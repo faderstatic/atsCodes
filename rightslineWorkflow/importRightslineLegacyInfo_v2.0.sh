@@ -15,7 +15,7 @@ IFS=$(echo -e "\n\b\015")
 # External funtions to include
 . /opt/olympusat/scriptsLibrary/olympusatCantemo.lib
 # --------------------------------------------------
-# WHHHAAAATTTTSSSS UPPPPP TAAANNNNGGGGYYYYYY
+# Whaatttuppp Ryannnn
 # --------------------------------------------------
 # Internal funtions
 convertToCamelCase ()
