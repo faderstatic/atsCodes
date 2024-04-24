@@ -128,10 +128,8 @@ do
     if [[ $columnsForThisRow -lt $columnCounts ]];
     then
         partialRow="true"
-        # echo "Partial Row is True"
     else
         partialRow="false"
-        # echo "Partial Row is False"
     fi
     # --------------------------------------------------
 
@@ -205,144 +203,140 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>
 columnCounter=1
 while [ $columnCounter -le $columnCounts ];
 do
-    if [ "${fieldName[$columnCounter]}" == "Genres" ];
-    then
-        fieldValue[$columnCounter]=$(convertToCamelCase ${fieldValue[$columnCounter]})
-        primaryGenre=$(echo "${fieldValue[$columnCounter]}" | awk -F "," '{print $1}')
-        secondaryGenres=$(echo "${fieldValue[$columnCounter]}" | cut -d "," -f2-$NF)
-        echo "      <field>
+    case "${fieldName[$columnCounter]}" in
+
+        "Genres")
+            fieldValue[$columnCounter]=$(convertToCamelCase ${fieldValue[$columnCounter]})
+            primaryGenre=$(echo "${fieldValue[$columnCounter]}" | awk -F "," '{print $1}')
+            secondaryGenres=$(echo "${fieldValue[$columnCounter]}" | cut -d "," -f2-$NF)
+            echo "      <field>
          <name>oly_primaryGenre</name>
          <value>$primaryGenre</value>
       </field>" >> "$fileDestination"
-        columnCounter=$(($columnCounter + 1))
-        if [ "$secondaryGenres" != "" ];
-        then
-            createTags "$secondaryGenres" "oly_secondaryGenres" "$fileDestination"
-        fi
-    else
-        # if [[ ("${fieldName[$columnCounter]}" = *"Es") && ("${fieldName[$columnCounter]}" != "oly_title"*) ]];
-        if [[ ("${fieldName[$columnCounter]}" = "oly_descriptionEs") || ("${fieldName[$columnCounter]}" = "oly_shortDescriptionEs") || ("${fieldName[$columnCounter]}" = "oly_socialDescriptionEs") || ("${fieldName[$columnCounter]}" = "oly_logLineEs") ]];
-        then
+            columnCounter=$(($columnCounter + 1))
+            if [ "$secondaryGenres" != "" ];
+            then
+                createTags "$secondaryGenres" "oly_secondaryGenres" "$fileDestination"
+            fi
+        ;;
+
+        "oly_descriptionEs"|"oly_shortDescriptionEs"|"oly_socialDescriptionEs"|"oly_logLineEs")
             echo "        <field>
           <name>${fieldName[$columnCounter]}</name>
           <value>${fieldValue[$columnCounter]}</value>
         </field>" >> "$fileDestinationSpanish"
-    columnCounter=$(($columnCounter + 1))
-        else
-            # if [[ ("${fieldName[$columnCounter]}" = *"En") && ("${fieldName[$columnCounter]}" != "oly_title"*) ]];
-            if [[ ("${fieldName[$columnCounter]}" = "oly_descriptionEn") || ("${fieldName[$columnCounter]}" = "oly_shortDescriptionEn") || ("${fieldName[$columnCounter]}" = "oly_socialDescriptionEn") || ("${fieldName[$columnCounter]}" = "oly_logLineEn") ]];
-            then
-                echo "        <field>
+            columnCounter=$(($columnCounter + 1))
+        ;;
+
+        "oly_descriptionEn"|"oly_shortDescriptionEn"|"oly_socialDescriptionEn"|"oly_logLineEn")
+            echo "        <field>
           <name>${fieldName[$columnCounter]}</name>
           <value>${fieldValue[$columnCounter]}</value>
         </field>" >> "$fileDestinationEnglish"
             columnCounter=$(($columnCounter + 1))
+        ;;
+
+        "oly_cast"|"oly_director"|"oly_producer"|"oly_tags")
+            createTags "${fieldValue[$columnCounter]}" "${fieldName[$columnCounter]}" "$fileDestination"
+            columnCounter=$(($columnCounter + 1))
+        ;;
+
+        "oly_contentType"|"oly_originalMpaaRating"|"oly_originalRtcRating"|"oly_originalRating"|"oly_countryOfOrigin"|"oly_closedCaptionLanguage"|"oly_originalLanguage")
+            fieldValue[$columnCounter]=$(convertToCamelCase ${fieldValue[$columnCounter]})
+            if [[ "${fieldName[$columnCounter]}" = "oly_countryOfOrigin" ]];
+            then
+                createTags "${fieldValue[$columnCounter]}" "${fieldName[$columnCounter]}" "$fileDestination"
             else
-                if [[ ("${fieldName[$columnCounter]}" = "oly_cast") || ("${fieldName[$columnCounter]}" = "oly_director") || ("${fieldName[$columnCounter]}" = "oly_producer") || ("${fieldName[$columnCounter]}" = "oly_tags") ]];
-                then
-                    createTags "${fieldValue[$columnCounter]}" "${fieldName[$columnCounter]}" "$fileDestination"
-                    columnCounter=$(($columnCounter + 1))
-                else
-                    if [[ ("${fieldName[$columnCounter]}" = "oly_contentType") || ("${fieldName[$columnCounter]}" = "oly_originalMpaaRating") || ("${fieldName[$columnCounter]}" = "oly_originalRtcRating") || ("${fieldName[$columnCounter]}" = "oly_originalRating") || ("${fieldName[$columnCounter]}" = "oly_countryOfOrigin") || ("${fieldName[$columnCounter]}" = "oly_closedCaptionLanguage") || ("${fieldName[$columnCounter]}" = "oly_originalLanguage") ]];
-                    then
-                        fieldValue[$columnCounter]=$(convertToCamelCase ${fieldValue[$columnCounter]})
-                        if [[ "${fieldName[$columnCounter]}" = "oly_countryOfOrigin" ]];
-                        then
-                            createTags "${fieldValue[$columnCounter]}" "${fieldName[$columnCounter]}" "$fileDestination"
-                        else
-                            echo "      <field>
+                echo "      <field>
          <name>${fieldName[$columnCounter]}</name>
          <value>${fieldValue[$columnCounter]}</value>
       </field>" >> "$fileDestination"
-                        fi
-                        columnCounter=$(($columnCounter + 1))
-                    else
-                        if [[ "${fieldName[$columnCounter]}" = "oly_closedCaptionInfo-closedcaptionavailable" ]];
-                        then
-                            if [[ "${fieldValue[$columnCounter]}" = "Yes" ]];
-                            then
-                                oly_closedCaptionInfoCC="closedcaptionavailable"
-                                echo "      <field>
+            fi
+            columnCounter=$(($columnCounter + 1))
+        ;;
+
+        "oly_closedCaptionInfo-closedcaptionavailable")
+            if [[ "${fieldValue[$columnCounter]}" = "Yes" ]];
+            then
+                oly_closedCaptionInfoCC="closedcaptionavailable"
+                echo "      <field>
          <name>oly_closedCaptionInfo</name>
          <value>$oly_closedCaptionInfoCC</value>
       </field>" >> "$fileDestination"
-                                columnCounter=$(($columnCounter + 1))
-                            else
-                                oly_closedCaptionInfoCC=""
-                                echo "      <field>
+                columnCounter=$(($columnCounter + 1))
+            else
+                oly_closedCaptionInfoCC=""
+                echo "      <field>
          <name>oly_closedCaptionInfo</name>
          <value>$oly_closedCaptionInfoCC</value>
       </field>" >> "$fileDestination"
-                                columnCounter=$(($columnCounter + 1))
-                            fi
-                        else
-                            if [[ "${fieldName[$columnCounter]}" = "oly_closedCaptionInfo-broadcastedontvwithcc" ]];
-                            then
-                                if [[ "${fieldValue[$columnCounter]}" = "Yes" ]];
-                                then
-                                    oly_closedCaptionInfoBC="broadcastedontvwithcc"
-                                    echo "      <field>
+                columnCounter=$(($columnCounter + 1))
+            fi
+        ;;
+
+        "oly_closedCaptionInfo-broadcastedontvwithcc")
+            if [[ "${fieldValue[$columnCounter]}" = "Yes" ]];
+            then
+                oly_closedCaptionInfoBC="broadcastedontvwithcc"
+                echo "      <field>
          <name>oly_closedCaptionInfo</name>
          <value>$oly_closedCaptionInfoBC</value>
       </field>" >> "$fileDestination"
-                                    columnCounter=$(($columnCounter + 1))
-                                else
-                                    oly_closedCaptionInfoBC=""
-                                    echo "      <field>
+                columnCounter=$(($columnCounter + 1))
+            else
+                oly_closedCaptionInfoBC=""
+                echo "      <field>
          <name>oly_closedCaptionInfo</name>
          <value>$oly_closedCaptionInfoBC</value>
       </field>" >> "$fileDestination"
-                                    columnCounter=$(($columnCounter + 1))
-                                fi
-                            else
-                                if [[ ("${fieldName[$columnCounter]}" = "oly_clipLink") || ("${fieldName[$columnCounter]}" = "oly_promoLink") || ("${fieldName[$columnCounter]}" = "oly_trailerLink") ]];
-                                then
-                                    echo "        <field>
+                columnCounter=$(($columnCounter + 1))
+            fi
+        ;;
+
+        "oly_clipLink"|"oly_promoLink"|"oly_trailerLink")
+            echo "        <field>
           <name>${fieldName[$columnCounter]}</name>
           <value>${fieldValue[$columnCounter]}</value>
         </field>" >> "$fileDestinationExternal"
-                                    columnCounter=$(($columnCounter + 1))
-                                else
-                                    if [[ "${fieldName[$columnCounter]}" = "oly_rightslineContractId" ]];
-                                    then
-                                        numberOfCharacters=$(echo "${fieldValue[$columnCounter]}" | wc -c)
-                                        if [[ $numberOfCharacters != 1 ]];
-                                        then
-                                            contractString="CA_"
-                                            missingCharacters=$((7 - $numberOfCharacters))
-                                            for (( k=1 ; k<=$missingCharacters ; k++ ));
-                                            do
-                                                contractString="$contractString""0"
-                                            done
-                                            contractString="$contractString""${fieldValue[$columnCounter]}"
-                                            echo "      <field>
+            columnCounter=$(($columnCounter + 1))
+        ;;
+
+        "oly_rightslineContractId")
+            numberOfCharacters=$(echo "${fieldValue[$columnCounter]}" | wc -c)
+            if [[ $numberOfCharacters != 1 ]];
+            then
+                contractString="CA_"
+                missingCharacters=$((7 - $numberOfCharacters))
+                for (( k=1 ; k<=$missingCharacters ; k++ ));
+                do
+                    contractString="$contractString""0"
+                done
+                contractString="$contractString""${fieldValue[$columnCounter]}"
+                echo "      <field>
          <name>${fieldName[$columnCounter]}</name>
          <value>$contractString</value>
       </field>" >> "$fileDestination"
-                                            columnCounter=$(($columnCounter + 1))
-                                        else
-                                            echo "      <field>
+                columnCounter=$(($columnCounter + 1))
+            else
+                echo "      <field>
          <name>${fieldName[$columnCounter]}</name>
          <value>$contractString</value>
       </field>" >> "$fileDestination"
-                                            columnCounter=$(($columnCounter + 1))
-                                        fi
-                                    else
-                                        echo "      <field>
+                columnCounter=$(($columnCounter + 1))
+            fi
+        ;;
+
+        *)
+            echo "      <field>
          <name>${fieldName[$columnCounter]}</name>
          <value>${fieldValue[$columnCounter]}</value>
       </field>" >> "$fileDestination"
-                                        columnCounter=$(($columnCounter + 1))
-                                    fi
-                                fi
-                            fi
-                        fi
-                    fi
-                fi
-            fi
-        fi
-    fi
+            columnCounter=$(($columnCounter + 1))
+        ;;
+
+    esac
 done
+
 if [ -e "$fileDestinationExternal" ];
 then
     echo "      <group>
