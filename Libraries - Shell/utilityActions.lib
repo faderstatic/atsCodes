@@ -1,0 +1,37 @@
+#---- Library of Functions for Utility Actions ----#
+#  Make sure this library is included in your shell script
+
+
+
+#---- convertToCamelCase ----#
+# This function combines words (with TITLE capitalization rule) stored in a variable and created camelcase (innercaps) string
+#       Usage: convertToCamelCase [string TITLE]
+#
+# System requirements: This script will only run in LINUX and MacOS
+
+convertToCamelCase ()
+{
+    currentFieldValue=$1
+    combinedValue=""
+    numberOfValues=$(echo "$currentFieldValue" | awk -F'[|,]' '{print NF}')
+    for (( i=1 ; i<=$numberOfValues ; i++ ));
+    do
+        currentValue=$(echo "$currentFieldValue" | awk -F'[|,]' '{print $'$i'}')
+        firstWord=$(echo $currentValue | awk '{print $1}' | tr '[:upper:]' '[:lower:]')
+        numberOfWords=$(echo $currentValue | awk '{print NF}')
+        if [[ $numberOfWords -gt 1 ]];
+        then
+            restOfTheWords=$(echo $currentValue | cut -d " " -f2-$NF | sed -e 's/ //g')
+        else
+            restOfTheWords=""
+        fi
+        if [[ "$combinedValue" = "" ]];
+        then
+            combinedValue=$(echo $firstWord$restOfTheWords)
+        else
+            combinedValue=$(echo $combinedValue,$firstWord$restOfTheWords)
+        fi
+    done
+    echo "$combinedValue"
+}
+#--------- END FUNCTION ----------#

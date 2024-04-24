@@ -1,0 +1,90 @@
+#---- Library of Functions for Cantemo ----#
+#  Make sure this library is included in your shell script
+
+#---- hashDelete ----#
+# This function creates hashes and deletes chunks
+#       Usage: hashDelete [Root Folder] [Item ID] [Chunk Number] [File List of Hashes] 
+#
+# System requirements: This script will only run in LINUX and MacOS
+
+hashDelete ()
+{
+	rootFolder="$1"
+	itemId="$2"
+	chunkNumber=$3
+	listFile="$4"
+	partsCount=0
+	while read hashByLine;
+	do
+		hashToProcess=$(echo $hashByLine | awk -F "'" '{print $2}')
+		chunkHashFile=$(echo "$rootFolder"/"$itemId"/Chunk_"$chunkNumber"/"$itemId"_0_"$partsCount"_hash)
+		openssl dgst -sha256 -binary "$rootFolder"/"$itemId"/Chunk_"$chunkNumber"/"$hashToProcess" > "$chunkHashFile"
+		rm -f "$rootFolder"/"$itemId"/Chunk_"$chunkNumber"/"$hashToProcess"
+		partsCount=$((partsCount+1))
+	done < "$hashListFile"
+	rm -f "$hashListFile"
+	echo $partsCount
+}
+
+#---- createTreeHash ----#
+# This function creates tree hash of chunk hashes in a directory for Glacier
+#       Usage: createTreeHash [Root Folder] [Item ID] [Chunk Number] [Number of Hashes] [Chunk to be Processed]
+#
+# System requirements: This script will only run in LINUX and MacOS
+
+createTreeHash ()
+{
+	rootFolder="$1"
+	itemId="$2"
+	chunkNumber="$3"
+	chunkCurrent="$5"
+	finalHash=0
+	kCounter=$4
+	lCounter=0
+	layerCounter=1
+
+	while [ $finalHash -eq 0 ]
+	do
+		itemCounter=0
+		previousLayer=$((layerCounter-1))
+		while [ $lCounter -lt $kCounter ];
+		do
+			nextL=$((lCounter+1))
+			if [ $nextL -lt $kCounter ];
+			then
+				cat $rootFolder"/"$itemId"/Chunk_"$chunkNumber"/"$itemId"_"$previousLayer"_"$lCounter"_hash" $rootFolder"/"$itemId"/Chunk_"$chunkNumber"/"$itemId"_"$previousLayer"_"$nextL"_hash" > $rootFolder"/"$itemId"/Chunk_"$chunkNumber"/"$itemId"_"$layerCounter"_"$itemCounter
+				openssl dgst -sha256 -binary $rootFolder"/"$itemId"/Chunk_"$chunkNumber"/"$itemId"_"$layerCounter"_"$itemCounter > $rootFolder"/"$itemId"/Chunk_"$chunkNumber"/"$itemId"_"$layerCounter"_"$itemCounter"_hash"
+				if [ $kCounter -eq 2 ];
+				then
+					openssl dgst -sha256 $rootFolder"/"$itemId"/Chunk_"$chunkNumber"/"$itemId"_"$layerCounter"_"$itemCounter > $rootFolder"/"$itemId"/Chunk_"$chunkNumber"/"$itemId"_"$layerCounter"_"$itemCounter"_tree.txt"
+					topTreeHash=$(cat $rootFolder"/"$itemId"/Chunk_"$chunkNumber"/"$itemId"_"$layerCounter"_"$itemCounter"_tree.txt" | awk -F " " '{ print $2 }')
+					echo "$topTreeHash"
+				fi
+				rm -f $rootFolder"/"$itemId"/Chunk_"$chunkNumber"/"$itemId"_"$previousLayer"_"$lCounter"_hash"
+				rm -f $rootFolder"/"$itemId"/Chunk_"$chunkNumber"/"$itemId"_"$previousLayer"_"$nextL"_hash"
+				rm -f $rootFolder"/"$itemId"/Chunk_"$chunkNumber"/"$itemId"_"$layerCounter"_"$itemCounter
+			else
+				mv -f $rootFolder"/"$itemId"/Chunk_"$chunkNumber"/"$itemId"_"$previousLayer"_"$lCounter"_hash" $rootFolder"/"$itemId"/Chunk_"$chunkNumber"/"$itemId"_"$layerCounter"_"$itemCounter"_hash"
+				if [ $kCounter -eq 1 ];
+				then
+					openssl dgst -sha256 $rootFolder"/"$itemId"/Chunk_"$chunkNumber"/"$itemId"_"$layerCounter"_"$itemCounter"_hash" > $rootFolder"/"$itemId"/Chunk_"$chunkNumber"/"$itemId"_"$layerCounter"_"$itemCounter"_tree.txt"
+					topTreeHash=$(cat $rootFolder"/"$itemId"/Chunk_"$chunkNumber"/"$itemId"_"$layerCounter"_"$itemCounter"_tree.txt" | awk -F " " '{ print $2 }')
+					echo "$topTreeHash"
+				fi
+			fi
+			lCounter=$((lCounter+2))
+			itemCounter=$((itemCounter+1))
+		done
+		kCounter=$itemCounter
+		lCounter=0
+		if [ $itemCounter -eq 1 ];
+		then
+			finalHash=1
+			itemCounter=$((itemCounter-1))
+		else
+			layerCounter=$((layerCounter+1))
+		fi
+	done
+	cp $rootFolder"/"$itemId"/Chunk_"$chunkNumber"/"$itemId"_"$layerCounter"_"$itemCounter"_hash" $rootFolder"/"$itemId"/Chunk_all/"$itemId"_0_"$chunkNumber"_hash"
+	mv -f $rootFolder"/"$itemId"/Chunk_"$chunkNumber"/"$itemId"_"$layerCounter"_"$itemCounter"_hash" $rootFolder"/"$itemId"/Chunk_"$chunkNumber"/"$chunkCurrent"_hash"
+}

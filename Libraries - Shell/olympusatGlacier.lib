@@ -1,0 +1,140 @@
+#---- Library of Functions for S3 Glacier ----#
+#  Make sure this library is included in your shell script
+
+#---- glacierInitiateMultiPart ----#
+# This function makes API call to S3 Glacier to receive upload ID
+#       Usage: glacierinitiateMultiPart [account id] [vault name] [part size] [description]
+#
+# System requirements: This script will only run in LINUX and MacOS
+
+glacierInitiateMultiPart ()
+{
+	accountIdAWS=$1
+	vaultNameAWS=$2
+	partSize=$3
+	archiveDescription=$4
+	
+	glacierApiResponse=$(aws glacier initiate-multipart-upload --account-id "$accountIdAWS" --vault-name "$vaultNameAWS" --part-size $partSize --archive-description "$archiveDescription")
+	glacierApiResponseTrimmed=$(echo "$glacierApiResponse" | awk -F "/" '{print $NF}')
+	echo "$glacierApiResponseTrimmed"
+}
+
+
+#---- glacierUploadPart ----#
+# This function makes API call to S3 Glacier to upload parts of archive
+#       Usage: glacierUploadPart [account id] [vault name] [upload id] [chunk location] [starting byte] [ending byte]
+#
+# System requirements: This script will only run in LINUX and MacOS
+
+glacierUploadPart ()
+{
+	accountIdAWS=$1
+	vaultNameAWS=$2
+	uploadIdAWS=$3
+	bodyAPIValue=$4
+	startingByteValue=$5
+	endingByteValue=$6
+	
+	leadingUploadId=$(echo "$uploadIdAWS" | cut -c1)
+	if [ "$leadingUploadId" == "-" ];
+	then
+		uploadIdAWS='\'"$uploadIdAWS"
+	fi
+	glacierApiResponse=$(aws glacier upload-multipart-part --account-id "$accountIdAWS" --vault-name "$vaultNameAWS" --upload-id "$uploadIdAWS" --body "$bodyAPIValue" --range 'byte $startingByteValue-$endingByteValue/*')
+	echo "$glacierApiResponse"
+}
+
+
+#---- glacierCompleteUpload ----#
+# This function makes API call to S3 Glacier to complete uploading parts
+#       Usage: glacierCompleteUpload [account id] [vault name] [upload id] [tree hash] [archive size]
+#
+# System requirements: This script will only run in LINUX and MacOS
+
+glacierCompleteUpload ()
+{
+	accountIdAWS=$1
+	vaultNameAWS=$2
+	uploadIdAWS=$3
+	finalTreeHash=$4
+	totalArchiveSize=$5
+	
+	leadingUploadId=$(echo "$uploadIdAWS" | cut -c1)
+	if [ "$leadingUploadId" == "-" ];
+	then
+		uploadIdAWS='\'"$uploadIdAWS"
+	fi
+	glacierApiResponse=$(aws glacier complete-multipart-upload --account-id "$accountIdAWS" --vault-name "$vaultNameAWS" --upload-id "$uploadIdAWS" --checksum "$finalTreeHash" --archive-size $totalArchiveSize)
+	glacierApiResponseTrimmed=$(echo "$glacierApiResponse" | awk -F " " '{print $1}')
+	echo "$glacierApiResponseTrimmed"
+}
+
+
+#---- glacierRestoreRequest ----#
+# This function makes API call to S3 Glacier to initiate archive retrieval job
+#       Usage: glacierRestoreRequest [account id] [vault name] [archive id]
+#
+# System requirements: This script will only run in LINUX and MacOS
+
+glacierRestoreRequest ()
+{
+	accountIdAWS=$1
+	vaultNameAWS=$2
+	archiveIdAWS=$3
+	
+	leadingArchiveId=$(echo "$archiveIdAWS" | cut -c1)
+	if [ "$leadingArchiveId" == "-" ];
+	then
+		archiveIdAWS='\'"$archiveIdAWS"
+	fi
+	glacierApiResponse=$(aws glacier initiate-job --account-id "$accountIdAWS" --vault-name "vaultNameAWS" --job-parameters="{\"Type\":\"archive-retrieval\",\"ArchiveId\":\"archiveIdAWS\",\"Tier\":\"Bulk\"}")
+	glacierApiResponseTrimmed=$(echo "$glacierApiResponse" | awk -F " " '{print $1}')
+	echo "$glacierApiResponseTrimmed"
+}
+
+
+#---- glacierJobRequestStatus ----#
+# This function makes API call to S3 Glacier to get status of job that has been requested prior
+#       Usage: glacierJobRequestStatus [account id] [vault name] [archive id]
+#
+# System requirements: This script will only run in LINUX and MacOS
+
+glacierRestoreRequest ()
+{
+	accountIdAWS=$1
+	vaultNameAWS=$2
+	jobIdAWS=$3
+	
+	leadingJobId=$(echo "$jobIdAWS" | cut -c1)
+	if [ "$leadingJobId" == "-" ];
+	then
+		jobIdAWS='\'"$jobIdAWS"
+	fi
+	glacierApiResponse=$(aws glacier describe-job --vault-name "$vaultNameAWS" --account-id "$archiveIdAWS" --job-id "$jobIdAWS")
+	glacierApiResponseTrimmed=$(echo "$glacierApiResponse" | awk -F " " '{print $10}')
+	echo "$glacierApiResponseTrimmed"
+}
+
+
+#---- glacierGetJobOutput ----#
+# This function makes API call to S3 Glacier to get output of job that has been requested prior
+#       Usage: glacierJobRequestStatus [account id] [vault name] [job id] [destination file]
+#
+# System requirements: This script will only run in LINUX and MacOS
+
+glacierGetJobOutput ()
+{
+	accountIdAWS=$1
+	vaultNameAWS=$2
+	jobIdAWS=$3
+	destinationFile=$4
+	
+	leadingJobId=$(echo "$jobIdAWS" | cut -c1)
+	if [ "$leadingJobId" == "-" ];
+	then
+		jobIdAWS='\'"$jobIdAWS"
+	fi
+	glacierApiResponse=$(aws glacier get-job-output --vault-name "$vaultNameAWS" --account-id "$accountIdAWS" --job-id "$jobIdAWS" "$destinationFile")
+	glacierApiResponseTrimmed=$(echo "$glacierApiResponse" | awk -F " " '{print $1}')
+	echo "$glacierApiResponseTrimmed"
+}

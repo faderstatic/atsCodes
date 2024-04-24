@@ -1,0 +1,40 @@
+#---- Library of Technical Functions ----#
+#  Make sure this library is included in your shell script
+
+
+
+#---- chunkByteStart ----#
+#
+#       Usage: chunkByteStart [exponential value] [chunk number]
+#
+# System requirements: This script will only run in LINUX and MacOS
+
+chunkByteStart ()
+{
+	if [ $1 -gt 22 ];
+	then
+        	echo $1" is greater than the allowable chunk size - 4GiB."
+	else
+        	byteStartValue=$(($2*1024*(2**$1)))
+        	echo $byteStartValue
+	fi
+}
+
+
+
+#---- chunkByteEnd ----#
+#
+#       Usage: chunkByteEnd [exponential value] [chunk number]
+#
+# System requirements: This script will only run in LINUX and MacOS
+
+chunkByteEnd ()
+{
+        if [ $1 -gt 22 ];
+        then
+                echo $1" is greater than the allowable chunk size - 4GiB."
+        else
+		byteEndValue=$(((($2+1)*1024*(2**$1))-1))
+                echo $byteEndValue
+        fi
+}
