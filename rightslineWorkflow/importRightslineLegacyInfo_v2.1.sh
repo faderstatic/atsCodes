@@ -382,6 +382,11 @@ url="http://10.1.1.34:8080/API/import/sidecar/$cantemoItemId?sidecar=/opt/olympu
 
 curl --location --request POST $url --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0'
 
+sleep 2
+
+echo "Moving xml to zCompleted folder"
+mv "$fileDestination" "/opt/olympusat/xmlsForMetadataImport/"
+
 IFS=$saveIFS
 
 exit 0
