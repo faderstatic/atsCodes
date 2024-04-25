@@ -40,6 +40,8 @@ export title=$(filterVidispineItemMetadata $itemId "metadata" "title")
 export titleEs=$(filterVidispineItemMetadata $itemId "metadata" "oly_titleEs")
 export titleEn=$(filterVidispineItemMetadata $itemId "metadata" "oly_titleEn")
 export contentType=$(filterVidispineItemMetadata $itemId "metadata" "oly_contentType")
+#export contentType=$(filterVidispineItemMetadata $itemId "metadata" "oly_contentType" | sed 's/.*/\u&/')
+export contentType=$(echo $contentType | sed 's/.*/\u&/')
 export rtcMexicoQCNotes=$(filterVidispineItemMetadata $itemId "metadata" "oly_rtcMexicoQCNotes")
 export linkToClip=http://cantemo.olympusat.com/item/$itemId/
 
@@ -109,7 +111,7 @@ fi
 
 #Email Body
 
-case "${fieldName[$columnCounter]}" in
+case "$qcStatus" in
 
   "approved")
 
