@@ -40,8 +40,8 @@ export title=$(filterVidispineItemMetadata $itemId "metadata" "title")
 export titleEs=$(filterVidispineItemMetadata $itemId "metadata" "oly_titleEs")
 export titleEn=$(filterVidispineItemMetadata $itemId "metadata" "oly_titleEn")
 export contentType=$(filterVidispineItemMetadata $itemId "metadata" "oly_contentType")
-#export contentType=$(filterVidispineItemMetadata $itemId "metadata" "oly_contentType" | sed 's/.*/\u&/')
-export contentType=$(echo $contentType | sed 's/.*/\u&/')
+export contentType=$(filterVidispineItemMetadata $itemId "metadata" "oly_contentType" | sed 's/.*/\u&/')
+#export contentType=$(echo $contentType | sed 's/.*/\u&/')
 export rtcMexicoQCNotes=$(filterVidispineItemMetadata $itemId "metadata" "oly_rtcMexicoQCNotes")
 echo "TESTING - RTC Notes - $rtcMexicoQCNotes"
 export linkToClip=http://cantemo.olympusat.com/item/$itemId/
@@ -168,7 +168,7 @@ echo "$datetime - (rtcMexicoQC) - Body - [$body]" >> "$logfile"
 curl --url 'smtp://smtp-mail.outlook.com:587' \
  --ssl-reqd \
   --mail-from $emailFrom \
-  --mail-rcpt $recipient2 --mail-rcpt $recipient4 \
+  --mail-rcpt $recipient3 --mail-rcpt $recipient4 \
   --user 'notify@olympusat.com:560Village' \
   --tlsv1.2 \
   -T <(echo -e "$message")
