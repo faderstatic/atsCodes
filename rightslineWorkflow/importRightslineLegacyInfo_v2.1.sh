@@ -98,6 +98,7 @@ do
         columnCounter=$(($columnCounter + 1))
     fi
 done
+echo "$(grep -n "$inputFile" -e "\<$rightslineItemId\>" | awk -F ',' '{print $'$rightslineIdColumn'}')"
 for matchedRow in $(grep -n "$inputFile" -e "\<$rightslineItemId\>" | awk -F ',' '{print $'$rightslineIdColumn'}')
 do
     matchedValue=$(echo $matchedRow | awk -F ':' '{print $2}')
@@ -105,6 +106,7 @@ do
     then
         matchedRowNumber=$(echo $matchedRow | awk -F ':' '{print $1}')
     fi
+    echo "Matched row number: $matchedRowNumber"
 done
 # --------------------------------------------------
 
@@ -114,6 +116,7 @@ while [[ "$lineReadComplete" = "false" ]];
 do
     line=$(sed -n ''$matchedRowNumber'p' "$inputFile")
     cleanLine=$(echo $line | sed -e 's/\"\"/-/g')
+    echo "--- line:$matchedRowNumber --- $cleanLine"
     # --------------------------------------------------
     # Determine if we are dealing with a line with partial data
     if [[ "$partialRow" = "true" ]];
@@ -132,6 +135,7 @@ do
     else
         partialRow="false"
     fi
+    echo "This row is partial -- $partialRow -- ends with last column count - $lastColumnNumber"
     # --------------------------------------------------
 
     # --------------------------------------------------
@@ -144,11 +148,13 @@ do
             adjustedColumnNumber=$(($firstColumnNumber + $columnCounter -1))
             if [[ "$previousPartialMetadata" != "" ]];
             then
-                fieldValue[$adjustedColumnNumber]=$(echo $cleanLine | awk 'BEGIN { FPAT = "([^,]*)|(\"[^\"]+\")" } {print $'$columnCounter'}' | sed -e 's/\"//g')
+                fieldValue[$adjustedColumnNumber]=$(echo $cleanLine | awk 'BEGIN { FPAT = "([^,]*)|(\"[^\"]+\")|(\"[^\"]+[\r\n]$)" } {print $'$columnCounter'}' | sed -e 's/\"//g')
                 fieldValue[$adjustedColumnNumber]="$previousPartialMetadata ${fieldValue[$adjustedColumnNumber]}"
                 previousPartialMetadata=""
+                echo "Filling PARTIAL line PARTIAL column $adjustedColumnNumber --- ${fieldValue[$adjustedColumnNumber]}"
             else
-                fieldValue[$adjustedColumnNumber]=$(echo $cleanLine | awk 'BEGIN { FPAT = "([^,]*)|(\"[^\"]+\")" } {print $'$columnCounter'}' | sed -e 's/\"//g')
+                fieldValue[$adjustedColumnNumber]=$(echo $cleanLine | awk 'BEGIN { FPAT = "([^,]*)|(\"[^\"]+\")|(\"[^\"]+[\r\n]$)" } {print $'$columnCounter'}' | sed -e 's/\"//g')
+                echo "Filling PARTIAL line FULL column $adjustedColumnNumber --- ${fieldValue[$adjustedColumnNumber]}"
             fi
             columnCounter=$(($columnCounter + 1))
         done
@@ -162,11 +168,13 @@ do
             adjustedColumnNumber=$(($firstColumnNumber + $columnCounter -1))
             if [[ "$previousPartialMetadata" != "" ]];
             then
-                fieldValue[$adjustedColumnNumber]=$(echo $cleanLine | awk 'BEGIN { FPAT = "([^,]*)|(\"[^\"]+\")" } {print $'$columnCounter'}' | sed -e 's/\"//g')
+                fieldValue[$adjustedColumnNumber]=$(echo $cleanLine | awk 'BEGIN { FPAT = "([^,]*)|(\"[^\"]+\")|(\"[^\"]+[\r\n]$)" } {print $'$columnCounter'}' | sed -e 's/\"//g')
                 fieldValue[$adjustedColumnNumber]="$previousPartialMetadata ${fieldValue[$adjustedColumnNumber]}"
                 previousPartialMetadata=""
+                echo "Filling FULL line PARTIAL column $adjustedColumnNumber --- ${fieldValue[$adjustedColumnNumber]}"
             else
-                fieldValue[$adjustedColumnNumber]=$(echo $cleanLine | awk 'BEGIN { FPAT = "([^,]*)|(\"[^\"]+\")" } {print $'$columnCounter'}' | sed -e 's/\"//g')
+                fieldValue[$adjustedColumnNumber]=$(echo $cleanLine | awk 'BEGIN { FPAT = "([^,]*)|(\"[^\"]+\")|(\"[^\"]+[\r\n]$)" } {print $'$columnCounter'}' | sed -e 's/\"//g')
+                echo "Filling FULL line FULL column $adjustedColumnNumber --- ${fieldValue[$adjustedColumnNumber]}"
             fi
             columnCounter=$(($columnCounter + 1))
         done
