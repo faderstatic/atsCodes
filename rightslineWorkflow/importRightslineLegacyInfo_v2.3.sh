@@ -203,10 +203,7 @@ then
          <value>$primaryGenre</value>
       </field>" >> "$fileDestination"
                 columnCounter=$(($columnCounter + 1))
-                if [ "$secondaryGenres" != "" ];
-                then
-                    createTags "$secondaryGenres" "oly_secondaryGenres" "$fileDestination"
-                fi
+                createTags "$secondaryGenres" "oly_secondaryGenres" "$fileDestination"
             ;;
 
             "oly_descriptionEs"|"oly_shortDescriptionEs"|"oly_socialDescriptionEs"|"oly_logLineEs")
