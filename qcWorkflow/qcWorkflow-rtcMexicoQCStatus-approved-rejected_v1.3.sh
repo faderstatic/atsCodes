@@ -40,6 +40,7 @@ export title=$(filterVidispineItemMetadata $itemId "metadata" "title")
 export titleEs=$(filterVidispineItemMetadata $itemId "metadata" "oly_titleEs")
 export titleEn=$(filterVidispineItemMetadata $itemId "metadata" "oly_titleEn")
 export contentType=$(filterVidispineItemMetadata $itemId "metadata" "oly_contentType")
+export rtcMexicoQCNotes=$(filterVidispineItemMetadata $itemId "metadata" "oly_rtcMexicoQCNotes")
 export linkToClip=http://cantemo.olympusat.com/item/$itemId/
 
 export url="http://10.1.1.34:8080/API/item/$itemId/metadata/"
@@ -107,6 +108,11 @@ Title-Spanish: $titleEs"
 fi
 
 #Email Body
+
+case "${fieldName[$columnCounter]}" in
+
+  "approved")
+
 subject="MAM - RTC Mexico QC - $qcStatusUCase - $title"
 body="Hi,
 
@@ -122,6 +128,30 @@ Please login to the system and view this item.
 Thanks
 
 MAM Notify"
+
+  ;;
+
+  "rejected")
+
+subject="MAM - RTC Mexico QC - $qcStatusUCase - $title"
+body="Hi,
+
+The title, [$title], has been $qcStatusUCase by [$qcBy] for RTC Mexico QC.
+
+Title: $title
+$titleLanguage
+Content Type: $contentType
+RTC QC Notes: $rtcMexicoQCNotes
+Link To Clip: $linkToClip
+
+Please login to the system and view this item.
+
+Thanks
+
+MAM Notify"
+
+  ;;
+esac
 
 #Email Message
 message="Subject: $subject\n\n$body"
