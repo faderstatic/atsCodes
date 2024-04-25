@@ -385,7 +385,7 @@ curl --location --request POST $url --header 'Authorization: Basic YWRtaW46MTBsb
 sleep 2
 
 echo "Moving xml to zCompleted folder"
-mv "$fileDestination" "/opt/olympusat/xmlsForMetadataImport/"
+mv "$fileDestination" "/opt/olympusat/xmlsForMetadataImport/zCompleted/"
 
 IFS=$saveIFS
 
