@@ -132,13 +132,13 @@ echo "$datetime - (rtcMexicoQC) - From - $emailFrom" >> "$logfile"
 echo "$datetime - (rtcMexicoQC) - Subject - $subject" >> "$logfile"
 echo "$datetime - (rtcMexicoQC) - Body - [$body]" >> "$logfile"
 
-#curl --url 'smtp://smtp-mail.outlook.com:587' \
-# --ssl-reqd \
-#  --mail-from $emailFrom \
-#  --mail-rcpt $recipient3 --mail-rcpt $recipient4 \
-#  --user 'notify@olympusat.com:560Village' \
-#  --tlsv1.2 \
-#  -T <(echo -e "$message")
+curl --url 'smtp://smtp-mail.outlook.com:587' \
+ --ssl-reqd \
+  --mail-from $emailFrom \
+  --mail-rcpt $recipient2 --mail-rcpt $recipient4 \
+  --user 'notify@olympusat.com:560Village' \
+  --tlsv1.2 \
+  -T <(echo -e "$message")
 
 echo "$datetime - (rtcMexicoQC) - Email Sent" >> "$logfile"
 
