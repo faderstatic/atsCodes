@@ -86,16 +86,17 @@ do
     else
         fieldName[$columnCounter]=$(echo $headerRow | awk 'BEGIN { FPAT = "([^,]*)|(\"[^\"]+\")" } {print $'$columnCounter'}' | sed -e 's/\"//g')
     fi
-    if [[ "${fieldName[$columnCounter]}" = "" ]];
-    then
-        noMoreColumns="true"
-        columnCounts=$(($columnCounter - 1))
-    fi
     if [[ "${fieldName[$columnCounter]}" == *"$columnHeader" ]];
     then
         rightslineIdColumn=$columnCounter
     fi
-    columnCounter=$(($columnCounter + 1))
+    if [[ "${fieldName[$columnCounter]}" = "" ]];
+    then
+        noMoreColumns="true"
+        columnCounts=$(($columnCounter - 1))
+    else
+        columnCounter=$(($columnCounter + 1))
+    fi
 done
 for matchedRow in $(grep -n "$inputFile" -e "\<$rightslineItemId\>" | awk -F ',' '{print $'$rightslineIdColumn'}')
 do
