@@ -117,7 +117,7 @@ do
     if [[ "${fieldName[$columnCounter]}" = "" ]];
     then
         noMoreColumns="true"
-        columnCounts=$columnCounter
+        columnCounts=$(($columnCounter -1))
     else
         columnCounter=$(($columnCounter + 1))
     fi
@@ -151,7 +151,7 @@ then
     done
 
     columnCounter=1
-    while [[ $columnCounter -lt $columnCounts ]];
+    while [[ $columnCounter -le $columnCounts ]];
     do
         fieldValue[$columnCounter]=$(echo $cleanLine | awk 'BEGIN { FPAT = "([^,]*)|(\"[^\"]+)|(\"[^\"]+\")" } {print $'$columnCounter'}' | sed -e 's/\"//g')
         columnCounter=$(($columnCounter + 1))
