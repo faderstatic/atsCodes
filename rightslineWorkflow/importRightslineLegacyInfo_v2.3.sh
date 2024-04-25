@@ -194,7 +194,7 @@ then
                 fieldValue[$columnCounter]=$(convertToCamelCase ${fieldValue[$columnCounter]})
                 primaryGenre=$(echo "${fieldValue[$columnCounter]}" | awk -F "," '{print $1}')
                 secondaryGenres=$(echo "${fieldValue[$columnCounter]}" | cut -d "," -f2-$NF)
-                if [[ "$primaryGenre" = "$secondaryGenres" ]];
+                if [[ "$primaryGenre" = "$secondaryGenres" || -z "$secondaryGenres" ]];
                 then
                     secondaryGenres=""
                 fi
