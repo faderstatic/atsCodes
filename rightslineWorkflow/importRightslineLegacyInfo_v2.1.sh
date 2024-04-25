@@ -15,7 +15,7 @@ IFS=$(echo -e "\n\b\015")
 # External funtions to include
 . /opt/olympusat/scriptsLibrary/olympusatCantemo.lib
 # --------------------------------------------------
-# Double point Duffy's Tuesday
+
 # --------------------------------------------------
 # Internal funtions
 convertToCamelCase ()
