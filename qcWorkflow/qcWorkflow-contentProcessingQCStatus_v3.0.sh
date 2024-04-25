@@ -34,17 +34,17 @@ export qcBy=$2
 export qcDate=$(date "+%Y-%m-%dT%H:%M:%S")
 
 #logfile="/Users/rsims/Documents/OLYMPUSAT Documentation/_olympusatFutureWorkflows/Cinesys/apiCalls/logs/apiCall-$mydate.log"
-logfile="/opt/olympusat/logs/setMetadata-contentProcessingQCStatus-$mydate.log"
+logfile="/opt/olympusat/logs/qcWorkflow-$mydate.log"
 
 echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" >> $logfile
-echo "$datetime - Triggering API to Update OriginalQC Metadata" >> "$logfile"
-echo "$datetime - Item ID - $itemId" >> "$logfile"
-echo "$datetime - User - $user" >> "$logfile"
-echo "$datetime - New QC Status - $qcStatus" >> "$logfile"
-echo "$datetime - Item Content Type - $itemContentType" >> "$logfile"
-echo "$datetime - Item Version Type - $itemVersionType" >> "$logfile"
-echo "$datetime - Item Current Original Content QC Status - $itemOriginalContentQCStatus" >> "$logfile"
-echo "$datetime - Item Current Final QC Status - $itemFinalQCStatus" >> "$logfile"
+echo "$datetime - (contentProcessingQC) - Triggering API to Update OriginalQC Metadata" >> "$logfile"
+echo "$datetime - (contentProcessingQC) - Item ID - $itemId" >> "$logfile"
+echo "$datetime - (contentProcessingQC) - User - $user" >> "$logfile"
+echo "$datetime - (contentProcessingQC) - New QC Status - $qcStatus" >> "$logfile"
+echo "$datetime - (contentProcessingQC) - Item Content Type - $itemContentType" >> "$logfile"
+echo "$datetime - (contentProcessingQC) - Item Version Type - $itemVersionType" >> "$logfile"
+echo "$datetime - (contentProcessingQC) - Item Current Original Content QC Status - $itemOriginalContentQCStatus" >> "$logfile"
+echo "$datetime - (contentProcessingQC) - Item Current Final QC Status - $itemFinalQCStatus" >> "$logfile"
 
 case $itemContentType in
     "movie" | "episode")
@@ -77,12 +77,12 @@ case $itemContentType in
     ;;
 esac
 
-echo "$datetime - Body Data - $bodyData" >> "$logfile"
+echo "$datetime - (contentProcessingQC) - Body Data - $bodyData" >> "$logfile"
 
 curl -s -o /dev/null --location --request PUT $url --header 'Content-Type: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=xZqBrKBPBOUANsWFnMC3aF90S52Ip3tgXdUHwWZvhNnu9aLl9j4rdrxRhV9nSQx9' --data $bodyData
 
 sleep 5
 
-echo "$datetime - Update Metadata Completed" >> "$logfile"
+echo "$datetime - (contentProcessingQC) - Update Metadata Completed" >> "$logfile"
 
 IFS=$saveIFS
