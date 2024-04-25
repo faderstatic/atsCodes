@@ -59,6 +59,30 @@ createTags ()
     done
     echo "      </field>" >> "$currentOutputFile"
 }
+
+countDaMuthaFukkingColumns ()
+{
+    countingString="$1"
+    holdFurtherCount="false"
+    properFieldCount=0
+    maximumColumns=$(echo "$countingString" | awk -F "," '{print NF+1}')
+    for (( m=1 ; m<=$maximumColumns ; m++ ));
+    do
+        currentReadValue=$(echo "$countingString" | awk -F "," '{print $'$m'}')
+        if [[ "$currentReadValue" == "\""* ]];
+        then
+            holdFurtherCount="true"
+        elif [[ "$currentReadValue" == *"\"" ]];
+        then
+            holdFurtherCount="false"
+        fi
+        if [[ "$holdFurtherCount" = "false" ]];
+        then
+            properFieldCount=$(($properFieldCount + 1))
+        fi
+    done
+    echo $properFieldCount
+}
 # --------------------------------------------------
 
 # --------------------------------------------------
@@ -74,7 +98,7 @@ partialRow="false"
 lineReadComplete="false"
 
 # --------------------------------------------------
-# Read Header Row Values
+# Read Header Row Values and Count Columns
 headerRow=$(sed -n '1p' "$inputFile")
 columnCounter=1
 noMoreColumns="false"
@@ -93,12 +117,11 @@ do
     if [[ "${fieldName[$columnCounter]}" = "" ]];
     then
         noMoreColumns="true"
-        columnCounts=$(($columnCounter - 1))
+        columnCounts=$columnCounter
     else
         columnCounter=$(($columnCounter + 1))
     fi
 done
-echo "$(grep -n "$inputFile" -e "\<$rightslineItemId\>" | awk -F ',' '{print $'$rightslineIdColumn'}')"
 for matchedRow in $(grep -n "$inputFile" -e "\<$rightslineItemId\>" | awk -F ',' '{print $'$rightslineIdColumn'}')
 do
     matchedValue=$(echo $matchedRow | awk -F ':' '{print $2}')
@@ -114,91 +137,43 @@ done
 if [ ! -z "$matchedRowNumber" ];
 then
 
-while [[ "$lineReadComplete" = "false" ]];
-do
     line=$(sed -n ''$matchedRowNumber'p' "$inputFile")
     cleanLine=$(echo $line | sed -e 's/\"\"/-/g')
-    # --------------------------------------------------
-    # Determine if we are dealing with a line with partial data
-    if [[ "$partialRow" = "true" ]];
-    then
-        lastColumnNumber=$(echo "$cleanLine" | awk 'BEGIN { FPAT = "([^,]*)|(\"[^\"]+)|(\"[^\"]+\")" } {print NF+1}' )
-        firstColumnNumber=$previousColumnCount
-        columnsForThisRow=$(($lastColumnNumber + $previousColumnCount -1))
-    else
-        columnsForThisRow=$(echo "$cleanLine" | awk 'BEGIN { FPAT = "([^,]*)|(\"[^\"]+)|(\"[^\"]+\")" } {print NF+1}' )
-        firstColumnNumber=1
-        lastColumnNumber=$columnsForThisRow
-    fi
-    if [[ $columnsForThisRow -lt $columnCounts ]];
-    then
-        partialRow="true"
-    else
-        partialRow="false"
-    fi
-    echo "This row is partial -- $partialRow -- ends with last column count - $lastColumnNumber"
-    # --------------------------------------------------
-
-    # --------------------------------------------------
-    # Making sure data in each and all column is read correctly
-    if [[ "$partialRow" = "true" ]];
-    then
-        columnCounter=1
-        while [ $columnCounter -lt $lastColumnNumber ];
-        do
-            adjustedColumnNumber=$(($firstColumnNumber + $columnCounter -1))
-            if [[ "$previousPartialMetadata" != "" ]];
-            then
-                fieldValue[$adjustedColumnNumber]=$(echo $cleanLine | awk 'BEGIN { FPAT = "([^,]*)|(\"[^\"]+)|(\"[^\"]+\")" } {print $'$columnCounter'}' | sed -e 's/\"//g')
-                fieldValue[$adjustedColumnNumber]="$previousPartialMetadata ${fieldValue[$adjustedColumnNumber]}"
-                previousPartialMetadata=""
-                echo "Filling PARTIAL line PARTIAL column $adjustedColumnNumber --- ${fieldValue[$adjustedColumnNumber]}"
-            else
-                fieldValue[$adjustedColumnNumber]=$(echo $cleanLine | awk 'BEGIN { FPAT = "([^,]*)|(\"[^\"]+)|(\"[^\"]+\")" } {print $'$columnCounter'}' | sed -e 's/\"//g')
-                echo "Filling PARTIAL line FULL column $adjustedColumnNumber --- ${fieldValue[$adjustedColumnNumber]}"
-            fi
-            columnCounter=$(($columnCounter + 1))
-        done
-        previousColumnCount=$(($adjustedColumnNumber))
-        previousPartialMetadata="${fieldValue[$adjustedColumnNumber]}"
+    # columnsForThisRow=$(echo "$cleanLine" | awk 'BEGIN { FPAT = "([^,]*)|(\"[^\"]+)|(\"[^\"]+\")" } {print NF+1}' )
+    columnsForThisRow=$(countDaMuthaFukkingColumns "$cleanLine")
+    while [[ $columnsForThisRow -lt $columnCounts ]];
+    do
         matchedRowNumber=$(($matchedRowNumber + 1))
-    else
-        columnCounter=1
-        while [ $columnCounter -lt $lastColumnNumber ];
-        do
-            adjustedColumnNumber=$(($firstColumnNumber + $columnCounter -1))
-            if [[ "$previousPartialMetadata" != "" ]];
-            then
-                fieldValue[$adjustedColumnNumber]=$(echo $cleanLine | awk 'BEGIN { FPAT = "([^,]*)|(\"[^\"]+)|(\"[^\"]+\")" } {print $'$columnCounter'}' | sed -e 's/\"//g')
-                fieldValue[$adjustedColumnNumber]="$previousPartialMetadata ${fieldValue[$adjustedColumnNumber]}"
-                previousPartialMetadata=""
-                echo "Filling FULL line PARTIAL column $adjustedColumnNumber --- ${fieldValue[$adjustedColumnNumber]}"
-            else
-                fieldValue[$adjustedColumnNumber]=$(echo $cleanLine | awk 'BEGIN { FPAT = "([^,]*)|(\"[^\"]+)|(\"[^\"]+\")" } {print $'$columnCounter'}' | sed -e 's/\"//g')
-                echo "Filling FULL line FULL column $adjustedColumnNumber --- ${fieldValue[$adjustedColumnNumber]}"
-            fi
-            columnCounter=$(($columnCounter + 1))
-        done
-        lineReadComplete="true"
-    fi
+        nextLine=$(sed -n ''$matchedRowNumber'p' "$inputFile")
+        cleanNextLine=$(echo $nextLine | sed -e 's/\"\"/-/g')
+        cleanLine="$cleanLine $cleanNextLine"
+        columnsForThisRow=$(countDaMuthaFukkingColumns "$cleanLine")
+    done
+
+    columnCounter=1
+    while [[ $columnCounter -lt $columnCounts ]];
+    do
+        fieldValue[$columnCounter]=$(echo $cleanLine | awk 'BEGIN { FPAT = "([^,]*)|(\"[^\"]+)|(\"[^\"]+\")" } {print $'$columnCounter'}' | sed -e 's/\"//g')
+        columnCounter=$(($columnCounter + 1))
+    done
+
     # --------------------------------------------------
-done
 
-# --------------------------------------------------
-# Writing XML File
+    # --------------------------------------------------
+    # Writing XML File
 
-#fileDestination="/opt/olympusat/xmlsForMetadataImport/${fieldValue[3]}.xml"
-fileDestination="/opt/olympusat/xmlsForMetadataImport/$cantemoItemTitle.xml"
-#fileDestinationSpanish="/opt/olympusat/xmlsForMetadataImport/${fieldValue[3]}_ES.xml"
-fileDestinationSpanish=$(echo "/opt/olympusat/xmlsForMetadataImport/"$cantemoItemTitle"_ES.xml")
-#fileDestinationEnglish="/opt/olympusat/xmlsForMetadataImport/${fieldValue[3]}_EN.xml"
-fileDestinationEnglish=$(echo "/opt/olympusat/xmlsForMetadataImport/"$cantemoItemTitle"_EN.xml")
-#fileDestinationExternal="/opt/olympusat/xmlsForMetadataImport/${fieldValue[3]}_EN.xml"
-fileDestinationExternal=$(echo "/opt/olympusat/xmlsForMetadataImport/"$cantemoItemTitle"_External.xml")
+    #fileDestination="/opt/olympusat/xmlsForMetadataImport/${fieldValue[3]}.xml"
+    fileDestination="/opt/olympusat/xmlsForMetadataImport/$cantemoItemTitle.xml"
+    #fileDestinationSpanish="/opt/olympusat/xmlsForMetadataImport/${fieldValue[3]}_ES.xml"
+    fileDestinationSpanish=$(echo "/opt/olympusat/xmlsForMetadataImport/"$cantemoItemTitle"_ES.xml")
+    #fileDestinationEnglish="/opt/olympusat/xmlsForMetadataImport/${fieldValue[3]}_EN.xml"
+    fileDestinationEnglish=$(echo "/opt/olympusat/xmlsForMetadataImport/"$cantemoItemTitle"_EN.xml")
+    #fileDestinationExternal="/opt/olympusat/xmlsForMetadataImport/${fieldValue[3]}_EN.xml"
+    fileDestinationExternal=$(echo "/opt/olympusat/xmlsForMetadataImport/"$cantemoItemTitle"_External.xml")
 
-# --------------------------------------------------
-# Print XML header
-echo "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>
+    # --------------------------------------------------
+    # Print XML header
+    echo "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>
 <MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\">
   <group>Olympusat</group>
     <timespan end=\"+INF\" start=\"-INF\">
@@ -206,195 +181,199 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>
          <name>title</name>
          <value>$cantemoItemTitle</value>
       </field>" > "$fileDestination"
-# --------------------------------------------------
+    # --------------------------------------------------
 
-# --------------------------------------------------
-# Choose what information from the CSV export file needed to be printed
-columnCounter=1
-while [ $columnCounter -le $columnCounts ];
-do
-    case "${fieldName[$columnCounter]}" in
+    # --------------------------------------------------
+    # Choose what information from the CSV export file needed to be printed
+    columnCounter=1
+    while [ $columnCounter -le $columnCounts ];
+    do
+        case "${fieldName[$columnCounter]}" in
 
-        "Genres")
-            fieldValue[$columnCounter]=$(convertToCamelCase ${fieldValue[$columnCounter]})
-            primaryGenre=$(echo "${fieldValue[$columnCounter]}" | awk -F "," '{print $1}')
-            secondaryGenres=$(echo "${fieldValue[$columnCounter]}" | cut -d "," -f2-$NF)
-            echo "      <field>
+            "Genres")
+                fieldValue[$columnCounter]=$(convertToCamelCase ${fieldValue[$columnCounter]})
+                primaryGenre=$(echo "${fieldValue[$columnCounter]}" | awk -F "," '{print $1}')
+                secondaryGenres=$(echo "${fieldValue[$columnCounter]}" | cut -d "," -f2-$NF)
+                echo "      <field>
          <name>oly_primaryGenre</name>
          <value>$primaryGenre</value>
       </field>" >> "$fileDestination"
-            columnCounter=$(($columnCounter + 1))
-            if [ "$secondaryGenres" != "" ];
-            then
-                createTags "$secondaryGenres" "oly_secondaryGenres" "$fileDestination"
-            fi
-        ;;
+                columnCounter=$(($columnCounter + 1))
+                if [ "$secondaryGenres" != "" ];
+                then
+                    createTags "$secondaryGenres" "oly_secondaryGenres" "$fileDestination"
+                fi
+            ;;
 
-        "oly_descriptionEs"|"oly_shortDescriptionEs"|"oly_socialDescriptionEs"|"oly_logLineEs")
-            echo "        <field>
+            "oly_descriptionEs"|"oly_shortDescriptionEs"|"oly_socialDescriptionEs"|"oly_logLineEs")
+                echo "        <field>
           <name>${fieldName[$columnCounter]}</name>
           <value>${fieldValue[$columnCounter]}</value>
         </field>" >> "$fileDestinationSpanish"
-            columnCounter=$(($columnCounter + 1))
-        ;;
+                columnCounter=$(($columnCounter + 1))
+            ;;
 
-        "oly_descriptionEn"|"oly_shortDescriptionEn"|"oly_socialDescriptionEn"|"oly_logLineEn")
-            echo "        <field>
+            "oly_descriptionEn"|"oly_shortDescriptionEn"|"oly_socialDescriptionEn"|"oly_logLineEn")
+                echo "        <field>
           <name>${fieldName[$columnCounter]}</name>
           <value>${fieldValue[$columnCounter]}</value>
         </field>" >> "$fileDestinationEnglish"
-            columnCounter=$(($columnCounter + 1))
-        ;;
+                columnCounter=$(($columnCounter + 1))
+            ;;
 
-        "oly_cast"|"oly_director"|"oly_producer"|"oly_tags")
-            createTags "${fieldValue[$columnCounter]}" "${fieldName[$columnCounter]}" "$fileDestination"
-            columnCounter=$(($columnCounter + 1))
-        ;;
-
-        "oly_contentType"|"oly_originalMpaaRating"|"oly_originalRtcRating"|"oly_originalRating"|"oly_countryOfOrigin"|"oly_closedCaptionLanguage"|"oly_originalLanguage")
-            fieldValue[$columnCounter]=$(convertToCamelCase ${fieldValue[$columnCounter]})
-            if [[ "${fieldName[$columnCounter]}" = "oly_countryOfOrigin" ]];
-            then
+            "oly_cast"|"oly_director"|"oly_producer"|"oly_tags")
                 createTags "${fieldValue[$columnCounter]}" "${fieldName[$columnCounter]}" "$fileDestination"
-            else
-                echo "      <field>
+                columnCounter=$(($columnCounter + 1))
+            ;;
+
+            "oly_contentType"|"oly_originalMpaaRating"|"oly_originalRtcRating"|"oly_originalRating"|"oly_countryOfOrigin"|"oly_closedCaptionLanguage"|"oly_originalLanguage")
+                fieldValue[$columnCounter]=$(convertToCamelCase ${fieldValue[$columnCounter]})
+                if [[ "${fieldName[$columnCounter]}" = "oly_countryOfOrigin" ]];
+                then
+                    createTags "${fieldValue[$columnCounter]}" "${fieldName[$columnCounter]}" "$fileDestination"
+                else
+                    echo "      <field>
          <name>${fieldName[$columnCounter]}</name>
          <value>${fieldValue[$columnCounter]}</value>
       </field>" >> "$fileDestination"
-            fi
-            columnCounter=$(($columnCounter + 1))
-        ;;
+                fi
+                columnCounter=$(($columnCounter + 1))
+            ;;
 
-        "oly_closedCaptionInfo-closedcaptionavailable")
-            if [[ "${fieldValue[$columnCounter]}" = "Yes" ]];
-            then
-                oly_closedCaptionInfoCC="closedcaptionavailable"
-                echo "      <field>
+            "oly_closedCaptionInfo-closedcaptionavailable")
+                if [[ "${fieldValue[$columnCounter]}" = "Yes" ]];
+                then
+                    oly_closedCaptionInfoCC="closedcaptionavailable"
+                    echo "      <field>
          <name>oly_closedCaptionInfo</name>
          <value>$oly_closedCaptionInfoCC</value>
       </field>" >> "$fileDestination"
-                columnCounter=$(($columnCounter + 1))
-            else
-                oly_closedCaptionInfoCC=""
-                echo "      <field>
+                    columnCounter=$(($columnCounter + 1))
+                else
+                    oly_closedCaptionInfoCC=""
+                    echo "      <field>
          <name>oly_closedCaptionInfo</name>
          <value>$oly_closedCaptionInfoCC</value>
       </field>" >> "$fileDestination"
-                columnCounter=$(($columnCounter + 1))
-            fi
-        ;;
+                    columnCounter=$(($columnCounter + 1))
+                fi
+            ;;
 
-        "oly_closedCaptionInfo-broadcastedontvwithcc")
-            if [[ "${fieldValue[$columnCounter]}" = "Yes" ]];
-            then
-                oly_closedCaptionInfoBC="broadcastedontvwithcc"
-                echo "      <field>
+            "oly_closedCaptionInfo-broadcastedontvwithcc")
+                if [[ "${fieldValue[$columnCounter]}" = "Yes" ]];
+                then
+                    oly_closedCaptionInfoBC="broadcastedontvwithcc"
+                    echo "      <field>
          <name>oly_closedCaptionInfo</name>
          <value>$oly_closedCaptionInfoBC</value>
       </field>" >> "$fileDestination"
-                columnCounter=$(($columnCounter + 1))
-            else
-                oly_closedCaptionInfoBC=""
-                echo "      <field>
+                    columnCounter=$(($columnCounter + 1))
+                else
+                    oly_closedCaptionInfoBC=""
+                    echo "      <field>
          <name>oly_closedCaptionInfo</name>
          <value>$oly_closedCaptionInfoBC</value>
       </field>" >> "$fileDestination"
-                columnCounter=$(($columnCounter + 1))
-            fi
-        ;;
+                    columnCounter=$(($columnCounter + 1))
+                fi
+            ;;
 
-        "oly_clipLink"|"oly_promoLink"|"oly_trailerLink")
-            echo "        <field>
+            "oly_clipLink"|"oly_promoLink"|"oly_trailerLink")
+                echo "        <field>
           <name>${fieldName[$columnCounter]}</name>
           <value>${fieldValue[$columnCounter]}</value>
         </field>" >> "$fileDestinationExternal"
-            columnCounter=$(($columnCounter + 1))
-        ;;
+                columnCounter=$(($columnCounter + 1))
+            ;;
 
-        "oly_rightslineContractId")
-            numberOfCharacters=$(echo "${fieldValue[$columnCounter]}" | wc -c)
-            if [[ $numberOfCharacters != 1 ]];
-            then
-                contractString="CA_"
-                missingCharacters=$((7 - $numberOfCharacters))
-                for (( k=1 ; k<=$missingCharacters ; k++ ));
-                do
-                    contractString="$contractString""0"
-                done
-                contractString="$contractString""${fieldValue[$columnCounter]}"
-                echo "      <field>
+            "oly_rightslineContractId")
+                numberOfCharacters=$(echo "${fieldValue[$columnCounter]}" | wc -c)
+                if [[ $numberOfCharacters != 1 ]];
+                then
+                    contractString="CA_"
+                    missingCharacters=$((7 - $numberOfCharacters))
+                    for (( k=1 ; k<=$missingCharacters ; k++ ));
+                    do
+                        contractString="$contractString""0"
+                    done
+                    contractString="$contractString""${fieldValue[$columnCounter]}"
+                    echo "      <field>
          <name>${fieldName[$columnCounter]}</name>
          <value>$contractString</value>
       </field>" >> "$fileDestination"
-                columnCounter=$(($columnCounter + 1))
-            else
-                echo "      <field>
+                    columnCounter=$(($columnCounter + 1))
+                else
+                    echo "      <field>
          <name>${fieldName[$columnCounter]}</name>
          <value>$contractString</value>
       </field>" >> "$fileDestination"
-                columnCounter=$(($columnCounter + 1))
-            fi
-        ;;
+                    columnCounter=$(($columnCounter + 1))
+                fi
+            ;;
 
-        *)
-            echo "      <field>
+            "oly_rightslineItemId")
+                columnCounter=$(($columnCounter + 1))
+            ;;
+
+            *)
+                echo "      <field>
          <name>${fieldName[$columnCounter]}</name>
          <value>${fieldValue[$columnCounter]}</value>
       </field>" >> "$fileDestination"
-            columnCounter=$(($columnCounter + 1))
-        ;;
+                columnCounter=$(($columnCounter + 1))
+            ;;
 
-    esac
-done
+        esac
+    done
 
-if [ -e "$fileDestinationExternal" ];
-then
-    echo "      <group>
+    if [ -e "$fileDestinationExternal" ];
+    then
+        echo "      <group>
         <name>External Resources</name>" >> "$fileDestination"
-    cat "$fileDestinationExternal" >> "$fileDestination"
-    echo "      </group>" >> "$fileDestination"
-    rm -f "$fileDestinationExternal"
-fi
-if [ -e "$fileDestinationSpanish" ];
-then
-    echo "      <group>
+        cat "$fileDestinationExternal" >> "$fileDestination"
+        echo "      </group>" >> "$fileDestination"
+        rm -f "$fileDestinationExternal"
+    fi
+    if [ -e "$fileDestinationSpanish" ];
+    then
+        echo "      <group>
         <name>Spanish Synopsis</name>" >> "$fileDestination"
-    cat "$fileDestinationSpanish" >> "$fileDestination"
-    echo "      </group>" >> "$fileDestination"
-    rm -f "$fileDestinationSpanish"
-fi
-if [ -e "$fileDestinationEnglish" ];
-then
-    echo "      <group>
+        cat "$fileDestinationSpanish" >> "$fileDestination"
+        echo "      </group>" >> "$fileDestination"
+        rm -f "$fileDestinationSpanish"
+    fi
+    if [ -e "$fileDestinationEnglish" ];
+    then
+        echo "      <group>
         <name>English Synopsis</name>" >> "$fileDestination"
-    cat "$fileDestinationEnglish" >> "$fileDestination"
-    echo "      </group>" >> "$fileDestination"
-    rm -f "$fileDestinationEnglish"
-fi
-# --------------------------------------------------
+        cat "$fileDestinationEnglish" >> "$fileDestination"
+        echo "      </group>" >> "$fileDestination"
+        rm -f "$fileDestinationEnglish"
+    fi
+    # --------------------------------------------------
 
-# --------------------------------------------------
-# Print XML footer
-echo "    </timespan>
+    # --------------------------------------------------
+    # Print XML footer
+    echo "    </timespan>
 </MetadataDocument>" >> "$fileDestination"
-# --------------------------------------------------
+    # --------------------------------------------------
 
-sleep 5
+    sleep 5
 
-# ----------------------------------------------------
-# API Call to Update Metadata
+    # ----------------------------------------------------
+    # API Call to Update Metadata
 
-url="http://10.1.1.34:8080/API/import/sidecar/$cantemoItemId?sidecar=/opt/olympusat/xmlsForMetadataImport/$cantemoItemTitle.xml"
-#echo "Item ID - $cantemoItemId"
-#echo "Item Title - $cantemoItemTitle"
-#echo "URL - $url"
+    url="http://10.1.1.34:8080/API/import/sidecar/$cantemoItemId?sidecar=/opt/olympusat/xmlsForMetadataImport/$cantemoItemTitle.xml"
+    #echo "Item ID - $cantemoItemId"
+    #echo "Item Title - $cantemoItemTitle"
+    #echo "URL - $url"
 
-curl --location --request POST $url --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0'
+    curl --location --request POST $url --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0'
 
-sleep 2
+    sleep 2
 
-printf "\nMoving xml to zCompleted folder"
-mv "$fileDestination" "/opt/olympusat/xmlsForMetadataImport/zCompleted/"
+    echo "Moving xml to zCompleted folder"
+    mv "$fileDestination" "/opt/olympusat/xmlsForMetadataImport/zCompleted/"
 
 fi
 
