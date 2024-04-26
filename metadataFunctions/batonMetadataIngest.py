@@ -20,3 +20,7 @@ tree = ET.parse('/mnt/c/Users/kkanjanapitak/Desktop/Repositories/atsCodes/sample
 root = tree.getroot()
 
 print(root.tag)
+print(root.attrib)
+
+for child in root:
+    print(child.tag, child.attrib)
