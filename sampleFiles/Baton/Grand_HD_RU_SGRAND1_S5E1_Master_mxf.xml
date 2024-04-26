@@ -1,0 +1,129 @@
+<taskReport encoding="utf-8" lastUpdate="1712844828.73" lastUpdate_ISO="2024-04-11T10:13:48.726000" updatedBy="">
+
+  <toplevelinfo Error="1" Filepath="C:\Volumes\creative\CS5\FTP New Content\Contract\Solpin\Contract\Grand\S5\Master\Grand_HD_RU_SGRAND1_S5E1_Master.mxf" Format="MXF" Neighbours="0" Summary="File has 1 errors, 0 warnings" Warning="0" />
+
+  <hierarchy value="(SYS)(SYS Level=-1- Name=-Source Package- ID=-2- IDName=-TrackID-/)(SYS Level=-2- Name=-MPEG2 Video- ID=-512- parent=-2-/)(SYS Level=-2- Name=-AES3 Audio- ID=-768- parent=-2-/)(SYS Level=-2- Name=-AES3 Audio- ID=-1024- parent=-2-/)(/SYS)" />
+
+  <streamnode EncodedDuration="-1" Error="0" StartTimecode="0" Warning="0" id="0" name="MXF" parent="0">
+    <errors>
+      <customchecks>
+        <systemencodingchecks name="System Level" sectionName="Common" />
+        <MXFChecks name="MXF" sectionName="Common" />
+      </customchecks>
+      <conformancechecks />
+    </errors>
+    <info>
+      <field name="AudioTracks">
+        <ActualTracks value="2" />
+      </field>
+      <field name="VideoTracks" value="1" />
+      <field name="DolbyETracks" value="0" />
+    </info>
+    <summary />
+  </streamnode>
+
+  <streamnode EncodedDuration="1410480" Error="1" StartTimecode="0" TimecodeType="Real" Warning="0" id="512" name="MPEG2 Video" parent="2">
+    <errors>
+      <customchecks>
+        <genericvideochecks name="Video Description" sectionName="Common">
+          <error description="The format of the video is Component. Specified criteria: Report as Serious if 'Video Format' is not in NTSC,HD,4K" id="VD.0012.01" item="Video Format" location="Frame[0]" rap_sequence_num="0" severity="Serious" smptetimecode="00:00:00:00" subitem="Video Format" synopsis="The video format does not match the specified criteria." timecode="00:00:00:000">
+            <Params>
+              <Param Name="VideoFormat" Value="Component" />
+            </Params>
+          </error>
+        </genericvideochecks>
+        <decodedvideochecks name="Video Quality" sectionName="Common" />
+        <MPEG2Videochecks name="MPEG2 Video" sectionName="Common" />
+        <burntinsubtitlechecks name="Burnt-in Subtitles" sectionName="Common" />
+      </customchecks>
+      <conformancechecks />
+    </errors>
+    <info>
+      <field name="Resolution" timecode="00:00:00:000" value="1920x1080" />
+      <field name="Frame Rate" timecode="00:00:00:000" value="25" />
+      <field name="Display Aspect Ratio" timecode="00:00:00:000" value="16:9" />
+      <field name="Video Format" timecode="00:00:00:000" value="Component" />
+      <field name="Profile" timecode="00:00:00:000" value="4:2:2" />
+      <field name="Level" timecode="00:00:00:000" value="High" />
+      <field name="progressive_sequence" timecode="00:00:00:000" value="0" />
+      <field name="top_field_first" timecode="00:00:00:000" value="1" />
+      <field name="Duration">
+        <Duration value="00:23:30:480" />
+        <DurationFrames value="35262" />
+        <DurationSMPTE value="00:23:30:12" />
+      </field>
+      <field name="Average Bitrate" timecode="00:23:30:440" value="50.00" />
+      <field name="BitrateMode" value="VBR" />
+      <field name="Instantaneous Bitrate">
+        <max value="57.11" />
+        <min value="43.14" />
+      </field>
+      <field name="Resolution Change" value="false" />
+      <field name="Video Format Change" value="false" />
+    </info>
+    <summary />
+  </streamnode>
+
+  <streamnode EncodedDuration="1410480" Error="0" StartTimecode="0" TimecodeType="Real" Warning="0" id="768" name="AES3 Audio" parent="2">
+    <errors>
+      <customchecks>
+        <genericaudiochecks name="Audio Description" sectionName="Common" />
+        <decodedaudiochecks name="Audio Quality" sectionName="Common" />
+      </customchecks>
+      <conformancechecks />
+    </errors>
+    <info>
+      <field internal="yes" name="Duration_msec" value="00:23:30:480" />
+      <field name="Average Loudness">
+        <ProgramLoudness>
+          <Speech value="46" />
+          <end value="00:23:30:480" />
+          <level value="-26.2" />
+          <start value="00:00:00:000" />
+        </ProgramLoudness>
+      </field>
+      <field name="TruePeakLevelITU2">
+        <TruePeakStruct>
+          <channel value="0" />
+          <level value="-8.3" />
+          <timecode value="00:23:10:592" />
+        </TruePeakStruct>
+      </field>
+      <field name="High Frequency Noise" value="Not Present" />
+      <field desc="Can't be determined" name="Stereo Pair Detection" />
+    </info>
+    <summary />
+  </streamnode>
+
+  <streamnode EncodedDuration="1410480" Error="0" StartTimecode="0" TimecodeType="Real" Warning="0" id="1024" name="AES3 Audio" parent="2">
+    <errors>
+      <customchecks>
+        <genericaudiochecks name="Audio Description" sectionName="Common" />
+        <decodedaudiochecks name="Audio Quality" sectionName="Common" />
+      </customchecks>
+      <conformancechecks />
+    </errors>
+    <info>
+      <field internal="yes" name="Duration_msec" value="00:23:30:480" />
+      <field name="Average Loudness">
+        <ProgramLoudness>
+          <Speech value="46" />
+          <end value="00:23:30:480" />
+          <level value="-26.3" />
+          <start value="00:00:00:000" />
+        </ProgramLoudness>
+      </field>
+      <field name="TruePeakLevelITU2">
+        <TruePeakStruct>
+          <channel value="0" />
+          <level value="-8.4" />
+          <timecode value="00:23:15:541" />
+        </TruePeakStruct>
+      </field>
+      <field name="High Frequency Noise" value="Not Present" />
+      <field desc="Can't be determined" name="Stereo Pair Detection" />
+    </info>
+    <summary />
+  </streamnode>
+
+</taskReport>
