@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:vs="http://xml.vidispine.com/schema/vidispine">
+    <vs:vsXSLTVersion>2</vs:vsXSLTVersion>
+    <xsl:template match="/">
+        <root>
+            <job>
+                <xsl:value-of select="vs:ExportInformationDocument/vs:job/vs:jobId/text()"/>
+            </job>
+            <custom>
+                <xsl:for-each select="vs:ExportInformationDocument/vs:job/vs:data[vs:key='custom']/vs:value/tokenize(.,',')">
+                    <data>
+                        <xsl:value-of select="."/>
+                    </data>
+                </xsl:for-each>
+            </custom>
+        </root>
+    </xsl:template>
+</xsl:stylesheet>
