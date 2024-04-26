@@ -17,18 +17,17 @@ import requests
 import xml.etree.ElementTree as ET
 #------------------------------
 
-cantemoItemId = sys.argv[1]
-# cantemoItemId = os.environ.get("portal_itemId")
-
-urlGetSourceFile = (f"http://10.1.1.34:8080/API/item/{cantemoItemId}/uri?tag=original")
-httpApiResponse = requests.get(urlGetSourceFile)
-sourceFileLocation = http
-justFileName=os.path.basename(sourceFileLocation)
-
 tree = ET.parse('/mnt/c/Users/kkanjanapitak/Desktop/Repositories/atsCodes/sampleFiles/Baton/Grand_HD_RU_SGRAND1_S5E1_Master_mxf.xml')
 root = tree.getroot()
 
+# print(root.tag)
+# print(root.attrib)
+
+# for child in root:
+#     print(child.tag, child.attrib)
+
 for errorResults in root.iter('error'):
+#     print(errorResults.attrib)
     errorMessage = errorResults.get('synopsis')
     errorDescription = errorResults.get('description')
     errorTimecode = errorResults.get('timecode')

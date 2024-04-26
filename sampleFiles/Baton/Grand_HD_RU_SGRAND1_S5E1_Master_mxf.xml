@@ -99,6 +99,7 @@
     <errors>
       <customchecks>
         <genericaudiochecks name="Audio Description" sectionName="Common" />
+        <error description="Test for recursive read from XML file" id="VD.0012.01" item="Video Format" location="Frame[0]" rap_sequence_num="0" severity="Serious" smptetimecode="00:00:00:00" subitem="Video Format" synopsis="Another error down in the XML file" timecode="01:02:03:456"></error>
         <decodedaudiochecks name="Audio Quality" sectionName="Common" />
       </customchecks>
       <conformancechecks />
