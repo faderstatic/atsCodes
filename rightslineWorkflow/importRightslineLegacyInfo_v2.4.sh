@@ -222,7 +222,7 @@ then
                 columnCounter=$(($columnCounter + 1))
             ;;
 
-            "oly_cast"|"oly_director"|"oly_producer"|"oly_tags")
+            "oly_cast"|"oly_director"|"oly_producer"|"oly_tags"|"oly_productionCompany")
                 createTags "${fieldValue[$columnCounter]}" "${fieldName[$columnCounter]}" "$fileDestination"
                 columnCounter=$(($columnCounter + 1))
             ;;
