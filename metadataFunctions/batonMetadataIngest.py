@@ -15,7 +15,7 @@ import subprocess
 import xml.etree.ElementTree as ET
 #------------------------------
 
-tree = ET.parse('C:\Users\kkanjanapitak\Documents\atsCodes\sampleFiles\Baton\Grand_HD_RU_SGRAND1_S5E1_Master_mxf.xml')
+tree = ET.parse('C:\Users\kkanjanapitak\Desktop\Repositories\atsCodes\sampleFiles\Baton\Grand_HD_RU_SGRAND1_S5E1_Master_mxf.xml')
 root = tree.getroot()
 
 print(root.tag)
