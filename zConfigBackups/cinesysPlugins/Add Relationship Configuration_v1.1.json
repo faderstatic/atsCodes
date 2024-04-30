@@ -1,0 +1,42 @@
+{
+    "default_type": "episode",
+    "populate_search": true,
+    "relationship_types": {
+        "series": {
+            "mediaType": "none",
+            "title": "Series"
+        },
+        "season": {
+            "mediaType": "none",
+            "title": "Season"
+        },
+        "episode": {
+            "mediaType": "video",
+            "title": "Episode"
+        },
+        "trailer": {
+            "mediaType": "video",
+            "title": "Trailer"
+        },
+        "forDistribution": {
+            "mediaType": "image",
+            "title": "For Distribution"
+        },
+        "forDistributionCaption": {
+            "mediaType": "document",
+            "title": "For Distribution Caption"
+        },
+        "forDubbingAudio": {
+            "mediaType": "audio",
+            "title": "For Dubbing-Audio"
+        },
+        "forDubbingScript": {
+            "mediaType": "pdf",
+            "title": "For Dubbing-Script"
+        },
+        "forDubbingSubtitle": {
+            "mediaType": "document",
+            "title": "For Dubbing-Subtitle"
+        }
+    }
+}

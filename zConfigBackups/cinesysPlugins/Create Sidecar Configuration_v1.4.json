@@ -1,0 +1,266 @@
+{
+    "enable_item_gear": true,
+    "metadata_groups": [
+        "Olympusat"
+    ],
+    "sidecar_type_field": "Distribution/oly_distributionTo",
+    "sidecar_types": {
+        "amagi": {
+            "title": "Amagi",
+            "format": "csv",
+            "file_name": "assets<date>.csv",
+            "date_format": "yyyymmddHHMMss",
+            "shape_tag": "metadata-amagi",
+            "fields": {
+                "external_id": {
+                    "title": "External ID",
+                    "field": "title"
+                },
+                "title": {
+                    "title": "Title",
+                    "field": "oly_primaryMetadataLanguage",
+                    "map": {
+                        "english": {
+                            "field": "oly_titleEn"
+                        },
+                        "spanish": {
+                            "field": "oly_titleEs"
+                        }
+                    }
+                },
+                "description": {
+                    "title": "Description",
+                    "field": "oly_primaryMetadataLanguage",
+                    "map": {
+                        "english": {
+                            "field": "English Synopsis/oly_logLineEn"
+                        },
+                        "spanish": {
+                            "field": "Spanish Synopsis/oly_logLineEs"
+                        }
+                    }
+                },
+                "series_name": {
+                    "title": "Series Name",
+                    "field": "_related/series/title"
+                },
+                "season_number": {
+                    "title": "Season Number",
+                    "field": "oly_seasonNumber"
+                },
+                "episode_number": {
+                    "title": "Episode Number",
+                    "field": "oly_episodeNumber"
+                },
+                "keywords": {
+                    "title": "Keywords",
+                    "field": "oly_primaryGenre,oly_secondaryGenres,oly_cast,oly_director,oly_producer,oly_artist",
+                    "delimiter": ","
+                },
+                "categories": {
+                    "title": "Categories",
+                    "field": "oly_primaryGenre,oly_secondaryGenres",
+                    "delimiter": ","
+                },
+                "video_filename": {
+                    "title": "Video Filename",
+                    "field": "_export/amagi/broadcast-amagi:baseName",
+                    "required": true
+                },
+                "artwork_filename": {
+                    "title": "Artwork Filename",
+                    "field": "_export/amagi/artwork_image:baseName"
+                },
+                "poster_filename": {
+                    "title": "Poster Filename",
+                    "field": "_export/amagi/poster_image:baseName"
+                },
+                "series_artwork_filename": {
+                    "title": "Series Artwork Filename",
+                    "field": "_export/amagi/series_artwork_image:baseName"
+                },
+                "closed_caption_filename": {
+                    "title": "Closed Caption Filename",
+                    "field": "_export/amagi/closed_caption_file:baseName"
+                },
+                "ad_markers_subclips": {
+                    "title": "Cut Points-From Subclips",
+                    "field": "_subclip/start",
+                    "delimiter": ","
+                },
+                "ad_markers_metadata": {
+                    "title": "Cut Points-From Metadata",
+                    "field": "oly_adMarkers",
+                    "delimiter": ","
+                },
+                "is_ad": {
+                    "title": "Is Ad?",
+                    "field": "Distribution/oly_distributionFlags",
+                    "map": {
+                        "ad": {
+                            "value": "yes"
+                        }
+                    },
+                    "default_value": "no",
+                    "required": true
+                },
+                "is_promo": {
+                    "title": "Is Promo?",
+                    "field": "Distribution/oly_distributionFlags",
+                    "map": {
+                        "promo": {
+                            "value": "yes"
+                        }
+                    },
+                    "default_value": "no",
+                    "required": true
+                },
+                "burn_in_captions": {
+                    "title": "Burn-in Captions?",
+                    "field": "Distribution/oly_distributionFlags",
+                    "map": {
+                        "burnincaption": {
+                            "value": "yes"
+                        }
+                    },
+                    "default_value": "no",
+                    "required": true
+                },
+                "type": {
+                    "title": "Type",
+                    "field": "oly_contentType",
+                    "map": {
+                        "movie": {
+                            "value": "Feature"
+                        },
+                        "episode": {
+                            "value": "Episode"
+                        }
+                    },
+                    "required": true
+                },
+                "release_year": {
+                    "title": "Release Year",
+                    "field": "oly_productionYear"
+                },
+                "language": {
+                    "title": "Language",
+                    "field": "oly_primaryMetadataLanguage"
+                },
+                "rating": {
+                    "title": "Rating",
+                    "field": "oly_originalRating,oly_originalMpaaRating",
+                    "single_value": true
+                },
+                "start_date": {
+                    "title": "Start Date",
+                    "field": "oly_termStartDate",
+                    "date_format": "mm/dd/yyyy",
+                    "required": true
+                },
+                "end_date": {
+                    "title": "End Date",
+                    "field": "oly_termEndDate",
+                    "date_format": "mm/dd/yyyy",
+                    "required": true
+                },
+                "alternative_title": {
+                    "title": "Alternative Title",
+                    "field": "oly_originalTitle"
+                },
+                "release_date": {
+                    "title": "Release Date",
+                    "field": "oly_productionYear",
+                    "date_format": "UTC:01/01/yyyy"
+                }
+            }
+        },
+        "plutoTv": {
+            "title": "Pluto TV",
+            "format": "csv",
+            "file_name": "assets<date>.csv",
+            "date_format": "yyyymmddHHMMss",
+            "shape_tag": "metadata-plutoTv",
+            "fields": {
+                "guid": {
+                    "title": "GUID or custom code",
+                    "field": "oly_rightslineItemId"
+                },
+                "file_name": {
+                    "title": "Film Name",
+                    "field": "oly_primaryMetadataLanguage",
+                    "map": {
+                        "english": {
+                            "field": "oly_titleEn"
+                        },
+                        "spanish": {
+                            "field": "oly_titleEs"
+                        }
+                    }
+                },
+                "ad_breakpoints": {
+                    "title": "Ad Breakpoints",
+                    "field": "_subclip/start",
+                    "delimiter": ","
+                },
+                "content_rating": {
+                    "title": "Content Rating",
+                    "field": "oly_originalRating,oly_originalMpaaRating",
+                    "single_value": true
+                },
+                "metadata_language": {
+                    "title": "Metadata Language",
+                    "field": "oly_primaryMetadataLanguage",
+                    "map": {
+                        "english": {
+                            "value": "en"
+                        },
+                        "spanish": {
+                            "value": "es"
+                        }
+                    }
+                },
+                "film_trailer_file_name": {
+                    "title": "Film Trailer File Name",
+                    "field": "_export/amagi/original:baseName",
+                    "required": true
+                },
+                "video_file_name": {
+                    "title": "Video File Name",
+                    "field": "_shape/fileName"
+                },
+                "dubbed_language": {
+                    "title": "Dubbed Language",
+                    "field": "oly_forDubbing",
+                    "map": {
+                        "forenglishdubbing": {
+                            "value": "en"
+                        },
+                        "forspanishdubbing": {
+                            "value": "es"
+                        }
+                    }
+                },
+                "closed_caption_requirements": {
+                    "title": "Closed Caption Requirements",
+                    "field": "oly_closedCaptionInfo",
+                    "map": {
+                        "closedcaptionavailable": {
+                            "value": "t"
+                        }
+                    },
+                    "default_value": "f",
+                    "required": true
+                },
+                "tags": {
+                    "title": "Tags",
+                    "field": "oly_tags"
+                },
+                "file_screenshot_16x9": {
+                    "title": "Film Screenshot 16x9",
+                    "field": "_export/amagi/poster_image:name"
+                }
+            }
+        }
+    }
+}

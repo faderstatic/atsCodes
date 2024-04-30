@@ -1,0 +1,8 @@
+{
+    "host": "http://cantemo.olympusat.com",
+    "metadata_groups": [
+        "Olympusat"
+    ],
+    "presets": [],
+    "timed_metadata_fields": []
+}

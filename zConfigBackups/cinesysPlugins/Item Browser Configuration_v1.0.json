@@ -1,0 +1,28 @@
+{
+    "metadata": [
+        {
+            "field": "oly_titleEn",
+            "title": "English Title",
+            "width": "1fr"
+        },
+        {
+            "field": "oly_originalTitle",
+            "title": "Original Title",
+            "width": "1fr"
+        },
+        {
+            "field": "oly_contentType",
+            "title": "Content Type"
+        },
+        {
+            "field": "oly_versionType",
+            "title": "Version Type"
+        }
+    ],
+    "storage_ids": [
+        "OLY-11",
+        "OLY-16",
+        "OLY-21",
+        "OLY-8"
+    ]
+}

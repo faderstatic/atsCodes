@@ -1,0 +1,84 @@
+{
+    "conform_contract_id_field": "oly_rightslineContractId",
+    "conform_copy_fields": [
+        "oly_titleEn",
+        "oly_originalTitle",
+        "oly_titleEs",
+        "oly_licensor",
+        "oly_contentType",
+        "oly_contentFlags",
+        "oly_originalLanguage",
+        "oly_termStartDate",
+        "oly_termEndDate",
+        "oly_exclusivityRights",
+        "oly_mediaRights",
+        "oly_territoryRights",
+        "oly_languageRights",
+        "oly_networkRights",
+        "oly_audioLanguages",
+        "oly_closedCaptionInfo",
+        "oly_closedCaptionLanguage",
+        "oly_seriesName",
+        "oly_totalSeasonsBySeries",
+        "oly_totalEpisodesBySeries",
+        "oly_seasonNumber",
+        "oly_totalEpisodesBySeason",
+        "oly_episodeNumber",
+        "oly_primaryGenre",
+        "oly_secondaryGenres",
+        "oly_tags",
+        "oly_productionYear",
+        "oly_countryOfOrigin",
+        "oly_originalRating",
+        "oly_originalMpaaRating",
+        "oly_originalRtcRating",
+        "oly_reasonForOriginalRating",
+        "oly_productionCompany",
+        "oly_cast",
+        "oly_director",
+        "oly_producer",
+        "oly_artist",
+        "oly_recordLabel",
+        "oly_metadataSource",
+        "oly_externalResources",
+        "English Synopsis/oly_descriptionEn",
+        "English Synopsis/oly_shortDescriptionEn",
+        "English Synopsis/oly_logLineEn",
+        "Spanish Synopsis/oly_descriptionEs",
+        "Spanish Synopsis/oly_shortDescriptionEs",
+        "Spanish Synopsis/oly_logLineEs",
+        "oly_primaryNetwork",
+        "oly_secondaryNetworks"
+    ],
+    "conform_item_id_field": "oly_rightslineItemId",
+    "conform_schema": "Olympusat",
+    "conform_set_fields": {
+        "oly_versionType": "conformFile"
+    },
+    "conform_copy_relationships": [
+        "series",
+        "season",
+        "episode",
+        "trailer",
+        "forDistribution",
+        "forDistributionCaption"
+    ],
+    "distribution_group": "Distribution",
+    "distribution_status_field": "oly_distributionStatus",
+    "distribution_date_field": "oly_distributionDate",
+    "distribution_user_field": "oly_distributionBy",
+    "distribution_to_field": "oly_distributionTo",
+    "metadata_groups": [
+        "Olympusat"
+    ],
+    "license_end_date_field": "oly_termEndDate",
+    "workflows": {
+        "amagi": {
+            "transcode_profile": "Broadcast-Amagi",
+            "rights": {
+                "oly_versionType": "/conformFile|conformFile-spanish|conformFile-english|censoredFile|censoredFile-spanish|censoredFile-english/",
+                "oly_mediaRights": "/fast|payTv/"
+            }
+        }
+    }
+}

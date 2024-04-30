@@ -1,0 +1,18 @@
+{
+    "job_inputs": {
+        "CS In Point": "",
+        "CS Out Point": "",
+        "CS Series Name": "",
+        "olyTest": "oly_rightslineItemId",
+        "Priority": "oly_vantagePriority",
+        "File Name (output)": "oly_fileNameOutput",
+        "Path (AFD VANC)": "oly_pathAfdVanc",
+        "ID (Distribution)": "oly_van_idDistribution"
+    },
+    "job_outputs": [
+        "ProResLT",
+        "h264",
+        "Broadcast-Amagi",
+        "Broadcast-PlutoTV"
+    ]
+}

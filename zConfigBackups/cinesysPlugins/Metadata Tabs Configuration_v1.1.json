@@ -1,0 +1,166 @@
+{
+    "tabs": [
+        {
+            "name": "Rights Info",
+            "first_field_id": "oly_titleEn",
+            "tab_style": "color:#ffffff; background:#2986cc",
+            "group": "Olympusat"
+        },
+        {
+            "name": "Content Info",
+            "first_field_id": "oly_seriesName",
+            "extra_field_ids": [],
+            "tab_style": "color:#ffffff; background:#ce7e00",
+            "group": "Olympusat",
+            "subgroups": [
+                "English Synopsis",
+                "Spanish Synopsis"
+            ]
+        },
+        {
+            "name": "QC-Content Processing",
+            "first_field_id": "portal_mf294582",
+            "extra_field_ids": [],
+            "tab_style": "color:#ffffff; background:#8fce00",
+            "group": "Olympusat",
+            "subgroups": [
+                "Original Content",
+                "Final Content"
+            ]
+        },
+        {
+            "name": "Dubbing",
+            "first_field_id": "oly_forDubbing",
+            "extra_field_ids": [],
+            "tab_style": "color:#ffffff; background:#213252",
+            "group": "Olympusat"
+        },
+        {
+            "name": "Creative",
+            "first_field_id": "oly_creativeStatus",
+            "extra_field_ids": [],
+            "tab_style": "color:#ffffff; background:#5b5b5b",
+            "group": "Olympusat"
+        },
+        {
+            "name": "Graphics",
+            "first_field_id": "oly_graphicsStatus",
+            "extra_field_ids": [],
+            "tab_style": "color:#ffffff; background:#674ea7",
+            "group": "Olympusat"
+        },
+        {
+            "name": "Distribution",
+            "first_field_id": "oly_primaryMetadataLanguage",
+            "extra_field_ids": [],
+            "tab_style": "color:#ffffff; background:#6aa84f",
+            "group": "Olympusat",
+            "subgroups": [
+                "Distribution"
+            ]
+        },
+        {
+            "name": "Programming",
+            "first_field_id": "oly_programmingPriority",
+            "extra_field_ids": [],
+            "tab_style": "color:#ffffff; background:#e06666",
+            "group": "Olympusat"
+        },
+        {
+            "name": "Accounting",
+            "first_field_id": "oly_chainOfTitle",
+            "extra_field_ids": [],
+            "tab_style": "color:#ffffff; background:#134f5c",
+            "group": "Olympusat"
+        },
+        {
+            "name": "Archive",
+            "first_field_id": "oly_archiveStatusAWS",
+            "extra_field_ids": [],
+            "tab_style": "color:#000000; background:#f1c232",
+            "group": "Olympusat"
+        },
+        {
+            "name": "Admin",
+            "first_field_id": "cs_in_point",
+            "extra_field_ids": [],
+            "tab_style": "color:#000000; background:#f44336",
+            "group": "Olympusat"
+        },
+        {
+            "name": "Title Info",
+            "first_field_id": "oly_titleEn",
+            "tab_style": "color:#ffffff; background:#2986cc",
+            "group": "Client Owned Content"
+        },
+        {
+            "name": "QC-Content Processing",
+            "first_field_id": "portal_mf294582",
+            "extra_field_ids": [],
+            "tab_style": "color:#ffffff; background:#8fce00",
+            "group": "Client Owned Content",
+            "subgroups": [
+                "Client Owned Original Content",
+                "Client Owned Final Content"
+            ]
+        },
+        {
+            "name": "Dubbing",
+            "first_field_id": "oly_dubbingPriority",
+            "tab_style": "color:#ffffff; background:#213252",
+            "group": "Client Owned Content"
+        },
+        {
+            "name": "Distribution",
+            "first_field_id": "portal_mf353093",
+            "extra_field_ids": [],
+            "tab_style": "color:#ffffff; background:#6aa84f",
+            "group": "Client Owned Content",
+            "subgroups": [
+                "Client Owned Distribution"
+            ]
+        },
+        {
+            "name": "Demo Only Tab 1 - Subgroups",
+            "first_field_id": "portal_mf971482",
+            "tab_style": "color:#ffffff; background:#2986cc",
+            "group": "Demo"
+        },
+        {
+            "name": "Demo Only Tab 2 - Subgroups",
+            "first_field_id": "portal_mf802179",
+            "tab_style": "color:#ffffff; background:#6aa84f",
+            "group": "Demo",
+            "subgroups": [
+                "Person"
+            ]
+        },
+        {
+            "name": "Demo Only Tab 3 - Subgroups",
+            "first_field_id": "portal_mf524601",
+            "tab_style": "color:#ffffff; background:#134f5c",
+            "group": "Demo",
+            "subgroups": [
+                "Broadcast Date"
+            ]
+        },
+        {
+            "name": "Demo Only Tab 4 - Subgroups",
+            "first_field_id": "",
+            "tab_style": "color:#ffffff; background:#134f5c",
+            "group": "Demo",
+            "subgroups": [
+                "English Metadata",
+                "Spanish Metadata"
+            ]
+        },
+        {
+            "name": "Demo Only Tab 1 - Subgroups",
+            "first_field_id": "portal_mf912596",
+            "tab_style": "color:#ffffff; background:#2986cc",
+            "group": "Demo"
+        }
+    ],
+    "all_tab_style": "",
+    "tabless_field_ids": []
+}

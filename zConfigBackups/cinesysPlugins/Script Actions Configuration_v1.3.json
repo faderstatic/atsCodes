@@ -1,0 +1,74 @@
+{
+    "item": [
+        {
+            "label": "Mark as Approved",
+            "name": "cp_mark_as_approved",
+            "role": "olympusat_cpMarkAsApproved",
+            "script": "/opt/cantemo/portal/portal/plugins/rulesengine3/shellscripts/call_qcWorkflow-contentProcessingQCStatus-approved.sh"
+        },
+        {
+            "label": "Legacy-Mark as Approved",
+            "name": "cp_mark_as_approved_legacy",
+            "role": "olympusat_cpMarkAsApprovedLegacy",
+            "script": "/opt/cantemo/portal/portal/plugins/rulesengine3/shellscripts/call_qcWorkflow-contentProcessingQCStatus-approved-legacyApproval.sh"
+        },
+        {
+            "label": "Mark as Rejected",
+            "name": "cp_mark_as_rejected",
+            "role": "olympusat_cpMarkAsRejected",
+            "script": "/opt/cantemo/portal/portal/plugins/rulesengine3/shellscripts/call_qcWorkflow-contentProcessingQCStatus-rejected.sh"
+        },
+        {
+            "label": "RTC Mexico-Mark as Pending",
+            "name": "rtc_mark_as_pending",
+            "role": "olympusat_rtcMarkAsPending",
+            "script": "/opt/cantemo/portal/portal/plugins/rulesengine3/shellscripts/call_qcWorkflow-rtcMexicoQCStatus-pending_v1.1.sh"
+        },
+        {
+            "label": "RTC Mexico-Mark as Approved",
+            "name": "rtc_mark_as_approved",
+            "role": "olympusat_rtcMarkAsApproved",
+            "script": "/opt/cantemo/portal/portal/plugins/rulesengine3/shellscripts/call_qcWorkflow-rtcMexicoQCStatus-approved_v1.1.sh"
+        },
+        {
+            "label": "RTC Mexico-Mark as Rejected",
+            "name": "rtc_mark_as_rejected",
+            "role": "olympusat_rtcMarkAsRejected",
+            "script": "/opt/cantemo/portal/portal/plugins/rulesengine3/shellscripts/call_qcWorkflow-rtcMexicoQCStatus-rejected_v1.1.sh"
+        },
+        {
+            "label": "Import Rightsline Legacy Info",
+            "name": "import_rightsline_legacy_info",
+            "role": "olympusat_importRightslineLegacyInfo",
+            "script": "/opt/cantemo/portal/portal/plugins/rulesengine3/shellscripts/call_importRightslineLegacyInfo.sh"
+        },
+        {
+            "label": "Glacier Archive",
+            "name": "glacier_archive",
+            "role": "olympusat_glacierArchive",
+            "script": "/opt/cantemo/portal/portal/plugins/rulesengine3/shellscripts/glacierArchive.sh"
+        },
+        {
+            "label": "Glacier Restore",
+            "name": "glacier_restore",
+            "role": "olympusat_glacierRestore",
+            "script": "/opt/cantemo/portal/portal/plugins/rulesengine3/shellscripts/glacierRestore.sh"
+        },
+        {
+            "label": "zAdmin-Glacier Delete",
+            "name": "glacier_delete",
+            "role": "olympusat_glacierDelete",
+            "script": "/opt/cantemo/portal/portal/plugins/rulesengine3/shellscripts/glacierDelete.sh"
+        },
+        {
+            "args": [
+                "--test_arg",
+                "test_value"
+            ],
+            "label": "zExample Action with Args",
+            "name": "zExampleActionWithArgs",
+            "role": "bar_role",
+            "script": "cs_script_actions/scripts/test_script2.py"
+        }
+    ]
+}

@@ -1,0 +1,81 @@
+{
+    "styles": [
+        {
+            "cardBorder": {
+                "color": "blue",
+                "width": "4px"
+            },
+            "query": "*oly_readyForAirDate*:[* TO now+5d]"
+        },
+        {
+            "query": "*oly_versionType*:\"originalFile\" AND *oly_originalContentQCStatus*:\"pending\"",
+            "thumbnailBorder": {
+                "color": "#E69138",
+                "width": "4px"
+            }
+        },
+        {
+            "query": "*oly_versionType*:\"originalFile\" AND *oly_originalContentQCStatus*:\"approved\" AND *is_online*:\"true\"",
+            "thumbnailBorder": {
+                "color": "#38761D",
+                "width": "4px"
+            }
+        },
+        {
+            "query": "*oly_versionType*:\"originalFile\" AND *oly_originalContentQCStatus*:*rejected*",
+            "thumbnailBorder": {
+                "color": "#CC0000",
+                "width": "4px"
+            }
+        },
+        {
+            "query": "*oly_versionType*:\"originalFile\" AND *oly_originalContentQCStatus*:\"approved\" AND *portal_archive_status*:\"Archived\"",
+            "thumbnailBorder": {
+                "color": "#351C75",
+                "width": "4px"
+            }
+        },
+        {
+            "cardBorder": {
+                "color": "#FFD966",
+                "width": "4px"
+            },
+            "query": "*oly_versionType*:\"originalFile\" AND ((!_exists_:*oly_licensor*) OR (!_exists_:*oly_rightslineContractId* AND !*oly_contentFlags*:*unlicensedcontent*) OR (!_exists_:f_oly_rightslineItemId_str) OR (!_exists_:f_oly_contentType_str_ex) OR (!_exists_:f_oly_titleEn_str OR !_exists_:f_oly_titleEs_str))"
+        },
+        {
+            "cardBorder": {
+                "color": "#FFD966",
+                "width": "4px"
+            },
+            "query": "(*oly_contentType*:\"image\" OR *oly_contentType*:\"audio\" OR *oly_contentType*:\"m-e\" OR *oly_contentType*:\"script\" OR *oly_contentType*:\"subtitle\" OR *oly_contentType*:\"closedCaption\" OR *oly_contentType*:\"marketingContent\" OR *oly_contentType*:\"promo\" OR *oly_contentType*:*Trailer*) AND ((!_exists_:*oly_licensor*) OR (!_exists_:f_oly_titleEn_str OR !_exists_:f_oly_titleEs_str OR !_exists_:*oly_seriesName*))"
+        },
+        {
+            "cardBorder": {
+                "color": "#E69138",
+                "width": "4px"
+            },
+            "query": "*oly_versionType*:\"conformFile\" AND *oly_finalQCStatus*:\"pending\""
+        },
+        {
+            "cardBorder": {
+                "color": "#38761D",
+                "width": "4px"
+            },
+            "query": "*oly_versionType*:\"conformFile\" AND *oly_finalQCStatus*:\"approved\" AND *is_online*:\"true\""
+        },
+        {
+            "cardBorder": {
+                "color": "#CC0000",
+                "width": "4px"
+            },
+            "query": "*oly_versionType*:\"conformFile\" AND *oly_finalQCStatus*:*rejected*"
+        },
+        {
+            "cardBorder": {
+                "color": "#351C75",
+                "width": "4px"
+            },
+            "query": "*oly_versionType*:\"conformFile\" AND *oly_finalQCStatus*:\"approved\" AND *portal_archive_status*:\"Archived\""
+        }
+    ]
+}

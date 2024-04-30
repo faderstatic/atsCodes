@@ -1,0 +1,34 @@
+{
+    "fields": [
+        {
+            "capitalization": "titlecase",
+            "clean_spaces": true,
+            "field_id": "oly_titleEn"
+        },
+        {
+            "capitalization": "titlecase",
+            "clean_spaces": true,
+            "field_id": "oly_originalTitle"
+        },
+        {
+            "capitalization": "titlecase",
+            "clean_spaces": true,
+            "field_id": "oly_titleEs"
+        },
+        {
+            "capitalization": "titlecase",
+            "clean_spaces": true,
+            "field_id": "oly_seriesName"
+        },
+        {
+            "capitalization": "titlecase",
+            "clean_spaces": true,
+            "field_id": "oly_tags"
+        },
+        {
+            "capitalization": "titlecase",
+            "clean_spaces": true,
+            "field_id": "oly_programmingInputTitle"
+        }
+    ]
+}
