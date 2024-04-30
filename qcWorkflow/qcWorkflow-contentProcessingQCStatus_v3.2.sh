@@ -34,8 +34,26 @@ httpResponse=$(curl --location --request GET $urlGetItemInfo --header 'Authoriza
 #filteredResponse=$(echo $httpResponse | awk -F "$fieldName" '{print $2}' | awk -F "\">" '{print $2}' | head -c -3)
 #echo $filteredResponse
 
+contentFlagsValues=""
+numberOfValues=$(echo "$httpResponse" | awk -F "$filedName" '{print NF}')
+for (( j=1 ; j<=$numberOfValues ; j++ ));
+do
+    currentValue=$(echo $httpResponse | awk -F "$fieldName" '{print $2}' | awk -F "\">" '{print $2}' | head -c -3)
+    echo "currentValue=[$currentValue]"
+    if [[ "$contentFlagsValues" = "" ]];
+    then
+        contentFlagsValues="$currentValue"
+        echo "contentFlagsValues=[$contentFlagsValues]"
+    else
+        contentFlagsValues="$contentFlagsValues","$currentValue"
+        echo "contentFlagsValues=[$contentFlagsValues]"
+    fi
+done
+echo "final contentFlagsValues=[$contentFlagsValues]"
+
+: '
 #Check Variable
-#if [[ "$itemContentFlags" != *"legacycontent"* ]];
+#if [[ ()"$itemContentFlags" != *"legacycontent"*) && ("$user" = "legacyApproval") ]];
 if [[ ("$httpResponse" != *"legacycontent"*) && ("$user" = "legacyApproval") ]];
 then
     #user is 'legacyApproval' & oly_contentFlags does not contain 'legacycontent'-skip process
@@ -105,6 +123,6 @@ else
     sleep 5
 
     echo "$datetime - (contentProcessingQC) - Update Metadata Completed" >> "$logfile"
-    '
 fi
+'
 IFS=$saveIFS
