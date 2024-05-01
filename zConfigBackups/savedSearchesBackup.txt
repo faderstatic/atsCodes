@@ -1,0 +1,866 @@
+OLYMPUSAT Metadata Group
+Saved Searches for Users & Rules Engine Jobs
+
+
+RE-Needs Metadata for contentType-poster - For Content from AutoIngest Watch Folder (storage_original:OLY-11) & from the poster watch folder
+metadata_main_group:"Olympusat" AND (f_originalUri_str_ex:*\/poster\/* OR title:*_Poster OR title:*_Poster_Still) AND !_exists_:f_oly_contentType_str_ex AND (mediaType:"document" OR mediaType:"data" OR mediaType:"pdf") AND (storage_original:OLY-11 OR storage_original:OLY-16)
+
+
+RE-Needs Metadata for contentType-marketingContent - For Content from AutoIngest Watch Folder (storage_original:OLY-11) & from the marketingContent watch folder
+metadata_main_group:"Olympusat" AND (f_originalUri_str_ex:*\/marketingContent\/* OR (title:*_Synopsis OR title:*_Press\ Kit OR title:*_Characters_Cast OR title:*_Bio OR title:*_DVD\ Case_Poster OR title:*_DVD\ Case title:*_Credits OR title:*_Music\ Sheet)) AND !_exists_:f_oly_contentType_str_ex AND (mediaType:"pdf" OR mediaType:"document" OR mediaType:"data" OR mediaType:"image" OR (mediaType:"video" AND title:*_Promo)) AND (storage_original:OLY-11 OR storage_original:OLY-16)
+
+
+Marketing Content
+(metadata_main_group:"Olympusat" AND f_oly_contentType_str_ex:"marketingContent" AND placeholder_shape_size:0) AND (mediaType.analyzed:"pdf" OR mediaType.analyzed:"document" OR mediaType.analyzed:"data") AND storage_original:OLY-65
+
+
+RE-RTC Mexico QC Pending-Set Access for Group
+metadata_main_group:"Olympusat" AND f_oly_rtcMexicoQCStatus_str_ex:"pending" AND !access_control_group:*RTC Mexico*
+
+
+RTC Mexico QC-Pending
+metadata_main_group:"Olympusat" AND f_oly_rtcMexicoQCStatus_str_ex:"pending"
+
+
+RTC Mexico QC-Approved
+metadata_main_group:"Olympusat" AND f_oly_rtcMexicoQCStatus_str_ex:"approved"
+
+
+RTC Mexico QC-Rejected
+metadata_main_group:"Olympusat" AND f_oly_rtcMexicoQCStatus_str_ex:"rejected"
+
+
+RE-RTC Mexico QC-Remove Access for Group
+metadata_main_group:"Olympusat" AND (f_oly_rtcMexicoQCStatus_str_ex:"approved" OR f_oly_rtcMexicoQCStatus_str_ex:"rejected") AND !f_oly_adminRulesFlags_str_ex:*rtcaccessremoved*
+
+
+RE-Images Need Metadata-oly_graphicsTags
+(metadata_main_group:"Olympusat" AND f_oly_contentType_str_ex:"image" AND placeholder_shape_size:0 AND mediaType.analyzed:"image") AND storage_original:OLY-65 AND !_exists_:"f_oly_graphicsTags_str"
+
+
+Original Legacy Content QC-Pending
+(metadata_main_group:"Olympusat" AND _exists_:f_oly_licensor_str_ex AND _exists_:f_oly_rightslineContractId_str AND type:item AND f_oly_versionType_str_ex:"originalFile" AND f_oly_originalContentQCStatus_str_ex:"pending" AND !f_oly_contentFlags_str_ex:*securedcontent* AND !f_oly_contentFlags_str_ex:*unlicensedcontent*) OR (metadata_main_group:"Olympusat" AND _exists_:f_oly_licensor_str_ex AND f_oly_originalContentQCStatus_str_ex:"pending" !f_oly_contentFlags_str_ex:*securedcontent* AND !f_oly_contentFlags_str_ex:*unlicensedcontent* AND (f_oly_contentType_str_ex:"audio" OR f_oly_contentType_str_ex:"m-e" OR f_oly_contentType_str_ex:"image" OR f_oly_contentType_str_ex:"script" OR f_oly_contentType_str_ex:"subtitle" OR f_oly_contentType_str_ex:"project" OR f_oly_contentType_str_ex:*Trailer* OR f_oly_contentType_str_ex:"promo" OR f_oly_contentType_str_ex:"marketingContent")) AND (f_oly_contentFlags_str_ex:*legacycontent*)
+
+
+RE-Needs Metadata for contentType-promo - For Content from AutoIngest Watch Folder (storage_original:OLY-11) & from the promo watch folder
+metadata_main_group:"Olympusat" AND f_originalUri_str_ex:*\/promo\/* AND !_exists_:f_oly_contentType_str_ex AND mediaType:"video" AND (storage_original:OLY-11 OR storage_original:OLY-16)
+
+
+Term End Date Expires in 3 Days
+f_oly_termEndDate_dt:[* TO now+3d]
+
+
+Non Video Content Missing Metadata
+(metadata_main_group:"Olympusat" AND placeholder_shape_size:0 id:*OLY-* AND (f_oly_contentType_str_ex:"audio" OR f_oly_contentType_str_ex:"image" OR f_oly_contentType_str_ex:"m-e" OR f_oly_contentType_str_ex:"script" OR f_oly_contentType_str_ex:"subtitle" OR f_oly_contentType_str_ex:"closedCaption" OR f_oly_contentType_str_ex:"project")) AND (storage_original:OLY-8 OR storage_original:OLY-9 OR storage_original:OLY-10 OR storage_original:OLY-16 OR storage_original:OLY-65) AND ((!_exists_:f_oly_licensor_str_ex) OR (!_exists_:f_oly_titleEn_str OR !_exists_:f_oly_titleEs_str))
+
+
+Legacy Original-Needs Manual Input-Rightsline IDs
+metadata_main_group:"Olympusat" AND f_oly_versionType_str_ex:"originalFile" AND f_oly_contentFlags_str_ex:*legacycontent* AND !f_oly_contentFlags_str_ex:*textless* AND (f_oly_contentType_str_ex:"movie" OR f_oly_contentType_str_ex:"episode") AND mediaType:"video" AND ((!_exists_:f_oly_rightslineItemId_str) OR (!_exists_:f_oly_rightslineContractId_str))
+
+
+RE-Needs Metadata for contentType-seasonTrailer - For Content from AutoIngest Watch Folder (storage_original:OLY-11) & from the trailer watch folder
+metadata_main_group:"Olympusat" AND f_originalUri_str_ex:*\/trailer\/season\/* AND !_exists_:f_oly_contentType_str_ex AND mediaType:"video" AND (storage_original:OLY-11 OR storage_original:OLY-16)
+
+
+RE-Needs Metadata for contentType-movieTrailer - For Content from AutoIngest Watch Folder (storage_original:OLY-11) & from the trailer watch folder
+metadata_main_group:"Olympusat" AND f_originalUri_str_ex:*\/trailer\/movie\/* AND !_exists_:f_oly_contentType_str_ex AND mediaType:"video" AND (storage_original:OLY-11 OR storage_original:OLY-16)
+
+
+RE-Needs Metadata for contentType-subtitle - For Content from AutoIngest Watch Folder (storage_original:OLY-11) & from the subtitle watch folder
+metadata_main_group:"Olympusat" AND (f_originalUri_str_ex:*\/subtitle\/* OR title:*_Subtitle) AND !_exists_:f_oly_contentType_str_ex AND (mediaType:"document" OR mediaType:"data") AND (storage_original:OLY-11 OR storage_original:OLY-16)
+
+
+RE-Needs Metadata for contentType-script - For Content from AutoIngest Watch Folder (storage_original:OLY-11) & from the script watch folder
+metadata_main_group:"Olympusat" AND (f_originalUri_str_ex:*\/script\/* OR title:*_Script) AND !_exists_:f_oly_contentType_str_ex AND (mediaType:"pdf" OR mediaType:"data" OR mediaType:"document") AND (storage_original:OLY-11 OR storage_original:OLY-16)
+
+
+RE-Needs Metadata for contentType-M_E - For Content from AutoIngest Watch Folder (storage_original:OLY-11) & from the audio/me watch folder
+metadata_main_group:"Olympusat" AND (f_originalUri_str_ex:*\/me\/* OR title:*_ME_Audio) AND !_exists_:f_oly_contentType_str_ex AND mediaType:"audio" AND (storage_original:OLY-11 OR storage_original:OLY-16)
+
+
+RE-Needs Metadata for versionType-censoredFile-english v2
+metadata_main_group:"Olympusat" AND title:"CA_*" AND title:"*_70" AND !f_oly_versionType_str_ex:"censoredFile-english" AND ((placeholder_shape_size:1) OR (placeholder_shape_size:0 AND f_originalUri_str_ex:*\/conform\/* AND (storage_original:OLY-8 OR storage_original:OLY-9 OR storage_original:OLY-10 OR storage_original:OLY-11 OR storage_original:OLY-16)))
+
+
+RE-Needs Metadata for versionType-censoredFile-spanish v2
+metadata_main_group:"Olympusat" AND title:"CA_*" AND title:"*_60" AND !f_oly_versionType_str_ex:"censoredFile-spanish" AND ((placeholder_shape_size:1) OR (placeholder_shape_size:0 AND f_originalUri_str_ex:*\/conform\/* AND (storage_original:OLY-8 OR storage_original:OLY-9 OR storage_original:OLY-10 OR storage_original:OLY-11 OR storage_original:OLY-16)))
+
+
+RE-Needs Metadata for versionType-censoredFile v2
+metadata_main_group:"Olympusat" AND title:"CA_*" AND title:"*_50" AND !f_oly_versionType_str_ex:"censoredFile" AND ((placeholder_shape_size:1) OR (placeholder_shape_size:0 AND f_originalUri_str_ex:*\/conform\/* AND (storage_original:OLY-8 OR storage_original:OLY-9 OR storage_original:OLY-10 OR storage_original:OLY-11 OR storage_original:OLY-16)))
+
+
+RE-Needs Metadata for versionType-conformFile-english v2
+metadata_main_group:"Olympusat" AND title:"CA_*" AND title:"*_20" AND !f_oly_versionType_str_ex:"conformFile-english" AND ((placeholder_shape_size:1) OR (placeholder_shape_size:0 AND f_originalUri_str_ex:*\/conform\/* AND (storage_original:OLY-8 OR storage_original:OLY-9 OR storage_original:OLY-10 OR storage_original:OLY-11 OR storage_original:OLY-16)))
+
+
+RE-Needs Metadata for versionType-conformFile-spanish v2
+metadata_main_group:"Olympusat" AND title:"CA_*" AND title:"*_10" AND !f_oly_versionType_str_ex:"conformFile-spanish" AND ((placeholder_shape_size:1) OR (placeholder_shape_size:0 AND f_originalUri_str_ex:*\/conform\/* AND (storage_original:OLY-8 OR storage_original:OLY-9 OR storage_original:OLY-10 OR storage_original:OLY-11 OR storage_original:OLY-16)))
+
+
+RE-Needs Metadata for versionType-conformFile v2
+metadata_main_group:"Olympusat" AND title:"CA_*" AND title:"*_00" AND !f_oly_versionType_str_ex:"conformFile" AND ((placeholder_shape_size:1) OR (placeholder_shape_size:0 AND f_originalUri_str_ex:*\/conform\/* AND (storage_original:OLY-8 OR storage_original:OLY-9 OR storage_original:OLY-10 OR storage_original:OLY-11 OR storage_original:OLY-16)))
+
+
+Conform Items-Needs Media
+metadata_main_group:"Olympusat" AND !_exists_:cs_storage_original id:*OLY-* AND f_oly_versionType_str_ex:"conformFile"
+
+
+RE-Needs Conform Item Created
+metadata_main_group:"Olympusat" AND mediaType.analyzed:"video" AND _exists_:f_oly_rightslineItemId_str AND _exists_:f_oly_rightslineContractId_str AND id:*OLY-* AND f_oly_versionType_str_ex:"originalFile" AND !f_oly_adminRulesFlags_str_ex:*conformitemcreated* AND !f_originalUri_str_ex:*\/original-legacy\/*
+
+metadata_main_group:"Olympusat" AND !f_oly_contentFlags_str_ex:*legacycontent* AND mediaType.analyzed:"video" AND _exists_:f_oly_rightslineItemId_str AND _exists_:f_oly_rightslineContractId_str AND id:*OLY-* AND f_oly_versionType_str_ex:"originalFile" AND !f_oly_adminRulesFlags_str_ex:*conformitemcreated*
+
+
+New Content Missing Metadata
+((metadata_main_group:"Olympusat" AND !f_oly_tags_str:"to be deleted" AND is_online:true AND placeholder_shape_size:0 id:*OLY-* AND (!f_oly_contentType_str_ex:*Trailer* OR !f_oly_contentType_str_ex:"promo") AND (!f_oly_versionType_str_ex:"conformFile" OR !f_oly_versionType_str_ex:"censoredFile" OR !f_oly_versionType_str_ex:"conformFile-spanish" OR !f_oly_versionType_str_ex:"conformFile-english" OR !f_oly_versionType_str_ex:"censoredFile-spanish" OR !f_oly_versionType_str_ex:"censoredFile-english")) AND (storage_original:OLY-8 OR storage_original:OLY-9 OR storage_original:OLY-10 OR storage_original:OLY-16) AND ((!_exists_:"f_oly_seriesName_str" AND f_oly_contentType_str_ex:"episode") OR (!_exists_:"f_oly_seasonNumber_str_ex" AND f_oly_contentType_str_ex:"episode") OR (!_exists_:"f_oly_episodeNumber_str_ex" AND f_oly_contentType_str_ex:"episode") OR (!_exists_:f_oly_licensor_str_ex) OR (!_exists_:f_oly_rightslineContractId_str AND !f_oly_contentFlags_str_ex:*unlicensedcontent*) OR (!_exists_:f_oly_rightslineItemId_str) OR (!_exists_:f_oly_contentType_str_ex) OR (!_exists_:f_oly_versionType_str_ex) OR (!_exists_:f_oly_titleEn_str OR !_exists_:f_oly_titleEs_str))) OR (metadata_main_group:"Olympusat" AND !f_oly_tags_str:"to be deleted" AND is_online:true AND placeholder_shape_size:0 id:*OLY-* AND storage_original:OLY-65 AND ((!_exists_:f_oly_licensor_str_ex) OR (!_exists_:f_oly_titleEn_str OR !_exists_:f_oly_titleEs_str OR !_exists_:f_oly_seriesName_str))) OR (metadata_main_group:"Olympusat" AND !f_oly_tags_str:"to be deleted" AND is_online:true AND placeholder_shape_size:0 id:*OLY-* AND (storage_original:OLY-8 OR storage_original:OLY-9 OR storage_original:OLY-10 OR storage_original:OLY-16) AND (f_oly_contentType_str_ex:*Trailer* OR f_oly_contentType_str_ex:"promo") AND ((!_exists_:f_oly_licensor_str_ex) OR (!_exists_:f_oly_titleEn_str OR !_exists_:f_oly_titleEs_str OR !_exists_:f_oly_seriesName_str)))
+
+
+Conform Files Missing Metadata
+(metadata_main_group:"Olympusat" AND !f_oly_tags_str:"to be deleted" AND is_online:true AND placeholder_shape_size:0 id:*OLY-* AND (f_oly_versionType_str_ex:"conformFile" OR f_oly_versionType_str_ex:"censoredFile" OR f_oly_versionType_str_ex:"conformFile-spanish" OR f_oly_versionType_str_ex:"conformFile-english" OR f_oly_versionType_str_ex:"censoredFile-spanish" OR f_oly_versionType_str_ex:"censoredFile-english")) AND (storage_original:OLY-8 OR storage_original:OLY-9 OR storage_original:OLY-10 OR storage_original:OLY-16) AND ((!_exists_:f_oly_licensor_str_ex) OR (!_exists_:f_oly_contentType_str_ex) OR (!_exists_:f_oly_titleEn_str OR !_exists_:f_oly_titleEs_str))
+
+
+RE-Criteria to Move metadata-amagi to metadata
+(metadata_main_group:"Olympusat" AND shapeTag:*metadata-amagi*) AND storage:*OLY-16* AND !storage:*OLY-57*
+
+
+RE-Needs Metadata for primaryMetadataLanguage-english - For Content from AutoIngest Watch Folder (storage_original:OLY-11) & from the english watch folder
+metadata_main_group:"Olympusat" AND f_originalUri_str_ex:*\/english\/* AND !_exists_:f_oly_primaryMetadataLanguage_str_ex AND mediaType:"image" AND (storage_original:OLY-11 OR storage_original:OLY-16)
+
+
+RE-Needs Metadata for primaryMetadataLanguage-spanish - For Content from AutoIngest Watch Folder (storage_original:OLY-11) & from the spanish watch folder
+metadata_main_group:"Olympusat" AND f_originalUri_str_ex:*\/spanish\/* AND !_exists_:f_oly_primaryMetadataLanguage_str_ex AND mediaType:"image" AND (storage_original:OLY-11 OR storage_original:OLY-16)
+
+
+RE-Criteria to Move from importFromStorage to default-original
+(metadata_main_group:"Olympusat" AND is_online:true AND placeholder_shape_size:0) AND !storage_original:OLY-16 AND storage_original:OLY-21 AND !cs_missingOrLost.analyzed:"original" AND mediaType.analyzed:"video"
+
+
+RE-Needs Metadata for contentType-closedCaption - For Content from AutoIngest Watch Folder (storage_original:OLY-11) & from the closedCaption watch folder
+metadata_main_group:"Olympusat" AND (f_originalUri_str_ex:*\/closedCaption\/* OR f_originalUri_str_ex:*\/zTest\/*) AND !_exists_:f_oly_contentType_str_ex AND mediaType:"document" AND (storage_original:OLY-11 OR storage_original:OLY-16)
+
+
+RE-Needs Metadata for contentType-project - For Content from AutoIngest Watch Folder (storage_original:OLY-11) & from the project watch folder
+metadata_main_group:"Olympusat" AND (f_originalUri_str_ex:*\/project\/* OR originalFilename:*.prproj) AND !_exists_:f_oly_contentType_str_ex AND (storage_original:OLY-11 OR storage_original:OLY-16)
+
+
+RE-Needs Metadata for contentType-audio - For Content from AutoIngest Watch Folder (storage_original:OLY-11) & from the audio watch folder
+metadata_main_group:"Olympusat" AND f_originalUri_str_ex:*\/audio\/* AND !f_originalUri_str_ex:*\/me\/* AND !_exists_:f_oly_contentType_str_ex AND mediaType:"audio" AND (storage_original:OLY-11 OR storage_original:OLY-16)
+
+
+RE-Needs Metadata for contentType-image - For Content from AutoIngest Watch Folder (storage_original:OLY-11) & from the image watch folder
+metadata_main_group:"Olympusat" AND f_originalUri_str_ex:*\/image\/* AND !_exists_:f_oly_contentType_str_ex AND mediaType:"image" AND (storage_original:OLY-11 OR storage_original:OLY-16)
+
+
+RE-Needs Metadata for clientOwnedContent-clientOwnedContent - For Content from AutoIngest Watch Folder (storage_original:OLY-11) & from the zClientOwnedContent watch folder
+metadata_main_group:"Client Owned Content" AND f_originalUri_str_ex:*clientOwnedContent* AND !f_oly_clientOwnedContent_str_ex:"clientownedcontent" AND (storage_original:OLY-19 OR storage_original:OLY-16)
+
+
+RE-Needs Metadata for clientOwnedContent-versionType-original - For Content from AutoIngest Watch Folder (storage_original:OLY-11) & from the zClientOwnedContent/original watch folder
+metadata_main_group:"Client Owned Content" AND f_originalUri_str_ex:*clientOwnedContent**original* AND !_exists_:f_oly_versionType_str_ex AND (storage_original:OLY-19 OR storage_original:OLY-16)
+
+
+RE-Needs Metadata for clientOwnedContent-versionType-conform - For Content from AutoIngest Watch Folder (storage_original:OLY-11) & from the zClientOwnedContent/conform watch folder
+metadata_main_group:"Client Owned Content" AND f_originalUri_str_ex:*clientOwnedContent**conform* AND !_exists_:f_oly_versionType_str_ex AND (storage_original:OLY-19 OR storage_original:OLY-16)
+
+
+RE-Needs Metadata for contentFlags-securedContent - For Content from AutoIngest Watch Folder (storage_original:OLY-11) & from the securedContent watch folder
+metadata_main_group:"Olympusat" AND f_originalUri_str_ex:*securedContent* AND !f_oly_contenFlags_str_ex:"securedcontent" AND (storage_original:OLY-11 OR storage_original:OLY-16)
+
+
+RE-Needs Metadata for contentFlags-unlicensedContent - For Content from AutoIngest Watch Folder (storage_original:OLY-11) & from the unlicensedContent watch folder
+metadata_main_group:"Olympusat" AND f_originalUri_str_ex:*unlicensedContent* AND !f_oly_contenFlags_str_ex:"unlicensedcontent" AND (storage_original:OLY-11 OR storage_original:OLY-16)
+
+
+RE-Needs Metadata for versionType-originalFile - For Content from AutoIngest Watch Folder (storage_original:OLY-11) & from the original watch folder
+metadata_main_group:"Olympusat" AND (f_originalUri_str_ex:*\/original\/* OR f_originalUri_str_ex:*\/original-legacy\/*) AND !f_originalUri_str_ex:*\/trailer\/* AND !_exists_:f_oly_versionType_str_ex AND (storage_original:OLY-11 OR storage_original:OLY-16)
+
+
+RE-Needs Metadata for contentType-movie - For Content from AutoIngest Watch Folder (storage_original:OLY-11) & from the movie watch folder
+metadata_main_group:"Olympusat" AND f_originalUri_str_ex:*\/movie\/* AND !_exists_:f_oly_contentType_str_ex AND (storage_original:OLY-11 OR storage_original:OLY-16)
+
+
+RE-Needs Metadata for contentType-episode - For Content from AutoIngest Watch Folder (storage_original:OLY-11) & from the episode watch folder
+metadata_main_group:"Olympusat" AND f_originalUri_str_ex:*\/episode\/* AND !_exists_:f_oly_contentType_str_ex AND (storage_original:OLY-11 OR storage_original:OLY-16)
+
+
+RE-Needs Metadata for contentType-musicVideo - For Content from AutoIngest Watch Folder (storage_original:OLY-11) & from the musicVideo watch folder
+metadata_main_group:"Olympusat" AND f_originalUri_str_ex:*musicVideo* AND !_exists_:f_oly_contentType_str_ex AND (storage_original:OLY-11 OR storage_original:OLY-16)
+
+
+Content in AutoIngest
+(is_online:true AND placeholder_shape_size:0) AND (storage_original:OLY-11 OR storage_original:OLY-19 OR storage_original:OLY-64) AND !cs_missingOrLost.analyzed:"original" AND (mediaType.analyzed:"video" OR mediaType.analyzed:"image" OR mediaType.analyzed:"audio" OR mediaType.analyzed:"data" OR mediaType.analyzed:"document" OR mediaType.analyzed:"pdf")
+
+
+RE-Criteria to Move from autoIngest to default
+(is_online:true AND placeholder_shape_size:0) AND !storage_original:OLY-16 AND (storage_original:OLY-11 OR storage_original:OLY-19 OR storage_original:OLY-64) AND !cs_missingOrLost.analyzed:"original" AND (mediaType.analyzed:"video" OR mediaType.analyzed:"image" OR mediaType.analyzed:"audio" OR mediaType.analyzed:"data" OR mediaType.analyzed:"document" OR mediaType.analyzed:"pdf")
+
+
+Content in DefaultUpload
+(is_online:true AND placeholder_shape_size:0 AND id:*OLY-*) AND storage_original:OLY-16 AND !cs_missingOrLost.analyzed:"original" AND (mediaType.analyzed:"video" OR mediaType.analyzed:"image" OR mediaType.analyzed:"audio" OR mediaType.analyzed:"data" OR mediaType.analyzed:"document" OR mediaType.analyzed:"pdf")
+
+
+RE-Needs Audio Wave Form
+cs_has_waveform:false AND (mediaType:video OR mediaType:audio) AND type:item AND is_online:true AND !cs_missingOrLost.analyzed:"original"
+
+
+RE-Needs Video Proxies
+(storage_original:OLY-7 OR storage_original:OLY-8 OR storage_original:OLY-9 OR storage_original:OLY-10 OR storage_original:OLY-16 OR storage_original:OLY-17) AND !cs_current_shapes.analyzed:”lowres” AND type:item AND is_online:true AND !cs_missingOrLost.analyzed:"original" AND mediaType.analyzed:"video"
+
+
+RE-Needs Audio Proxies
+(storage_original:OLY-7 OR storage_original:OLY-8 OR storage_original:OLY-9 OR storage_original:OLY-10 OR storage_original:OLY-16 OR storage_original:OLY-17) AND !cs_current_shapes.analyzed:”lowaudio” AND type:item AND is_online:true AND !cs_missingOrLost.analyzed:"original" AND mediaType.analyzed:"audio"
+
+
+RE-Needs Image Proxies
+(storage_original:OLY-7 OR storage_original:OLY-8 OR storage_original:OLY-9 OR storage_original:OLY-10 OR storage_original:OLY-16 OR storage_original:OLY-17) AND !cs_current_shapes.analyzed:”lowimage” AND type:item AND is_online:true AND !cs_missingOrLost.analyzed:"original" AND mediaType.analyzed:"image"
+
+
+RE-Criteria to Move to licensedContent
+(metadata_main_group:"Olympusat" AND _exists_:f_oly_contentType_str_ex AND _exists_:f_oly_licensor_str_ex AND _exists_:f_oly_rightslineItemId_str AND _exists_:f_oly_rightslineContractId_str AND is_online:true AND placeholder_shape_size:0 AND shapeTag:*lowres*) AND !storage_original:OLY-8 AND !f_oly_contentFlags_str_ex:*securedcontent* AND !f_oly_contentFlags_str_ex:*unlicensedcontent*
+
+
+Licensed Content
+(metadata_main_group:"Olympusat" AND !_exists_:f_oly_contentFlags_str_ex AND placeholder_shape_size:0) AND storage_original:OLY-8
+
+
+RE-Criteria to Move to securedContent
+(metadata_main_group:"Olympusat" AND _exists_:f_oly_contentType_str_ex AND f_oly_contentFlags_str_ex:*securedcontent* AND is_online:true AND placeholder_shape_size:0) AND shapeTag:*lowres* AND !storage_original:OLY-9
+
+
+Secured Content
+(metadata_main_group:"Olympusat" AND f_oly_contentFlags_str_ex:*securedcontent* AND placeholder_shape_size:0) AND storage_original:OLY-9
+
+
+RE-Criteria to Move to unlicensedContent
+(metadata_main_group:"Olympusat" AND _exists_:f_oly_licensor_str_ex AND f_oly_contentFlags_str_ex:*unlicensedcontent* AND is_online:true AND placeholder_shape_size:0 AND !_exists_:f_oly_rightslineContractId_str AND shapeTag:*lowres*) AND !storage_original:OLY-10
+
+
+Unlicensed Content
+(metadata_main_group:"Olympusat" AND f_oly_contentFlags_str_ex:*unlicensedcontent* AND placeholder_shape_size:0) AND storage_original:OLY-10
+
+
+RE-Criteria to Move from unlicensed to licensed
+(metadata_main_group:"Olympusat" AND _exists_:f_oly_licensor_str_ex AND _exists_:f_oly_contentType_str_ex AND f_oly_contentFlags_str_ex:*unlicensedcontent* AND is_online:true AND placeholder_shape_size:0 AND _exists_:f_oly_rightslineContractId_str) AND storage_original:OLY-10
+
+
+RE-Criteria to Move conform from default to licensed
+(metadata_main_group:"Olympusat" AND _exists_:f_oly_contentType_str_ex AND (f_oly_versionType_str_ex:"conformFile" OR f_oly_versionType_str_ex:"conformFile-spanish" OR f_oly_versionType_str_ex:"conformFile-english" OR f_oly_versionType_str_ex:"censoredFile" OR f_oly_versionType_str_ex:"censoredFile-spanish" OR f_oly_versionType_str_ex:"censoredFile-english") AND is_online:true AND placeholder_shape_size:0 AND shapeTag:*lowres*) AND storage_original:OLY-16 AND !storage_original:OLY-8 AND !f_oly_contentFlags_str_ex:*securedcontent* AND !f_oly_contentFlags_str_ex:*unlicensedcontent*
+
+
+RE-Criteria to Move from default to nonVideo-audio
+(metadata_main_group:"Olympusat" AND (f_oly_contentType_str_ex:"audio" OR f_oly_contentType_str_ex:"m-e") AND is_online:true AND placeholder_shape_size:0 AND mediaType.analyzed:"audio" AND shapeTag:*lowaudio*) AND storage_original:OLY-16 AND !storage_original:OLY-65 AND !f_oly_contentFlags_str_ex:*securedcontent* AND !f_oly_contentFlags_str_ex:*unlicensedcontent*
+
+
+Audio
+metadata_main_group:"Olympusat" AND (f_oly_contentType_str_ex:"audio" OR f_oly_contentType_str_ex:"m-e") AND placeholder_shape_size:0 AND mediaType.analyzed:"audio" AND storage_original:OLY-65
+
+
+RE-Criteria to Move from default to nonVideo
+metadata_main_group:"Olympusat" AND is_online:true AND placeholder_shape_size:0 AND ((f_oly_contentType_str_ex:"image" AND mediaType.analyzed:"image" AND shapeTag:*lowimage*) OR (f_oly_contentType_str_ex:"closedCaption" AND mediaType.analyzed:"document") OR (f_oly_contentType_str_ex:"project" AND mediaType.analyzed:"data") OR (f_oly_contentType_str_ex:"script" AND (mediaType:"pdf" OR mediaType:"document" OR mediaType:"data")) OR (f_oly_contentType_str_ex:"subtitle" AND (mediaType.analyzed:"document" OR mediaType.analyzed:"data")) OR (f_oly_contentType_str_ex:"poster" AND (mediaType.analyzed:"document" OR mediaType.analyzed:"data" OR mediaType.analyzed:"pdf")) OR (f_oly_contentType_str_ex:"marketingContent" AND (mediaType.analyzed:"pdf" OR mediaType.analyzed:"document" OR mediaType.analyzed:"data" OR mediaType:"image"))) AND storage_original:OLY-16 AND !storage_original:OLY-65 AND !f_oly_contentFlags_str_ex:*securedcontent* AND !f_oly_contentFlags_str_ex:*unlicensedcontent*
+
+
+Images
+(metadata_main_group:"Olympusat" AND f_oly_contentType_str_ex:"image" AND placeholder_shape_size:0 AND mediaType.analyzed:"image") AND storage_original:OLY-65
+
+
+Scripts
+(metadata_main_group:"Olympusat" AND f_oly_contentType_str_ex:"script" AND placeholder_shape_size:0 AND mediaType.analyzed:"pdf") AND storage_original:OLY-65
+
+
+Closed Captions
+(metadata_main_group:"Olympusat" AND f_oly_contentType_str_ex:"closedCaption" AND placeholder_shape_size:0 AND mediaType.analyzed:"document") AND storage_original:OLY-65
+
+
+Subtitles
+(metadata_main_group:"Olympusat" AND f_oly_contentType_str_ex:"subtitle" AND placeholder_shape_size:0 AND mediaType.analyzed:"document") AND storage_original:OLY-65
+
+
+Projects
+(metadata_main_group:"Olympusat" AND f_oly_contentType_str_ex:"project" AND placeholder_shape_size:0 AND mediaType.analyzed:"data") AND storage_original:OLY-65
+
+
+Needs Registered to Rightsline-ALL
+(metadata_main_group:"Olympusat" AND !_exists_:f_oly_rightslineItemId_str AND !f_oly_contentFlags_str_ex:*legacycontent*) AND ((mediaType.analyzed:"video" AND f_oly_versionType_str_ex:"originalFile" AND f_oly_contentType_str_ex:"movie") OR (mediaType.analyzed:"video" AND f_oly_versionType_str_ex:"originalFile" AND f_oly_contentType_str_ex:"episode" AND _exists_:f_oly_episodeNumber_str_ex AND _exists_:f_oly_seasonNumber_str_ex) OR (mediaType.analyzed:"none" AND placeholder_shape_size:"1" AND f_oly_contentType_str_ex:"series") OR (mediaType.analyzed:"none" AND placeholder_shape_size:"1" AND f_oly_contentType_str_ex:"season")) AND (_exists_:f_oly_titleEn_str OR _exists_:f_oly_titleEs_str OR _exists:f_oly_originalTitle_str)
+
+
+RE-Needs Registered to Rightsline-Movie
+(metadata_main_group:"Olympusat" AND mediaType.analyzed:"video" AND !_exists_:f_oly_rightslineItemId_str AND !f_oly_contentFlags_str_ex:*legacycontent*) AND f_oly_contentType_str_ex:"movie" AND f_oly_versionType_str_ex:"originalFile" AND f_oly_contentFlags_str_ex:*originallanguage* AND (_exists_:f_oly_titleEn_str OR _exists_:f_oly_titleEs_str OR _exists:f_oly_originalTitle_str)
+
+
+RE-Needs Registered to Rightsline-Series
+(metadata_main_group:"Olympusat" AND !f_oly_contentFlags_str_ex:*legacycontent* AND mediaType.analyzed:"none" AND placeholder_shape_size:"1" AND !_exists_:f_oly_rightslineItemId_str) AND f_oly_contentType_str_ex:"series" AND (_exists_:f_oly_titleEn_str OR _exists_:f_oly_titleEs_str OR _exists:f_oly_originalTitle_str)
+
+(metadata_main_group:"Olympusat" AND !f_oly_contentFlags_str_ex:*legacycontent* AND mediaType.analyzed:"none" AND placeholder_shape_size:"1" AND !_exists_:f_oly_rightslineItemId_str) AND f_oly_contentType_str_ex:"series" AND (_exists_:f_oly_titleEn_str OR _exists_:f_oly_titleEs_str OR _exists:f_oly_originalTitle_str)
+
+
+RE-Needs Registered to Rightsline-Season
+(metadata_main_group:"Olympusat" AND !f_oly_contentFlags_str_ex:*legacycontent* AND mediaType.analyzed:"none" AND placeholder_shape_size:"1" AND !_exists_:f_oly_rightslineItemId_str) AND f_oly_contentType_str_ex:"season" AND _exists_:f_oly_seasonNumber_str_ex AND (_exists_:f_oly_titleEn_str OR _exists_:f_oly_titleEs_str OR _exists:f_oly_originalTitle_str)
+
+(metadata_main_group:"Olympusat" AND !f_oly_contentFlags_str_ex:*legacycontent* AND mediaType.analyzed:"none" AND placeholder_shape_size:"1" AND !_exists_:f_oly_rightslineItemId_str) AND f_oly_contentType_str_ex:"season" AND _exists_:f_oly_seasonNumber_str_ex AND (_exists_:f_oly_titleEn_str OR _exists_:f_oly_titleEs_str OR _exists:f_oly_originalTitle_str)
+
+
+RE-Needs Registered to Rightsline-Episode
+(metadata_main_group:"Olympusat" AND mediaType.analyzed:"video" AND !_exists_:f_oly_rightslineItemId_str AND !f_oly_contentFlags_str_ex:*legacycontent*) AND f_oly_contentType_str_ex:"episode" AND f_oly_versionType_str_ex:"originalFile" AND f_oly_contentFlags_str_ex:*originallanguage* AND _exists_:f_oly_episodeNumber_str_ex AND _exists_:f_oly_seasonNumber_str_ex AND (_exists_:f_oly_titleEn_str OR _exists_:f_oly_titleEs_str OR _exists:f_oly_originalTitle_str)
+
+
+In Rightsline-No Associated Contract-Licensed
+(metadata_main_group:"Olympusat" AND _exists_:f_oly_rightslineItemId_str AND !_exists_:f_oly_rightslineContractId_str AND id:*OLY-* AND (f_oly_versionType_str_ex:"originalFile" OR f_oly_contentType_str_ex:"season" OR f_oly_contentType_str_ex:"series") AND !f_oly_contentFlags_str_ex:*unlicensedcontent*)
+
+
+In Rightsline-No Associated Contract-Unlicensed
+(metadata_main_group:"Olympusat" AND mediaType.analyzed:"video" AND _exists_:f_oly_rightslineItemId_str AND !_exists_:f_oly_rightslineContractId_str AND id:*OLY-* AND (f_oly_versionType_str_ex:"originalFile" OR f_oly_contentType_str_ex:"season" OR f_oly_contentType_str_ex:"series") AND f_oly_contentFlags_str_ex:*unlicensedcontent*)
+
+
+RE-Mark Graphics Status-Pending
+(storage_original:OLY-8 OR storage_original:OLY-9 OR storage_original:OLY-10 OR storage_original:OLY-16) AND shapeTag:*lowres* AND type:item AND is_online:true AND !cs_missingOrLost.analyzed:"original" AND (metadata_main_group:"Olympusat" AND _exists_:f_oly_licensor_str_ex AND _exists_:f_oly_rightslineContractId_str AND _exists_:f_oly_rightslineItemId_str AND !f_oly_contentFlags_str_ex:*securedcontent* AND !f_oly_contentFlags_str_ex:*unlicensedcontent*) AND (_exists_:f_oly_titleEn_str OR _exists_:f_oly_titleEs_str) AND !_exists_:f_oly_graphicsStatus_str_ex AND f_oly_versionType_str_ex:"originalFile" AND !f_originalUri_str_ex:*\/original-legacy\/*
+
+(storage_original:OLY-8 OR storage_original:OLY-9 OR storage_original:OLY-10 OR storage_original:OLY-16) AND shapeTag:*lowres* AND type:item AND is_online:true AND !cs_missingOrLost.analyzed:"original" AND (metadata_main_group:"Olympusat" AND _exists_:f_oly_licensor_str_ex AND _exists_:f_oly_rightslineContractId_str AND _exists_:f_oly_rightslineItemId_str AND !f_oly_contentFlags_str_ex:*securedcontent* AND !f_oly_contentFlags_str_ex:*unlicensedcontent*) AND (_exists_:f_oly_titleEn_str OR _exists_:f_oly_titleEs_str) AND !_exists_:f_oly_graphicsStatus_str_ex AND f_oly_versionType_str_ex:"originalFile" AND !f_oly_contentFlags_str_ex:*legacycontent*
+
+
+Graphics-Pending
+metadata_main_group:"Olympusat" AND _exists_:f_oly_licensor_str_ex AND _exists_:f_oly_rightslineContractId_str AND type:item AND f_oly_versionType_str_ex:"originalFile" AND f_oly_graphicsStatus_str_ex:"pending" AND !f_oly_contentFlags_str_ex:*securedcontent* AND !f_oly_contentFlags_str_ex:*unlicensedcontent*
+
+
+Graphics-In Progress
+metadata_main_group:"Olympusat" AND _exists_:f_oly_licensor_str_ex AND _exists_:f_oly_rightslineContractId_str AND type:item AND f_oly_versionType_str_ex:"originalFile" AND f_oly_graphicsStatus_str_ex:"inProgress" AND !f_oly_contentFlags_str_ex:*securedcontent* AND !f_oly_contentFlags_str_ex:*unlicensedcontent*
+
+
+Graphics-On Hold
+metadata_main_group:"Olympusat" AND _exists_:f_oly_licensor_str_ex AND _exists_:f_oly_rightslineContractId_str AND type:item AND f_oly_versionType_str_ex:"originalFile" AND f_oly_graphicsStatus_str_ex:"onHold" AND !f_oly_contentFlags_str_ex:*securedcontent* AND !f_oly_contentFlags_str_ex:*unlicensedcontent*
+
+
+RE-Mark Original Content QC Status-Pending
+((storage_original:OLY-8 OR storage_original:OLY-9 OR storage_original:OLY-10 OR storage_original:OLY-16) AND shapeTag:*lowres* AND type:item AND is_online:true AND !cs_missingOrLost.analyzed:"original" AND (metadata_main_group:"Olympusat" AND _exists_:f_oly_licensor_str_ex AND _exists_:f_oly_rightslineContractId_str AND _exists_:f_oly_rightslineItemId_str AND !f_oly_contentFlags_str_ex:*securedcontent* AND !f_oly_contentFlags_str_ex:*unlicensedcontent*) AND (_exists_:f_oly_titleEn_str OR _exists_:f_oly_titleEs_str) AND !_exists_:f_oly_originalContentQCStatus_str_ex AND f_oly_versionType_str_ex:"originalFile") OR (storage_original:OLY-65 AND ((f_oly_contentType_str_ex:"image" AND shapeTag:*lowimage*) OR (f_oly_contentType_str_ex:"audio" AND shapeTag:*lowaudio*) OR (f_oly_contentType_str_ex:"m-e" AND shapeTag:*lowaudio*) OR (f_oly_contentType_str_ex:"script") OR (f_oly_contentType_str_ex:"subtitle")) AND (_exists_:f_oly_titleEn_str OR _exists_:f_oly_titleEs_str OR _exists_:f_oly_seriesName_str) AND !_exists_:f_oly_originalContentQCStatus_str_ex) OR (metadata_main_group:"Olympusat" AND (storage_original:OLY-8 OR storage_original:OLY-9 OR storage_original:OLY-10 OR storage_original:OLY-16) AND (f_oly_contentType_str_ex:*Trailer* OR f_oly_contentType_str_ex:"promo") AND (_exists_:f_oly_titleEn_str OR _exists_:f_oly_titleEs_str OR _exists_:f_oly_seriesName_str) AND !_exists_:f_oly_originalContentQCStatus_str_ex)
+
+
+Original Content QC-Pending
+(metadata_main_group:"Olympusat" AND _exists_:f_oly_licensor_str_ex AND _exists_:f_oly_rightslineContractId_str AND type:item AND f_oly_versionType_str_ex:"originalFile" AND f_oly_originalContentQCStatus_str_ex:"pending" AND !f_oly_contentFlags_str_ex:*securedcontent* AND !f_oly_contentFlags_str_ex:*unlicensedcontent*) OR (metadata_main_group:"Olympusat" AND _exists_:f_oly_licensor_str_ex AND f_oly_originalContentQCStatus_str_ex:"pending" !f_oly_contentFlags_str_ex:*securedcontent* AND !f_oly_contentFlags_str_ex:*unlicensedcontent* AND (f_oly_contentType_str_ex:"audio" OR f_oly_contentType_str_ex:"m-e" OR f_oly_contentType_str_ex:"image" OR f_oly_contentType_str_ex:"script" OR f_oly_contentType_str_ex:"subtitle" OR f_oly_contentType_str_ex:"project" OR f_oly_contentType_str_ex:*Trailer* OR f_oly_contentType_str_ex:"promo" OR f_oly_contentType_str_ex:"marketingContent")) AND (!f_oly_contentFlags_str_ex:*legacycontent*)
+
+
+Original Content QC-Approved
+metadata_main_group:"Olympusat" AND _exists_:f_oly_licensor_str_ex AND _exists_:f_oly_rightslineContractId_str AND type:item AND f_oly_versionType_str_ex:"originalFile" AND f_oly_originalContentQCStatus_str_ex:"approved" AND !f_oly_contentFlags_str_ex:*securedcontent* AND !f_oly_contentFlags_str_ex:*unlicensedcontent*
+
+
+Original Content QC-Rejected
+metadata_main_group:"Olympusat" AND _exists_:f_oly_licensor_str_ex AND _exists_:f_oly_rightslineContractId_str AND type:item AND f_oly_versionType_str_ex:"originalFile" AND f_oly_originalContentQCStatus_str_ex:*rejected* AND !f_oly_contentFlags_str_ex:*securedcontent* AND !f_oly_contentFlags_str_ex:*unlicensedcontent*
+
+
+Approved Original Licensed Content
+(metadata_main_group:"Olympusat" AND _exists_:f_oly_licensor_str_ex AND _exists_:f_oly_rightslineContractId_str AND f_oly_originalContentQCStatus_str_ex:"approved" AND is_online:true AND !f_oly_contentFlags_str_ex:*securedcontent* AND !f_oly_contentFlags_str_ex:*unlicensedcontent*) AND storage_original:OLY-8
+
+
+RE-Criteria to Move from default to licensed-trailer
+(metadata_main_group:"Olympusat" AND f_oly_contentType_str_ex:*Trailer* AND is_online:true AND placeholder_shape_size:0 AND shapeTag:*lowres*) AND storage_original:OLY-16 AND !storage_original:OLY-8 AND !f_oly_contentFlags_str_ex:*securedcontent* AND !f_oly_contentFlags_str_ex:*unlicensedcontent*
+
+
+Trailers
+metadata_main_group:"Olympusat" AND f_oly_contentType_str_ex:*Trailer* AND storage_original:OLY-8 AND !f_oly_contentFlags_str_ex:*securedcontent* AND !f_oly_contentFlags_str_ex:*unlicensedcontent*
+
+
+RE-Criteria to Move from default to licensed-promo
+(metadata_main_group:"Olympusat" AND f_oly_contentType_str_ex:"promo" AND is_online:true AND placeholder_shape_size:0 AND shapeTag:*lowres*) AND storage_original:OLY-16 AND !storage_original:OLY-8 AND !f_oly_contentFlags_str_ex:*securedcontent* AND !f_oly_contentFlags_str_ex:*unlicensedcontent*
+
+
+Promos
+metadata_main_group:"Olympusat" AND f_oly_contentType_str_ex:"promo" AND storage_original:OLY-8 AND !f_oly_contentFlags_str_ex:*securedcontent* AND !f_oly_contentFlags_str_ex:*unlicensedcontent*
+
+
+RE-Mark Dubbing Status-Pending
+(metadata_main_group:"Olympusat" AND _exists_:f_oly_licensor_str_ex AND _exists_:f_oly_rightslineContractId_str AND f_oly_originalContentQCStatus_str_ex:"approved" AND is_online:true) AND (!_exists_:f_oly_dubbingStatus_str_ex AND f_oly_forDubbing_str_ex:*dubbing*) AND storage_original:OLY-8
+
+
+Dubbing English-Pending
+metadata_main_group:"Olympusat" AND _exists_:f_oly_licensor_str_ex AND _exists_:f_oly_rightslineContractId_str AND f_oly_originalContentQCStatus_str_ex:"approved" AND type:item AND f_oly_dubbingStatus_str_ex:"pending" AND f_oly_forDubbing_str_ex:"forenglishdubbing"
+
+
+Dubbing English-In Progress
+metadata_main_group:"Olympusat" AND _exists_:f_oly_licensor_str_ex AND _exists_:f_oly_rightslineContractId_str AND f_oly_originalContentQCStatus_str_ex:"approved" AND type:item AND f_oly_dubbingStatus_str_ex:*inProgress* AND f_oly_forDubbing_str_ex:"forenglishdubbing"
+
+
+Dubbing English-Submitted
+metadata_main_group:"Olympusat" AND _exists_:f_oly_licensor_str_ex AND _exists_:f_oly_rightslineContractId_str AND f_oly_originalContentQCStatus_str_ex:"approved" AND type:item AND f_oly_dubbingStatus_str_ex:"submitted" AND f_oly_forDubbing_str_ex:"forenglishdubbing"
+
+
+Dubbing English-On Hold
+metadata_main_group:"Olympusat" AND _exists_:f_oly_licensor_str_ex AND _exists_:f_oly_rightslineContractId_str AND f_oly_originalContentQCStatus_str_ex:"approved" AND type:item AND f_oly_dubbingStatus_str_ex:"onHold" AND f_oly_forDubbing_str_ex:"forenglishdubbing"
+
+
+Dubbing Spanish-Pending
+metadata_main_group:"Olympusat" AND _exists_:f_oly_licensor_str_ex AND _exists_:f_oly_rightslineContractId_str AND f_oly_originalContentQCStatus_str_ex:"approved" AND type:item AND f_oly_dubbingStatus_str_ex:"pending" AND f_oly_forDubbing_str_ex:"forspanishdubbing"
+
+
+Dubbing Spanish-In Progress
+metadata_main_group:"Olympusat" AND _exists_:f_oly_licensor_str_ex AND _exists_:f_oly_rightslineContractId_str AND f_oly_originalContentQCStatus_str_ex:"approved" AND type:item AND f_oly_dubbingStatus_str_ex:*inProgress* AND f_oly_forDubbing_str_ex:"forspanishdubbing"
+
+
+Dubbing Spanish-Submitted
+metadata_main_group:"Olympusat" AND _exists_:f_oly_licensor_str_ex AND _exists_:f_oly_rightslineContractId_str AND f_oly_originalContentQCStatus_str_ex:"approved" AND type:item AND f_oly_dubbingStatus_str_ex:"submitted" AND f_oly_forDubbing_str_ex:"forspanishdubbing"
+
+
+Dubbing Spanish-On Hold
+metadata_main_group:"Olympusat" AND _exists_:f_oly_licensor_str_ex AND _exists_:f_oly_rightslineContractId_str AND f_oly_originalContentQCStatus_str_ex:"approved" AND type:item AND f_oly_dubbingStatus_str_ex:"onHold" AND f_oly_forDubbing_str_ex:"forspanishdubbing"
+
+
+Original Content QC-Pending-NonVideo
+(metadata_main_group:"Olympusat" AND _exists_:f_oly_licensor_str_ex AND f_oly_originalContentQCStatus_str_ex:"pending" AND !f_oly_contentFlags_str_ex:*securedcontent* AND !f_oly_contentFlags_str_ex:*unlicensedcontent* AND !f_oly_contentFlags_str_ex:*legacycontent* AND (f_oly_contentType_str_ex:"audio" OR f_oly_contentType_str_ex:"m-e" OR f_oly_contentType_str_ex:"image" OR f_oly_contentType_str_ex:"script" OR f_oly_contentType_str_ex:"subtitle" OR f_oly_contentType_str_ex:"project" OR f_oly_contentType_str_ex:*Trailer* OR f_oly_contentType_str_ex:"promo" OR f_oly_contentType_str_ex:"marketingContent"))
+
+
+RE-AutomationTrigger-Dub-Placeholder02
+test
+
+
+RE-AutomationTrigger-Dub-Placeholder03
+test
+
+
+RE-AutomationTrigger-Dub-Placeholder04
+test
+
+
+RE-Mark FinalQC Status-Pending
+(storage_original:OLY-8 OR storage_original:OLY-9 OR storage_original:OLY-10 OR storage_original:OLY-16) AND shapeTag:*lowres* AND type:item AND is_online:true AND !cs_missingOrLost.analyzed:"original" AND (metadata_main_group:"Olympusat" AND _exists_:f_oly_licensor_str_ex AND _exists_:f_oly_contentType_str_ex AND (f_oly_versionType_str_ex:"conformFile" OR f_oly_versionType_str_ex:"conformFile-spanish" OR f_oly_versionType_str_ex:"conformFile-english" OR f_oly_versionType_str_ex:"censoredFile" OR f_oly_versionType_str_ex:"censoredFile-spanish" OR f_oly_versionType_str_ex:"censoredFile-english")) AND (_exists_:f_oly_titleEn_str OR _exists_:f_oly_titleEs_str) AND !_exists_:f_oly_finalQCStatus_str_ex
+
+
+Final QC-Pending
+metadata_main_group:"Olympusat" AND _exists_:f_oly_licensor_str_ex AND _exists_:f_oly_contentType_str_ex AND type:item AND (f_oly_versionType_str_ex:"conformFile" OR f_oly_versionType_str_ex:"conformFile-spanish" OR f_oly_versionType_str_ex:"conformFile-english" OR f_oly_versionType_str_ex:"censoredFile" OR f_oly_versionType_str_ex:"censoredFile-spanish" OR f_oly_versionType_str_ex:"censoredFile-english") AND f_oly_finalQCStatus_str_ex:"pending"
+
+
+Final QC-Approved
+metadata_main_group:"Olympusat" AND _exists_:f_oly_licensor_str_ex AND _exists_:f_oly_contentType_str_ex AND type:item AND (f_oly_versionType_str_ex:"conformFile" OR f_oly_versionType_str_ex:"conformFile-spanish" OR f_oly_versionType_str_ex:"conformFile-english" OR f_oly_versionType_str_ex:"censoredFile" OR f_oly_versionType_str_ex:"censoredFile-spanish" OR f_oly_versionType_str_ex:"censoredFile-english") AND f_oly_finalQCStatus_str_ex:"approved"
+
+
+Final QC-Rejected
+metadata_main_group:"Olympusat" AND _exists_:f_oly_licensor_str_ex AND _exists_:f_oly_contentType_str_ex AND type:item AND (f_oly_versionType_str_ex:"conformFile" OR f_oly_versionType_str_ex:"conformFile-spanish" OR f_oly_versionType_str_ex:"conformFile-english" OR f_oly_versionType_str_ex:"censoredFile" OR f_oly_versionType_str_ex:"censoredFile-spanish" OR f_oly_versionType_str_ex:"censoredFile-english") AND f_oly_finalQCStatus_str_ex:*rejected*
+
+
+Approved Final Licensed Content
+(metadata_main_group:"Olympusat" AND _exists_:f_oly_licensor_str_ex AND f_oly_finalQCStatus_str_ex:"approved") AND storage_original:OLY-8
+
+
+RE-AutomationTrigger-FinalQC-Placeholder01
+test
+
+
+RE-AutomationTrigger-FinalQC-Placeholder02
+test
+
+
+RE-AutomationTrigger-FinalQC-Placeholder03
+test
+
+
+RE-AutomationTrigger-FinalQC-Placeholder04
+test
+
+
+RE-Mark Creative Status-Pending
+(metadata_main_group:"Olympusat" AND _exists_:f_oly_licensor_str_ex AND f_oly_versionType_str_ex:"conformFile" AND f_oly_finalQCStatus_str_ex:"approved" AND is_online:true) AND storage_original:OLY-8 AND !_exists_:f_oly_creativeStatus_str_ex
+
+
+Creative-Pending
+metadata_main_group:"Olympusat" AND type:item AND f_oly_versionType_str_ex:"conformFile" AND f_oly_finalQCStatus_str_ex:"approved" AND f_oly_creativeStatus_str_ex:"pending"
+
+
+Creative-In Progress
+metadata_main_group:"Olympusat" AND type:item AND f_oly_versionType_str_ex:"conformFile" AND f_oly_finalQCStatus_str_ex:"approved" AND f_oly_creativeStatus_str_ex:"inProgress"
+
+
+Creative-Failed
+metadata_main_group:"Olympusat" AND type:item AND f_oly_versionType_str_ex:"conformFile" AND f_oly_finalQCStatus_str_ex:"approved" AND f_oly_creativeStatus_str_ex:"failed"
+
+
+Creative-Completed
+metadata_main_group:"Olympusat" AND type:item AND f_oly_versionType_str_ex:"conformFile" AND f_oly_finalQCStatus_str_ex:"approved" AND f_oly_creativeStatus_str_ex:"completed"
+
+
+RE-AutomationTrigger-Creative-Placeholder01
+test
+
+
+RE-AutomationTrigger-Creative-Placeholder02
+test
+
+
+RE-AutomationTrigger-Creative-Placeholder03
+test
+
+
+RE-AutomationTrigger-Creative-Placeholder04
+test
+
+
+Distribution-Missing Metadata
+(metadata_main_group:"Olympusat" AND _exists_:f_oly_licensor_str_ex AND f_oly_versionType_str_ex:"conformFile" AND f_oly_finalQCStatus_str_ex:"approved" AND is_online:true) AND storage_original:OLY-8 AND ((!_exists_:f_oly_contentType_str_ex) OR (!_exists_:f_oly_distributionTo_str_ex) OR (!_exists_:f_oly_primaryMetadataLanguage_str_ex) OR (!_exists_:f_oly_channel_str_ex) OR (!_exists_:f_oly_copyright_str) OR (!_exists_:f_oly_titleEn_str OR !_exists_:f_oly_titleEs_str) OR (!_exists_:f_oly_descriptionEn_str OR !_exists_:f_oly_descriptionEs_str) OR (!_exists_:f_oly_shortDescriptionEn_str OR !_exists_:f_oly_shortDescriptionEs_str) OR (!_exists_:f_oly_logLineEn_str OR !_exists_:f_oly_logLineEs_str))
+
+
+RE-Mark as Pending Distribution
+(metadata_main_group:"Olympusat" AND _exists_:f_oly_licensor_str_ex AND f_oly_versionType_str_ex:"conformFile" AND f_oly_finalQCStatus_str_ex:"approved" AND f_oly_creativeStatus_str_ex:"completed" AND is_online:true AND storage_original:OLY-8 AND _exists_:f_oly_contentType_str_ex AND _exists_:f_oly_distributionTo_str_ex AND _exists_:f_oly_primaryMetadataLanguage_str_ex AND _exists_:f_oly_channel_str_ex AND _exists_:f_oly_copyright_str AND !_exists_:f_oly_distributionStatus_str_ex) AND (_exists_:f_oly_titleEn_str OR _exists_:f_oly_titleEs_str) AND (_exists_:f_oly_descriptionEn_str OR _exists_:f_oly_descriptionEs_str) AND (_exists_:f_oly_shortDescriptionEn_str OR _exists_:f_oly_shortDescriptionEs_str) AND (_exists_:f_oly_logLineEn_str OR _exists_:f_oly_logLineEs_str)
+
+
+Distribution-Pending
+metadata_main_group:"Olympusat" AND type:item AND f_oly_versionType_str_ex:"conformFile" AND f_oly_finalQCStatus_str_ex:"approved" AND f_oly_creativeStatus_str_ex:"completed" AND f_oly_distributionStatus_str_ex:"pending"
+
+
+Distribution-In Progress
+metadata_main_group:"Olympusat" AND type:item AND f_oly_versionType_str_ex:"conformFile" AND f_oly_finalQCStatus_str_ex:"approved" AND f_oly_creativeStatus_str_ex:"completed" AND f_oly_distributionStatus_str_ex:"inProgress"
+
+
+Distribution-Failed
+metadata_main_group:"Olympusat" AND type:item AND f_oly_versionType_str_ex:"conformFile" AND f_oly_finalQCStatus_str_ex:"approved" AND f_oly_creativeStatus_str_ex:"completed" AND f_oly_distributionStatus_str_ex:"failed"
+
+
+Distribution-Completed
+metadata_main_group:"Olympusat" AND type:item AND f_oly_versionType_str_ex:"conformFile" AND f_oly_finalQCStatus_str_ex:"approved" AND f_oly_creativeStatus_str_ex:"completed" AND f_oly_distributionStatus_str_ex:"completed"
+
+
+Items with Metadata CSV
+(metadata_main_group:"Olympusat" AND shapeTag:*metadata*) AND storage:*OLY-57*
+
+
+RE-AutomationTrigger-Dist-Placeholder02
+test
+
+
+RE-AutomationTrigger-Dist-Placeholder03
+test
+
+
+RE-AutomationTrigger-Dist-Placeholder04
+test
+
+
+RE-Mark Programming Status-Pending
+(metadata_main_group:"Olympusat" AND _exists_:f_oly_licensor_str_ex AND f_oly_versionType_str_ex:"conformFile" AND f_oly_finalQCStatus_str_ex:"approved" AND is_online:true AND storage_original:OLY-8 AND _exists_:f_oly_contentType_str_ex AND _exists_:f_oly_distributionTo_str_ex AND f_oly_distributionStatus_str_ex:"completed" AND !_exists_:f_oly_programmingStatus_str_ex)
+
+
+Programming-Pending
+type:item AND f_oly_versionType_str_ex:"conformFile" AND f_oly_finalQCStatus_str_ex:"approved" AND f_oly_distributionStatus_str_ex:"completed" AND f_oly_programmingStatus_str_ex:"pending"
+
+
+Programming-In Progress
+type:item AND f_oly_versionType_str_ex:"conformFile" AND f_oly_finalQCStatus_str_ex:"approved" AND f_oly_distributionStatus_str_ex:"completed" AND f_oly_programmingStatus_str_ex:"inProgress"
+
+
+Programming-Failed
+type:item AND f_oly_versionType_str_ex:"conformFile" AND f_oly_finalQCStatus_str_ex:"approved" AND f_oly_distributionStatus_str_ex:"completed" AND f_oly_programmingStatus_str_ex:"failed"
+
+
+Programming-Completed
+type:item AND f_oly_versionType_str_ex:"conformFile" AND f_oly_finalQCStatus_str_ex:"approved" AND f_oly_distributionStatus_str_ex:"completed" AND f_oly_programmingStatus_str_ex:"completed"
+
+
+Licensor set, ContractID set, Final QC Approved & Ready for Air in 5 Days
+(metadata_main_group:"Olympusat" AND _exists_:f_oly_licensor_str_ex AND _exists_:f_oly_rightslineContractId_str AND f_oly_finalQCStatus_str_ex:"approved" AND f_oly_readyForAirDate_dt:[* TO now+5d] AND is_online:true) AND storage_original:OLY-8
+
+
+RE-AutomationTrigger-Prog-Placeholder01
+test
+
+
+RE-AutomationTrigger-Prog-Placeholder02
+test
+
+
+RE-AutomationTrigger-Prog-Placeholder03
+test
+
+
+RE-AutomationTrigger-Prog-Placeholder04
+test
+
+
+++++++++++++++++++++++++++++++++++
+test
+
+
+
+
+
+Modify Shape Directory - Move to Year Created/Client/ folder
+${item_created_year}/${oly_clientName}
+
+CLIENT OWNED CONTENT Metadata Group
+Saved Searches for Users & Rules Engine Jobs
+
+Client Owned Content Missing Metadata
+(metadata_main_group:"Client Owned Content" AND is_online:true AND placeholder_shape_size:0) AND (storage_original:OLY-16 OR storage_original:OLY-17) AND ((!_exists_:f_oly_clientName_str_ex) OR (!_exists_:f_oly_description_str) OR (!_exists_:f_oly_tags_str) OR (!_exists_:f_oly_versionType_str_ex) OR (!f_oly_forDubbing_str_ex:*forenglishdubbing* OR !f_oly_forDubbing_str_ex:*forspanishdubbing*) OR (!_exists_:f_oly_titleEn_str OR !_exists_:f_oly_titleEs_str))
+
+
+RE-Criteria to Move to clientOwnedContent
+(metadata_main_group:"Client Owned Content" AND _exists_:f_oly_clientName_str_ex AND is_online:true AND placeholder_shape_size:0) AND storage_original:OLY-16 AND !storage_original:OLY-17
+
+
+Client Owned Content
+(metadata_main_group:"Client Owned Content" AND _exists_:f_oly_clientName_str_ex AND is_online:true AND placeholder_shape_size:0) AND storage_original:OLY-17
+
+
+RE-ClientOwned-Mark as Pending Original Content QC
+(metadata_main_group:"Client Owned Content" AND is_online:true AND placeholder_shape_size:0 AND storage_original:OLY-17 AND shapeTag:*lowres*) AND ((_exists_:f_oly_clientName_str_ex) AND (_exists_:f_oly_titleEn_str OR _exists_:f_oly_titleEs_str)) AND !_exists_:f_oly_originalContentQCStatus_str_ex
+
+
+Client Owned-Original Content QC-Pending
+(metadata_main_group:"Client Owned Content" AND is_online:true AND placeholder_shape_size:0 AND storage_original:OLY-17) AND ((_exists_:f_oly_clientName_str_ex) AND (_exists_:f_oly_titleEn_str OR _exists_:f_oly_titleEs_str)) AND f_oly_originalContentQCStatus_str_ex:"pending"
+
+
+Client Owned-Original Content QC-Approved
+(metadata_main_group:"Client Owned Content" AND is_online:true AND placeholder_shape_size:0 AND storage_original:OLY-17) AND ((_exists_:f_oly_clientName_str_ex) AND (_exists_:f_oly_titleEn_str OR _exists_:f_oly_titleEs_str)) AND f_oly_originalContentQCStatus_str_ex:"approved"
+
+
+Client Owned-Original Content QC-Rejected
+(metadata_main_group:"Client Owned Content" AND is_online:true AND placeholder_shape_size:0 AND storage_original:OLY-17) AND ((_exists_:f_oly_clientName_str_ex) AND (_exists_:f_oly_titleEn_str OR _exists_:f_oly_titleEs_str)) AND f_oly_originalContentQCStatus_str_ex:"rejected"
+
+
+RE-ClientOwned-Mark Dubbing Status-Pending
+(metadata_main_group:"Client Owned Content" AND _exists_:f_oly_clientName_str_ex AND f_oly_originalContentQCStatus_str_ex:"approved" AND is_online:true) AND (!_exists_:f_oly_dubbingStatus_str_ex AND f_oly_forDubbing_str_ex:*dubbing*) AND storage_original:OLY-17
+
+
+Client Owned-Dubbing English-Pending
+type:item AND metadata_main_group:"Client Owned Content" AND _exists_:f_oly_clientName_str_ex AND f_oly_originalContentQCStatus_str_ex:"approved" AND f_oly_dubbingStatus_str_ex:"pending" AND f_oly_forDubbing_str_ex:"forenglishdubbing"
+
+
+Client Owned-Dubbing English-In Progress
+type:item AND metadata_main_group:"Client Owned Content" AND _exists_:f_oly_clientName_str_ex AND f_oly_originalContentQCStatus_str_ex:"approved" AND f_oly_dubbingStatus_str_ex:*inProgress* AND f_oly_forDubbing_str_ex:"forenglishdubbing"
+
+
+Client Owned-Dubbing English-Submitted
+type:item AND metadata_main_group:"Client Owned Content" AND _exists_:f_oly_clientName_str_ex AND f_oly_originalContentQCStatus_str_ex:"approved" AND f_oly_dubbingStatus_str_ex:"submitted" AND f_oly_forDubbing_str_ex:"forenglishdubbing"
+
+
+Client Owned-Dubbing English-On Hold
+type:item AND metadata_main_group:"Client Owned Content" AND _exists_:f_oly_clientName_str_ex AND f_oly_originalContentQCStatus_str_ex:"approved" AND f_oly_dubbingStatus_str_ex:"onHold" AND f_oly_forDubbing_str_ex:"forenglishdubbing"
+
+
+Client Owned-Dubbing Spanish-Pending
+type:item AND metadata_main_group:"Client Owned Content" AND _exists_:f_oly_clientName_str_ex AND f_oly_originalContentQCStatus_str_ex:"approved" AND f_oly_dubbingStatus_str_ex:"pending" AND f_oly_forDubbing_str_ex:"forspanishdubbing"
+
+
+Client Owned-Dubbing Spanish-In Progress
+type:item AND metadata_main_group:"Client Owned Content" AND _exists_:f_oly_clientName_str_ex AND f_oly_originalContentQCStatus_str_ex:"approved" AND f_oly_dubbingStatus_str_ex:*inProgress* AND f_oly_forDubbing_str_ex:"forspanishdubbing"
+
+
+Client Owned-Dubbing Spanish-Submitted
+type:item AND metadata_main_group:"Client Owned Content" AND _exists_:f_oly_clientName_str_ex AND f_oly_originalContentQCStatus_str_ex:"approved" AND f_oly_dubbingStatus_str_ex:"submitted" AND f_oly_forDubbing_str_ex:"forspanishdubbing"
+
+
+Client Owned-Dubbing Spanish-On Hold
+type:item AND metadata_main_group:"Client Owned Content" AND _exists_:f_oly_clientName_str_ex AND f_oly_originalContentQCStatus_str_ex:"approved" AND f_oly_dubbingStatus_str_ex:"onHold" AND f_oly_forDubbing_str_ex:"forspanishdubbing"
+
+
+RE-ClientOwned-Mark as Pending Final QC
+(storage_original:OLY-16 OR storage_original:OLY-17) AND shapeTag:*lowres* AND type:item AND is_online:true AND !cs_missingOrLost.analyzed:"original" AND (metadata_main_group:"Client Owned Content" AND _exists_:f_oly_clientName_str_ex AND f_oly_versionType_str_ex:"conformFile") AND (_exists_:f_oly_titleEn_str OR _exists_:f_oly_titleEs_str) AND !_exists_:f_oly_finalQCStatus_str_ex
+
+
+Client Owned-Final QC-Pending
+metadata_main_group:"Client Owned Content" AND _exists_:f_oly_clientName_str_ex AND type:item AND f_oly_versionType_str_ex:"conformFile" AND f_oly_finalQCStatus_str_ex:"pending"
+
+
+Client Owned-Final QC-Approved
+metadata_main_group:"Client Owned Content" AND _exists_:f_oly_clientName_str_ex AND type:item AND f_oly_versionType_str_ex:"conformFile" AND f_oly_finalQCStatus_str_ex:"approved"
+
+
+Client Owned-Final QC-Rejected
+metadata_main_group:"Client Owned Content" AND _exists_:f_oly_clientName_str_ex AND type:item AND f_oly_versionType_str_ex:"conformFile" AND f_oly_finalQCStatus_str_ex:*rejected*
+
+
+Client Owned-Approved Final Content
+(metadata_main_group:"Client Owned Content" AND _exists_:f_oly_clientName_str_ex AND f_oly_finalQCStatus_str_ex:"approved" AND is_online:true) AND storage_original:OLY-17
+
+
+Client Owned-Distribution-Pending
+(metadata_main_group:"Client Owned Content" AND _exists_:f_oly_clientName_str_ex AND f_oly_finalQCStatus_str_ex:"approved" AND is_online:true) AND storage_original:OLY-17 AND f_oly_distributionStatus_str_ex:"pending"
+
+
+Client Owned-Distribution-InProgress
+(metadata_main_group:"Client Owned Content" AND _exists_:f_oly_clientName_str_ex AND f_oly_finalQCStatus_str_ex:"approved" AND is_online:true) AND storage_original:OLY-17 AND f_oly_distributionStatus_str_ex:"inProgress"
+
+
+Client Owned-Distribution-Failed
+(metadata_main_group:"Client Owned Content" AND _exists_:f_oly_clientName_str_ex AND f_oly_finalQCStatus_str_ex:"approved" AND is_online:true) AND storage_original:OLY-17 AND f_oly_distributionStatus_str_ex:"failed"
+
+
+Client Owned-Distribution-Completed
+(metadata_main_group:"Client Owned Content" AND _exists_:f_oly_clientName_str_ex AND f_oly_finalQCStatus_str_ex:"approved" AND is_online:true) AND storage_original:OLY-17 AND f_oly_distributionStatus_str_ex:"completed"
+
+
++++++++++++++++++++++++++++++++++
+test
+
+
+RE-Criteria to Archive to Quantum-originalFile-nonVideo
+(metadata_main_group:"Olympusat" AND is_online:true AND is_archived:"false" AND !cs_missingOrLost.analyzed:"original" AND !f_oly_tags_str:"to be deleted" AND (storage_original:OLY-8 OR storage_original:OLY-9 OR storage_original:OLY-10) AND (mediaType.analyzed:"video" AND f_oly_versionType_str_ex:"originalFile" AND f_oly_originalContentQCStatus_str_ex:"approved" AND placeholder_shape_size:0)) OR (metadata_main_group:"Olympusat" AND is_online:true AND is_archived:"false" AND !cs_missingOrLost.analyzed:"original" AND !f_oly_tags_str:"to be deleted" AND storage_original:OLY-65 AND ((mediaType.analyzed:"audio" AND f_oly_contentType_str_ex:"m-e") OR (mediaType.analyzed:"audio" AND f_oly_contentType_str_ex:"audio") OR (mediaType.analyzed:"image" AND f_oly_contentType_str_ex:"image") OR (mediaType.analyzed:"pdf" AND f_oly_contentType_str_ex:"script") OR (mediaType.analyzed:"document" AND f_oly_contentType_str_ex:"closedCaption") OR (mediaType.analyzed:"document" AND f_oly_contentType_str_ex:"subtitle") OR (mediaType.analyzed:"video" AND f_oly_contentType_str_ex:*Trailer*) OR (f_oly_contentType_str_ex:"marketingContent" AND (mediaType.analyzed:"pdf" OR mediaType.analyzed:"document" OR mediaType.analyzed:"data"))) AND f_oly_originalContentQCStatus_str_ex:"approved")
+
+
+    Testing to combine every file needed to be Archived into one Saved Search
+    (metadata_main_group:"Olympusat" AND is_online:true AND placeholder_shape_size:0) AND (storage_original:OLY-8 OR storage_original:OLY-9 OR storage_original:OLY-10) AND ((!cs_missingOrLost.analyzed:"original" AND mediaType.analyzed:"video" AND f_oly_versionType_str_ex:"originalFile" AND f_oly_originalContentQCStatus_str_ex:"approved") OR (!cs_missingOrLost.analyzed:"original" AND mediaType.analyzed:"video" AND (f_oly_versionType_str_ex:"conformFile" OR f_oly_versionType_str_ex:"conformFile-spanish" OR f_oly_versionType_str_ex:"conformFile-english" OR f_oly_versionType_str_ex:"censoredFile" OR f_oly_versionType_str_ex:"censoredFile-spanish" OR f_oly_versionType_str_ex:"censoredFile-english") AND f_oly_finalQCStatus_str_ex:"approved") OR (f_oly_contentType_str_ex:"audio") OR (f_oly_contentType_str_ex:"image") OR (f_oly_contentType_str_ex:"musicVideo") OR (f_oly_contentType_str_ex:"closedCaption")) AND is_archived:"false"
+
+
+RE-Criteria to Archive to Quantum-conform-censored files
+(metadata_main_group:"Olympusat" AND is_online:true AND placeholder_shape_size:0) AND (storage_original:OLY-8 OR storage_original:OLY-9 OR storage_original:OLY-10) AND !cs_missingOrLost.analyzed:"original" AND mediaType.analyzed:"video" AND (f_oly_versionType_str_ex:"conformFile" OR f_oly_versionType_str_ex:"conformFile-spanish" OR f_oly_versionType_str_ex:"conformFile-english" OR f_oly_versionType_str_ex:"censoredFile" OR f_oly_versionType_str_ex:"censoredFile-spanish" OR f_oly_versionType_str_ex:"censoredFile-english") AND f_oly_finalQCStatus_str_ex:"approved" AND is_archived:"false"
+
+
+Archive to Quantum-InProgress
+f_portal_archive_action_status_str_ex:"Archiving"
+
+
+Archive to Quantum-Failed
+test
+
+
+Archive to Quantum-Completed-Last 14 Days
+is_archived:"true" AND f_portal_archive_ts_ts:[now-14d TO *]
+
+
+Placeholder00
+test
+
+
+Placeholder01
+test
+
+
+Placeholder02
+test
+
+
+RE-Criteria to Copy to S3 Glacier-originalFile-nonVideo
+(metadata_main_group:"Olympusat" AND is_online:true AND is_archived:"true" AND !_exist_:f_oly_deleteStatusAWS_str AND !f_oly_archiveStatusAWS_str:"completed" AND !cs_missingOrLost.analyzed:"original" AND !f_oly_tags_str:"to be deleted") AND (storage_original:OLY-8 OR storage_original:OLY-9 OR storage_original:OLY-10 OR storage_original:OLY-65) AND ((mediaType.analyzed:"video" AND f_oly_versionType_str_ex:"originalFile" AND f_oly_originalContentQCStatus_str_ex:"approved" AND placeholder_shape_size:0) OR (mediaType.analyzed:"audio" AND f_oly_contentType_str_ex:"m-e") OR (mediaType.analyzed:"audio" AND f_oly_contentType_str_ex:"audio") OR (mediaType.analyzed:"image" AND f_oly_contentType_str_ex:"image") OR (mediaType.analyzed:"pdf" AND f_oly_contentType_str_ex:"script") OR (mediaType.analyzed:"document" AND f_oly_contentType_str_ex:"closedCaption") OR (mediaType.analyzed:"document" AND f_oly_contentType_str_ex:"subtitle") OR (mediaType.analyzed:"video" AND f_oly_contentType_str_ex:*Trailer*) OR (f_oly_contentType_str_ex:"marketingContent" AND (mediaType.analyzed:"pdf" OR mediaType.analyzed:"document" OR mediaType.analyzed:"data")))
+
+
+RE-Criteria to Copy to S3 Glacier-conform-censored files
+(metadata_main_group:"Olympusat" AND is_online:true AND is_archived:"true" AND !f_oly_archiveStatusAWS_str:"completed" AND placeholder_shape_size:0) AND (storage_original:OLY-8 OR storage_original:OLY-9 OR storage_original:OLY-10) AND !cs_missingOrLost.analyzed:"original" AND mediaType.analyzed:"video" AND (f_oly_versionType_str_ex:"conformFile" OR f_oly_versionType_str_ex:"conformFile-spanish" OR f_oly_versionType_str_ex:"conformFile-english" OR f_oly_versionType_str_ex:"censoredFile" OR f_oly_versionType_str_ex:"censoredFile-spanish" OR f_oly_versionType_str_ex:"censoredFile-english")
+
+
+Copy to S3 Glacier-In Progress
+metadata_main_group:"Olympusat" AND f_oly_archiveStatusAWS_str:*in\ progress*
+
+
+Copy to S3 Glacier-Failed
+metadata_main_group:"Olympusat" AND is_archived:"true" AND f_oly_archiveStatusAWS_str:*failed*
+
+
+Copy to S3 Glacier-Completed-Last 14 Days
+metadata_main_group:"Olympusat" AND is_archived:"true" AND f_oly_archiveStatusAWS_str:"completed" AND f_oly_archiveDateAWS_ts:[now-14d TO *]
+
+
+Archived to Quantum & NOT Archived to S3 Glacier
+metadata_main_group:"Olympusat" AND !f_oly_archiveStatusAWS_str:"completed" AND is_archived:true
+
+
+Placeholder01
+test
+
+
+Placeholder02
+test
+
+
+Archived and Online-To Be Flushed
+is_archived:"true" AND portal_archive_status:"Archived/Restored" AND f_oly_archiveStatusAWS_str:"completed"
+
+
+RE-Flush from Online-conform-After 14 days
+is_archived:"true" AND f_oly_versionType_str_ex:"conformFile" AND portal_archive_status:"Archived/Restored" AND ((f_portal_archive_ts_ts:[* TO now-14d] AND !_exists_:f_portal_restore_ts_ts) OR (f_portal_restore_ts_ts:[* TO now-14d]))
+
+    Test - After 1 days
+    is_archived:"true" AND f_oly_versionType_str_ex:"conformFile" AND portal_archive_status:"Archived/Restored" AND ((f_portal_archive_ts_ts:[* TO now-1d] AND !_exists_:f_portal_restore_ts_ts) OR (f_portal_restore_ts_ts:[* TO now-1d]))
+
+
+RE-Flush from Online-DateAutomation-Placeholder03
+test
+
+
+RE-Flush from Online-DateAutomation-Placeholder04
+test
+
+
+Flush from Online-Pending
+test
+
+
+Flush from Online-InProgress
+test
+
+
+Flush from Online-Failed
+test
+
+
+Flush from Online-Completed
+is_archived:"true" AND is_online:"false" AND f_oly_versionType_str_ex:"conformFile" AND portal_archive_status:"Archived"
+
+
+RE-Restore from Quantum-Automation-Placeholder01
+test
+
+
+RE-Restore from Quantum-Automation-Placeholder02
+test
+
+
+Restore from Quantum-Pending
+test
+
+
+Restore from Quantum-InProgress
+test
+
+
+Restore from Quantum-Failed
+test
+
+
+Restore from Quantum-Completed
+test
+
+
+RE-Restore from AWS-Automation-Placeholder01
+test
+
+
+RE-Restore from AWS-Automation-Placeholder02
+test
+
+
+Restore from AWS-Pending
+test
+
+
+Restore from AWS-InProgress
+test
+
+
+Restore from AWS-Failed
+test
+
+
+Restore from AWS-Completed
+test
+
+
+++++++++++++++++++++++++++++++++
+test
+
+
+RE-Needs Metadata-Mark as Legacy Content
+metadata_main_group:"Olympusat" AND id:*OLY-* AND (f_originalUri_str_ex:*\/original-legacy\/* OR f_originalUri_str_ex:*\/nonVideo-legacy\/*) AND !f_oly_contentFlags_str_ex:*legacycontent*
+
+
+Test Files - To Be Deleted
+
+
+
+Not Accesssed in Past 14 Days
+f_cs_last_access_date_ts:[* TO now-14d]
+
+
+
+
+TESTING SAVED SEARCHES
+
+Missing Relationships
+metadata_main_group:"Olympusat" AND placeholder_shape_size:0 AND id:*OLY-* AND ((f_oly_contentType_str_ex:"episode" AND (f_oly_versionType_str_ex:*conform* OR f_oly_versionType_str_ex:*censored*) AND (!relations:*OLY-136* OR !relations:*OLY-146*)) OR (f_oly_contentType_str_ex:"episode" AND f_oly_versionType_str_ex:"originalFile" AND (!relations:*OLY-136* OR !relations:*OLY-146)))
+
+
+Has Relationships
+metadata_main_group:"Olympusat" AND placeholder_shape_size:0 id:*OLY-* AND ((f_oly_contentType_str_ex:"episode" AND (f_oly_versionType_str_ex:*conform* OR f_oly_versionType_str_ex:*censored*) AND (relations:*OLY-136* OR relations:*OLY-146*)) OR (f_oly_contentType_str_ex:"episode" AND f_oly_versionType_str_ex:"originalFile" AND (relations:*OLY-136* OR relations:*OLY-146)))
