@@ -39,11 +39,9 @@ httpResponse=$(curl --location --request GET $urlGetItemInfo --header 'Authoriza
 if [[ ("$httpResponse" != *"legacycontent"*) && ("$user" = "legacyApproval") ]];
 then
     #user is 'legacyApproval' & oly_contentFlags does not contain 'legacycontent'-skip process
-    echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" >> $logfile
-    echo "$datetime - (contentProcessingQC) - Item ID - $itemId" >> "$logfile"
-    echo "$datetime - (contentProcessingQC) - User - $user" >> "$logfile"
-    echo "$datetime - (contentProcessingQC) - Content Flags Does NOT Contain 'legacycontent'" >> "$logfile"
-    echo "$datetime - (contentProcessingQC) - Skipping Marking as Approved" >> "$logfile"
+    echo "$datetime - (contentProcessingQC) - [$itemId] - User - $user" >> "$logfile"
+    echo "$datetime - (contentProcessingQC) - [$itemId] - Content Flags Does NOT Contain 'legacycontent'" >> "$logfile"
+    echo "$datetime - (contentProcessingQC) - [$itemId] - Skipping Marking as Approved" >> "$logfile"
 else
     #user is not 'legacyApproval' or user is 'legacyApproval' & oly_contentFlags does contain 'legacycontent'-continue with process
     #Variables to be passed from Cantemo to shell script
@@ -57,15 +55,10 @@ else
     export qcBy=$2
     export qcDate=$(date "+%Y-%m-%dT%H:%M:%S")
 
-    echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" >> $logfile
-    echo "$datetime - (contentProcessingQC) - Triggering API to Update OriginalQC Metadata" >> "$logfile"
-    echo "$datetime - (contentProcessingQC) - Item ID - $itemId" >> "$logfile"
-    echo "$datetime - (contentProcessingQC) - User - $user" >> "$logfile"
-    echo "$datetime - (contentProcessingQC) - New QC Status - $qcStatus" >> "$logfile"
-    echo "$datetime - (contentProcessingQC) - Item Content Type - $itemContentType" >> "$logfile"
-    echo "$datetime - (contentProcessingQC) - Item Version Type - $itemVersionType" >> "$logfile"
-    echo "$datetime - (contentProcessingQC) - Item Current Original Content QC Status - $itemOriginalContentQCStatus" >> "$logfile"
-    echo "$datetime - (contentProcessingQC) - Item Current Final QC Status - $itemFinalQCStatus" >> "$logfile"
+    echo "$datetime - (contentProcessingQC) - [$itemId] - Triggering API to Update OriginalQC Metadata" >> "$logfile"
+    echo "$datetime - (contentProcessingQC) - [$itemId] - User - {$user} - New QC Status - {$qcStatus}" >> "$logfile"
+    echo "$datetime - (contentProcessingQC) - [$itemId] - Content Type - {$itemContentType} - Item Version Type - {$itemVersionType}" >> "$logfile"
+    echo "$datetime - (contentProcessingQC) - [$itemId] - Current Original Content QC Status - {$itemOriginalContentQCStatus} - Current Final QC Status - {$itemFinalQCStatus}" >> "$logfile"
 
     case $itemContentType in
         "movie" | "episode")
@@ -98,12 +91,12 @@ else
         ;;
     esac
 
-    echo "$datetime - (contentProcessingQC) - Body Data - $bodyData" >> "$logfile"
+    #echo "$datetime - (contentProcessingQC) - [$itemId] - Body Data - $bodyData" >> "$logfile"
 
     curl -s -o /dev/null --location --request PUT $url --header 'Content-Type: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=xZqBrKBPBOUANsWFnMC3aF90S52Ip3tgXdUHwWZvhNnu9aLl9j4rdrxRhV9nSQx9' --data $bodyData
 
     sleep 5
 
-    echo "$datetime - (contentProcessingQC) - Update Metadata Completed" >> "$logfile"
+    echo "$datetime - (contentProcessingQC) - [$itemId] - Update Metadata Completed" >> "$logfile"
 fi
 IFS=$saveIFS
