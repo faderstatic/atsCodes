@@ -59,7 +59,7 @@ else
     seriesCheckHttpResponse=$(curl --location --request PUT $searchUrl --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=VDa9RP3Y9rgomyzNWvRxbu7WdTMetVYBlLg6pGMIJ6oyVABsjJiiEK9JCWVA1HYd' --data $seriesCheckBody)
     echo "Series Check HTTP Response - [$seriesCheckHttpResponse]"
 
-    if [[ "$seriesCheckHttpResponse" != *'"id":"OLY-"'* ]];
+    if [[ "$seriesCheckHttpResponse" != *'"id":"OLY-'* ]];
     then
         #Series placeholder does not exists, API Call to create new Series placeholder with metadata
 
@@ -83,7 +83,7 @@ else
     seasonCheckHttpResponse=$(curl --location --request PUT $searchUrl --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=VDa9RP3Y9rgomyzNWvRxbu7WdTMetVYBlLg6pGMIJ6oyVABsjJiiEK9JCWVA1HYd' --data $seasonBody)
     echo "Season Check HTTP Response - [$seasonCheckHttpResponse]"
 
-    if [[ "$seasonCheckHttpResponse" != *'"id":"OLY-"'* ]];
+    if [[ "$seasonCheckHttpResponse" != *'"id":"OLY-'* ]];
     then
         #Season placeholder does not exist, API Call to create new Season placeholder with metadata
 
