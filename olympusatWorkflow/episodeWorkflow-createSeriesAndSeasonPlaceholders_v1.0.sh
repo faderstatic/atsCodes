@@ -78,7 +78,7 @@ else
     then
         itemLicensor=$(filterVidispineItemMetadata $itemId "metadata" "oly_licensor")
         #seriesCreateHttpResponse=$(curl -X POST "http://10.1.1.34/API/v2/items/" -H "accept: application/json" -H "Content-Type: application/json" -H "X-CSRFToken: u3qcM502KaqTlwp9rDT0dqZw3cePwHN9rLaCojxekvUuYeKgi5ikanKUoe5zziQL" -d "{ \"metadata\": { \"group_name\": \"Olympusat\", \"fields\": [ { \"name\": \"title\", \"value\": \"Test Season API\" }, { \"name\": \"oly_contentType\", \"value\": \"season\" }, { \"name\": \"oly_licensor\", \"value\": \"olympusat\" }, { \"name\": \"oly_seasonNumber\", \"value\": \"1\" } ] }}")
-        seasonCreateBody="{ \"metadata\": { \"group_name\": \"Olympusat\", \"fields\": [ { \"name\": \"title\", \"value\": \"$checkForSeasonItem\" }, { \"name\": \"oly_contentType\", \"value\": \"season\" }, { \"name\": \"oly_licensor\", \"value\": \"$itemLicensor\" }, { \"name\": \"oly_seasonNumber\", \"value\": \"$itemSeasonNumber\" } ] }}"
+        seasonCreateBody="{ \"metadata\": { \"group_name\": \"Olympusat\", \"fields\": [ { \"name\": \"title\", \"value\": \"$checkForSeasonItem\" }, { \"name\": \"oly_contentType\", \"value\": \"season\" }, { \"name\": \"oly_licensor\", \"value\": \"$itemLicensor\" }, { \"name\": \"oly_seasonNumber\", \"value\": \"$itemSeasonNumber\" }, { \"name\": \"oly_seriesName\", \"value\": \"$checkForSeriesItem\" } ] }}"
         seasonCreateHttpResponse=$(curl --location --request POST $createUrl --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=CRbBvVEFSfR5lHoQebsbQemRRas2MUyo53CsO5ixtkSrzvC9H7NffcuaXkIJvr1V' --data $seasonCreateBody)
         echo "Season Create httpResponse - [$seasonCreateHttpResponse]"
     fi
