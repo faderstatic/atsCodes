@@ -94,6 +94,8 @@ else
         #Season placeholder already exists
         echo "$datetime - (episodeWorkflow) - [$itemId] - Season placeholder already exists - [$checkForSeriesItem]" >> "$logfile"
     fi
+
+    updateVidispineMetadata $itemId "oly_adminRulesFlags" "episodeprocessed"
 fi
 
 IFS=$saveIFS
