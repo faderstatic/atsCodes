@@ -35,7 +35,7 @@ httpResponse=$(curl --location --request GET $urlGetItemInfo --header 'Authoriza
 #echo $filteredResponse
 
 contentFlagsValues=""
-numberOfValues=$(echo "$httpResponse" | awk -F "$filedName" '{print NF}')
+numberOfValues=$(echo "$httpResponse" | awk -F "$fieldName" '{print NF}')
 for (( j=1 ; j<=$numberOfValues ; j++ ));
 do
     currentValue=$(echo $httpResponse | awk -F "$fieldName" '{print $2}' | awk -F "\">" '{print $2}' | head -c -3)
