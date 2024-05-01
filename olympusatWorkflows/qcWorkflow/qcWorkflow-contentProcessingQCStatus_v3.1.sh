@@ -105,6 +105,5 @@ else
     sleep 5
 
     echo "$datetime - (contentProcessingQC) - Update Metadata Completed" >> "$logfile"
-    '
 fi
 IFS=$saveIFS
