@@ -30,7 +30,7 @@ itemContentType=$(filterVidispineItemMetadata $itemId "metadata" "oly_contentTyp
 if [[ "$itemContentType" != "episode" ]];
 then
     #contentType is NOT 'episode'-skip process
-    
+
     echo "$datetime - (episodeWorkflow) - [$itemId] - Content Type is NOT 'episode'" >> "$logfile"
     echo "$datetime - (episodeWorkflow) - [$itemId] - Content Type is [$itemContentType] - Skipping Episode Workflow" >> "$logfile"
 else
@@ -94,7 +94,7 @@ else
             seasonCreateHttpResponse=$(curl --location --request POST $createUrl --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=CRbBvVEFSfR5lHoQebsbQemRRas2MUyo53CsO5ixtkSrzvC9H7NffcuaXkIJvr1V' --data $seasonCreateBody)
         else
             #Season placeholder already exists
-            echo "$datetime - (episodeWorkflow) - [$itemId] - Season placeholder already exists - [$checkForSeriesItem]" >> "$logfile"
+            echo "$datetime - (episodeWorkflow) - [$itemId] - Season placeholder already exists - [$checkForSeasonItem]" >> "$logfile"
         fi
 
         updateVidispineMetadata $itemId "oly_adminRulesFlags" "episodeprocessed"
