@@ -25,7 +25,6 @@ logfile="/opt/olympusat/logs/olympusatWorkflow-$mydate.log"
 #Set Variable to check before continuing with script
 export itemId=$1
 itemContentType=$(filterVidispineItemMetadata $itemId "metadata" "oly_contentType")
-echo "Content Type - [$itemContentType]"
 
 #Check Variable
 if [[ "$itemContentType" != "episode" ]];
@@ -33,20 +32,16 @@ then
     #echo "contentType is NOT 'episode'-skip process"
     
     #contentType is NOT 'episode'-skip process
-    echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" >> $logfile
-    echo "$datetime - (episodeWorkflow) - Item ID - $itemId" >> "$logfile"
-    echo "$datetime - (episodeWorkflow) - Content Type is NOT 'episode'" >> "$logfile"
-    echo "$datetime - (episodeWorkflow) - Content Type is [$itemContentType]" >> "$logfile"
-    echo "$datetime - (episodeWorkflow) - Skipping Episode Workflow" >> "$logfile"
+    echo "$datetime - (episodeWorkflow) - [$itemId] - Content Type is NOT 'episode'" >> "$logfile"
+    echo "$datetime - (episodeWorkflow) - [$itemId] - Content Type is [$itemContentType]" >> "$logfile"
+    echo "$datetime - (episodeWorkflow) - [$itemId] - Skipping Episode Workflow" >> "$logfile"
 else
     #echo "contentType IS episode-continue with process"
     
     #contentType IS episode-continue with process
     #Variables to be passed from Cantemo to shell script
 
-    echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" >> $logfile
-    echo "$datetime - (episodeWorkflow) - Item ID - $itemId" >> "$logfile"
-    echo "$datetime - (episodeWorkflow) - Content Type is [$itemContentType]" >> "$logfile"
+    echo "$datetime - (episodeWorkflow) - [$itemId] - Content Type is [$itemContentType]" >> "$logfile"
 
     itemSeriesName=$(filterVidispineItemMetadata $itemId "metadata" "oly_seriesName")
     itemSeasonNumber=$(filterVidispineItemMetadata $itemId "metadata" "oly_seasonNumber")
@@ -58,7 +53,7 @@ else
 
     #API Call to Search if Series already exists
 
-    echo "$datetime - (episodeWorkflow) - Checking if Series item exists - [$checkForSeriesItem]" >> "$logfile"
+    echo "$datetime - (episodeWorkflow) - [$itemId] - Checking if Series item exists - [$checkForSeriesItem]" >> "$logfile"
 
     seriesCheckBody="{ \"filter\": { \"operator\": \"AND\",\"terms\": [{ \"name\": \"title\", \"value\": \"$checkForSeriesItem\" },{ \"name\": \"oly_contentType\", \"value\": \"series\" }]}}"
     seriesCheckHttpResponse=$(curl --location --request PUT $searchUrl --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=VDa9RP3Y9rgomyzNWvRxbu7WdTMetVYBlLg6pGMIJ6oyVABsjJiiEK9JCWVA1HYd' --data $seriesCheckBody)
@@ -67,21 +62,21 @@ else
     then
         #Series placeholder does not exists, API Call to create new Series placeholder with metadata
 
-        echo "$datetime - (episodeWorkflow) - Creating new Series placeholder - [$checkForSeriesItem]" >> "$logfile"
+        echo "$datetime - (episodeWorkflow) - [$itemId] - Creating new Series placeholder - [$checkForSeriesItem]" >> "$logfile"
 
         itemLicensor=$(filterVidispineItemMetadata $itemId "metadata" "oly_licensor")
         seriesCreateBody="{ \"metadata\": { \"group_name\": \"Olympusat\", \"fields\": [ { \"name\": \"title\", \"value\": \"$checkForSeriesItem\" }, { \"name\": \"oly_contentType\", \"value\": \"series\" }, { \"name\": \"oly_licensor\", \"value\": \"$itemLicensor\" } ] }}"
         seriesCreateHttpResponse=$(curl --location --request POST $createUrl --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=CRbBvVEFSfR5lHoQebsbQemRRas2MUyo53CsO5ixtkSrzvC9H7NffcuaXkIJvr1V' --data $seriesCreateBody)
     else
         #Series placeholder already exists
-        echo "$datetime - (episodeWorkflow) - Series placeholder already exists - [$checkForSeriesItem]" >> "$logfile"
+        echo "$datetime - (episodeWorkflow) - [$itemId] - Series placeholder already exists - [$checkForSeriesItem]" >> "$logfile"
     fi
 
     sleep 2
 
     #API Call to Search if Season already exists
 
-    echo "$datetime - (episodeWorkflow) - Checking if Season item exists - [$checkForSeasonItem]" >> "$logfile"
+    echo "$datetime - (episodeWorkflow) - [$itemId] - Checking if Season item exists - [$checkForSeasonItem]" >> "$logfile"
 
     seasonBody="{ \"filter\": { \"operator\": \"AND\",\"terms\": [{ \"name\": \"title\", \"value\": \"$checkForSeasonItem\" },{ \"name\": \"oly_contentType\", \"value\": \"season\" }]}}"
     seasonHttpResponse=$(curl --location --request PUT $searchUrl --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=VDa9RP3Y9rgomyzNWvRxbu7WdTMetVYBlLg6pGMIJ6oyVABsjJiiEK9JCWVA1HYd' --data $seasonBody)
@@ -90,14 +85,14 @@ else
     then
         #Season placeholder does not exist, API Call to create new Season placeholder with metadata
 
-        echo "$datetime - (episodeWorkflow) - Creating new Season placeholder - [$checkForSeasonItem]" >> "$logfile"
+        echo "$datetime - (episodeWorkflow) - [$itemId] - Creating new Season placeholder - [$checkForSeasonItem]" >> "$logfile"
 
         itemLicensor=$(filterVidispineItemMetadata $itemId "metadata" "oly_licensor")
         seasonCreateBody="{ \"metadata\": { \"group_name\": \"Olympusat\", \"fields\": [ { \"name\": \"title\", \"value\": \"$checkForSeasonItem\" }, { \"name\": \"oly_contentType\", \"value\": \"season\" }, { \"name\": \"oly_licensor\", \"value\": \"$itemLicensor\" }, { \"name\": \"oly_seasonNumber\", \"value\": \"$itemSeasonNumber\" }, { \"name\": \"oly_seriesName\", \"value\": \"$checkForSeriesItem\" } ] }}"
         seasonCreateHttpResponse=$(curl --location --request POST $createUrl --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=CRbBvVEFSfR5lHoQebsbQemRRas2MUyo53CsO5ixtkSrzvC9H7NffcuaXkIJvr1V' --data $seasonCreateBody)
     else
         #Season placeholder already exists
-        echo "$datetime - (episodeWorkflow) - Season placeholder already exists - [$checkForSeriesItem]" >> "$logfile"
+        echo "$datetime - (episodeWorkflow) - [$itemId] - Season placeholder already exists - [$checkForSeriesItem]" >> "$logfile"
     fi
 fi
 
