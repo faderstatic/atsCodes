@@ -29,10 +29,15 @@ headersCantemo = {
 payloadCantemo = {}
 urlGetContractId = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata?field=oly_rightslineContractId&terse=yes"
 httpApiResponse = requests.request("GET", urlGetContractId, headers=headersCantemo, data=payloadCantemo)
+<<<<<<< HEAD
+=======
+print(httpApiResponse.text)
+>>>>>>> 9821b1d0e7a02f48af383007dddf538378ff1f8e
 #------------------------------
 
 #------------------------------
 # Parsing XML data
+<<<<<<< HEAD
 ET.register_namespace('ns', 'http://xml.vidispine.com/schema/vidispine')
 responseXml = httpApiResponse.text
 print(responseXml)
@@ -42,6 +47,12 @@ cantemoContractId = responseXmlRoot
 for child in cantemoContractId:
     print(child.tag)
 # print(cantemoContractId.attrib)
+=======
+# ET.register_namespace('ns', 'http://xml.vidispine.com/schema/vidispine')
+# responseXml = httpApiResponse.text
+# responseXmlRoot = ET.fromstring(responseXml)
+# fileLocation = responseXmlRoot.find('{http://xml.vidispine.com/schema/vidispine}uri')
+>>>>>>> 9821b1d0e7a02f48af383007dddf538378ff1f8e
 #------------------------------
 
 #------------------------------
