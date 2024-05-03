@@ -96,7 +96,7 @@ export cantemoItemTitle=$(filterVidispineItemMetadata "$cantemoItemId" "metadata
 
 # --------------------------------------------------
 # Sanitize rightslineItemId to remove any empty spaces
-rightslineItemId=$(echo $rightslineItemId | tr -d ' '
+rightslineItemId=$(echo $rightslineItemId | tr -d ' ')
 
 # --------------------------------------------------
 # Check to see if import has already ran on item
