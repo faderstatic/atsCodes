@@ -99,6 +99,12 @@ export cantemoItemTitle=$(filterVidispineItemMetadata "$cantemoItemId" "metadata
 urlGetItemInfo="http://10.1.1.34:8080/API/item/$cantemoItemId/metadata?field=oly_rightslineInfo&terse=yes"
 httpResponse=$(curl --location --request GET $urlGetItemInfo --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=Tkb9vkSC8v4SceB8CHUyB3iaMPjvgoHrzhLrvo36agG3wqv0jHc7nsOtdTo9JEyM')
 
+echo "Item ID - [$cantemoItemId]"
+echo "Rightsline Item ID - [$rightslineItemId]"
+echo "Cantemo Item Title - [$cantemoItemTitle]"
+echo "URL - [$urlGetItemInfo]"
+echo "Http Response - [$httpResponse]"
+
 if [[ "$httpResponse" != *"metadataimported"* ]];
 then
     partialRow="false"
