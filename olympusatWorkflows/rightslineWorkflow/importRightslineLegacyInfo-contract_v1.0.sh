@@ -205,7 +205,11 @@ then
                     columnCounter=$(($columnCounter + 1))
                 ;;
 
-                "oly_contractCode")
+                "oly_rightslineItemId")
+                    columnCounter=$(($columnCounter + 1))
+                ;;
+
+                *)
                     echo "      <field>
          <name>${fieldName[$columnCounter]}</name>
          <value>${fieldValue[$columnCounter]}</value>
