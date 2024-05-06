@@ -110,7 +110,7 @@ then
 else
     echo "rightslineItemIdCleaned {$rightslineItemIdClenaed} equals rightslineItemId [$rightslineItemId]"
 fi
-: '
+
 # --------------------------------------------------
 # Check to see if import has already ran on item
 urlGetItemInfo="http://10.1.1.34:8080/API/item/$cantemoItemId/metadata?field=oly_rightslineInfo&terse=yes"
@@ -406,7 +406,7 @@ then
 
     fi
 fi
-'
+
 IFS=$saveIFS
 
 exit 0
