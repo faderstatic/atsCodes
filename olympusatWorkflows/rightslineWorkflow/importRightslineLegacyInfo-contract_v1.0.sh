@@ -103,11 +103,9 @@ rightslineItemId=$(echo $rightslineItemId | tr -d ' ')
 #urlGetItemInfo="http://10.1.1.34:8080/API/item/$cantemoItemId/metadata?field=oly_contractCode&terse=yes"
 #httpResponse=$(curl --location --request GET $urlGetItemInfo --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=Tkb9vkSC8v4SceB8CHUyB3iaMPjvgoHrzhLrvo36agG3wqv0jHc7nsOtdTo9JEyM')
 export contractCode=$(filterVidispineItemMetadata "$cantemoItemId" "metadata" "oly_contractCode")
-echo "Current oly_contractCode is [$contractCode]"
 
 if [ -z "$contractCode" ];
 then
-    echo "Entered the THEN as expected because contractCode is empty"
     partialRow="false"
     lineReadComplete="false"
 
@@ -207,7 +205,7 @@ then
                     columnCounter=$(($columnCounter + 1))
                 ;;
 
-                *)
+                "oly_contractCode")
                     echo "      <field>
          <name>${fieldName[$columnCounter]}</name>
          <value>${fieldValue[$columnCounter]}</value>
@@ -247,8 +245,6 @@ then
         mv "$fileDestination" "/opt/olympusat/xmlsForMetadataImport/zCompleted/"
 
     fi
-else
-    echo "Entered the ELSE which is NOT expected because contractCode is empty"
 fi
 
 IFS=$saveIFS
