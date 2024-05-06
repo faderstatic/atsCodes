@@ -107,6 +107,7 @@ echo "Current oly_contractCode is [$contractCode]"
 
 if [ -z "$contractCode" ];
 then
+    echo "Entered the THEN as expected because contractCode is empty"
     partialRow="false"
     lineReadComplete="false"
 
@@ -246,6 +247,8 @@ then
         mv "$fileDestination" "/opt/olympusat/xmlsForMetadataImport/zCompleted/"
 
     fi
+else
+    echo "Entered the ELSE which is NOT expected because contractCode is empty"
 fi
 
 IFS=$saveIFS
