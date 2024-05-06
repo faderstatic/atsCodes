@@ -105,7 +105,7 @@ rightslineItemId=$(echo $rightslineItemId | tr -d ' ')
 export contractCode=$(filterVidispineItemMetadata "$cantemoItemId" "metadata" "oly_contractCode")
 echo "Current oly_contractCode is [$contractCode]"
 
-if [[ "$contractCode" != *"C"* ]];
+if [[ -z "$contractCode" ]];
 then
     partialRow="false"
     lineReadComplete="false"
