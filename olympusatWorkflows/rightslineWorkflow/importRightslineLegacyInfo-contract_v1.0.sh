@@ -175,7 +175,7 @@ then
         # Writing XML File
 
         #fileDestination="/opt/olympusat/xmlsForMetadataImport/${fieldValue[3]}.xml"
-        fileDestination="/opt/olympusat/xmlsForMetadataImport/"$cantemoItemId"_CONTRACT.xml"
+        fileDestination="/opt/olympusat/xmlsForMetadataImport/"$cantemoItemId"-CONTRACT.xml"
 
         # --------------------------------------------------
         # Print XML header
@@ -232,7 +232,7 @@ then
         # ----------------------------------------------------
         # API Call to Update Metadata
 
-        url="http://10.1.1.34:8080/API/import/sidecar/$cantemoItemId?sidecar=/opt/olympusat/xmlsForMetadataImport/$fileDestination"
+        url="http://10.1.1.34:8080/API/import/sidecar/$cantemoItemId?sidecar=/opt/olympusat/xmlsForMetadataImport/$cantemoItemId-CONTRACT.xml"
         #echo "Item ID - $cantemoItemId"
         #echo "Item Title - $cantemoItemTitle"
         #echo "URL - $url"
