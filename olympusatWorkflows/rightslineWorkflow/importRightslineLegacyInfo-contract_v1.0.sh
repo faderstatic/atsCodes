@@ -32,7 +32,7 @@ convertToCamelCase ()
         then
             #restOfTheWords=$(echo $currentValue | awk '{print $NF}' | tr '[:upper:]' '[:lower:]')
             #restOfTheWords=$(echo $restOfTheWords | sed 's/.*/\u&/')
-            restOfTheWords=$(echo $currentValue | cut -d " " -f2-$NF | tr '[:upper:]' '[:lower:]' | sed 's/./\U&/')
+            restOfTheWords=$(echo $currentValue | cut -d " " -f2-$NF | tr '[:upper:]' '[:lower:]' | sed 's/\([a-z]\)\([a-zA-Z0-9]*\)/\u\1\2/g')
             #restOfTheWords=$(echo $restOfTheWordsTemp | sed 's/./\U&/')
             # | sed -e 's/ //g'
         else
