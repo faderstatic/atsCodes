@@ -30,7 +30,7 @@ convertToCamelCase ()
         numberOfWords=$(echo $currentValue | awk '{print NF}')
         if [[ $numberOfWords -gt 1 ]];
         then
-            restOfTheWords=$(echo $currentValue | cut -d " " -f2-$NF | sed -e 's/ //g')
+            restOfTheWords=$(echo $currentValue | cut -d " " -f2-$NF | tr '[:upper:]' '[:lower:]' | sed 's/\([a-z]\)\([a-zA-Z0-9]*\)/\u\1\2/g' | sed -e 's/ //g')
         else
             restOfTheWords=""
         fi
