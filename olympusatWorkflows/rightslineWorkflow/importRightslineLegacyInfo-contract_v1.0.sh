@@ -31,11 +31,8 @@ convertToCamelCase ()
         if [[ $numberOfWords -gt 1 ]];
         then
             restOfTheWords=$(echo $currentValue | awk '{print $1}' | tr '[:upper:]' '[:lower:]')
-            echo "After Upper to Lower - [$restOfTheWords]"
             restOfTheWords=$(echo $restOfTheWords | sed 's/.*/\u&/')
-            echo "After Upper First Letters - [$restOfTheWords]"
             restOfTheWords=$(echo $restOfTheWords | cut -d " " -f2-$NF | sed -e 's/ //g')
-            echo "Final restOfTheWords - [$restOfTheWords]"
         else
             restOfTheWords=""
         fi
