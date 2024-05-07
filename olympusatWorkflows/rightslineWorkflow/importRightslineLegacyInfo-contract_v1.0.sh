@@ -238,10 +238,6 @@ then
         #echo "URL - $url"
 
         curl --location --request POST $url --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0'
-
-        sleep 2
-        
-        updateVidispineMetadata $cantemoItemId "oly_rightslineInfo" "contractmetadataimported"
         
         sleep 2
 
