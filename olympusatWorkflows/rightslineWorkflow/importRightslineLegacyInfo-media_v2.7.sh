@@ -404,6 +404,8 @@ then
         echo "Moving xml to zCompleted folder"
         mv "$fileDestination" "/opt/olympusat/xmlsForMetadataImport/zCompleted/"
 
+        bash -c "sudo /opt/olympusat/scriptsActive/importRightslineLegacyInfo-contract_v1.0.sh $cantemoItemId oly_rightslineItemId /opt/olympusat/resources/RIGHTSLINE_CONTRACT_CODE_INFO_DATABASE_2024-05-01.csv > /dev/null 2>&1 &"
+
     fi
 fi
 
