@@ -45,11 +45,16 @@ if [[ $numberOfUnderscores == 4 ]];
             imageType=$(echo $title | awk -F "_" '{print $4}')
             imageSize=$(echo $title | awk -F "_" '{print $5}')
 
+            seasonNumberCheck=$(echo $imageType | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
+            episodeNumberCheck=$(echo $imageType | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
+
             echo "$datetime - ($itemId) - titleCode - $titleCode" >> "$logfile"
             echo "$datetime - ($itemId) - imageType - $imageType" >> "$logfile"
             echo "$datetime - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
             echo "$datetime - ($itemId) - language - $language" >> "$logfile"
             echo "$datetime - ($itemId) - imageSize - $imageSize" >> "$logfile"
+            echo "$datetime - ($itemId) - seasonNumber - $seasonNumberCheck" >> "$logfile"
+            echo "$datetime - ($itemId) - episodeNumber - $episodeNumberCheck" >> "$logfile"
         else
             titleCode=$(echo $title | awk -F "_" '{print $1}')
             imageType=$(echo $title | awk -F "_" '{print $2}')
@@ -142,7 +147,12 @@ fi
 
 if [[ $language == "es" || $language == "en" || $language == "ES" || $language == "EN" ]];
     then
-        graphicsTags="<field><name>oly_graphicsTags</name><value>$titleCode</value><value>$imageType</value><value>$titleByLanguage</value><value>$language</value><value>$imageSize</value></field>"
+        if [[ $titleCode == "S"* ]];
+        then 
+            graphicsTags="<field><name>oly_graphicsTags</name><value>$titleCode</value><value>$imageType</value><value>$titleByLanguage</value><value>$language</value><value>$imageSize</value></field><field><name>oly_seasonNumber</name><value>$seasonNumberCheck</value></field><field><name>oly_episodeNumber</name><value>$episodeNumberCheck</value></field>"
+        else
+            graphicsTags="<field><name>oly_graphicsTags</name><value>$titleCode</value><value>$imageType</value><value>$titleByLanguage</value><value>$language</value><value>$imageSize</value></field>"
+        fi
     else
         if [[ $numberOfUnderscores == 3 ]];
             then
