@@ -209,6 +209,31 @@ then
                     columnCounter=$(($columnCounter + 1))
                 ;;
 
+                "oly_rightslineContractId")
+                    numberOfCharacters=$(echo "${fieldValue[$columnCounter]}" | wc -c)
+                    if [[ $numberOfCharacters != 1 ]];
+                    then
+                        contractString="CA_"
+                        missingCharacters=$((7 - $numberOfCharacters))
+                        for (( k=1 ; k<=$missingCharacters ; k++ ));
+                        do
+                            contractString="$contractString""0"
+                        done
+                        contractString="$contractString""${fieldValue[$columnCounter]}"
+                        echo "      <field>
+         <name>${fieldName[$columnCounter]}</name>
+         <value>$contractString</value>
+      </field>" >> "$fileDestination"
+                        columnCounter=$(($columnCounter + 1))
+                    else
+                        echo "      <field>
+         <name>${fieldName[$columnCounter]}</name>
+         <value>$contractString</value>
+      </field>" >> "$fileDestination"
+                        columnCounter=$(($columnCounter + 1))
+                    fi
+                ;;
+
                 *)
                     echo "      <field>
          <name>${fieldName[$columnCounter]}</name>
@@ -238,10 +263,6 @@ then
         #echo "URL - $url"
 
         curl --location --request POST $url --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0'
-
-        sleep 2
-        
-        updateVidispineMetadata $cantemoItemId "oly_rightslineInfo" "contractmetadataimported"
         
         sleep 2
 
