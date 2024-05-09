@@ -145,7 +145,7 @@ if [[ $titleCode == "M"* ]];
         fieldName="oly_seriesName"
 fi
 
-if [[ $language == "es" || $language == "en" || $language == "ES" || $language == "EN" ]];
+if [[ $language == "es" || $language == "en" || $language == "ES" || $language == "EN" || $language == "FR" ]];
     then
         if [[ $titleCode == "S"* ]];
         then 
