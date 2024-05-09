@@ -192,6 +192,8 @@ case $language in
     ;;
 esac
 
+echo "$datetime - ($itemId) - Graphics Tags - $graphicsTags" >> "$logfile"
+
 bodyData=$(echo "<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\">$graphicsTags<field><name>oly_titleCode</name><value>$titleCode</value></field><field><name>oly_primaryMetadataLanguage</name><value>$primaryMetadataLanguage</value></field><field><name>$fieldName</name><value>$titleByLanguage</value></field></timespan></MetadataDocument>")
 
 echo "$datetime - ($itemId) - Body Data - $bodyData" >> "$logfile"
