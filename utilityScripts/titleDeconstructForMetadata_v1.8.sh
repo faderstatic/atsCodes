@@ -147,7 +147,7 @@ if [[ $numberOfUnderscores == 4 ]];
                                                 imageType=$(echo $title | awk -F "_" '{print $4}')
                                                 imageSize=$(echo $title | awk -F "_" '{print $5}')
                                                 imageNumber=$(echo $title | awk -F "_" '{print $6}')
-                                                desc=$(echo $title | awk -F "_" '{print $6}')
+                                                desc=$(echo $title | awk -F "_" '{print $7}')
 
                                                 seasonNumberCheck=$(echo $imageType | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
                                                 episodeNumberCheck=$(echo $imageType | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
