@@ -376,7 +376,7 @@ case $language in
         primaryMetadataLanguage="english"
     ;;
     "FR")
-        primaryMetadataLanguage="french"
+        primaryMetadataLanguage=""
     ;;
     "OG")
         primaryMetadataLanguage=""
