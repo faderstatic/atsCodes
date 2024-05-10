@@ -39,7 +39,7 @@ if [[ $numberOfUnderscores == 4 ]];
         if [[ ("$namingConventionCheck" == "EN") || ("$namingConventionCheck" == "ES") || ("$namingConventionCheck" == "FR") || ("$namingConventionCheck" == "OG") ]];
             then
                 titleByLanguage=$(echo $title | awk -F "_" '{print $1}')
-                titleByLanguage=$(echo $titleByLanguage | sed -r -e "s/([^A-Z])([A-Z])/\1 \2/g" -e "s/([A-Z]+)([A-Z])/\1 \2/g")
+                #titleByLanguage=$(echo $titleByLanguage | sed -r -e "s/([^A-Z])([A-Z])/\1 \2/g" -e "s/([A-Z]+)([A-Z])/\1 \2/g")
                 language=$(echo $title | awk -F "_" '{print $2}')
                 titleCode=$(echo $title | awk -F "_" '{print $3}')
                 imageType=$(echo $title | awk -F "_" '{print $4}')
@@ -100,7 +100,7 @@ if [[ $numberOfUnderscores == 4 ]];
                                 if [[ ("$namingConventionCheck" == "EN") || ("$namingConventionCheck" == "ES") || ("$namingConventionCheck" == "FR") || ("$namingConventionCheck" == "OG") ]];
                                     then
                                         titleByLanguage=$(echo $title | awk -F "_" '{print $1}')
-                                        titleByLanguage=$(echo $titleByLanguage | sed -r -e "s/([^A-Z])([A-Z])/\1 \2/g" -e "s/([A-Z]+)([A-Z])/\1 \2/g")
+                                        #titleByLanguage=$(echo $titleByLanguage | sed -r -e "s/([^A-Z])([A-Z])/\1 \2/g" -e "s/([A-Z]+)([A-Z])/\1 \2/g")
                                         language=$(echo $title | awk -F "_" '{print $2}')
                                         titleCode=$(echo $title | awk -F "_" '{print $3}')
                                         imageType=$(echo $title | awk -F "_" '{print $4}')
