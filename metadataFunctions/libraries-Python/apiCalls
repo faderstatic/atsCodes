@@ -1,0 +1,16 @@
+# /opt/cantemo/python/bin/python
+# /usr/bin/python3
+
+"""
+This library contains multiple api calls to various applications
+    application list:
+        Cantemo (via Vidispine)
+        MisTV Mira
+"""
+
+# Making API call to Cantemo to get contract ID
+payloadCantemo = {}
+urlGetContractId = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata?field=oly_rightslineContractId&terse=yes"
+httpApiResponse = requests.request("GET", urlGetContractId, headers=headersCantemo, data=payloadCantemo)
+httpApiResponse.raise_for_status()
+#------------------------------
