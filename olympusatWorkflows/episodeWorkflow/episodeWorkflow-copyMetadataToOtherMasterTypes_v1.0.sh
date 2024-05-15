@@ -44,7 +44,7 @@ else
 
     echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Original File Flags are [$httpResponse]" >> "$logfile"
 
-    if [ "$httpResponse" != *"originalrawmaster"* ] || [ "$httpResponse" != *"originallanguage"* ];
+    if [[ "$httpResponse" != *"originalrawmaster"* ]];
     then
         #Item is not Original Master-skip process
         echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Item is Not Original Master - Skipping Episode Workflow" >> "$logfile"
@@ -74,47 +74,97 @@ else
         echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Searching for Textless Master - [$searchTitle]" >> "$logfile"
 
         export searchUrl="http://10.1.1.34/API/v2/search/"
-        #seriesCheckBody="{ \"filter\": { \"operator\": \"AND\",\"terms\": [{ \"name\": \"title\", \"value\": \"$checkForSeriesItem\" },{ \"name\": \"oly_contentType\", \"value\": \"series\" }]}}"
-        #seriesCheckHttpResponse=$(curl --location --request PUT $searchUrl --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=VDa9RP3Y9rgomyzNWvRxbu7WdTMetVYBlLg6pGMIJ6oyVABsjJiiEK9JCWVA1HYd' --data $seriesCheckBody)
+        textlessCheckBody="{ \"filter\": { \"operator\": \"AND\",\"terms\": [{ \"name\": \"title\", \"value\": \"$searchTitle\" },{ \"name\": \"oly_originalFileFlags\", \"value\": \"textlessmaster\" }]}}"
+        
+        echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Textless Check Body - [$textlessCheckBody]" >> "$logfile"
+        
+        textlessCheckHttpResponse=$(curl --location --request PUT $searchUrl --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=VDa9RP3Y9rgomyzNWvRxbu7WdTMetVYBlLg6pGMIJ6oyVABsjJiiEK9JCWVA1HYd' --data $textlessCheckBody)
 
-        #if [[ "$seriesCheckHttpResponse" != *'"id":"OLY-'* ]];
-        #then
-            #Series placeholder does not exists, API Call to create new Series placeholder with metadata
+        echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Textless Check HTTP Response - [$textlessCheckHttpResponse]" >> "$logfile"
 
-            #echo "$datetime - (episodeWorkflow) - [$itemId] - Creating new Series placeholder - [$checkForSeriesItem]" >> "$logfile"
+        if [[ "$textlessCheckHttpResponse" != *'"id":"OLY-'* ]];
+        then
+            #Textless Master does not exist
+            echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Textless Master does not exist" >> "$logfile"
 
-            #itemLicensor=$(filterVidispineItemMetadata $itemId "metadata" "oly_licensor")
-            #seriesCreateBody="{ \"metadata\": { \"group_name\": \"Olympusat\", \"fields\": [ { \"name\": \"title\", \"value\": \"$checkForSeriesItem\" }, { \"name\": \"oly_titleEn\", \"value\": \"$checkForSeriesItem\" }, { \"name\": \"oly_contentType\", \"value\": \"series\" }, { \"name\": \"oly_licensor\", \"value\": \"$itemLicensor\" }, { \"name\": \"oly_contentFlags\", \"value\": \"$contentFlagsValue\" } ] }}"
-            #seriesCreateHttpResponse=$(curl --location --request POST $createUrl --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=CRbBvVEFSfR5lHoQebsbQemRRas2MUyo53CsO5ixtkSrzvC9H7NffcuaXkIJvr1V' --data $seriesCreateBody)
-        #else
-            #Series placeholder already exists
-            #echo "$datetime - (episodeWorkflow) - [$itemId] - Series placeholder already exists - [$checkForSeriesItem]" >> "$logfile"
-        #fi
+        else
+            #Textless Master does exist, updating metadata
+            textlessItemId=$(echo "$textlessCheckHttpResponse" | awk -F '"id":"' '{print $2}' | awk -F '"' '{print $1}')
+            echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Textless Master Item ID - [$textlessItemId]" >> "$logfile"
 
-        #sleep 2
+            #Updating metadata on Textless Master Item
+            echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Updating Metadata on Textless Master Item - [$textlessItemId]" >> "$logfile"
 
-        #API Call to Search if Season already exists
+            updateVidispineMetadata $textlessItemId "oly_seriesName" "$itemSeriesName"
+            updateVidispineMetadata $textlessItemId "oly_seasonNumber" "$itemSeasonNumber"
+            updateVidispineMetadata $textlessItemId "oly_episodeNumber" "$itemEpisodeNumber"
+        fi
 
-        #echo "$datetime - (episodeWorkflow) - [$itemId] - Checking if Season item exists - [$checkForSeasonItem]" >> "$logfile"
+        sleep 2
 
-        #seasonCheckBody="{ \"filter\": { \"operator\": \"AND\",\"terms\": [{ \"name\": \"title\", \"value\": \"$checkForSeasonItem\" },{ \"name\": \"oly_contentType\", \"value\": \"season\" }]}}"
-        #seasonCheckHttpResponse=$(curl --location --request PUT $searchUrl --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=VDa9RP3Y9rgomyzNWvRxbu7WdTMetVYBlLg6pGMIJ6oyVABsjJiiEK9JCWVA1HYd' --data $seasonCheckBody)
+        #API Call to Search for Dubbed Master
 
-        #if [[ "$seasonCheckHttpResponse" != *'"id":"OLY-'* ]];
-        #then
-            #Season placeholder does not exist, API Call to create new Season placeholder with metadata
+        echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Searching for Dubbed Master - [$searchTitle]" >> "$logfile"
 
-            #echo "$datetime - (episodeWorkflow) - [$itemId] - Creating new Season placeholder - [$checkForSeasonItem]" >> "$logfile"
+        export searchUrl="http://10.1.1.34/API/v2/search/"
+        dubbedCheckBody="{ \"filter\": { \"operator\": \"AND\",\"terms\": [{ \"name\": \"title\", \"value\": \"$searchTitle\" },{ \"name\": \"oly_originalFileFlags\", \"value\": \"dubbedmaster\" }]}}"
+        
+        echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master Check Body - [$dubbedCheckBody]" >> "$logfile"
+        
+        dubbedCheckHttpResponse=$(curl --location --request PUT $searchUrl --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=VDa9RP3Y9rgomyzNWvRxbu7WdTMetVYBlLg6pGMIJ6oyVABsjJiiEK9JCWVA1HYd' --data $dubbedCheckBody)
 
-            #itemLicensor=$(filterVidispineItemMetadata $itemId "metadata" "oly_licensor")
-            #seasonCreateBody="{ \"metadata\": { \"group_name\": \"Olympusat\", \"fields\": [ { \"name\": \"title\", \"value\": \"$checkForSeasonItem\" }, { \"name\": \"oly_titleEn\", \"value\": \"$checkForSeriesItem\" }, { \"name\": \"oly_contentType\", \"value\": \"season\" }, { \"name\": \"oly_licensor\", \"value\": \"$itemLicensor\" }, { \"name\": \"oly_seasonNumber\", \"value\": \"$itemSeasonNumber\" }, { \"name\": \"oly_seriesName\", \"value\": \"$checkForSeriesItem\" }, { \"name\": \"oly_contentFlags\", \"value\": \"$contentFlagsValue\" } ] }}"
-            #seasonCreateHttpResponse=$(curl --location --request POST $createUrl --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=CRbBvVEFSfR5lHoQebsbQemRRas2MUyo53CsO5ixtkSrzvC9H7NffcuaXkIJvr1V' --data $seasonCreateBody)
-        #else
-            #Season placeholder already exists
-            #echo "$datetime - (episodeWorkflow) - [$itemId] - Season placeholder already exists - [$checkForSeasonItem]" >> "$logfile"
-        #fi
+        echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master Check HTTP Response - [$dubbedCheckHttpResponse]" >> "$logfile"
 
-        #updateVidispineMetadata $itemId "oly_adminRulesFlags" "episodeprocessed"
+        if [[ "$dubbedCheckHttpResponse" != *'"id":"OLY-'* ]];
+        then
+            #Dubbed Master does not exist
+            echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master does not exist" >> "$logfile"
+
+        else
+            #Dubbed Master does exist, updating metadata
+            dubbedItemId=$(echo "$dubbedCheckHttpResponse" | awk -F '"id":"' '{print $2}' | awk -F '"' '{print $1}')
+            echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master Item ID - [$dubbedItemId]" >> "$logfile"
+
+            #Updating metadata on Dubbed Master Item
+            echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Updating Metadata on Dubbed Master Item - [$dubbedItemId]" >> "$logfile"
+
+            updateVidispineMetadata $dubbedItemId "oly_seriesName" "$itemSeriesName"
+            updateVidispineMetadata $dubbedItemId "oly_seasonNumber" "$itemSeasonNumber"
+            updateVidispineMetadata $dubbedItemId "oly_episodeNumber" "$itemEpisodeNumber"
+        fi
+
+        sleep 2
+
+        #API Call to Search for Spanish Master
+
+        echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Searching for Spanish Master - [$searchTitle]" >> "$logfile"
+
+        export searchUrl="http://10.1.1.34/API/v2/search/"
+        spanishCheckBody="{ \"filter\": { \"operator\": \"AND\",\"terms\": [{ \"name\": \"title\", \"value\": \"$searchTitle\" },{ \"name\": \"oly_originalFileFlags\", \"value\": \"spanishmaster\" }]}}"
+        
+        echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Spanish Master Check Body - [$spanishCheckBody]" >> "$logfile"
+        
+        spanishCheckHttpResponse=$(curl --location --request PUT $searchUrl --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=VDa9RP3Y9rgomyzNWvRxbu7WdTMetVYBlLg6pGMIJ6oyVABsjJiiEK9JCWVA1HYd' --data $spanishCheckBody)
+
+        echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Spanish Master Check HTTP Response - [$spanishCheckHttpResponse]" >> "$logfile"
+
+        if [[ "$spanishCheckHttpResponse" != *'"id":"OLY-'* ]];
+        then
+            #Spanish Master does not exist
+            echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Spanish Master does not exist" >> "$logfile"
+
+        else
+            #Spanish Master does exist, updating metadata
+            spanishItemId=$(echo "$spanishCheckHttpResponse" | awk -F '"id":"' '{print $2}' | awk -F '"' '{print $1}')
+            echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Spanish Master Item ID - [$spanishItemId]" >> "$logfile"
+
+            #Updating metadata on Spanish Master Item
+            echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Updating Metadata on Spanish Master Item - [$spanishItemId]" >> "$logfile"
+
+            updateVidispineMetadata $spanishItemId "oly_seriesName" "$itemSeriesName"
+            updateVidispineMetadata $spanishItemId "oly_seasonNumber" "$itemSeasonNumber"
+            updateVidispineMetadata $spanishItemId "oly_episodeNumber" "$itemEpisodeNumber"
+        fi
     fi
 fi
 
