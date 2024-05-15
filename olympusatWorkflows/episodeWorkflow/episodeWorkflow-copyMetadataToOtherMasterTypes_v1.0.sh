@@ -44,7 +44,7 @@ else
 
     echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Original File Flags are [$httpResponse]" >> "$logfile"
 
-    if [[ ("$httpResponse" != *originalrawmaster*) || ("$httpResponse" != *originallanguage*) ]];
+    if [[ "$httpResponse" != *"originalrawmaster"* ]];
     then
         #Item is not Original Master-skip process
         echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Item is Not Original Master - Skipping Episode Workflow" >> "$logfile"
