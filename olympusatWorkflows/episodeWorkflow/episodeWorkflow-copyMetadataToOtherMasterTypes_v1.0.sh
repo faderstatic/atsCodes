@@ -77,8 +77,8 @@ else
         #seriesCheckBody="{ \"filter\": { \"operator\": \"AND\",\"terms\": [{ \"name\": \"title\", \"value\": \"$checkForSeriesItem\" },{ \"name\": \"oly_contentType\", \"value\": \"series\" }]}}"
         #seriesCheckHttpResponse=$(curl --location --request PUT $searchUrl --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=VDa9RP3Y9rgomyzNWvRxbu7WdTMetVYBlLg6pGMIJ6oyVABsjJiiEK9JCWVA1HYd' --data $seriesCheckBody)
 
-        if [[ "$seriesCheckHttpResponse" != *'"id":"OLY-'* ]];
-        then
+        #if [[ "$seriesCheckHttpResponse" != *'"id":"OLY-'* ]];
+        #then
             #Series placeholder does not exists, API Call to create new Series placeholder with metadata
 
             #echo "$datetime - (episodeWorkflow) - [$itemId] - Creating new Series placeholder - [$checkForSeriesItem]" >> "$logfile"
@@ -86,12 +86,12 @@ else
             #itemLicensor=$(filterVidispineItemMetadata $itemId "metadata" "oly_licensor")
             #seriesCreateBody="{ \"metadata\": { \"group_name\": \"Olympusat\", \"fields\": [ { \"name\": \"title\", \"value\": \"$checkForSeriesItem\" }, { \"name\": \"oly_titleEn\", \"value\": \"$checkForSeriesItem\" }, { \"name\": \"oly_contentType\", \"value\": \"series\" }, { \"name\": \"oly_licensor\", \"value\": \"$itemLicensor\" }, { \"name\": \"oly_contentFlags\", \"value\": \"$contentFlagsValue\" } ] }}"
             #seriesCreateHttpResponse=$(curl --location --request POST $createUrl --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=CRbBvVEFSfR5lHoQebsbQemRRas2MUyo53CsO5ixtkSrzvC9H7NffcuaXkIJvr1V' --data $seriesCreateBody)
-        else
+        #else
             #Series placeholder already exists
             #echo "$datetime - (episodeWorkflow) - [$itemId] - Series placeholder already exists - [$checkForSeriesItem]" >> "$logfile"
-        fi
+        #fi
 
-        sleep 2
+        #sleep 2
 
         #API Call to Search if Season already exists
 
@@ -100,8 +100,8 @@ else
         #seasonCheckBody="{ \"filter\": { \"operator\": \"AND\",\"terms\": [{ \"name\": \"title\", \"value\": \"$checkForSeasonItem\" },{ \"name\": \"oly_contentType\", \"value\": \"season\" }]}}"
         #seasonCheckHttpResponse=$(curl --location --request PUT $searchUrl --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=VDa9RP3Y9rgomyzNWvRxbu7WdTMetVYBlLg6pGMIJ6oyVABsjJiiEK9JCWVA1HYd' --data $seasonCheckBody)
 
-        if [[ "$seasonCheckHttpResponse" != *'"id":"OLY-'* ]];
-        then
+        #if [[ "$seasonCheckHttpResponse" != *'"id":"OLY-'* ]];
+        #then
             #Season placeholder does not exist, API Call to create new Season placeholder with metadata
 
             #echo "$datetime - (episodeWorkflow) - [$itemId] - Creating new Season placeholder - [$checkForSeasonItem]" >> "$logfile"
@@ -109,12 +109,12 @@ else
             #itemLicensor=$(filterVidispineItemMetadata $itemId "metadata" "oly_licensor")
             #seasonCreateBody="{ \"metadata\": { \"group_name\": \"Olympusat\", \"fields\": [ { \"name\": \"title\", \"value\": \"$checkForSeasonItem\" }, { \"name\": \"oly_titleEn\", \"value\": \"$checkForSeriesItem\" }, { \"name\": \"oly_contentType\", \"value\": \"season\" }, { \"name\": \"oly_licensor\", \"value\": \"$itemLicensor\" }, { \"name\": \"oly_seasonNumber\", \"value\": \"$itemSeasonNumber\" }, { \"name\": \"oly_seriesName\", \"value\": \"$checkForSeriesItem\" }, { \"name\": \"oly_contentFlags\", \"value\": \"$contentFlagsValue\" } ] }}"
             #seasonCreateHttpResponse=$(curl --location --request POST $createUrl --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=CRbBvVEFSfR5lHoQebsbQemRRas2MUyo53CsO5ixtkSrzvC9H7NffcuaXkIJvr1V' --data $seasonCreateBody)
-        else
+        #else
             #Season placeholder already exists
             #echo "$datetime - (episodeWorkflow) - [$itemId] - Season placeholder already exists - [$checkForSeasonItem]" >> "$logfile"
-        fi
+        #fi
 
-        updateVidispineMetadata $itemId "oly_adminRulesFlags" "episodeprocessed"
+        #updateVidispineMetadata $itemId "oly_adminRulesFlags" "episodeprocessed"
     fi
 fi
 
