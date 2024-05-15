@@ -23,6 +23,7 @@ export jobActiveFolder=$2
 export concurrentLimit=2
 export checkInterval=1800
 export myDate=$(date "+%Y-%m-%d")
+export logArchiveDate=$(date "+%Y-%m-%d" -d "14 day ago")
 export awsCustomerId="500844647317"
 export awsVaultName="olympusatMamGlacier"
 # export urlMetadata=$(echo "http://10.1.1.34:8080/API/item/$uploadId/metadata/")
