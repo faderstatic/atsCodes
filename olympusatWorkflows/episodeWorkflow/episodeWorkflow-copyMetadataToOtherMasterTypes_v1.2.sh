@@ -162,7 +162,7 @@ else
         echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Searching for Dubbed Master - [$searchTitle]" >> "$logfile"
 
         export searchUrl="http://10.1.1.34/API/v2/search/"
-        dubbedCheckBody="{ \"filter\": { \"operator\": \"AND\",\"terms\": [{ \"name\": \"title\", \"value\": \"$searchTitle\" },{ \"name\": \"oly_originalFileFlags\", \"value\": \"dubbedmaster\" }]}}"
+        dubbedCheckBody="{ \"filter\": { \"operator\": \"AND\",\"terms\": [{ \"name\": \"title\", \"value\": \"$searchTitle\" },{ \"name\": \"oly_originalFileFlags\", \"value\": \"dubbedmaster*\" }]}}"
         
         echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master Check Body - [$dubbedCheckBody]" >> "$logfile"
         
@@ -195,7 +195,7 @@ else
             #searchTitle="$searchTitle1 S'$itemSeasonNumber'E'$itemEpisodeNumber'"
             searchTitle=$(echo $searchTitle1 "S"$itemSeasonNumber"E"$itemEpisodeNumber)
             export searchUrl="http://10.1.1.34/API/v2/search/"
-            dubbedCheckBody="{ \"filter\": { \"operator\": \"AND\",\"terms\": [{ \"name\": \"title\", \"value\": \"$searchTitle\" },{ \"name\": \"oly_originalFileFlags\", \"value\": \"dubbedmaster\" }]}}"
+            dubbedCheckBody="{ \"filter\": { \"operator\": \"AND\",\"terms\": [{ \"name\": \"title\", \"value\": \"$searchTitle\" },{ \"name\": \"oly_originalFileFlags\", \"value\": \"dubbedmaster*\" }]}}"
             
             echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Second Dubbed Master Check Body - [$dubbedCheckBody]" >> "$logfile"
             
