@@ -63,15 +63,6 @@ do
     # Process the current list of queued items
     while read queuedItem;
     do
-        #--------------------------------------------------
-        # Check to see if we need to start a new log file
-        newDate=$(date "+%Y-%m-%d")
-        if [ "$myDate" != "$newDate" ];
-        then
-            logFile="/opt/olympusat/logs/glacier-$newDate.log"
-        fi
-        #--------------------------------------------------
-        
         queueCount=$(ls $activeFolder | wc -l)
 
         #------------------------------
