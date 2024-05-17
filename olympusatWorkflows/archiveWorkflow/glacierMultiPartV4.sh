@@ -53,6 +53,7 @@ then
 	awsArchiveId=$(echo "$httpResponse" | awk -F " " '{print $1}')
 	echo "$(date "+%H:%M:%S") (glacierSingleArch) - ($uploadId)   Completing single upload process." >> "$logFile"
 else
+	totalChunkCount=$(( $sourceFileSize/$chunkByteSize+1 ))
 	echo "$(date "+%H:%M:%S") (glacierMultiArch) - ($uploadId) Start processing $sourceFile ($sourceFileSize bytes) with $chunkByteSize byte chunks" >> "$logFile"
 
 	#-------------------------------------------------- Get Job ID from AWS and set it in Cantemo oly_archiveIdAWS
@@ -89,7 +90,7 @@ else
 		chunkToProcess=$(echo $chunkByLine | awk -F "'" '{print $2}')
 		#------------------------------ Log and update Cantemo Metadata
 		echo "$(date "+%H:%M:%S") (glacierMultiArch) - ($uploadId)   Processing $chunkToProcess" >> "$logFile"
-		updateValue="in progress - chunk $iCounter"
+		updateValue="in progress - chunk $iCounter of $totalChunkCount"
 		updateVidispineMetadata $uploadId "oly_archiveStatusAWS" $updateValue
 		#------------------------------ End log
 		mkdir -p "$temporaryFolder"/"$uploadId"/Chunk_"$iCounter"
@@ -120,18 +121,19 @@ else
 
 		#------------------------------ Log and update Cantemo Metadata
 		echo "$(date "+%H:%M:%S") (glacierMultiArch) - ($uploadId)   Archiving $chunkToProcess with hash $chunkTreeHash" >> "$logFile"
-		echo "$(date "+%H:%M:%S") (glacierMultiArch) - ($uploadId)     Chunk $iCounter: byte range $byteStartValue-$byteEndValue" >> "$logFile"
+		echo "$(date "+%H:%M:%S") (glacierMultiArch) - ($uploadId)     Chunk $iCounter of $totalChunkCount: byte range $byteStartValue-$byteEndValue" >> "$logFile"
 		updateValue="in progress - chunk $iCounter"
 		updateVidispineMetadata $uploadId "oly_archiveStatusAWS" $updateValue
 		#------------------------------ End log
 
 		#------------------------------ Archiving using AWS CLI
 		leadingAwsJobId=$(echo "$awsJobId" | cut -c1)
-	if [ "$leadingAwsJobId" == "-" ];
-	then
-		/usr/local/aws-cli/v2/current/dist/aws glacier upload-multipart-part --upload-id "\\$awsJobId" --body $temporaryFolder/$uploadId/Chunk_$iCounter/$chunkToProcess --range 'bytes '$byteStartValue'-'$byteEndValue'/*' --account-id "$awsCustomerId" --vault-name "$awsVaultName"
-	fi
-		/usr/local/aws-cli/v2/current/dist/aws glacier upload-multipart-part --upload-id "$awsJobId" --body $temporaryFolder/$uploadId/Chunk_$iCounter/$chunkToProcess --range 'bytes '$byteStartValue'-'$byteEndValue'/*' --account-id "$awsCustomerId" --vault-name "$awsVaultName"
+		if [ "$leadingAwsJobId" == "-" ];
+		then
+			/usr/local/aws-cli/v2/current/dist/aws glacier upload-multipart-part --upload-id "\\$awsJobId" --body $temporaryFolder/$uploadId/Chunk_$iCounter/$chunkToProcess --range 'bytes '$byteStartValue'-'$byteEndValue'/*' --account-id "$awsCustomerId" --vault-name "$awsVaultName"
+		else
+			/usr/local/aws-cli/v2/current/dist/aws glacier upload-multipart-part --upload-id "$awsJobId" --body $temporaryFolder/$uploadId/Chunk_$iCounter/$chunkToProcess --range 'bytes '$byteStartValue'-'$byteEndValue'/*' --account-id "$awsCustomerId" --vault-name "$awsVaultName"
+		fi
 		#------------------------------ End archiving
 		
 		cd "$temporaryFolder"/"$uploadId"
@@ -144,7 +146,12 @@ else
 	#------------------------------ Process and complete multi-part upload
 	cd "$temporaryFolder"/"$uploadId"/Chunk_all
 	completeTreeHash=$(createTreeHash "$temporaryFolder" "$uploadId" "all" "$chunksCount" "$uploadId")
-	httpResponse=$(/usr/local/aws-cli/v2/current/dist/aws glacier complete-multipart-upload --upload-id "$awsJobId" --checksum $completeTreeHash --archive-size $sourceFileSize --account-id "$awsCustomerId" --vault-name "$awsVaultName")
+	if [ "$leadingAwsJobId" == "-" ];
+	then
+		httpResponse=$(/usr/local/aws-cli/v2/current/dist/aws glacier complete-multipart-upload --upload-id "\\$awsJobId" --checksum $completeTreeHash --archive-size $sourceFileSize --account-id "$awsCustomerId" --vault-name "$awsVaultName")
+	else
+		httpResponse=$(/usr/local/aws-cli/v2/current/dist/aws glacier complete-multipart-upload --upload-id "$awsJobId" --checksum $completeTreeHash --archive-size $sourceFileSize --account-id "$awsCustomerId" --vault-name "$awsVaultName")
+	fi
 	awsArchiveId=$(echo "$httpResponse" | awk -F " " '{print $1}')
 	#------------------------------ Log and update Cantemo Metadata
 	echo "$(date "+%H:%M:%S") (glacierMultiArch) - ($uploadId)   Completing multi-part upload process with hash $completeTreeHash" >> "$logFile"
@@ -155,7 +162,7 @@ fi
 #------------------------------ Update Cantemo Metadata
 updateValue=$(date "+%Y-%m-%dT%H:%M:%S")
 updateVidispineMetadata $uploadId "oly_archiveDateAWS" $updateValue
-if [[ -z "$awsArchiveId" ]];
+if [ "$awsArchiveId" == "" ];
 then
 	updateValue="failed"
 else
