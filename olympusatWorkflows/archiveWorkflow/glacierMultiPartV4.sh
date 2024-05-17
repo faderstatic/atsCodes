@@ -129,7 +129,7 @@ else
 		leadingAwsJobId=$(echo "$awsJobId" | cut -c1)
 	if [ "$leadingAwsJobId" == "-" ];
 	then
-		awsJobId='\'"$awsJobId"
+		/usr/local/aws-cli/v2/current/dist/aws glacier upload-multipart-part --upload-id "\\$awsJobId" --body $temporaryFolder/$uploadId/Chunk_$iCounter/$chunkToProcess --range 'bytes '$byteStartValue'-'$byteEndValue'/*' --account-id "$awsCustomerId" --vault-name "$awsVaultName"
 	fi
 		/usr/local/aws-cli/v2/current/dist/aws glacier upload-multipart-part --upload-id "$awsJobId" --body $temporaryFolder/$uploadId/Chunk_$iCounter/$chunkToProcess --range 'bytes '$byteStartValue'-'$byteEndValue'/*' --account-id "$awsCustomerId" --vault-name "$awsVaultName"
 		#------------------------------ End archiving
