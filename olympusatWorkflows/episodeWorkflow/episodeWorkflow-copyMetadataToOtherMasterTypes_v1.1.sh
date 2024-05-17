@@ -66,6 +66,9 @@ else
 
         echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Search Title - [$searchTitle]" >> "$logfile"
 
+        itemTitleEs=$(filterVidispineItemMetadata $itemId "metadata" "oly_titleEs")
+        itemTitleEn=$(filterVidispineItemMetadata $itemId "metadata" "oly_titleEn")
+        itemOriginalTitle=$(filterVidispineItemMetadata $itemId "metadata" "oly_originalTitle")
         itemSeriesName=$(filterVidispineItemMetadata $itemId "metadata" "oly_seriesName")
         itemSeasonNumber=$(filterVidispineItemMetadata $itemId "metadata" "oly_seasonNumber")
         itemEpisodeNumber=$(filterVidispineItemMetadata $itemId "metadata" "oly_episodeNumber")
@@ -106,6 +109,9 @@ else
             #Updating metadata on Textless Master Item
             echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Updating Metadata on Textless Master Item - [$textlessItemId]" >> "$logfile"
 
+            updateVidispineMetadata $textlessItemId "oly_titleEs" "$itemTitleEs"
+            updateVidispineMetadata $textlessItemId "oly_titleEn" "$itemTitleEn"
+            updateVidispineMetadata $textlessItemId "oly_originalTitle" "$itemOriginalTitle"
             updateVidispineMetadata $textlessItemId "oly_seriesName" "$itemSeriesName"
             updateVidispineMetadata $textlessItemId "oly_seasonNumber" "$itemSeasonNumber"
             updateVidispineMetadata $textlessItemId "oly_episodeNumber" "$itemEpisodeNumber"
@@ -139,6 +145,9 @@ else
             #Updating metadata on Dubbed Master Item
             echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Updating Metadata on Dubbed Master Item - [$dubbedItemId]" >> "$logfile"
 
+            updateVidispineMetadata $dubbedItemId "oly_titleEs" "$itemTitleEs"
+            updateVidispineMetadata $dubbedItemId "oly_titleEn" "$itemTitleEn"
+            updateVidispineMetadata $dubbedItemId "oly_originalTitle" "$itemOriginalTitle"
             updateVidispineMetadata $dubbedItemId "oly_seriesName" "$itemSeriesName"
             updateVidispineMetadata $dubbedItemId "oly_seasonNumber" "$itemSeasonNumber"
             updateVidispineMetadata $dubbedItemId "oly_episodeNumber" "$itemEpisodeNumber"
@@ -172,6 +181,9 @@ else
             #Updating metadata on Spanish Master Item
             echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Updating Metadata on Spanish Master Item - [$spanishItemId]" >> "$logfile"
 
+            updateVidispineMetadata $spanishItemId "oly_titleEs" "$itemTitleEs"
+            updateVidispineMetadata $spanishItemId "oly_titleEn" "$itemTitleEn"
+            updateVidispineMetadata $spanishItemId "oly_originalTitle" "$itemOriginalTitle"
             updateVidispineMetadata $spanishItemId "oly_seriesName" "$itemSeriesName"
             updateVidispineMetadata $spanishItemId "oly_seasonNumber" "$itemSeasonNumber"
             updateVidispineMetadata $spanishItemId "oly_episodeNumber" "$itemEpisodeNumber"
