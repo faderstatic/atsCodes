@@ -155,7 +155,12 @@ fi
 #------------------------------ Update Cantemo Metadata
 updateValue=$(date "+%Y-%m-%dT%H:%M:%S")
 updateVidispineMetadata $uploadId "oly_archiveDateAWS" $updateValue
-updateValue="completed"
+if [[ -z "$awsArchiveId" ]];
+then
+	updateValue="failed"
+else
+	updateValue="completed"
+fi
 updateVidispineMetadata $uploadId "oly_archiveStatusAWS" $updateValue
 echo "$(date "+%H:%M:%S") (glacierSummary) - ($uploadId)   AWS Archive ID: $awsArchiveId" >> "$logFile"
 updateValue="$sourceFile,$sourceFileSize,$awsArchiveId"
