@@ -48,6 +48,7 @@ countDaMuthaFukkingColumns ()
 export cantemoItemId="$1"
 export columnHeader="$2"
 export inputFile="$3"
+export rightslineItemId="$1"
 export cantemoItemTitle=$(filterVidispineItemMetadata "$cantemoItemId" "metadata" "title")
 # --------------------------------------------------
 
@@ -126,7 +127,7 @@ then
         # Writing XML File
 
         #fileDestination="/opt/olympusat/xmlsForMetadataImport/${fieldValue[3]}.xml"
-        fileDestination="/opt/olympusat/xmlsForMetadataImport/$cantemoItemId.xml"
+        fileDestination="/opt/olympusat/xmlsForMetadataImport/rightslineItemId_$cantemoItemId.xml"
 
         # --------------------------------------------------
         # Print XML header
@@ -151,7 +152,7 @@ then
                     echo "        <field>
           <name>oly_rightslineItemId</name>
           <value>${fieldValue[$columnCounter]}</value>
-        </field>" >> "$fileDestinationSpanish"
+        </field>" >> "$fileDestination"
                     columnCounter=$(($columnCounter + 1))
                 ;;
 
@@ -161,7 +162,7 @@ then
 
             esac
         done
-        
+
         # --------------------------------------------------
 
         # --------------------------------------------------
@@ -177,14 +178,16 @@ then
 
         url="http://10.1.1.34:8080/API/import/sidecar/$cantemoItemId?sidecar=/opt/olympusat/xmlsForMetadataImport/rightslineItemId_$cantemoItemId.xml"
 
-        #curl --location --request POST $url --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0'
+        curl --location --request POST $url --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0'
         
         sleep 2
 
         echo "Moving xml to zCompleted folder"
-        #mv "$fileDestination" "/opt/olympusat/xmlsForMetadataImport/zCompleted/"
+        mv "$fileDestination" "/opt/olympusat/xmlsForMetadataImport/zCompleted/"
 
-        #bash -c "sudo /opt/olympusat/scriptsActive/importRightslineLegacyInfo-media_v2.7.sh $cantemoItemId oly_rightslineItemId /opt/olympusat/resources/RIGHTSLINE_CATALOG-ITEM_DATABASE_2024-04-16_v2.1.csv > /dev/null 2>&1 &"
+        sleep 2
+
+        bash -c "sudo /opt/olympusat/scriptsActive/importRightslineLegacyInfo-media_v2.7.sh $cantemoItemId oly_rightslineItemId /opt/olympusat/resources/RIGHTSLINE_CATALOG-ITEM_DATABASE_2024-04-16_v2.1.csv > /dev/null 2>&1 &"
 
     fi
 fi
