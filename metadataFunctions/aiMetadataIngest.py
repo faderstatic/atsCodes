@@ -22,6 +22,7 @@ try:
   cantemoItemId = sys.argv[1]
   # cantemoItemId = os.environ.get("portal_itemId")
   errorReport = ''
+  cantemoAdBreaks = ""
 
   #------------------------------
   # Making API call to Cantemo to get file name
@@ -36,35 +37,14 @@ try:
 
   #------------------------------
   # Parsing JSON data
-  # ET.register_namespace('ns', 'http://xml.vidispine.com/schema/vidispine')
   responseJson = httpApiResponse.json()
-  itemAiAnalysis = json.loads(httpApiResponse.text)
-  for lineValue in responseJson:
-    itemAiAnalysis = lineValue["adbreak"]
-  # responseXmlRoot = ET.fromstring(responseXml)
-  # fileLocation = responseXmlRoot.find('{http://xml.vidispine.com/schema/vidispine}uri')
-  #------------------------------
-
-  #------------------------------
-  # Formatting sorce  filename
-  baseFileName = os.path.basename(fileLocation.text)
-  justFileName, justFileExtension = os.path.splitext(baseFileName)
-  justFileExtensionTrimmed = justFileExtension.replace('.', '')
-  # print(f"Filename: {justFileName} - File Extension: {justFileExtension}")
-  sourceXmlFile = f"/Volumes/creative/MAM/_autoIngest/staging/zAdmin/xmlImport/{justFileName}_{justFileExtensionTrimmed}.xml"
-  sourceXmlFile = f"/mnt/c/Users/kkanjanapitak/Desktop/Repositories/atsCodes/sampleFiles/Baton/Grand_HD_RU_SGRAND1_S5E1_Master_mxf.xml"
-  #------------------------------
-
-  tree = ET.parse(sourceXmlFile)
-  root = tree.getroot()
-
-  #------------------------------
-  # Gather metadata from the report
-  # for errorResults in root.iter('error'):
-  #     errorMessage = errorResults.get('synopsis')
-  #     errorDescription = errorResults.get('description')
-  #     errorTimecode = errorResults.get('timecode')
-  #     errorReport = errorReport + f"{errorTimecode} - {errorMessage} ({errorDescription})\n"
+  # responseJson = json.loads(httpApiResponse.text)
+  for rankingValue in responseJson["adbreak"]:
+    rankingNumber = rankingValue["rank"]
+    rankingFrame = rankingValue["candidates"]
+    cantemoAdBreaks = f"{cantemoAdBreaks}Recommendation {rankingNumber} - Frame Numbers {rankingFrame}\n"
+  cantemoAdBreaks = cantemoAdBreaks[:-1]
+  print(cantemoAdBreaks)
   #------------------------------
 
   #------------------------------
