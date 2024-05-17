@@ -120,7 +120,8 @@ else
             #Textless Master does not exist - trying different search
             echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Textless Master does not exist - Trying different search" >> "$logfile"
 
-            searchTitle="$searchTitle1 S'$itemSeasonNumber'E'$itemEpisodeNumber'"
+            #searchTitle="$searchTitle1 S'$itemSeasonNumber'E'$itemEpisodeNumber'"
+            searchTitle=$(echo $searchTitle1 "S"$itemSeasonNumber"E"$itemEpisodeNumber)
             export searchUrl="http://10.1.1.34/API/v2/search/"
             textlessCheckBody="{ \"filter\": { \"operator\": \"AND\",\"terms\": [{ \"name\": \"title\", \"value\": \"$searchTitle\" },{ \"name\": \"oly_originalFileFlags\", \"value\": \"textlessmaster\" }]}}"
             
@@ -191,7 +192,8 @@ else
             #Dubbed Master does not exist - trying different search
             echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master does not exist - Trying different search" >> "$logfile"
 
-            searchTitle="$searchTitle1 S'$itemSeasonNumber'E'$itemEpisodeNumber'"
+            #searchTitle="$searchTitle1 S'$itemSeasonNumber'E'$itemEpisodeNumber'"
+            searchTitle=$(echo $searchTitle1 "S"$itemSeasonNumber"E"$itemEpisodeNumber)
             export searchUrl="http://10.1.1.34/API/v2/search/"
             dubbedCheckBody="{ \"filter\": { \"operator\": \"AND\",\"terms\": [{ \"name\": \"title\", \"value\": \"$searchTitle\" },{ \"name\": \"oly_originalFileFlags\", \"value\": \"dubbedmaster\" }]}}"
             
@@ -262,7 +264,8 @@ else
             #Spanish Master does not exist - trying different search
             echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Spanish Master does not exist - Trying different search" >> "$logfile"
 
-            searchTitle="$searchTitle1 S'$itemSeasonNumber'E'$itemEpisodeNumber'"
+            #searchTitle="$searchTitle1 S'$itemSeasonNumber'E'$itemEpisodeNumber'"
+            searchTitle=$(echo $searchTitle1 "S"$itemSeasonNumber"E"$itemEpisodeNumber)
             export searchUrl="http://10.1.1.34/API/v2/search/"
             spanishCheckBody="{ \"filter\": { \"operator\": \"AND\",\"terms\": [{ \"name\": \"title\", \"value\": \"$searchTitle\" },{ \"name\": \"oly_originalFileFlags\", \"value\": \"spanishmaster\" }]}}"
             
