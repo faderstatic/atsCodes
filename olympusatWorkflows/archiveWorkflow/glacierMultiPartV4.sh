@@ -53,7 +53,7 @@ then
 	awsArchiveId=$(echo "$httpResponse" | awk -F " " '{print $1}')
 	echo "$(date "+%H:%M:%S") (glacierSingleArch) - ($uploadId)   Completing single upload process." >> "$logFile"
 else
-	totalChunkCount=$(( $sourceFileSize/$chunkByteSize+1 ))
+	totalChunkCount=$(( $sourceFileSize/$chunkByteSize ))
 	echo "$(date "+%H:%M:%S") (glacierMultiArch) - ($uploadId) Start processing $sourceFile ($sourceFileSize bytes) with $chunkByteSize byte chunks" >> "$logFile"
 
 	#-------------------------------------------------- Get Job ID from AWS and set it in Cantemo oly_archiveIdAWS
