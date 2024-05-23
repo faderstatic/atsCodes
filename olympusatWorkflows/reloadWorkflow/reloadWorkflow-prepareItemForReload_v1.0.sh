@@ -1,10 +1,10 @@
 #!/bin/bash
 
 #::***************************************************************************************************************************
-#::This shell script will get metadata from Episode & create Series & Season placeholders
+#::This shell script will run a series of events to prepare item for "reload" of new version of file
 #::Engineers: Ryan Sims & Tang Kanjanapitak
 #::Client: Olympusat
-#::Updated: 04/30/2024
+#::Updated: 05/23/2024
 #::Rev A: 
 #::System requirements: This script will run in LINUX & MacOS
 #::***************************************************************************************************************************
@@ -24,97 +24,50 @@ logfile="/opt/olympusat/logs/olympusatWorkflow-$mydate.log"
 
 #Set Variable to check before continuing with script
 export itemId=$1
-itemContentType=$(filterVidispineItemMetadata $itemId "metadata" "oly_contentType")
+itemVersionType=$(filterVidispineItemMetadata $itemId "metadata" "oly_versionType")
 
 #Check Variable
-if [[ "$itemContentType" != "episode" ]];
+if [[ "$itemVersionType" == "conformFile" || "$itemVersionType" == "censoredFile" ]];
 then
-    #contentType is NOT 'episode'-skip process
+    #versionType IS 'conformFile' or 'censoredFile'-continue with process
 
-    echo "$datetime - (episodeWorkflow) - [$itemId] - Content Type is NOT 'episode'" >> "$logfile"
-    echo "$datetime - (episodeWorkflow) - [$itemId] - Content Type is [$itemContentType] - Skipping Episode Workflow" >> "$logfile"
+    echo "$datetime - (reloadWorkflow) - [$itemId] - Version Type IS 'conformFile' or 'censoredFile'" >> "$logfile"
+    echo "YEEESSSSS [$itemId] - Version Type IS 'conformFile' or 'censoredFile'"
+
 else
-    #contentType IS episode-continue with process
-    #Variables to be passed from Cantemo to shell script
-
-    echo "$datetime - (episodeWorkflow) - [$itemId] - Content Type is [$itemContentType]" >> "$logfile"
-
-    itemSeriesName=$(filterVidispineItemMetadata $itemId "metadata" "oly_seriesName")
-    itemSeasonNumber=$(filterVidispineItemMetadata $itemId "metadata" "oly_seasonNumber")
-    checkForSeriesItem="$itemSeriesName"
-    if [[ "$checkForSeriesItem" == *:* ]];
+    if [[ "$itemVersionType" == "originalFile" ]];
     then
-        checkForSeriesItem=$(echo $itemSeriesName | sed -e 's/:/\\\\:/g')
-    fi
-    checkForSeasonItem="$checkForSeriesItem | Season $itemSeasonNumber"
-    setForSeriesName="$itemSeriesName"
-    setForSeasonName="$itemSeriesName | Season $itemSeasonNumber"
+        #versionType IS 'originalFile'-contine with process
 
-    if [[ (-z "$itemSeriesName") || (-z "$itemSeasonNumber") ]];
-    then
-        #Metadaata is missinging-skip process
-        echo "$datetime - (episodeWorkflow) - [$itemId] - Series Name [$itemSeriesName] - Season Number [$itemSeasonNumber]" >> "$logfile"
-        echo "$datetime - (episodeWorkflow) - [$itemId] - Item is Missing Metadata - Skipping Episode Workflow" >> "$logfile"
+        echo "$datetime - (reloadWorkflow) - [$itemId] - Version Type IS 'originalFile'" >> "$logfile"
+        echo "YEEESSSSS [$itemId] - Version Type IS 'originalFile'"
+
     else
-        export searchUrl="http://10.1.1.34/API/v2/search/"
-        export createUrl="http://10.1.1.34/API/v2/items/"
+        #versionType IS NOT 'conformFile' nor 'censoredFile' nor 'originalFile'-skip process
 
-        urlGetItemInfo="http://10.1.1.34:8080/API/item/$itemId/metadata?field=oly_contentFlags&terse=yes"
-        httpResponse=$(curl --location --request GET $urlGetItemInfo --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=Tkb9vkSC8v4SceB8CHUyB3iaMPjvgoHrzhLrvo36agG3wqv0jHc7nsOtdTo9JEyM')
+        echo "$datetime - (reloadWorkflow) - [$itemId] - Version Type is NOT 'conformFile' nor 'censoredFile' nor 'originalFile'" >> "$logfile"
+        echo "NOOOOOOOO [$itemId] - Version Type is NOT 'conformFile' nor 'censoredFile' nor 'originalFile'"
 
-        if [[ "$httpResponse" == *"legacycontent"* ]];
-        then
-            contentFlagsValue="legacycontent"
-        else
-            contentFlagsValue=""
-        fi
-
-        #API Call to Search if Series already exists
-
-        echo "$datetime - (episodeWorkflow) - [$itemId] - Checking if Series item exists - [$checkForSeriesItem]" >> "$logfile"
-
-        seriesCheckBody="{ \"filter\": { \"operator\": \"AND\",\"terms\": [{ \"name\": \"title\", \"value\": \"$checkForSeriesItem\" },{ \"name\": \"oly_contentType\", \"value\": \"series\" }]}}"
-        seriesCheckHttpResponse=$(curl --location --request PUT $searchUrl --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=VDa9RP3Y9rgomyzNWvRxbu7WdTMetVYBlLg6pGMIJ6oyVABsjJiiEK9JCWVA1HYd' --data $seriesCheckBody)
-
-        if [[ "$seriesCheckHttpResponse" != *'"id":"OLY-'* ]];
-        then
-            #Series placeholder does not exists, API Call to create new Series placeholder with metadata
-
-            echo "$datetime - (episodeWorkflow) - [$itemId] - Creating new Series placeholder - [$setForSeriesName]" >> "$logfile"
-
-            itemLicensor=$(filterVidispineItemMetadata $itemId "metadata" "oly_licensor")
-            seriesCreateBody="{ \"metadata\": { \"group_name\": \"Olympusat\", \"fields\": [ { \"name\": \"title\", \"value\": \"$setForSeriesName\" }, { \"name\": \"oly_titleEn\", \"value\": \"$setForSeriesName\" }, { \"name\": \"oly_contentType\", \"value\": \"series\" }, { \"name\": \"oly_licensor\", \"value\": \"$itemLicensor\" }, { \"name\": \"oly_contentFlags\", \"value\": \"$contentFlagsValue\" } ] }}"
-            seriesCreateHttpResponse=$(curl --location --request POST $createUrl --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=CRbBvVEFSfR5lHoQebsbQemRRas2MUyo53CsO5ixtkSrzvC9H7NffcuaXkIJvr1V' --data $seriesCreateBody)
-        else
-            #Series placeholder already exists
-            echo "$datetime - (episodeWorkflow) - [$itemId] - Series placeholder already exists - [$setForSeriesName]" >> "$logfile"
-        fi
-
-        sleep 2
-
-        #API Call to Search if Season already exists
-
-        echo "$datetime - (episodeWorkflow) - [$itemId] - Checking if Season item exists - [$checkForSeasonItem]" >> "$logfile"
-
-        seasonCheckBody="{ \"filter\": { \"operator\": \"AND\",\"terms\": [{ \"name\": \"title\", \"value\": \"$checkForSeasonItem\" },{ \"name\": \"oly_contentType\", \"value\": \"season\" }]}}"
-        seasonCheckHttpResponse=$(curl --location --request PUT $searchUrl --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=VDa9RP3Y9rgomyzNWvRxbu7WdTMetVYBlLg6pGMIJ6oyVABsjJiiEK9JCWVA1HYd' --data $seasonCheckBody)
-
-        if [[ "$seasonCheckHttpResponse" != *'"id":"OLY-'* ]];
-        then
-            #Season placeholder does not exist, API Call to create new Season placeholder with metadata
-
-            echo "$datetime - (episodeWorkflow) - [$itemId] - Creating new Season placeholder - [$setForSeasonName]" >> "$logfile"
-
-            itemLicensor=$(filterVidispineItemMetadata $itemId "metadata" "oly_licensor")
-            seasonCreateBody="{ \"metadata\": { \"group_name\": \"Olympusat\", \"fields\": [ { \"name\": \"title\", \"value\": \"$setForSeasonName\" }, { \"name\": \"oly_titleEn\", \"value\": \"$setForSeriesName\" }, { \"name\": \"oly_contentType\", \"value\": \"season\" }, { \"name\": \"oly_licensor\", \"value\": \"$itemLicensor\" }, { \"name\": \"oly_seasonNumber\", \"value\": \"$itemSeasonNumber\" }, { \"name\": \"oly_seriesName\", \"value\": \"$setForSeriesName\" }, { \"name\": \"oly_contentFlags\", \"value\": \"$contentFlagsValue\" } ] }}"
-            seasonCreateHttpResponse=$(curl --location --request POST $createUrl --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=CRbBvVEFSfR5lHoQebsbQemRRas2MUyo53CsO5ixtkSrzvC9H7NffcuaXkIJvr1V' --data $seasonCreateBody)
-        else
-            #Season placeholder already exists
-            echo "$datetime - (episodeWorkflow) - [$itemId] - Season placeholder already exists - [$setForSeasonName]" >> "$logfile"
-        fi
-
-        updateVidispineMetadata $itemId "oly_adminRulesFlags" "episodeprocessed"
     fi
 fi
+
+case "$itemVersionType" in
+
+    "conformFile"|"censoredFile")
+        echo "$datetime - (reloadWorkflow) - [$itemId] - Case - Version Type IS 'conformFile' or 'censoredFile'" >> "$logfile"
+        echo "Case-YEEESSSSS [$itemId] - Version Type IS 'conformFile' or 'censoredFile'"
+    ;;
+
+    "originalFile")
+        echo "$datetime - (reloadWorkflow) - [$itemId] - Case - Version Type IS 'originalFile'" >> "$logfile"
+        echo "Case-YEEESSSSS [$itemId] - Version Type IS 'originalFile'"
+    ;;
+
+    *)
+        echo "$datetime - (reloadWorkflow) - [$itemId] - Case - Version Type is NOT 'conformFile' nor 'censoredFile' nor 'originalFile'" >> "$logfile"
+        echo "Case-NOOOOOOOO [$itemId] - Version Type is NOT 'conformFile' nor 'censoredFile' nor 'originalFile'"
+    ;;
+
+esac
 
 IFS=$saveIFS
