@@ -189,7 +189,7 @@ then
 
         sleep 5
 
-        bash -c "sudo /opt/olympusat/scriptsActive/importRightslineLegacyInfo-media_v2.7.sh $cantemoItemId oly_rightslineItemId /opt/olympusat/resources/RIGHTSLINE_CATALOG-ITEM_DATABASE_2024-04-16_v2.1.csv > /dev/null 2>&1"
+        bash -c "sudo /opt/olympusat/scriptsActive/importRightslineLegacyInfo-media_v2.8.sh $cantemoItemId oly_rightslineItemId /opt/olympusat/resources/RIGHTSLINE_CATALOG-ITEM_DATABASE_2024-04-16_v2.1.csv > /dev/null 2>&1"
 
     fi
 fi
