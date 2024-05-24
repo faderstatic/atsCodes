@@ -122,13 +122,20 @@ then
 
         # Reset Item to Placeholder
         echo "$datetime - (reloadWorkflow) - [$itemId] - Resetting Item to Placeholder" >> "$logfile"
+        itemTitle=$(filterVidispineItemMetadata $itemId "metadata" "title")
 
         urlResetToPlaceholder="http://10.1.1.34/API/v2/items/$itemId/formats/"
 	    #httpResponse=$(curl --location --request DELETE $urlResetToPlaceholder --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=CUhJ240QCYOVA1GW8yARnGbTGKlcVxuMWuEabYLspdpzlmjwcaC1J91bABx7f2RW')
 
         echo "$datetime - (reloadWorkflow) - [$itemId] - Item Reset to Placeholder Completed" >> "$logfile"
+        echo "$datetime - (reloadWorkflow) - [$itemId] - Updating Item Title {$itemTitle}" >> "$logfile"
 
-        sleep 1
+        sleep 5
+
+        #updateVidispineMetadata $itemId "title" "$itemTitle"
+
+        echo "$datetime - (reloadWorkflow) - [$itemId] - Prepare for Reload Workflow Completed" >> "$logfile"
+
     else
         echo "$datetime - (reloadWorkflow) - [$itemId] - Shape(s) still exist for Item in Cantemo - Item NOT Reset to Placeholder" >> "$logfile"
     fi
