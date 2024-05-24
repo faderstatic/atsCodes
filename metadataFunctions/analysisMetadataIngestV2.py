@@ -1,5 +1,5 @@
-# /opt/cantemo/python/bin/python
-#!/usr/bin/python3
+#!/opt/cantemo/python/bin/python
+# /usr/bin/python3
 
 # This application ingests metadata from an XML output file into Cantemo
 # PREREQUISITE: -none-
