@@ -16,39 +16,41 @@ import subprocess
 import requests
 import xml.etree.ElementTree as ET
 import urllib.parse
+# Cantemo Library
 import django
+import logging
 #------------------------------
 
-sys.path.append("/opt/cantemo/portal")
-os.environ["DJANGO_SETTINGS_MODULE"] = "portal.settings"
+#------------------------------
+# Cantemo Rulesengione3 Environment
+# sys.path.append("/opt/cantemo/portal")
+# os.environ["DJANGO_SETTINGS_MODULE"] = "portal.settings"
 
-django.setup()
+# django.setup()
 # Now Portal/Django environment is setup and helper classes are available
 
-import logging
-
 # Logging through standard Portal logging, i.e. to /var/log/cantemo/portal/portal.log
-log = logging.getLogger("portal.plugins.rulesengine3.shellscripts")
+# log = logging.getLogger("portal.plugins.rulesengine3.shellscripts")
 
 # Access variables from the Rules Engine through os.environ
-log.info("All script variables:")
-for key, value in os.environ.items():
-    if key.startswith("portal_"):
-        log.info(" %s=%r", key, value)
+# log.info("All script variables:")
+# for key, value in os.environ.items():
+#     if key.startswith("portal_"):
+#         log.info(" %s=%r", key, value)
 
 # Access command line arguments from Rules Engine through sys.argv
-log.info("All script command line arguments (%i):", len(sys.argv))
-for i, arg in enumerate(sys.argv):
-    log.info(" sys.argv[%i]=%s", i, arg)
+# log.info("All script command line arguments (%i):", len(sys.argv))
+# for i, arg in enumerate(sys.argv):
+#     log.info(" sys.argv[%i]=%s", i, arg)
 
-item_id = os.environ.get("portal_itemId")
-if item_id:
-    from portal.vidispine.iitem import ItemHelper
+# item_id = os.environ.get("portal_itemId")
+# if item_id:
+#     from portal.vidispine.iitem import ItemHelper
 
-    ith = ItemHelper()
-    log.info("Item title: %s", ith.getItem(item_id).getTitle())
-else:
-    log.info("portal_itemId not set")
+#     ith = ItemHelper()
+#     log.info("Item title: %s", ith.getItem(item_id).getTitle())
+# else:
+#     log.info("portal_itemId not set")
 
 cantemoItemId = sys.argv[1]
 # cantemoItemId = os.environ.get("portal_itemId")
