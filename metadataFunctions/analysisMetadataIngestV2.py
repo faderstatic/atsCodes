@@ -108,7 +108,6 @@ headers = {
   'Cookie': 'csrftoken=HFOqrbk9cGt3qnc6WBIxWPjvCFX0udBdbJnzCv9jECumOjfyG7SS2lgVbFcaHBCc',
   'Content-Type': 'application/xml'
 }
-cantemoItemId = 'OLY-4463'
 urlPutAnalysisInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata/"
 payload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_analysisReport</name><value>{errorReport}</value></field></timespan></MetadataDocument>"
 httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=payload)
