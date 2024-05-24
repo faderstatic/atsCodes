@@ -58,33 +58,32 @@ errorReport = ''
 
 #------------------------------
 # Making API call to Cantemo to get file name
-headers = {
-  'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
-  'Cookie': 'csrftoken=HFOqrbk9cGt3qnc6WBIxWPjvCFX0udBdbJnzCv9jECumOjfyG7SS2lgVbFcaHBCc'
-}
-payload = {}
-urlGetSourceFile = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/uri?tag=original"
-httpApiResponse = requests.request("GET", urlGetSourceFile, headers=headers, data=payload)
+# headers = {
+#   'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
+#   'Cookie': 'csrftoken=HFOqrbk9cGt3qnc6WBIxWPjvCFX0udBdbJnzCv9jECumOjfyG7SS2lgVbFcaHBCc'
+# }
+# payload = {}
+# urlGetSourceFile = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/uri?tag=original"
+# httpApiResponse = requests.request("GET", urlGetSourceFile, headers=headers, data=payload)
 #------------------------------
 
 #------------------------------
 # Parsing XML data
-ET.register_namespace('ns', 'http://xml.vidispine.com/schema/vidispine')
-responseXml = httpApiResponse.text
-responseXmlRoot = ET.fromstring(responseXml)
-fileLocation = responseXmlRoot.find('{http://xml.vidispine.com/schema/vidispine}uri')
+# ET.register_namespace('ns', 'http://xml.vidispine.com/schema/vidispine')
+# responseXml = httpApiResponse.text
+# responseXmlRoot = ET.fromstring(responseXml)
+# fileLocation = responseXmlRoot.find('{http://xml.vidispine.com/schema/vidispine}uri')
 #------------------------------
 
 #------------------------------
-# Formatting sorce filename
-baseFileName = os.path.basename(fileLocation.text)
-justFileName, justFileExtension = os.path.splitext(baseFileName)
-modFileName = urllib.parse.unquote(justFileName)
-justFileExtensionTrimmed = justFileExtension.replace('.', '')
+# Formatting source filename
+# baseFileName = os.path.basename(fileLocation.text)
+# justFileName, justFileExtension = os.path.splitext(baseFileName)
+# modFileName = urllib.parse.unquote(justFileName)
+# justFileExtensionTrimmed = justFileExtension.replace('.', '')
 # print(f"Filename: {justFileName} - File Extension: {justFileExtension}")
-# sourceXmlFile = f"/Volumes/creative/MAM/_autoIngest/staging/zAdminTestFiles/xmlIngestTests/{justFileName}_{justFileExtensionTrimmed}.xml"
-# sourceXmlFile = f"/Volumes/creative/MAM/zSoftware/batonReports/05212024 vantage test_mxf.xml"
-sourceXmlFile = f"/Volumes/creative/MAM/zSoftware/batonReports/{modFileName}.xml"
+# sourceXmlFile = f"/Volumes/creative/MAM/zSoftware/batonReports/{modFileName}.xml"
+sourceXmlFile = f"/Volumes/creative/MAM/zSoftware/batonReports/{cantemoItemId}.xml"
 #------------------------------
 
 tree = ET.parse(sourceXmlFile)
