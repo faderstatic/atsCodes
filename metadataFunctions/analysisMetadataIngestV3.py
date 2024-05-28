@@ -87,7 +87,7 @@ errorReport = ''
 # print(f"Filename: {justFileName} - File Extension: {justFileExtension}")
 # sourceXmlFile = f"/Volumes/creative/MAM/zSoftware/batonReports/{modFileName}.xml"
 sourceXmlFile = Path(f"/Volumes/creative/MAM/zSoftware/batonReports/{cantemoItemId}.xml")
-completedXmlFolder = Path("/Volumes/creative/MAM/zSoftware/batonReport/zCompleted")
+completedXmlFolder = Path("/Volumes/creative/MAM/zSoftware/batonReports/zCompleted")
 #------------------------------
 
 if sourceXmlFile.is_file():
