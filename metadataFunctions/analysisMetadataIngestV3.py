@@ -16,6 +16,7 @@ import time
 import subprocess
 import requests
 from pathlib import Path
+import shutil
 import xml.etree.ElementTree as ET
 import urllib.parse
 # Cantemo Library
@@ -86,6 +87,7 @@ errorReport = ''
 # print(f"Filename: {justFileName} - File Extension: {justFileExtension}")
 # sourceXmlFile = f"/Volumes/creative/MAM/zSoftware/batonReports/{modFileName}.xml"
 sourceXmlFile = Path(f"/Volumes/creative/MAM/zSoftware/batonReports/{cantemoItemId}.xml")
+completedXmlFolder = Path("/Volumes/creative/MAM/zSoftware/batonReport/zCompleted")
 #------------------------------
 
 if sourceXmlFile.is_file():
@@ -99,15 +101,20 @@ if sourceXmlFile.is_file():
   analysisSummary = topLevelInfo.get('Summary')
   errorReport = f"Summary - {analysisSummary}\n\n"
   for errorResults in root.iter('error'):
-      errorMessage = errorResults.get('synopsis')
-      errorDescription = errorResults.get('description')
-      errorTimecode = errorResults.get('timecode')
-      errorReport = errorReport + f"  Timecode: {errorTimecode} - {errorMessage} ({errorDescription})\n"
+      if errorResults is not None:
+        errorMessage = errorResults.get('synopsis')
+        errorDescription = errorResults.get('description')
+        errorTimecode = errorResults.get('timecode')
+        errorReport = errorReport + f"  Timecode: {errorTimecode} - {errorMessage} ({errorDescription})\n"
+      else:
+         errorReport = "There was no error reported in the analysis report XML"
   #------------------------------
-
+  shutil.move(sourceXmlFile,completedXmlFolder)
 else:
    
    errorReport = f"Analysis report XML file does not exist - (missing) {sourceXmlFile}"
+
+
 
 #------------------------------
 # Update Cantemo metadata
