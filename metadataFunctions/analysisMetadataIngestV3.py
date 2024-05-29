@@ -135,6 +135,8 @@ if sourceXmlFile.is_file():
         errorReport = errorReport + f"  Timecode: {errorTimecode} - {errorMessage} ({errorDescription})\n"
       else:
         errorReport = "There was no error reported in the analysis report XML"
+  else:
+    errorReport = analysisReport.text
   #------------------------------
   shutil.move(sourceXmlFile,completedXmlFolder)
 else:
