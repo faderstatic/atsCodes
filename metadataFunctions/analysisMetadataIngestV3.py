@@ -135,7 +135,10 @@ if sourceXmlFile.is_file():
   #------------------------------
   shutil.move(sourceXmlFile,completedXmlFolder)
 else:
-  errorReport = f"Analysis report XML file does not exist - (missing) {sourceXmlFile}"
+  if not analysisReport.text.startswith('Summary'):
+    errorReport = f"Analysis report XML file does not exist - (missing) {sourceXmlFile}"
+  else:
+    errorReport=analysisReport.text
 
 #------------------------------
 # Update Cantemo metadata
