@@ -107,11 +107,11 @@ ET.register_namespace('ns', 'http://xml.vidispine.com/schema/vidispine')
 responseXml = httpApiResponse.text
 responseXmlRoot = ET.fromstring(responseXml)
 print(f"first print {responseXmlRoot}")
-existingReport = responseXmlRoot.get('{http://xml.vidispine.com/schema/vidispine}TerseMetadataListDocument')
-print(existingReport)
+existingReport = responseXmlRoot.get('{http://xml.vidispine.com/schema/vidispine}item')
+print(f"second print {existingReport}")
 itemInformation = responseXmlRoot.get('item')
-print(itemInformation)
-analysisReport = itemInformation.find('oly_analysisReport')
+print(f"third print {itemInformation}")
+analysisReport = itemInformation.find('{http://xml.vidispine.com/schema/vidispine}oly_analysisReport')
 print(analysisReport)
 #------------------------------
 
