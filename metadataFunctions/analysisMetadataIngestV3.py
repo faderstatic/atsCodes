@@ -111,7 +111,7 @@ existingReport = responseXmlRoot.find('{http://xml.vidispine.com/schema/vidispin
 print(f"second print {existingReport}")
 itemInformation = responseXmlRoot.get('item')
 print(f"third print {itemInformation}")
-analysisReport = existingReport.find('{http://xml.vidispine.com/schema/vidispine}oly_analysisReport')
+analysisReport = existingReport.find('oly_analysisReport')
 print(analysisReport)
 #------------------------------
 
