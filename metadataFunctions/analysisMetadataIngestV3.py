@@ -106,9 +106,12 @@ httpApiResponse = requests.request("GET", urlGetReport, headers=headers, data=pa
 ET.register_namespace('ns', 'http://xml.vidispine.com/schema/vidispine')
 responseXml = httpApiResponse.text
 responseXmlRoot = ET.fromstring(responseXml)
+print(responseXmlRoot)
 existingReport = responseXmlRoot.find('{http://xml.vidispine.com/schema/vidispine}TerseMetadataListDocument')
-itemInformation = existingReport.get('item')
-analysisReport = itemInformation.get('oly_analysisReport')
+print(existingReport)
+itemInformation = existingReport.find('item')
+print(itemInformation)
+analysisReport = itemInformation.find('oly_analysisReport')
 print(analysisReport)
 #------------------------------
 
@@ -117,7 +120,7 @@ if analysisReport is not None:
   print(analysisReport)
 
 else:
-  
+
   if sourceXmlFile.is_file():
 
     tree = ET.parse(sourceXmlFile)
