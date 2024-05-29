@@ -112,8 +112,8 @@ analysisReport = itemInformation.find('oly_analysisReport')
 
 if analysisReport.text.startswith('Summary'):
 
-  print(analysisReport.text)
-
+  # print(analysisReport.text)
+  
 else:
 
   if sourceXmlFile.is_file():
