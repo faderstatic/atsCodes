@@ -112,7 +112,7 @@ print(f"second print {existingReport}")
 itemInformation = responseXmlRoot.get('item')
 print(f"third print {itemInformation}")
 analysisReport = existingReport.find('oly_analysisReport')
-print(analysisReport)
+print(analysisReport.text)
 #------------------------------
 
 if analysisReport is not None:
