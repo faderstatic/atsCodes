@@ -31,7 +31,7 @@ export urlMetadata=$(echo "http://10.1.1.34:8080/API/item/$uploadId/metadata/")
 export temporaryFolder="/Volumes/Temp/glacierStage"
 export chunkSizeExponential=19
 #--------------------------------------------------
-sourceFile=$(filterVidispineFileInfo $uploadId "uri" "tag=original" | sed -e 's/%20/ /g')
+sourceFile=$(filterVidispineFileInfo $uploadId "uri" "tag=original" | sed -e 's/%20/ /g' | sed -e 's/%23/\#/g')
 sourceTitle=$(filterVidispineItemMetadata $uploadId "metadata" "title")
 chunksCount=0
 chunkByteSize=$((1024*(2**$chunkSizeExponential)))
