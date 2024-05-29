@@ -106,18 +106,13 @@ httpApiResponse = requests.request("GET", urlGetReport, headers=headers, data=pa
 ET.register_namespace('ns', 'http://xml.vidispine.com/schema/vidispine')
 responseXml = httpApiResponse.text
 responseXmlRoot = ET.fromstring(responseXml)
-print(f"first print {responseXmlRoot}")
-existingReport = responseXmlRoot.find('{http://xml.vidispine.com/schema/vidispine}item')
-print(f"second print {existingReport}")
-itemInformation = responseXmlRoot.get('item')
-print(f"third print {itemInformation}")
-analysisReport = existingReport.find('oly_analysisReport')
-print(analysisReport.text)
+itemInformation = responseXmlRoot.find('{http://xml.vidispine.com/schema/vidispine}item')
+analysisReport = itemInformation.find('oly_analysisReport')
 #------------------------------
 
 if analysisReport is not None:
 
-  print(analysisReport)
+  print(analysisReport.text)
 
 else:
 
