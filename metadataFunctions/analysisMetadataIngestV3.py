@@ -90,17 +90,45 @@ sourceXmlFile = Path(f"/Volumes/creative/MAM/zSoftware/batonReports/{cantemoItem
 completedXmlFolder = Path("/Volumes/creative/MAM/zSoftware/batonReports/zCompleted")
 #------------------------------
 
-if sourceXmlFile.is_file():
+#------------------------------
+# Making API call to Cantemo to get existing oly_analysisReport metadata
+headers = {
+  'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
+  'Cookie': 'csrftoken=HFOqrbk9cGt3qnc6WBIxWPjvCFX0udBdbJnzCv9jECumOjfyG7SS2lgVbFcaHBCc'
+}
+payload = {}
+urlGetReport = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata?field=oly_analysisReport&terse=yes"
+httpApiResponse = requests.request("GET", urlGetReport, headers=headers, data=payload)
+#------------------------------
 
-  tree = ET.parse(sourceXmlFile)
-  root = tree.getroot()
+#------------------------------
+# Parsing XML data
+ET.register_namespace('ns', 'http://xml.vidispine.com/schema/vidispine')
+responseXml = httpApiResponse.text
+responseXmlRoot = ET.fromstring(responseXml)
+existingReport = responseXmlRoot.find('{http://xml.vidispine.com/schema/vidispine}TerseMetadataListDocument')
+itemInformation = existingReport.get('item')
+analysisReport = itemInformation.get('oly_analysisReport')
+print(analysisReport)
+#------------------------------
 
-  #------------------------------
-  # Gather metadata from the report
-  topLevelInfo = root.find('toplevelinfo')
-  analysisSummary = topLevelInfo.get('Summary')
-  errorReport = f"Summary - {analysisSummary}\n\n"
-  for errorResults in root.iter('error'):
+if analysisReport is not None:
+
+  print(analysisReport)
+
+else:
+  
+  if sourceXmlFile.is_file():
+
+    tree = ET.parse(sourceXmlFile)
+    root = tree.getroot()
+
+    #------------------------------
+    # Gather metadata from the report
+    topLevelInfo = root.find('toplevelinfo')
+    analysisSummary = topLevelInfo.get('Summary')
+    errorReport = f"Summary - {analysisSummary}\n\n"
+    for errorResults in root.iter('error'):
       if errorResults is not None:
         errorMessage = errorResults.get('synopsis')
         errorDescription = errorResults.get('description')
@@ -108,22 +136,19 @@ if sourceXmlFile.is_file():
         errorReport = errorReport + f"  Timecode: {errorTimecode} - {errorMessage} ({errorDescription})\n"
       else:
          errorReport = "There was no error reported in the analysis report XML"
+    #------------------------------
+    shutil.move(sourceXmlFile,completedXmlFolder)
+  else:
+    errorReport = f"Analysis report XML file does not exist - (missing) {sourceXmlFile}"
+
   #------------------------------
-  shutil.move(sourceXmlFile,completedXmlFolder)
-else:
-   
-   errorReport = f"Analysis report XML file does not exist - (missing) {sourceXmlFile}"
-
-
-
-#------------------------------
-# Update Cantemo metadata
-headers = {
-  'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
-  'Cookie': 'csrftoken=HFOqrbk9cGt3qnc6WBIxWPjvCFX0udBdbJnzCv9jECumOjfyG7SS2lgVbFcaHBCc',
-  'Content-Type': 'application/xml'
-}
-urlPutAnalysisInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata/"
-payload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_analysisReport</name><value>{errorReport}</value></field></timespan></MetadataDocument>"
-httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=payload)
-#------------------------------
+  # Update Cantemo metadata
+  headers = {
+    'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
+    'Cookie': 'csrftoken=HFOqrbk9cGt3qnc6WBIxWPjvCFX0udBdbJnzCv9jECumOjfyG7SS2lgVbFcaHBCc',
+    'Content-Type': 'application/xml'
+  }
+  urlPutAnalysisInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata/"
+  payload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_analysisReport</name><value>{errorReport}</value></field></timespan></MetadataDocument>"
+  httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=payload)
+  #------------------------------
