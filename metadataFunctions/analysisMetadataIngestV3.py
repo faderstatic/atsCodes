@@ -110,7 +110,6 @@ itemInformation = responseXmlRoot.find('{http://xml.vidispine.com/schema/vidispi
 analysisReport = itemInformation.find('oly_analysisReport')
 analysisReportSplit = analysisReport.text.split(" - ", 3)
 reportUpdateTime = analysisReportSplit[1]
-print(reportUpdateTime)
 #------------------------------
 
 if not analysisReport.text.startswith('Summary'):
@@ -123,7 +122,7 @@ if not analysisReport.text.startswith('Summary'):
     #------------------------------
     # Gather metadata from the report
     xmlUpdateTime = root.get('lastUpdate')
-    if xmlUpdateTime != 1:
+    if xmlUpdateTime != reportUpdateTime:
       topLevelInfo = root.find('toplevelinfo')
       analysisSummary = topLevelInfo.get('Summary')
       errorReport = f"Summary - {xmlUpdateTime} - {analysisSummary}\n\n"
