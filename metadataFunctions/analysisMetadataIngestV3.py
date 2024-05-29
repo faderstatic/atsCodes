@@ -107,7 +107,7 @@ ET.register_namespace('ns', 'http://xml.vidispine.com/schema/vidispine')
 responseXml = httpApiResponse.text
 responseXmlRoot = ET.fromstring(responseXml)
 print(f"first print {responseXmlRoot}")
-existingReport = responseXmlRoot.get('{http://xml.vidispine.com/schema/vidispine}item')
+existingReport = responseXmlRoot.find('{http://xml.vidispine.com/schema/vidispine}item')
 print(f"second print {existingReport}")
 itemInformation = responseXmlRoot.get('item')
 print(f"third print {itemInformation}")
