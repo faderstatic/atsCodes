@@ -108,9 +108,11 @@ responseXml = httpApiResponse.text
 responseXmlRoot = ET.fromstring(responseXml)
 itemInformation = responseXmlRoot.find('{http://xml.vidispine.com/schema/vidispine}item')
 analysisReport = itemInformation.find('oly_analysisReport')
-print(analysisReport)
-analysisReportSplit = analysisReport.text.split(" - ", 3)
-reportUpdateTime = analysisReportSplit[1]
+if analysisReport is not None:
+  analysisReportSplit = analysisReport.text.split(" - ", 3)
+  reportUpdateTime = analysisReportSplit[1]
+else:
+  reportUpdateTime = 0
 #------------------------------
 
 if sourceXmlFile.is_file():
