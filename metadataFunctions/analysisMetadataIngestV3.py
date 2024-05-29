@@ -119,9 +119,11 @@ if not analysisReport.text.startswith('Summary'):
 
     #------------------------------
     # Gather metadata from the report
+    reportInformation = root.find('taskReport')
+    updateTime = reportInformation.get('lastUpdate')
     topLevelInfo = root.find('toplevelinfo')
     analysisSummary = topLevelInfo.get('Summary')
-    errorReport = f"Summary - {analysisSummary}\n\n"
+    errorReport = f"Summary - {updateTime} - {analysisSummary}\n\n"
     for errorResults in root.iter('error'):
       if errorResults is not None:
         errorMessage = errorResults.get('synopsis')
