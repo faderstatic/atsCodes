@@ -106,7 +106,7 @@ httpApiResponse = requests.request("GET", urlGetReport, headers=headers, data=pa
 ET.register_namespace('ns', 'http://xml.vidispine.com/schema/vidispine')
 responseXml = httpApiResponse.text
 responseXmlRoot = ET.fromstring(responseXml)
-print(responseXmlRoot)
+print(f"first print {responseXmlRoot}")
 existingReport = responseXmlRoot.get('{http://xml.vidispine.com/schema/vidispine}TerseMetadataListDocument')
 print(existingReport)
 itemInformation = responseXmlRoot.find('item')
