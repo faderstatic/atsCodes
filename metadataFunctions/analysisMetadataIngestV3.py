@@ -110,7 +110,7 @@ itemInformation = responseXmlRoot.find('{http://xml.vidispine.com/schema/vidispi
 analysisReport = itemInformation.find('oly_analysisReport')
 #------------------------------
 
-if "Summary - " in analysisReport.text:
+if analysisReport.text.startswith('Summary'):
 
   print(analysisReport.text)
 
