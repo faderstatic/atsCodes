@@ -112,41 +112,39 @@ analysisReportSplit = analysisReport.text.split(" - ", 3)
 reportUpdateTime = analysisReportSplit[1]
 #------------------------------
 
-if not analysisReport.text.startswith('Summary'):
+if sourceXmlFile.is_file():
 
-  if sourceXmlFile.is_file():
-
-    tree = ET.parse(sourceXmlFile)
-    root = tree.getroot()
-
-    #------------------------------
-    # Gather metadata from the report
-    xmlUpdateTime = root.get('lastUpdate')
-    if xmlUpdateTime != reportUpdateTime:
-      topLevelInfo = root.find('toplevelinfo')
-      analysisSummary = topLevelInfo.get('Summary')
-      errorReport = f"Summary - {xmlUpdateTime} - {analysisSummary}\n\n"
-      for errorResults in root.iter('error'):
-        if errorResults is not None:
-          errorMessage = errorResults.get('synopsis')
-          errorDescription = errorResults.get('description')
-          errorTimecode = errorResults.get('timecode')
-          errorReport = errorReport + f"  Timecode: {errorTimecode} - {errorMessage} ({errorDescription})\n"
-        else:
-          errorReport = "There was no error reported in the analysis report XML"
-    #------------------------------
-    shutil.move(sourceXmlFile,completedXmlFolder)
-  else:
-    errorReport = f"Analysis report XML file does not exist - (missing) {sourceXmlFile}"
+  tree = ET.parse(sourceXmlFile)
+  root = tree.getroot()
 
   #------------------------------
-  # Update Cantemo metadata
-  headers = {
-    'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
-    'Cookie': 'csrftoken=HFOqrbk9cGt3qnc6WBIxWPjvCFX0udBdbJnzCv9jECumOjfyG7SS2lgVbFcaHBCc',
-    'Content-Type': 'application/xml'
-  }
-  urlPutAnalysisInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata/"
-  payload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_analysisReport</name><value>{errorReport}</value></field></timespan></MetadataDocument>"
-  httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=payload)
+  # Gather metadata from the report
+  xmlUpdateTime = root.get('lastUpdate')
+  if (xmlUpdateTime != reportUpdateTime) or (not analysisReport.text.startswith('Summary')):
+    topLevelInfo = root.find('toplevelinfo')
+    analysisSummary = topLevelInfo.get('Summary')
+    errorReport = f"Summary - {xmlUpdateTime} - {analysisSummary}\n\n"
+    for errorResults in root.iter('error'):
+      if errorResults is not None:
+        errorMessage = errorResults.get('synopsis')
+        errorDescription = errorResults.get('description')
+        errorTimecode = errorResults.get('timecode')
+        errorReport = errorReport + f"  Timecode: {errorTimecode} - {errorMessage} ({errorDescription})\n"
+      else:
+        errorReport = "There was no error reported in the analysis report XML"
   #------------------------------
+  shutil.move(sourceXmlFile,completedXmlFolder)
+else:
+  errorReport = f"Analysis report XML file does not exist - (missing) {sourceXmlFile}"
+
+#------------------------------
+# Update Cantemo metadata
+headers = {
+  'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
+  'Cookie': 'csrftoken=HFOqrbk9cGt3qnc6WBIxWPjvCFX0udBdbJnzCv9jECumOjfyG7SS2lgVbFcaHBCc',
+  'Content-Type': 'application/xml'
+}
+urlPutAnalysisInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata/"
+payload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_analysisReport</name><value>{errorReport}</value></field></timespan></MetadataDocument>"
+httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=payload)
+#------------------------------
