@@ -108,6 +108,9 @@ responseXml = httpApiResponse.text
 responseXmlRoot = ET.fromstring(responseXml)
 itemInformation = responseXmlRoot.find('{http://xml.vidispine.com/schema/vidispine}item')
 analysisReport = itemInformation.find('oly_analysisReport')
+analysisReportSplit = analysisReport.text.split(" - ", 3)
+reportUpdateTime = analysisReportSplit[1]
+print(reportUpdateTime)
 #------------------------------
 
 if not analysisReport.text.startswith('Summary'):
@@ -119,19 +122,19 @@ if not analysisReport.text.startswith('Summary'):
 
     #------------------------------
     # Gather metadata from the report
-    updateTime = root.get('lastUpdate')
-    print(updateTime)
-    topLevelInfo = root.find('toplevelinfo')
-    analysisSummary = topLevelInfo.get('Summary')
-    errorReport = f"Summary - {updateTime} - {analysisSummary}\n\n"
-    for errorResults in root.iter('error'):
-      if errorResults is not None:
-        errorMessage = errorResults.get('synopsis')
-        errorDescription = errorResults.get('description')
-        errorTimecode = errorResults.get('timecode')
-        errorReport = errorReport + f"  Timecode: {errorTimecode} - {errorMessage} ({errorDescription})\n"
-      else:
-         errorReport = "There was no error reported in the analysis report XML"
+    xmlUpdateTime = root.get('lastUpdate')
+    if xmlUpdateTime != 1:
+      topLevelInfo = root.find('toplevelinfo')
+      analysisSummary = topLevelInfo.get('Summary')
+      errorReport = f"Summary - {xmlUpdateTime} - {analysisSummary}\n\n"
+      for errorResults in root.iter('error'):
+        if errorResults is not None:
+          errorMessage = errorResults.get('synopsis')
+          errorDescription = errorResults.get('description')
+          errorTimecode = errorResults.get('timecode')
+          errorReport = errorReport + f"  Timecode: {errorTimecode} - {errorMessage} ({errorDescription})\n"
+        else:
+          errorReport = "There was no error reported in the analysis report XML"
     #------------------------------
     shutil.move(sourceXmlFile,completedXmlFolder)
   else:
