@@ -119,10 +119,7 @@ if not analysisReport.text.startswith('Summary'):
 
     #------------------------------
     # Gather metadata from the report
-    print(root)
-    reportInformation = root.find('taskReport')
-    print(reportInformation)
-    updateTime = reportInformation.find('lastUpdate')
+    updateTime = root.get('lastUpdate')
     print(updateTime)
     topLevelInfo = root.find('toplevelinfo')
     analysisSummary = topLevelInfo.get('Summary')
