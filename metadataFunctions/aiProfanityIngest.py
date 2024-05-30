@@ -44,8 +44,8 @@ try:
     endingSegment = individualSegment["end"]
     scoreSegment = individualSegment["score"]
     segmentInformation = f"Segment timecodes: {startingSegment} - {endingSegment} - Profanity Score: {scoreSegment}\n"
-  segmentInformation = segmentInformation[:-1]
-  print(segmentInformation)
+    segmentInformation = segmentInformation[:-1]
+    print(segmentInformation)
   #------------------------------
 
   #------------------------------
