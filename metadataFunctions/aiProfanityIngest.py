@@ -37,6 +37,7 @@ try:
   #------------------------------
   # Parsing JSON data
   responseJson = httpApiResponse.json()
+  print(responseJson)
   # responseJson = json.loads(httpApiResponse.text)
   for profanitySegment in responseJson["profanity"]:
     individualSegment = profanitySegment["segments"]
