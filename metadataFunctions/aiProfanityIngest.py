@@ -40,6 +40,7 @@ try:
   print(responseJson)
   # responseJson = json.loads(httpApiResponse.text)
   for profanitySegment in responseJson["profanity"]:
+    print(profanitySegment)
     individualSegment = profanitySegment["segments"]
     print (individualSegment)
     startingSegment = individualSegment["start"]
