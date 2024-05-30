@@ -45,7 +45,7 @@ try:
     profanityScore = individualSegment["score"]
     # segmentInformation = f"Segment timecodes: {startingSegment} - {endingSegment} - Profanity Score: {scoreSegment}\n"
     # segmentInformation = segmentInformation[:-1]
-    segmentPayload = '{'+f"\n\t\"comment\": \"Profanity Score\": \""+profanityScore+f"\",\n\t\"start_tc\": \""+startingTimecode+f"\",\n\t\"end_tc\": \""+endingTimecode+f"\"\n"+'}'
+    segmentPayload = '{'+f"\n\t\"comment\": \"Profanity Score\": \""+str(profanityScore)+f"\",\n\t\"start_tc\": \""+str(startingTimecode)+f"\",\n\t\"end_tc\": \""+str(endingTimecode)+f"\"\n"+'}'
     print(segmentPayload)
   #------------------------------
 
