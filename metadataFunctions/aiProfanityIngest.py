@@ -40,12 +40,13 @@ try:
   profanitySegment = responseJson["profanity"]
   # responseJson = json.loads(httpApiResponse.text)
   for individualSegment in profanitySegment["segments"]:
-    startingSegment = individualSegment["start"]
-    endingSegment = individualSegment["end"]
-    scoreSegment = individualSegment["score"]
-    segmentInformation = f"Segment timecodes: {startingSegment} - {endingSegment} - Profanity Score: {scoreSegment}\n"
-    segmentInformation = segmentInformation[:-1]
-    print(segmentInformation)
+    startingTimecode = individualSegment["start"]
+    endingTimecode = individualSegment["end"]
+    profanityScore = individualSegment["score"]
+    # segmentInformation = f"Segment timecodes: {startingSegment} - {endingSegment} - Profanity Score: {scoreSegment}\n"
+    # segmentInformation = segmentInformation[:-1]
+    segmentPayload = '{'+f"\n\t\"comment\": \"Profanity Score\": \""+profanityScore+f"\",\n\t\"start_tc\": \""+startingTimecode+f"\",\n\t\"end_tc\": \""+endingTimecode+f"\"\n"+'}'
+    print(segmentPayload)
   #------------------------------
 
   #------------------------------
