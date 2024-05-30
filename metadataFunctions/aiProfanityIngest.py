@@ -22,7 +22,6 @@ try:
   cantemoItemId = sys.argv[1]
   # cantemoItemId = os.environ.get("portal_itemId")
   errorReport = ''
-  cantemoAdBreaks = ""
 
   #------------------------------
   # Making API call to Cantemo to get file name
@@ -30,7 +29,7 @@ try:
     'Accept': 'application/json'
   }
   payload = {}
-  urlGetProfanitySegments = f"https://apis.prod.vionlabs.com/results/profanity/v1/{cantemoItemId}?&key=kt8cyimHXxUzFNGyhd7c7g"
+  urlGetProfanitySegments = f"https://apis.prod.vionlabs.com/results/profanity/v1/segments/{cantemoItemId}?&key=kt8cyimHXxUzFNGyhd7c7g"
   httpApiResponse = requests.request("GET", urlGetProfanitySegments, headers=headers, data=payload)
   httpApiResponse.raise_for_status()
   #------------------------------
