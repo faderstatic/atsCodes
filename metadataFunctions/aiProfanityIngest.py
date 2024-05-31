@@ -36,7 +36,7 @@ try:
   payload = {}
   httpApiResponse = requests.request("GET", urlGetTimebaseInfo, headers=headers, data=payload)
   httpApiResponse.raise_for_status()
-  print(httpApiResponse)
+  print(httpApiResponse.text)
   #------------------------------
 
   #------------------------------
