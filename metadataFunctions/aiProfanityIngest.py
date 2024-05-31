@@ -32,7 +32,6 @@ try:
   }
   cantemoItemId = 'OLY-4463'
   urlGetTimebaseInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata?field=durationTimeCode&terse=yes"
-  print(urlGetTimebaseInfo)
   payload = {}
   httpApiResponse = requests.request("GET", urlGetTimebaseInfo, headers=headers, data=payload)
   httpApiResponse.raise_for_status()
@@ -44,7 +43,7 @@ try:
   itemInformation = responseJson["item"]
   timecodeInformation = itemInformation["durationTimeCode"]
   timecodeDuration = timecodeInformation["value"]
-  print(timecodeDuration)
+  print(timecodeDuration.text)
   timecodeComponents = timecodeDuration.text.split("\@", 2)
   itemTimebase = timecodeComponents[1]
   print(itemTimebase)
