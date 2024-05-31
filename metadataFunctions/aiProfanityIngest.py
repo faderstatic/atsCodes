@@ -15,6 +15,7 @@ import time
 import subprocess
 import requests
 import json
+import urllib.parse
 from requests.exceptions import HTTPError
 #------------------------------
 
@@ -42,7 +43,7 @@ try:
   responseJson = httpApiResponse.json()
   itemInformation = responseJson["item"]
   print(itemInformation)
-  timecodeInformation = itemInformation["id"]
+  timecodeInformation = itemInformation['durationTimeCode']
   print(timecodeInformation)
   timecodeDuration = timecodeInformation["value"]
   timecodeComponents = timecodeDuration.split("\@", 2)
