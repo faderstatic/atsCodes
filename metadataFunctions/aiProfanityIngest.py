@@ -41,10 +41,10 @@ try:
   # Parsing JSON data for timebase
   responseJson = httpApiResponse.json()
   itemInformation = responseJson["item"]
+  print(itemInformation)
   timecodeInformation = itemInformation["durationTimeCode"]
   timecodeDuration = timecodeInformation["value"]
-  print(timecodeDuration.text)
-  timecodeComponents = timecodeDuration.text.split("\@", 2)
+  timecodeComponents = timecodeDuration.split("\@", 2)
   itemTimebase = timecodeComponents[1]
   print(itemTimebase)
 
