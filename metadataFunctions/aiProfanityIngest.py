@@ -42,12 +42,12 @@ try:
   responseJson = httpApiResponse.json()
   itemInformation = responseJson["item"]
   print(itemInformation)
-  timecodeInformation = itemInformation["durationTimeCode"]
-  print(timecodeInformation)
-  timecodeDuration = timecodeInformation["value"]
-  timecodeComponents = timecodeDuration.split("\@", 2)
-  itemTimebase = timecodeComponents[1]
-  print(itemTimebase)
+  for timecodeInformation in itemInformation["durationTimeCode"]
+    print(timecodeInformation)
+    timecodeDuration = timecodeInformation["value"]
+    timecodeComponents = timecodeDuration.split("\@", 2)
+    itemTimebase = timecodeComponents[1]
+    print(itemTimebase)
 
   #------------------------------
   # Making API call to Vionlabs to find possible profanity locations
