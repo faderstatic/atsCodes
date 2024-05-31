@@ -42,6 +42,7 @@ try:
   responseJson = json.loads(httpApiResponse.text)
   print(type(responseJson))
   print(type(responseJson["item"]))
+  print(responseJson["item"])
   itemInformation = responseJson["item"]["durationTimeCode"]
   print(itemInformation)
   timecodeInformation = itemInformation['durationTimeCode']
