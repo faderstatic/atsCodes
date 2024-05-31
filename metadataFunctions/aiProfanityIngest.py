@@ -40,8 +40,8 @@ try:
   profanitySegment = responseJson["profanity"]
   # responseJson = json.loads(httpApiResponse.text)
   for individualSegment in profanitySegment["segments"]:
-    startingTimecode = ( (individualSegment["start"] / 1000) * (30000 / 1001) )
-    endingTimecode = ( (individualSegment["end"] / 1000) * (30000 / 1001) )
+    startingTimecode = int( (individualSegment["start"] / 1000) * (30000 / 1001) )
+    endingTimecode = int( (individualSegment["end"] / 1000) * (30000 / 1001) )
     profanityScore = individualSegment["score"]
     # segmentInformation = f"Segment timecodes: {startingSegment} - {endingSegment} - Profanity Score: {scoreSegment}\n"
     # segmentInformation = segmentInformation[:-1]
