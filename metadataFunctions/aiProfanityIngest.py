@@ -40,25 +40,25 @@ try:
   profanitySegment = responseJson["profanity"]
   # responseJson = json.loads(httpApiResponse.text)
   for individualSegment in profanitySegment["segments"]:
-    startingTimecode = individualSegment["start"]
-    endingTimecode = individualSegment["end"]
+    startingTimecode = ( (individualSegment["start"] / 1000) * (30000 / 1001) )
+    endingTimecode = ( (individualSegment["end"] / 1000) * (30000 / 1001) )
     profanityScore = individualSegment["score"]
     # segmentInformation = f"Segment timecodes: {startingSegment} - {endingSegment} - Profanity Score: {scoreSegment}\n"
     # segmentInformation = segmentInformation[:-1]
     segmentPayload = '{'+f"\n\t\"comment\": \"Profanity Score\": \""+str(profanityScore)+f"\",\n\t\"start_tc\": \""+str(startingTimecode)+f"\",\n\t\"end_tc\": \""+str(endingTimecode)+f"\"\n"+'}'
-    # print(segmentPayload)
+    print(segmentPayload)
   
     #------------------------------
     # Update Cantemo metadata
-    headers = {
-      'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
-      'Cookie': 'csrftoken=OtjDQ4lhFt2wJjGaJhq3xi05z3uA6D8F7wCWNVXxMuJ8A9jw7Ri7ReqSNGLS2VRR',
-      'Content-Type': 'application/json'
-    }
-    cantemoItemId = 'OLY-4463'
-    urlPutProfanityInfo = f"http://10.1.1.34/API/v2/comments/item/{cantemoItemId}/"
+    # headers = {
+    #   'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
+    #   'Cookie': 'csrftoken=OtjDQ4lhFt2wJjGaJhq3xi05z3uA6D8F7wCWNVXxMuJ8A9jw7Ri7ReqSNGLS2VRR',
+    #   'Content-Type': 'application/json'
+    # }
+    # cantemoItemId = 'OLY-4463'
+    # urlPutProfanityInfo = f"http://10.1.1.34/API/v2/comments/item/{cantemoItemId}/"
     # payload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_analysisReport</name><value>{responseJson}</value></field></timespan></MetadataDocument>"
-    httpApiResponse = requests.request("POST", urlPutAnalysisInfo, headers=headers, data=segmentPayload)
+    # httpApiResponse = requests.request("POST", urlPutAnalysisInfo, headers=headers, data=segmentPayload)
     #------------------------------
 
 except HTTPError as http_err:
