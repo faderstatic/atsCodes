@@ -43,6 +43,7 @@ try:
   itemInformation = responseJson["item"]
   print(itemInformation)
   timecodeInformation = itemInformation["durationTimeCode"]
+  print(timecodeInformation)
   timecodeDuration = timecodeInformation["value"]
   timecodeComponents = timecodeDuration.split("\@", 2)
   itemTimebase = timecodeComponents[1]
