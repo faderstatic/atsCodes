@@ -30,6 +30,7 @@ export logFile="/opt/olympusat/logs/glacier-$myDate.log"
 export urlMetadata=$(echo "http://10.1.1.34:8080/API/item/$uploadId/metadata/")
 #--------------------------------------------------
 destinationFile=$(cat "$tokenFile" | awk -F "," '{ print $1 }')
+completeFileSize=$(cat "$tokenFile" | awk -F "," '{ print $2 }')
 jobIdAWS=$(cat "$tokenFile" | awk -F "," '{ print $4 }')
 #--------------------------------------------------
 
@@ -46,15 +47,25 @@ then
 else
 	updateVidispineMetadata $cantemoItemId "oly_restoreStatusAWS" "Start restoring process"
 	echo "$(date "+%H:%M:%S") (glacierRestore) - ($cantemoItemId) Start restoring $jobIdAWS" >> "$logFile"
-	leadingJobId=$(echo "$jobIdAWS" | cut -c1)
-	if [ "$leadingJobId" == "-" ];
-	then
-		jobIdAWS='\'"$jobIdAWS"
-	fi
-	glacierApiResponse=$(aws glacier get-job-output --vault-name "$awsVaultName" --account-id "$awsCustomerId" --job-id "$jobIdAWS" "$destinationFile")
+	# leadingJobId=$(echo "$jobIdAWS" | cut -c1)
+	# if [ "$leadingJobId" == "-" ];
+	# then
+	# 	jobIdAWS='\'"$jobIdAWS"
+	# fi
+	glacierApiResponse=$(/usr/local/aws-cli/v2/current/dist/aws glacier get-job-output --vault-name "$awsVaultName" --account-id "$awsCustomerId" --job-id "$jobIdAWS" "$destinationFile")
 	glacierApiResponseTrimmed=$(echo "$glacierApiResponse" | awk -F " " '{print $1}')
 	echo "$(date "+%H:%M:%S") (glacierRestore) - ($cantemoItemId) $glacierApiResponse" >> "$logFile"
 	echo "$(date "+%H:%M:%S") (glacierRestore) - ($cantemoItemId) Restoring $destinationFile successfully" >> "$logFile"
+	echo "$(date "+%H:%M:%S") (glacierRestore) - ($cantemoItemId) Verifying $destinationFile has the correct file size" >> "$logFile"
+	sleep 240
+	downloadedFileSize=$(stat -c%s "$destinationFile")
+	updateValue=$(date "+%Y-%m-%dT%H:%M:%S")
+	updateVidispineMetadata $cantemoItemId "oly_restoreDateAWS" $updateValue
+	if [[ $downloadedFileSize -eq $completeFileSize ]];
+	then
+	    updateVidispineMetadata $cantemoItemId "oly_restoreStatusAWS" "completed - file successfully restored from Glacier"
+	else
+	    updateVidispineMetadata $cantemoItemId "oly_restoreStatusAWS" "failed - file restored does not match the original file"
 fi
 
 rm -f $activeRestoreFolder/$cantemoItemId
