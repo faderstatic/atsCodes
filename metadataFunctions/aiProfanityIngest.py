@@ -42,7 +42,7 @@ try:
   responseJson = httpApiResponse.json()
   itemInformation = responseJson["item"]
   print(itemInformation)
-  for timecodeInformation in itemInformation["durationTimeCode"]
+  for timecodeInformation in itemInformation["durationTimeCode"]:
     print(timecodeInformation)
     timecodeDuration = timecodeInformation["value"]
     timecodeComponents = timecodeDuration.split("\@", 2)
