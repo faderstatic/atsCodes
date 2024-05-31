@@ -28,7 +28,7 @@ try:
   headers = {
     'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
     'Cookie': 'csrftoken=OtjDQ4lhFt2wJjGaJhq3xi05z3uA6D8F7wCWNVXxMuJ8A9jw7Ri7ReqSNGLS2VRR',
-    'Content-Type': 'application/json'
+    'Accept': 'application/json'
   }
   cantemoItemId = 'OLY-4463'
   urlGetTimebaseInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata?field=durationTimeCode&terse=yes"
