@@ -24,7 +24,31 @@ try:
   errorReport = ''
 
   #------------------------------
-  # Making API call to Cantemo to get file name
+  # Making API to Vidispine to get timebase
+  headers = {
+    'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
+    'Cookie': 'csrftoken=OtjDQ4lhFt2wJjGaJhq3xi05z3uA6D8F7wCWNVXxMuJ8A9jw7Ri7ReqSNGLS2VRR',
+    'Content-Type': 'application/json'
+  }
+  cantemoItemId = 'OLY-4463'
+  urlGetTimebaseInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata?field=durationTimeCode&terse=yes"
+  payload = {}
+  httpApiResponse = requests.request("GET", urlGetTimebaseInfo, headers=headers, data=payload)
+  httpApiResponse.raise_for_status()
+  #------------------------------
+
+  #------------------------------
+  # Parsing JSON data for timebase
+  responseJson = httpApiResponse.json()
+  itemInformation = responseJson["item"]
+  timecodeInformation = itemInformation["durationTimeCode"]
+  timecodeDuration = timecodeInformation["value"]
+  timecodeComponents = timecodeDuration.split("\@", 2)
+  itemTimebase = timecodeComponents[1]
+  print(itemTimebase)
+
+  #------------------------------
+  # Making API call to Vionlabs to find possible profanity locations
   headers = {
     'Accept': 'application/json'
   }
@@ -47,7 +71,7 @@ try:
     # segmentInformation = segmentInformation[:-1]
     segmentPayload = '{'+f"\n\t\"comment\": \"Profanity Score\": \""+str(profanityScore)+f"\",\n\t\"start_tc\": \""+str(startingTimecode)+f"\",\n\t\"end_tc\": \""+str(endingTimecode)+f"\"\n"+'}'
     print(segmentPayload)
-  
+
     #------------------------------
     # Update Cantemo metadata
     # headers = {
@@ -60,6 +84,7 @@ try:
     # payload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_analysisReport</name><value>{responseJson}</value></field></timespan></MetadataDocument>"
     # httpApiResponse = requests.request("POST", urlPutAnalysisInfo, headers=headers, data=segmentPayload)
     #------------------------------
+  #------------------------------
 
 except HTTPError as http_err:
     print(f'HTTP error occurred: {http_err}')
