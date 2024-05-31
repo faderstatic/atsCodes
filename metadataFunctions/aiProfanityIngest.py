@@ -36,17 +36,16 @@ try:
   payload = {}
   httpApiResponse = requests.request("GET", urlGetTimebaseInfo, headers=headers, data=payload)
   httpApiResponse.raise_for_status()
-  print(httpApiResponse.text)
   #------------------------------
 
   #------------------------------
   # Parsing JSON data for timebase
   responseJson = httpApiResponse.json()
-  print(responseJson)
   itemInformation = responseJson["item"]
   timecodeInformation = itemInformation["durationTimeCode"]
   timecodeDuration = timecodeInformation["value"]
-  timecodeComponents = timecodeDuration.split("\@", 2)
+  print(timecodeDuration)
+  timecodeComponents = timecodeDuration.text.split("\@", 2)
   itemTimebase = timecodeComponents[1]
   print(itemTimebase)
 
