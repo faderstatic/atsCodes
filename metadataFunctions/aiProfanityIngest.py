@@ -40,7 +40,7 @@ try:
   #------------------------------
   # Parsing JSON data for timebase
   responseJson = httpApiResponse.json()
-  itemInformation = responseJson["durationTimeCode"]
+  itemInformation = responseJson["item"]
   print(itemInformation)
   timecodeInformation = itemInformation["durationTimeCode"]
   print(timecodeInformation)
