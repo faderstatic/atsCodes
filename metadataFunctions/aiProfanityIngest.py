@@ -15,7 +15,6 @@ import time
 import subprocess
 import requests
 import json
-import urllib.parse
 from requests.exceptions import HTTPError
 #------------------------------
 
@@ -41,9 +40,9 @@ try:
   #------------------------------
   # Parsing JSON data for timebase
   responseJson = httpApiResponse.json()
-  itemInformation = responseJson["item"]
+  itemInformation = responseJson["item"]["durationTimeCode"]
   print(itemInformation)
-  timecodeInformation = itemInformation[0]
+  timecodeInformation = itemInformation['durationTimeCode']
   print(timecodeInformation)
   timecodeDuration = timecodeInformation["value"]
   timecodeComponents = timecodeDuration.split("\@", 2)
