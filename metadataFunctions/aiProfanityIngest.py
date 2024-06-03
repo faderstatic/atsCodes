@@ -75,20 +75,22 @@ try:
     profanityScore = individualSegment["score"]
     # segmentInformation = f"Segment timecodes: {startingSegment} - {endingSegment} - Profanity Score: {scoreSegment}\n"
     # segmentInformation = segmentInformation[:-1]
-    segmentPayload = '{'+f"\n\t\"comment\": \"Profanity Score "+str(profanityScore)+f"\",\n\t\"start_tc\": \""+str(startingTimecode)+f"@{itemTimebase}\",\n\t\"end_tc\": \""+str(endingTimecode)+f"@{itemTimebase}\"\n"+'}'
+    segmentString = '{'+f"\n\t\"comment\": \"Profanity Score "+str(profanityScore)+f"\",\n\t\"start_tc\": \""+str(startingTimecode)+f"@{itemTimebase}\",\n\t\"end_tc\": \""+str(endingTimecode)+f"@{itemTimebase}\"\n"+'}'
+    segmentPayload = json.dumps(segmentString)
     # print(segmentPayload)
 
     #------------------------------
     # Update Cantemo metadata
     headers = {
       'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
-      'Cookie': 'csrftoken=zhjTsSfSTkBSt8KeOgOK0txqLMbWbLDaLw5Ws0e3wwHjRCE453nCJAcM5gckhqCX',
+      'Cookie': 'csrftoken=6TSbOVYmsDD9ORWkUOkqgcXZ1IMetgInzZ96EcWJ048jMUNqD4nhNcqmrFapF8Sa',
       'Content-Type': 'application/json'
     }
     urlPutProfanityInfo = f"http://10.1.1.34/API/v2/comments/item/{cantemoItemId}/"
     # payload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_analysisReport</name><value>{responseJson}</value></field></timespan></MetadataDocument>"
     httpApiResponse = requests.request("POST", urlPutProfanityInfo, headers=headers, data=segmentPayload)
     httpApiResponse.raise_for_status()
+    print(httpApiResponse.text)
     time.sleep(5)
     #------------------------------
   #------------------------------
