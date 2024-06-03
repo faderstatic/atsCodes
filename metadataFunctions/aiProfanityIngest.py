@@ -30,7 +30,7 @@ try:
     'Cookie': 'csrftoken=OtjDQ4lhFt2wJjGaJhq3xi05z3uA6D8F7wCWNVXxMuJ8A9jw7Ri7ReqSNGLS2VRR',
     'Accept': 'application/json'
   }
-  urlGetTimebaseInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata?field=durationTimeCode&terse=yes"
+  urlGetTimebaseInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata?field=startTimeCode&terse=yes"
   payload = {}
   httpApiResponse = requests.request("GET", urlGetTimebaseInfo, headers=headers, data=payload)
   httpApiResponse.raise_for_status()
@@ -45,7 +45,7 @@ try:
   # print(responseJson["item"])
   if responseJson and 'item' in responseJson:
     for itemInformation in responseJson['item']:
-      for timecodeInformation in itemInformation['durationTimeCode']:
+      for timecodeInformation in itemInformation['startTimeCode']:
         itemTimecode = timecodeInformation['value']
   timecodeComponents = itemTimecode.split('@', 2)
   itemTimebase = timecodeComponents[1]
@@ -76,10 +76,10 @@ try:
     # segmentInformation = f"Segment timecodes: {startingSegment} - {endingSegment} - Profanity Score: {scoreSegment}\n"
     # segmentInformation = segmentInformation[:-1]
     # segmentString = '{'+f"\n\t\"comment\": \"Profanity Score "+str(profanityScore)+f"\",\n\t\"start_tc\": \""+str(startingTimecode)+f"@{itemTimebase}\",\n\t\"end_tc\": \""+str(endingTimecode)+f"@{itemTimebase}\"\n"+'}'
-    segmentString = '{"comment": "Profanity Score '+str(profanityScore)+'", "start_tc": "'+str(startingTimecode)+f"@{itemTimebase}"+'", "end_tc": "'+str(endingTimecode)+f"@{itemTimebase}"+'"}'
-    segmentPayload = json.dumps(segmentString)
-    print(segmentString)
-    print(segmentPayload)
+    segmentPayload = '{"comment": "Profanity Score '+str(profanityScore)+'", "start_tc": "'+str(startingTimecode)+f"@{itemTimebase}"+'", "end_tc": "'+str(endingTimecode)+f"@{itemTimebase}"+'"}'
+    # segmentPayload = json.dumps(segmentString)
+    # print(segmentString)
+    # print(segmentPayload)
     # print(segmentPayload)
 
     #------------------------------
