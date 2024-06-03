@@ -82,12 +82,14 @@ try:
     # Update Cantemo metadata
     headers = {
       'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
-      'Cookie': 'csrftoken=OtjDQ4lhFt2wJjGaJhq3xi05z3uA6D8F7wCWNVXxMuJ8A9jw7Ri7ReqSNGLS2VRR',
+      'Cookie': 'csrftoken=zhjTsSfSTkBSt8KeOgOK0txqLMbWbLDaLw5Ws0e3wwHjRCE453nCJAcM5gckhqCX',
       'Content-Type': 'application/json'
     }
     urlPutProfanityInfo = f"http://10.1.1.34/API/v2/comments/item/{cantemoItemId}/"
-    payload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_analysisReport</name><value>{responseJson}</value></field></timespan></MetadataDocument>"
+    # payload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_analysisReport</name><value>{responseJson}</value></field></timespan></MetadataDocument>"
     httpApiResponse = requests.request("POST", urlPutProfanityInfo, headers=headers, data=segmentPayload)
+    httpApiResponse.raise_for_status()
+    time.sleep(5)
     #------------------------------
   #------------------------------
 
