@@ -30,7 +30,6 @@ try:
     'Cookie': 'csrftoken=OtjDQ4lhFt2wJjGaJhq3xi05z3uA6D8F7wCWNVXxMuJ8A9jw7Ri7ReqSNGLS2VRR',
     'Accept': 'application/json'
   }
-  cantemoItemId = 'OLY-4463'
   urlGetTimebaseInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata?field=durationTimeCode&terse=yes"
   payload = {}
   httpApiResponse = requests.request("GET", urlGetTimebaseInfo, headers=headers, data=payload)
@@ -39,19 +38,20 @@ try:
 
   #------------------------------
   # Parsing JSON data for timebase
-  responseJson = json.loads(httpApiResponse.text)
-  print(type(responseJson))
-  print(type(responseJson["item"]))
-  print(responseJson["item"])
-  itemInformation = responseJson["item"]["durationTimeCode"]
-  print(itemInformation)
-  timecodeInformation = itemInformation['durationTimeCode']
-  print(timecodeInformation)
-  timecodeDuration = timecodeInformation["value"]
-  timecodeComponents = timecodeDuration.split("\@", 2)
+  # responseJson = json.loads(httpApiResponse.text)
+  responseJson = httpApiResponse.json() if httpApiResponse and httpApiResponse.status_code == 200 else None
+  # print(type(responseJson))
+  # print(type(responseJson["item"]))
+  # print(responseJson["item"])
+  if responseJson and 'item' in responseJson:
+    for itemInformation in responseJson['item']:
+      for timecodeInformation in itemInformation['durationTimeCode']:
+        itemTimecode = timecodeInformation['value']
+  timecodeComponents = itemTimecode.split('@', 2)
   itemTimebase = timecodeComponents[1]
-  print(itemTimebase)
 
+  cantemoItemId = 'OLT-003'
+  
   #------------------------------
   # Making API call to Vionlabs to find possible profanity locations
   headers = {
@@ -74,7 +74,7 @@ try:
     profanityScore = individualSegment["score"]
     # segmentInformation = f"Segment timecodes: {startingSegment} - {endingSegment} - Profanity Score: {scoreSegment}\n"
     # segmentInformation = segmentInformation[:-1]
-    segmentPayload = '{'+f"\n\t\"comment\": \"Profanity Score\": \""+str(profanityScore)+f"\",\n\t\"start_tc\": \""+str(startingTimecode)+f"\",\n\t\"end_tc\": \""+str(endingTimecode)+f"\"\n"+'}'
+    segmentPayload = '{'+f"\n\t\"comment\": \"Profanity Score\": \""+str(profanityScore)+f"\",\n\t\"start_tc\": \""+str(startingTimecode)+f"@{itemTimebase}\",\n\t\"end_tc\": \""+str(endingTimecode)+f"@{itemTimebase}\"\n"+'}'
     print(segmentPayload)
 
     #------------------------------
