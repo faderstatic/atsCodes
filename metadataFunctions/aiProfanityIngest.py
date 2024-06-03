@@ -77,6 +77,8 @@ try:
     # segmentInformation = segmentInformation[:-1]
     segmentPayload = '{'+f"\n\t\"comment\": \"Profanity Score "+str(profanityScore)+f"\",\n\t\"start_tc\": \""+str(startingTimecode)+f"@{itemTimebase}\",\n\t\"end_tc\": \""+str(endingTimecode)+f"@{itemTimebase}\"\n"+'}'
     print(segmentPayload)
+    locationMinutes = startingTimecode / 1800
+    print(locationMinutes)
 
     #------------------------------
     # Update Cantemo metadata
