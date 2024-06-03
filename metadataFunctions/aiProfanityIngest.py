@@ -77,6 +77,7 @@ try:
     # segmentInformation = segmentInformation[:-1]
     segmentString = '{'+f"\n\t\"comment\": \"Profanity Score "+str(profanityScore)+f"\",\n\t\"start_tc\": \""+str(startingTimecode)+f"@{itemTimebase}\",\n\t\"end_tc\": \""+str(endingTimecode)+f"@{itemTimebase}\"\n"+'}'
     segmentPayload = json.dumps(segmentString)
+    print(segmentPayload)
     # print(segmentPayload)
 
     #------------------------------
