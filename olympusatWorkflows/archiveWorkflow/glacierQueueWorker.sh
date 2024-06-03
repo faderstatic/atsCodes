@@ -39,14 +39,14 @@ queueCount=0
 
 #------------------------------
 # Let's start with some logging
-echo "$(date "+%H:%M:%S") ($glacierActionName Queue) - Start processing queue" >> "$logFile"
+echo "$(date "+%H:%M:%S") ($glacierActionName""Queue) - Start processing queue" >> "$logFile"
 #------------------------------
 
 #------------------------------
 # Let's get the initial list of items
 ls -rt $queueFolder > "$queueListFile"
 pendingJobCount=$(ls $queueFolder | wc -l)
-echo "$(date "+%H:%M:%S") ($glacierActionName Queue) - There are now $pendingJobCount item(s) in the queue" >> "$logFile"
+echo "$(date "+%H:%M:%S") ($glacierActionName""Queue) - There are now $pendingJobCount item(s) in the queue" >> "$logFile"
 if [ $pendingJobCount -eq 0 ];
 then
     queueListEmpty="true"
