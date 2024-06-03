@@ -49,6 +49,9 @@ try:
         itemTimecode = timecodeInformation['value']
   timecodeComponents = itemTimecode.split('@', 2)
   itemTimebase = timecodeComponents[1]
+  if itemTimebase == "NTSC30" or itemTimebase == "NTSC":
+     itemTimebase = "NTSC"
+     timebaseMultiplier = 30000 / 1001
 
   # cantemoItemId = 'OLT-003'
   
@@ -69,7 +72,7 @@ try:
   profanitySegment = responseJson["profanity"]
   # responseJson = json.loads(httpApiResponse.text)
   for individualSegment in profanitySegment["segments"]:
-    startingTimecode = int(individualSegment["start"] * (30000 / 1001))
+    startingTimecode = int(individualSegment["start"] * timebaseMultiplier)
     endingTimecode = startingTimecode + 1
     # endingTimecode = int(individualSegment["end"]) * (30000 / 1001)
     profanityScore = individualSegment["score"]
