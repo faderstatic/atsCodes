@@ -72,10 +72,10 @@ try:
     startingTimecode = int(individualSegment["start"] * (30000 / 1001))
     endingTimecode = startingTimecode + 1
     # endingTimecode = int(individualSegment["end"]) * (30000 / 1001)
-    profanityScore = individualSegment["score"].replace('"', '')
+    profanityScore = individualSegment["score"]
     # segmentInformation = f"Segment timecodes: {startingSegment} - {endingSegment} - Profanity Score: {scoreSegment}\n"
     # segmentInformation = segmentInformation[:-1]
-    segmentPayload = '{'+f"\n\t\"comment\": \"Profanity Score\": \""+str(profanityScore)+f"\",\n\t\"start_tc\": \""+str(startingTimecode)+f"@{itemTimebase}\",\n\t\"end_tc\": \""+str(endingTimecode)+f"@{itemTimebase}\"\n"+'}'
+    segmentPayload = '{'+f"\n\t\"comment\": \"Profanity Score\": \""+str(profanityScore).replace('"', '')+f"\",\n\t\"start_tc\": \""+str(startingTimecode)+f"@{itemTimebase}\",\n\t\"end_tc\": \""+str(endingTimecode)+f"@{itemTimebase}\"\n"+'}'
     print(segmentPayload)
 
     #------------------------------
