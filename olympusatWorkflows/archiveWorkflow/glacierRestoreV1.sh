@@ -69,6 +69,7 @@ else
 	    updateVidispineMetadata $cantemoItemId "oly_restoreStatusAWS" "completed - file successfully restored from Glacier"
 	else
 	    updateVidispineMetadata $cantemoItemId "oly_restoreStatusAWS" "failed - file restored does not match the original file"
+	fi
 fi
 
 rm -f $activeRestoreFolder/$cantemoItemId
