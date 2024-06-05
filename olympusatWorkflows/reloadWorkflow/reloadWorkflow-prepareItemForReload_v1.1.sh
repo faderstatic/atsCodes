@@ -77,6 +77,13 @@ then
         echo "$datetime - (reloadWorkflow) - [$itemId] - Deleting previous file from AWS Glacier" >> "$logfile"
 
         #bash -c "sudo /opt/olympusat/scriptsActive/glacierDeleteV1.sh $itemId $userName > /dev/null 2>&1 &"
+        #updateVidispineMetadata $itemId oly_archiveStatusAWS ""
+        #updateVidispineMetadata $itemId oly_archiveDateAWS ""
+        #updateVidispineMetadata $itemId oly_archiveIdAWS ""
+        #updateVidispineMetadata $itemId oly_flushDate ""
+        #updateVidispineMetadata $itemId oly_flushStatus ""
+        #updateVidispineMetadata $itemId oly_restoreStatusAWS ""
+        #updateVidispineMetadata $itemId oly_restoreDateAWS ""
 
         sleep 1
     fi
