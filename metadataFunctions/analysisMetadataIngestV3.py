@@ -126,7 +126,6 @@ if sourceXmlFile.is_file():
   if (xmlUpdateTime != reportUpdateTime) or (not analysisReport.text.startswith('Summary')):
     topLevelInfo = root.find('toplevelinfo')
     analysisSummary = topLevelInfo.get('Summary')
-    print(topLevelInfo.text)
     errorReport = f"Summary - {xmlUpdateTime} - {analysisSummary}\n\n"
     for errorResults in root.iter('error'):
       if errorResults is not None:
