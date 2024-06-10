@@ -78,6 +78,7 @@ try:
   for individualSegment in profanitySegment["segments"]:
     profanityScore = individualSegment["score"]
     profanityScore *= 100
+    profanityScore = round(profanityScore, 2)
     if profanityScore >= 80:
       startingTimecode = int(individualSegment["start"] * timebaseMultiplier)
       endingTimecode = startingTimecode + 1
