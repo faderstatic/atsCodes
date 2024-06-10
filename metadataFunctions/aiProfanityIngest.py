@@ -49,10 +49,13 @@ try:
         itemTimecode = timecodeInformation['value']
   timecodeComponents = itemTimecode.split('@', 2)
   itemTimebase = timecodeComponents[1]
-  if itemTimebase == "NTSC30" or itemTimebase == "NTSC":
-     itemTimebase = "NTSC"
-     timebaseMultiplier = 30000 / 1001
-
+  if not isinstance (itemTimebase, int):
+    if itemTimebase == "NTSC30" or itemTimebase == "NTSC":
+      itemTimebase = "NTSC"
+      timebaseMultiplier = 30000 / 1001
+    if itemTimebase == "PAL25" or itemTimebase == "PAL":
+      itemTimebase = "PAL"
+      timebaseMultiplier = 25
   # cantemoItemId = 'OLT-003'
   
   #------------------------------
@@ -61,6 +64,7 @@ try:
     'Accept': 'application/json'
   }
   payload = {}
+  # urlGetProfanitySegments = f"https://apis.prod.vionlabs.com/results/profanity/v1/segments/{cantemoItemId}?&key=kt8cyimHXxUzFNGyhd7c7g"
   urlGetProfanitySegments = f"https://apis.prod.vionlabs.com/results/profanity/v1/segments/OLT-003?&key=kt8cyimHXxUzFNGyhd7c7g"
   httpApiResponse = requests.request("GET", urlGetProfanitySegments, headers=headers, data=payload)
   httpApiResponse.raise_for_status()
@@ -72,33 +76,35 @@ try:
   profanitySegment = responseJson["profanity"]
   # responseJson = json.loads(httpApiResponse.text)
   for individualSegment in profanitySegment["segments"]:
-    startingTimecode = int(individualSegment["start"] * timebaseMultiplier)
-    endingTimecode = startingTimecode + 1
-    # endingTimecode = int(individualSegment["end"]) * (30000 / 1001)
     profanityScore = individualSegment["score"]
-    # segmentInformation = f"Segment timecodes: {startingSegment} - {endingSegment} - Profanity Score: {scoreSegment}\n"
-    # segmentInformation = segmentInformation[:-1]
-    # segmentString = '{'+f"\n\t\"comment\": \"Profanity Score "+str(profanityScore)+f"\",\n\t\"start_tc\": \""+str(startingTimecode)+f"@{itemTimebase}\",\n\t\"end_tc\": \""+str(endingTimecode)+f"@{itemTimebase}\"\n"+'}'
-    segmentPayload = '{"comment": "Profanity Score '+str(profanityScore)+'", "start_tc": "'+str(startingTimecode)+f"@{itemTimebase}"+'", "end_tc": "'+str(endingTimecode)+f"@{itemTimebase}"+'"}'
-    # segmentPayload = json.dumps(segmentString)
-    # print(segmentString)
-    # print(segmentPayload)
-    # print(segmentPayload)
+    profanityScore *= 100
+    if profanityScore >= 80:
+      startingTimecode = int(individualSegment["start"] * timebaseMultiplier)
+      endingTimecode = startingTimecode + 1
+      # endingTimecode = int(individualSegment["end"]) * (30000 / 1001)
+      # segmentInformation = f"Segment timecodes: {startingSegment} - {endingSegment} - Profanity Score: {scoreSegment}\n"
+      # segmentInformation = segmentInformation[:-1]
+      # segmentString = '{'+f"\n\t\"comment\": \"Profanity Score "+str(profanityScore)+f"\",\n\t\"start_tc\": \""+str(startingTimecode)+f"@{itemTimebase}\",\n\t\"end_tc\": \""+str(endingTimecode)+f"@{itemTimebase}\"\n"+'}'
+      segmentPayload = '{"comment": "Profanity level '+str(profanityScore)+' of 100", "start_tc": "'+str(startingTimecode)+f"@{itemTimebase}"+'", "end_tc": "'+str(endingTimecode)+f"@{itemTimebase}"+'"}'
+      # segmentPayload = json.dumps(segmentString)
+      # print(segmentString)
+      # print(segmentPayload)
+      # print(segmentPayload)
 
-    #------------------------------
-    # Update Cantemo metadata
-    headers = {
-      'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
-      'Cookie': 'csrftoken=6TSbOVYmsDD9ORWkUOkqgcXZ1IMetgInzZ96EcWJ048jMUNqD4nhNcqmrFapF8Sa',
-      'Content-Type': 'application/json'
-    }
-    urlPutProfanityInfo = f"http://10.1.1.34/API/v2/comments/item/{cantemoItemId}/"
-    # payload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_analysisReport</name><value>{responseJson}</value></field></timespan></MetadataDocument>"
-    httpApiResponse = requests.request("POST", urlPutProfanityInfo, headers=headers, data=segmentPayload)
-    httpApiResponse.raise_for_status()
-    print(httpApiResponse.text)
-    time.sleep(5)
-    #------------------------------
+      #------------------------------
+      # Update Cantemo metadata
+      headers = {
+        'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
+        'Cookie': 'csrftoken=6TSbOVYmsDD9ORWkUOkqgcXZ1IMetgInzZ96EcWJ048jMUNqD4nhNcqmrFapF8Sa',
+        'Content-Type': 'application/json'
+      }
+      urlPutProfanityInfo = f"http://10.1.1.34/API/v2/comments/item/{cantemoItemId}/"
+      # payload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_analysisReport</name><value>{responseJson}</value></field></timespan></MetadataDocument>"
+      httpApiResponse = requests.request("POST", urlPutProfanityInfo, headers=headers, data=segmentPayload)
+      httpApiResponse.raise_for_status()
+      print(httpApiResponse.text)
+      time.sleep(5)
+      #------------------------------
   #------------------------------
 
 except HTTPError as http_err:
