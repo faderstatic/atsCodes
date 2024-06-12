@@ -121,7 +121,7 @@
 		
 		<!-- AssociatedOrg is used to provide the Partner Alias and is required -->
 		<!-- Include the Partner Alias value in the @organizationID attribute and the value of "licensor" in the @role attribute -->
-		<md:AssociatedOrg organizationID="Hangzhou IX Media Co. LTD" role="licensor"></md:AssociatedOrg>
+		<md:AssociatedOrg organizationID="hangzhouIxMediaCoLtd" role="licensor"></md:AssociatedOrg>
 		
 		<!-- Sequence Info and Parent information is required for TV episodes and seasons -->
 		<md:SequenceInfo>
