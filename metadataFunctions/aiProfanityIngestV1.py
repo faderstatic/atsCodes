@@ -38,11 +38,7 @@ try:
 
   #------------------------------
   # Parsing JSON data for timebase
-  # responseJson = json.loads(httpApiResponse.text)
   responseJson = httpApiResponse.json() if httpApiResponse and httpApiResponse.status_code == 200 else None
-  # print(type(responseJson))
-  # print(type(responseJson["item"]))
-  # print(responseJson["item"])
   if responseJson and 'item' in responseJson:
     for itemInformation in responseJson['item']:
       for timecodeInformation in itemInformation['startTimeCode']:
@@ -60,7 +56,6 @@ try:
       timebaseMultiplier = 25
       timebaseNumerator = 25
       timebaseDenominator = 1
-  # cantemoItemId = 'OLT-003'
   
   #------------------------------
   # Making API call to Vionlabs to find possible profanity locations
@@ -78,7 +73,6 @@ try:
   # Parsing and POST JSON data
   responseJson = httpApiResponse.json()
   profanitySegment = responseJson["profanity"]
-  # responseJson = json.loads(httpApiResponse.text)
   for individualSegment in profanitySegment["segments"]:
     profanityScore = individualSegment["score"]
     profanityScore *= 100
