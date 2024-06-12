@@ -80,7 +80,7 @@
 
 <!-- AssociatedOrg is used to provide the Partner Alias and is required -->
 <!-- Include the Partner Alias value in the @organizationID attribute and the value of "licensor" in the @role attribute -->
-<md:AssociatedOrg organizationID="olympusat" role="licensor"></md:AssociatedOrg>
+<md:AssociatedOrg organizationID="Hangzhou IX Media Co. LTD" role="licensor"></md:AssociatedOrg>
 
 </mdmec:Basic>
 
