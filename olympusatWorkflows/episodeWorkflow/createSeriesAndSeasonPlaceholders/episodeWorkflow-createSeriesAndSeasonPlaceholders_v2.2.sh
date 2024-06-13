@@ -110,7 +110,8 @@ else
 
         else
             #Series placeholder already exists
-            echo "$datetime - (episodeWorkflow) - [$itemId] - Series placeholder already exists - [$setForSeriesName]" >> "$logfile"
+            seriesHitResults=$(echo $seriesCheckHttpResponse | awk -F "<hits>" '{print $2}' | awk -F "</hits>" '{print $1}')
+            echo "$datetime - (episodeWorkflow) - [$itemId] - Series placeholder already exists - [$setForSeriesName] - Number of Items in Results {$seriesHitResults}" >> "$logfile"
             seriesItemId=$(echo $seriesCheckHttpResponse | awk -F "<id>" '{print $2}' | awk -F "</id>" '{print $1}')
             echo "$datetime - (episodeWorkflow) - [$itemId] - Series Item ID - [$seriesItemId]" >> "$logfile"
 
@@ -178,7 +179,8 @@ else
 
         else
             #Season placeholder already exists
-            echo "$datetime - (episodeWorkflow) - [$itemId] - Season placeholder already exists - [$setForSeasonName]" >> "$logfile"
+            seasonHitResults=$(echo $seasonCheckHttpResponse | awk -F "<hits>" '{print $2}' | awk -F "</hits>" '{print $1}')
+            echo "$datetime - (episodeWorkflow) - [$itemId] - Season placeholder already exists - [$setForSeasonName] - Number of Items in Results {$seasonHitResults}" >> "$logfile"
             seasonItemId=$(echo $seasonCheckHttpResponse | awk -F "<id>" '{print $2}' | awk -F "</id>" '{print $1}')
             echo "$datetime - (episodeWorkflow) - [$itemId] - Season Item ID - [$seasonItemId]" >> "$logfile"
 
