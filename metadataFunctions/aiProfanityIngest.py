@@ -81,7 +81,7 @@ try:
     profanityScore = round(profanityScore, 2)
     if profanityScore >= 80:
       startingTimecode = int(individualSegment["start"] * timebaseMultiplier)
-      endingTimecode = startingTimecode + 1
+      endingTimecode = int(individualSegment["end"] * timebaseMultiplier)
       # endingTimecode = int(individualSegment["end"]) * (30000 / 1001)
       # segmentInformation = f"Segment timecodes: {startingSegment} - {endingSegment} - Profanity Score: {scoreSegment}\n"
       # segmentInformation = segmentInformation[:-1]
