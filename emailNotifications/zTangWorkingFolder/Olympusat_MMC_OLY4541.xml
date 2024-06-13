@@ -225,7 +225,7 @@
 </manifest:Experiences>
 <manifest:ALIDExperienceMaps>
 <manifest:ALIDExperienceMap>
-<manifest:ALID>md:alid:eidr-s:6F6C-796D-7075-0000-4541-Q</manifest:ALID>
+<manifest:ALID>md:alid:org:olympusat:OLY_4541</manifest:ALID>
 <manifest:ExperienceID>md:experienceid:eidr-x:6F6C-796D-7075-0000-4541-Q:experience</manifest:ExperienceID>
 </manifest:ALIDExperienceMap>
 </manifest:ALIDExperienceMaps>

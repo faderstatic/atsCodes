@@ -47,7 +47,7 @@
 		<!-- The ID used in the MMC and in the Avail must also be included in the AltIdentifier section -->
 		<md:AltIdentifier>
 			<md:Namespace>ORG</md:Namespace>
-			<md:Identifier>OLY-4554</md:Identifier>
+			<md:Identifier>OLY_4554</md:Identifier>
 		</md:AltIdentifier>
 		<!-- md:AltIdentifier>
 			<md:Namespace>IMDB</md:Namespace>
@@ -121,7 +121,7 @@
 		
 		<!-- AssociatedOrg is used to provide the Partner Alias and is required -->
 		<!-- Include the Partner Alias value in the @organizationID attribute and the value of "licensor" in the @role attribute -->
-		<md:AssociatedOrg organizationID="hangzhouIxMediaCoLtd" role="licensor"></md:AssociatedOrg>
+		<md:AssociatedOrg organizationID="olympusat" role="licensor"></md:AssociatedOrg>
 		
 		<!-- Sequence Info and Parent information is required for TV episodes and seasons -->
 		<md:SequenceInfo>

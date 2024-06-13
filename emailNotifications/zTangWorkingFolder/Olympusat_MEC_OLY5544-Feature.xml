@@ -57,7 +57,7 @@
 		<!-- The ID used in the MMC and in the Avail must also be included in the AltIdentifier section -->
 		<md:AltIdentifier>
 			<md:Namespace>ORG</md:Namespace>
-			<md:Identifier>OLY-5544</md:Identifier>
+			<md:Identifier>OLY_5544</md:Identifier>
 		</md:AltIdentifier>
 		<!-- md:AltIdentifier>
 			<md:Namespace>IMDB</md:Namespace>
@@ -157,7 +157,7 @@
 		</md:People>
 		
 		<!-- OriginalLanguage is required by Amazon -->
-		<md:OriginalLanguage>es-MX/md:OriginalLanguage>
+		<md:OriginalLanguage>es-MX</md:OriginalLanguage>
 		
 		<!-- AssociatedOrg is used to provide the Partner Alias and is required -->
 		<!-- Include the Partner Alias value in the @organizationID attribute and the value of "licensor" in the @role attribute -->
