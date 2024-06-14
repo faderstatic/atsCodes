@@ -35,7 +35,7 @@ try:
   httpApiResponse.raise_for_status()
   #------------------------------
   responseFile = open(outputFPFile, "w")
-  responseFile.write(httpApiResponse.content)
+  responseFile.write(httpApiResponse.json())
   responseFile.close()
   #------------------------------
   # Parsing and POST JSON data
