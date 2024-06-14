@@ -118,7 +118,7 @@
 		<md:People>
 			<md:Job>
 				<md:JobFunction>Actor</md:JobFunction>
-				<md:BillingBlockOrder>34</md:BillingBlockOrder>
+				<md:BillingBlockOrder>4</md:BillingBlockOrder>
 			</md:Job>
 			<md:Name>
 				<md:DisplayName language="en-US">Oscar Lopez</md:DisplayName>
