@@ -46,22 +46,22 @@ try:
   # Parsing JSON and POST XML data
   responseJson = httpApiResponse.json()
   for individualGenre in responseJson["genre"]:
-    print(individualGenre)
+    # print(individualGenre)
     genreXML += f"<value>{individualGenre}</value>"
   genreXML += "</field></timespan></MetadataDocument>"
   parsedXML = xml.dom.minidom.parseString(genreXML)
   genrePayload = parsedXML.toprettyxml()
-  print(genrePayload)
+  # print(genrePayload)
   #------------------------------
   # Update Cantemo metadata
-  # headers = {
-  # 'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
-  # 'Cookie': 'csrftoken=HFOqrbk9cGt3qnc6WBIxWPjvCFX0udBdbJnzCv9jECumOjfyG7SS2lgVbFcaHBCc',
-  # 'Content-Type': 'application/xml'
-  # }
-  # urlPutAnalysisInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata/"
+  headers = {
+  'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
+  'Cookie': 'csrftoken=HFOqrbk9cGt3qnc6WBIxWPjvCFX0udBdbJnzCv9jECumOjfyG7SS2lgVbFcaHBCc',
+  'Content-Type': 'application/xml'
+  }
+  urlPutAnalysisInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata/"
   # genrePayload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_analysisReport</name><value>{errorReport}</value></field></timespan></MetadataDocument>"
-  # httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=genrePayload)
+  httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=genrePayload)
   #------------------------------
   #------------------------------
 
