@@ -5,7 +5,7 @@
  xmlns:mdmec="http://www.movielabs.com/schema/mdmec/v2.9">
 	
 	<mdmec:Basic ContentID="md:cid:org:olympusat:CandleintheTomb1_7">
-		<md:LocalizedInfo language="en-US">\
+		<md:LocalizedInfo language="en-US">
 			<!-- TitleDisplayUnlimited is required by Amazon. Limited to 250 characters. -->
 			<md:TitleDisplayUnlimited>Episode 07</md:TitleDisplayUnlimited>
 			<!-- TitleSort is required by the MEC XSD, but is not used by Amazon. Blank fields such as below are acceptable.  -->
