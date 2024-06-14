@@ -4,90 +4,92 @@
  xmlns:md="http://www.movielabs.com/schema/md/v2.9/md"
  xmlns:mdmec="http://www.movielabs.com/schema/mdmec/v2.9">
 
-<mdmec:Basic ContentID="md:cid:org:olympusat:CandleintheTomb">
-<md:LocalizedInfo language="en-US">
+    <mdmec:Basic ContentID="md:cid:org:olympusat:CandleintheTomb">
+        <md:LocalizedInfo language="en-US">
 
-<!-- TitleDisplayUnlimited is required by Amazon. Limited to 250 characters. -->
-<md:TitleDisplayUnlimited>Candle in the Tomb: The Lost Caverns</md:TitleDisplayUnlimited>
+            <!-- TitleDisplayUnlimited is required by Amazon. Limited to 250 characters. -->
+            <md:TitleDisplayUnlimited>Candle in the Tomb: The Lost Caverns</md:TitleDisplayUnlimited>
 
-<!-- TitleSort is required by the MEC XSD, but is not used by Amazon. Blank fields such as below are acceptable. -->
-<md:TitleSort></md:TitleSort>
+            <!-- TitleSort is required by the MEC XSD, but is not used by Amazon. Blank fields such as below are acceptable. -->
+            <md:TitleSort></md:TitleSort>
 
-<md:ArtReference resolution="2560x1920" purpose="boxart">CA_000369_36712_00-4x3.jpg</md:ArtReference>
-<md:ArtReference resolution="3840x2160" purpose="cover">CA_000369_36712_00-US-16x9.jpg</md:ArtReference>
-<md:ArtReference resolution="1920x2560" purpose="hero">CA_000369_36712_00-US-3x4.jpg</md:ArtReference>
+            <md:ArtReference resolution="1600x1200" purpose="boxart">CA_000369_4588_00-4x3.jpg</md:ArtReference>
+            <md:ArtReference resolution="2560x1440" purpose="cover">CA_000369_4588_00-16x9.jpg</md:ArtReference>
+            <md:ArtReference resolution="1200x1600" purpose="hero">CA_000369_4588_00-3x4.jpg</md:ArtReference>
 
-<!-- Summary190 is required by the MEC XSD, but is not required by Amazon. Blank fields such as below are acceptable. -->
-<md:Summary190></md:Summary190>
+            <!-- Summary190 is required by the MEC XSD, but is not required by Amazon. Blank fields such as below are acceptable. -->
+            <md:Summary190></md:Summary190>
 
-<!-- Summary400 is required by Amazon -->
-<md:Summary400>A trio of Tomb Raider explore a mysterious tomb in the Shaanxi region.</md:Summary400>
+            <!-- Summary400 is required by Amazon -->
+            <md:Summary400>A trio of Tomb Raider explore a mysterious tomb in the Shaanxi region.</md:Summary400>
+            <md:Summary4000>Shirley Yang travels to the Longling Maze Grottos to investigate unusual patterns on fossil fragments. On the way, she crosses paths with Hu Bayi who along with Wang Pangzi have just escaped from the ancient city. The trio become companions in another tomb-raiding adventure.</md:Summary4000>
+            <!-- Genres must be submitted using the AV Genre codes, such as below. -->
+            <!-- Genres may be provided in just one, or all LocalizedInfo blocks. See the spec documentation for more detail. -->
+            <!-- At least 1 genre is required. Up to 3 genres are allowed. --> 
+            <md:Genre id="av_genre_adventure"></md:Genre>
+            <md:Genre id="av_subgenre_thriller"></md:Genre>
+            <md:Genre id="av_subgenre_fantasy"></md:Genre>
+            <!-- md:Genre id="av_subgenre_drama_historical"></md:Genre -->
+        </md:LocalizedInfo>
+        <md:LocalizedInfo language="es-MX">
+            <md:TitleDisplayUnlimited>La Vela en la Tumba: Las Cavernas Perdidas</md:TitleDisplayUnlimited>
+            <md:TitleSort></md:TitleSort>
+            <md:Summary190></md:Summary190>
+            <md:Summary400>Un trío se convierte en compañeros de una aventura de asalto a tumbas.</md:Summary400>
+            <md:Summary4000>Shirley Yang viaja a Longling Maze Grottos para investigar patrones inusuales en fragmentos fósiles. En el camino, se cruza con Hu Bayi, quien junto con Wang Pangzi acaban de escapar de la antigua ciudad. El trío se convierte en compañeros en otra aventura de asalto a tumbas.</md:Summary4000>
+        </md:LocalizedInfo>
+        <!-- md:LocalizedInfo language="ja-JP">
+            <md:TitleDisplayUnlimited>高い城の男</md:TitleDisplayUnlimited>
+            <md:TitleSort></md:TitleSort>
+            <md:Summary190></md:Summary190>
+            <md:Summary400>1962年、第２次世界大戦はアメリカの敗北に終わり、国土の東側は大ナチス帝国、西側は日本太平洋合衆国の統治下に置かれた。両国による圧政の最中、違う世界を映し出したフィルムが新たな希望として現れた。妹は姉にそのフィルムを託した直後、殺される。姉はフィルムが自由への鍵となると信じ、謎に包まれた制作者「高い城の男」を捜すことに没頭する。</md:Summary400>
+        </md:LocalizedInfo -->
+        <!-- end of Localized Info -->
+        <!-- ReleaseYear is required by the XSD -->
+        <md:ReleaseYear>2022</md:ReleaseYear>
+        <!-- WorkType is Required -->
+        <md:WorkType>series</md:WorkType>
+        <!-- The ID used in the MMC and in the Avail must also be included in the AltIdentifier section -->
+        <md:AltIdentifier>
+            <md:Namespace>ORG</md:Namespace>
+            <md:Identifier>OLY_4553</md:Identifier>
+        </md:AltIdentifier>
+        <!-- md:AltIdentifier>
+        <md:Namespace>IMDB</md:Namespace>
+        <md:Identifier>tt4518588</md:Identifier>
+        </md:AltIdentifier -->
+        <md:RatingSet>
+            <!-- each rating specifies exactly one country, system and value -->
+            <!-- At least one rating is required. If the work is not rated, use <md:notrated>true</md:notrated> -->
+            <!-- see http://www.movielabs.com/md/ratings/current.html for ratings -->
+            <md:Rating>
+                <md:Region>
+                    <md:country>US</md:country>
+                </md:Region>
+                <md:System>TVPG</md:System>
+                <md:Value>TV-14</md:Value>
+            </md:Rating>
+            <md:Rating>
+                <md:Region>
+                    <md:country>MX</md:country>
+                </md:Region>
+                <md:System>RTC</md:System>
+                <md:Value>B</md:Value>
+            </md:Rating>
+        </md:RatingSet>
+        <!-- OriginalLanguage is required by Amazon -->
+        <md:OriginalLanguage>zh-CN</md:OriginalLanguage>
+        <md:OriginalTitle>Gui Chui Deng Zhi Long Ling Mi Ku</md:OriginalTitle>
 
-<!-- Genres must be submitted using the AV Genre codes, such as below. -->
-<!-- Genres may be provided in just one, or all LocalizedInfo blocks. See the spec documentation for more detail. -->
-<!-- At least 1 genre is required. Up to 3 genres are allowed. --> 
-<md:Genre id="av_genre_adventure"></md:Genre>
-<md:Genre id="av_subgenre_thriller"></md:Genre>
-<md:Genre id="av_subgenre_fantasy"></md:Genre>
-<!-- md:Genre id="av_subgenre_drama_historical"></md:Genre -->
-</md:LocalizedInfo>
-<md:LocalizedInfo language="es-MX">
-<md:TitleDisplayUnlimited>Candle in the Tomb: The Lost Caverns</md:TitleDisplayUnlimited>
-<md:TitleSort></md:TitleSort>
-<md:Summary190></md:Summary190>
-<md:Summary400>Un trío se convierte en compañeros de una aventura de asalto a tumbas.</md:Summary400>
-</md:LocalizedInfo>
-<!-- md:LocalizedInfo language="ja-JP">
-<md:TitleDisplayUnlimited>高い城の男</md:TitleDisplayUnlimited>
-<md:TitleSort></md:TitleSort>
-<md:Summary190></md:Summary190>
-<md:Summary400>1962年、第２次世界大戦はアメリカの敗北に終わり、国土の東側は大ナチス帝国、西側は日本太平洋合衆国の統治下に置かれた。両国による圧政の最中、違う世界を映し出したフィルムが新たな希望として現れた。妹は姉にそのフィルムを託した直後、殺される。姉はフィルムが自由への鍵となると信じ、謎に包まれた制作者「高い城の男」を捜すことに没頭する。</md:Summary400>
-</md:LocalizedInfo -->
-<!-- end of Localized Info -->
-<!-- ReleaseYear is required by the XSD -->
-<md:ReleaseYear>2015</md:ReleaseYear>
-<!-- WorkType is Required -->
-<md:WorkType>series</md:WorkType>
-<!-- The ID used in the MMC and in the Avail must also be included in the AltIdentifier section -->
-<md:AltIdentifier>
-<md:Namespace>ORG</md:Namespace>
-<md:Identifier>OLY_4553</md:Identifier>
-</md:AltIdentifier>
-<!-- md:AltIdentifier>
-<md:Namespace>IMDB</md:Namespace>
-<md:Identifier>tt4518588</md:Identifier>
-</md:AltIdentifier -->
-<md:RatingSet>
-<!-- each rating specifies exactly one country, system and value -->
-<!-- At least one rating is required. If the work is not rated, use <md:notrated>true</md:notrated> -->
-<!-- see http://www.movielabs.com/md/ratings/current.html for ratings -->
-<md:Rating>
-<md:Region>
-<md:country>US</md:country>
-</md:Region>
-<md:System>MPAA</md:System>
-<md:Value>PG-13</md:Value>
-</md:Rating>
-<!-- md:Rating>
-<md:Region>
-<md:country>DE</md:country>
-</md:Region>
-<md:System>FSK</md:System>
-<md:Value>12</md:Value>
-</md:Rating -->
-</md:RatingSet>
-<!-- OriginalLanguage is required by Amazon -->
-<md:OriginalLanguage>zh-CN</md:OriginalLanguage>
+        <!-- AssociatedOrg is used to provide the Partner Alias and is required -->
+        <!-- Include the Partner Alias value in the @organizationID attribute and the value of "licensor" in the @role attribute -->
+        <md:AssociatedOrg organizationID="olympusat" role="licensor"></md:AssociatedOrg>
 
-<!-- AssociatedOrg is used to provide the Partner Alias and is required -->
-<!-- Include the Partner Alias value in the @organizationID attribute and the value of "licensor" in the @role attribute -->
-<md:AssociatedOrg organizationID="olympusat" role="licensor"></md:AssociatedOrg>
+    </mdmec:Basic>
 
-</mdmec:Basic>
-
-<!-- CompanyDisplayCredit is used to provide customer-facing studio credits. Required. -->
-<mdmec:CompanyDisplayCredit>
-<md:DisplayString language="en-US">Olympusat</md:DisplayString>
-</mdmec:CompanyDisplayCredit>
+    <!-- CompanyDisplayCredit is used to provide customer-facing studio credits. Required. -->
+    <mdmec:CompanyDisplayCredit>
+    <md:DisplayString language="en-US">Olympusat</md:DisplayString>
+    </mdmec:CompanyDisplayCredit>
 
 </mdmec:CoreMetadata>

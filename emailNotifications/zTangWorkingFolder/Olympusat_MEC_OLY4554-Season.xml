@@ -10,25 +10,27 @@
 			<md:TitleDisplayUnlimited>Candle in the Tomb: The Lost Caverns | Season 1</md:TitleDisplayUnlimited>
 			<!-- TitleSort is required by the MEC XSD, but is not used by Amazon. Blank fields such as below are acceptable.  -->
 			<md:TitleSort></md:TitleSort>
-			<md:ArtReference resolution="2560x1920" purpose="boxart">CA_000369_36712_00-US-4x3.jpg</md:ArtReference>
-			<md:ArtReference resolution="3840x2160" purpose="cover">CA_000369_36712_00-US-16x9.jpg</md:ArtReference>
-			<md:ArtReference resolution="1920x2560" purpose="hero">CA_000369_36712_00-US-3x4.jpg</md:ArtReference>
+			<md:ArtReference resolution="1600x1200" purpose="boxart">CA_000369_4588_00-4x3.jpg</md:ArtReference>
+			<md:ArtReference resolution="2560x1440" purpose="cover">CA_000369_4588_00-16x9.jpg</md:ArtReference>
+			<md:ArtReference resolution="1200x1600" purpose="hero">CA_000369_4588_00-3x4.jpg</md:ArtReference>
 			<!-- Summary190 is required by the MEC XSD, but is not required by Amazon. Blank fields such as below are acceptable.  -->
 			<md:Summary190></md:Summary190>
 			<!-- Summary400 is required by Amazon -->
-			<md:Summary400>Divine bead with red spot pattern would break curse, leading to the assimilation of Zagrama tribe by Han.</md:Summary400>
+			<md:Summary400>Tomb raider, explorers and terrifying creatures in an adventure full of dangers and mysteries.</md:Summary400>
+			<md:Summary4000>Tomb raider Shirley Yang joins Hu Bayi and Wang Pangzi on an adventure to investigate fossils. They face terrifying creatures and evil spirits as they seek their final destiny. Will they survive?</md:Summary4000>
 			<!-- Genres must be submitted using the AV Genre codes, such as below. -->
 			<!-- Genres may be provided in just one, or all LocalizedInfo blocks. See the spec documentation for more detail. -->
 			<!-- At least 1 genre is required. Up to 3 genres are allowed. -->
-			<md:Genre id="av_genre_adventure"></md:Genre>
-			<md:Genre id="av_subgenre_thriller"></md:Genre>
+			<md:Genre id="av_genre_action"></md:Genre>
+			<md:Genre id="av_subgenre_adventure"></md:Genre>
 			<md:Genre id="av_subgenre_fantasy"></md:Genre>
 		</md:LocalizedInfo>
 		<md:LocalizedInfo language="es-MX">
-			<md:TitleDisplayUnlimited>Candle in the Tomb: The Lost Caverns | Season 1</md:TitleDisplayUnlimited>
+			<md:TitleDisplayUnlimited>La Vela en la Tumba: Las Cavernas Perdidas</md:TitleDisplayUnlimited>
 			<md:TitleSort></md:TitleSort>
 			<md:Summary190></md:Summary190>
-			<md:Summary400>Cuenta divina con patrón de mancha roja rompería maldición, llevando la asimilación de tribu Zagrama por Han.</md:Summary400>
+			<md:Summary400>Saqueadora de tumbas, exploradores y criaturas aterradoras en una aventura llena de peligros y misterios.</md:Summary400>
+			<md:Summary4000>Shirley Yang, una saqueadora de tumbas, se une a Hu Bayi y Wang Pangzi en una aventura para investigar fósiles. Enfrentan criaturas aterradoras y espíritus malignos mientras buscan su destino final. ¿Lograrán sobrevivir?</md:Summary4000>
 		</md:LocalizedInfo>
 		<!-- md:LocalizedInfo language="ja-JP">
 			<md:TitleDisplayUnlimited> 高い城の男　シーズン１</md:TitleDisplayUnlimited>
@@ -39,7 +41,7 @@
 		<!-- end of Localized Info -->
 		
 		<!-- ReleaseYear is required by the XSD -->
-		<md:ReleaseYear>2015</md:ReleaseYear>
+		<md:ReleaseYear>2022</md:ReleaseYear>
 
 		<!-- WorkType is Required -->
 		<md:WorkType>season</md:WorkType>
@@ -62,16 +64,16 @@
 				<md:Region>
 					<md:country>US</md:country>
 				</md:Region>
-				<md:System>MPAA</md:System>
-				<md:Value>PG-13</md:Value>
+				<md:System>TVPG</md:System>
+				<md:Value>TV-14</md:Value>
 			</md:Rating>
-			<!-- md:Rating>
+			<md:Rating>
 				<md:Region>
-					<md:country>DE</md:country>
+					<md:country>MX</md:country>
 				</md:Region>
-				<md:System>FSK</md:System>
-				<md:Value>12</md:Value>
-			</md:Rating -->
+				<md:System>RTC</md:System>
+				<md:Value>B</md:Value>
+			</md:Rating>
 		</md:RatingSet>
 			
 		<!-- people are used for the cast and crew.  -->
@@ -81,8 +83,8 @@
 				<md:BillingBlockOrder>1</md:BillingBlockOrder>
 			</md:Job>
 			<md:Name>
-				<md:DisplayName language="en-US">Elio Lorenzo</md:DisplayName>
-				<md:DisplayName language="es-MX">Elio Lorenzo</md:DisplayName>
+				<md:DisplayName language="en-US">Pan Yue Ming</md:DisplayName>
+				<md:DisplayName language="es-MX">Pan Yue Ming</md:DisplayName>
 			</md:Name>
 		</md:People>
 		<md:People>
@@ -91,8 +93,18 @@
 				<md:BillingBlockOrder>2</md:BillingBlockOrder>
 			</md:Job>
 			<md:Name>
-				<md:DisplayName language="en-US">Jackson Berlin</md:DisplayName>
-				<md:DisplayName language="es-MX">Jackson Berlin</md:DisplayName>
+				<md:DisplayName language="en-US">Jiang Chao</md:DisplayName>
+				<md:DisplayName language="es-MX">Jiang Chao</md:DisplayName>
+			</md:Name>
+		</md:People>
+		<md:People>
+			<md:Job>
+				<md:JobFunction>Actor</md:JobFunction>
+				<md:BillingBlockOrder>3</md:BillingBlockOrder>
+			</md:Job>
+			<md:Name>
+				<md:DisplayName language="en-US">Zhang Yu Qi</md:DisplayName>
+				<md:DisplayName language="es-MX">Zhang Yu Qi</md:DisplayName>
 			</md:Name>
 		</md:People>
 		<md:People>
@@ -101,8 +113,8 @@
 				<md:BillingBlockOrder>1</md:BillingBlockOrder>
 			</md:Job>
 			<md:Name>
-				<md:DisplayName language="en-US">Dominique Lancelot</md:DisplayName>
-				<md:DisplayName language="es-MX">Dominique Lancelot</md:DisplayName>
+				<md:DisplayName language="en-US">Guan Hu</md:DisplayName>
+				<md:DisplayName language="es-MX">Guan Hu</md:DisplayName>
 			</md:Name>
 		</md:People>
 		<md:People>
@@ -111,8 +123,8 @@
 				<md:BillingBlockOrder>1</md:BillingBlockOrder>
 			</md:Job>
 			<md:Name>
-				<md:DisplayName language="en-US">Ed Bye</md:DisplayName>
-				<md:DisplayName language="en-MX">Ed Bye</md:DisplayName>
+				<md:DisplayName language="en-US">Fei Zhen Xiang</md:DisplayName>
+				<md:DisplayName language="en-MX">Fei Zhen Xiang</md:DisplayName>
 			</md:Name>
 		</md:People>
 		

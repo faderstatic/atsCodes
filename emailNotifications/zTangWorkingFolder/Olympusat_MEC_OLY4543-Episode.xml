@@ -4,20 +4,20 @@
  xmlns:md="http://www.movielabs.com/schema/md/v2.9/md"
  xmlns:mdmec="http://www.movielabs.com/schema/mdmec/v2.9">
 	
-	<mdmec:Basic ContentID="md:cid:org:olympusat:CandleintheTomb1_7">
+	<mdmec:Basic ContentID="md:cid:org:olympusat:CandleintheTomb1_3">
 		<md:LocalizedInfo language="en-US">\
 			<!-- TitleDisplayUnlimited is required by Amazon. Limited to 250 characters. -->
-			<md:TitleDisplayUnlimited>Episode 07</md:TitleDisplayUnlimited>
+			<md:TitleDisplayUnlimited>Episode 03</md:TitleDisplayUnlimited>
 			<!-- TitleSort is required by the MEC XSD, but is not used by Amazon. Blank fields such as below are acceptable.  -->
 			<md:TitleSort></md:TitleSort>
 			<!-- md:ArtReference resolution="2560x1920" purpose="boxart">CA_000369_36712_00-still.jpg</md:ArtReference -->
-			<md:ArtReference resolution="1920x1080" purpose="cover">CA_000369_36712_00-still.jpg</md:ArtReference>
+			<md:ArtReference resolution="1920x1080" purpose="cover">CA_000369_36708_00-still.jpg</md:ArtReference>
 			<!-- md:ArtReference resolution="1920x2560" purpose="hero">CA_000369_36712_00-3x4.jpg</md:ArtReference -->
 			<!-- Summary190 is required by the MEC XSD, but is not required by Amazon. Blank fields such as below are acceptable.  -->
 			<md:Summary190></md:Summary190>
 			<!-- Summary400 is required by Amazon -->
-			<md:Summary400>Divine bead with red spot pattern would break curse, leading to the assimilation of Zagrama tribe by Han.</md:Summary400>
-			<md:Summary4000>The prophet discovered that a divine bead with the red spot pattern in the Central Plains could break the curse. The Zagrama tribe embarked on an inland migration, gradually being absorbed by the Han civilization.</md:Summary4000>
+			<md:Summary400>Surviving the monstrous fish, Bayi and his companions arrive at Logan County, where they meet a mysterious soothsayer.</md:Summary400>
+			<md:Summary4000>Surviving the monstrous fish, Bayi and his companions arrive at Logan County, where they meet a mysterious soothsayer.</md:Summary4000>
 			<!-- Genres must be submitted using the AV Genre codes, such as below. -->
 			<!-- Genres may be provided in just one, or all LocalizedInfo blocks. See the spec documentation for more detail. -->
 			<!-- At least 1 genre is required. Up to 3 genres are allowed. -->
@@ -27,11 +27,11 @@
 			<!-- md:Genre id="av_subgenre_drama_historical"></md:Genre -->
 		</md:LocalizedInfo>
 		<md:LocalizedInfo language="es-MX">
-			<md:TitleDisplayUnlimited>Episode 07</md:TitleDisplayUnlimited>
+			<md:TitleDisplayUnlimited>Episode 03</md:TitleDisplayUnlimited>
 			<md:TitleSort></md:TitleSort>
 			<md:Summary190></md:Summary190>
-			<md:Summary400>Cuenta divina con patrón de mancha roja rompería maldición, llevando la asimilación de tribu Zagrama por Han.</md:Summary400>
-			<md:Summary4000>El profeta descubrió que una cuenta divina con el patrón de la mancha roja en las Llanuras Centrales podía romper la maldición. La tribu Zagrama se embarcó en una migración hacia el interior, siendo gradualmente absorbida por la civilización Han.</md:Summary4000>
+			<md:Summary400>Sobreviviendo al monstruoso pez, Bayi y sus compañeros llegan al condado de Logan, donde conocen a un misterioso adivino.</md:Summary400>
+			<md:Summary4000>Sobreviviendo al monstruoso pez, Bayi y sus compañeros llegan al condado de Logan, donde conocen a un misterioso adivino.</md:Summary4000>
 		</md:LocalizedInfo>
 		<!-- md:LocalizedInfo language="ja-JP">
 			<md:TitleDisplayUnlimited>新世界 </md:TitleDisplayUnlimited>
@@ -61,7 +61,7 @@
 		<!-- The ID used in the MMC and in the Avail must also be included in the AltIdentifier section -->
 		<md:AltIdentifier>
 			<md:Namespace>ORG</md:Namespace>
-			<md:Identifier>OLY_4541</md:Identifier>
+			<md:Identifier>OLY_4543</md:Identifier>
 		</md:AltIdentifier>
 		<!-- md:AltIdentifier>
 			<md:Namespace>IMDB</md:Namespace>
