@@ -41,11 +41,7 @@ try:
   responseWriting.write(apiResponseJsonFormat)
   responseWriting.close()
 
-  genreXML = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\">\
-    <group>Olympusat</group>\
-    <timespan start=\"-INF\" end=\"+INF\">\
-    <field>\
-    <name>oly_genreAnalysis</name>"
+  genreXML = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><group>Olympusat</group><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_genreAnalysis</name>"
   #------------------------------
   # Parsing JSON and POST XML data
   responseJson = httpApiResponse.json()
