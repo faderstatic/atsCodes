@@ -11,9 +11,9 @@
 			<md:TitleDisplayUnlimited>Comando X</md:TitleDisplayUnlimited>
 			<!-- TitleSort is required by the MEC XSD, but is not used by Amazon. Blank fields such as below are acceptable.  -->
 			<md:TitleSort></md:TitleSort>
-			<md:ArtReference resolution="2560x1920" purpose="boxart">CA_000752_699_00-US-4x3.jpg</md:ArtReference>
-			<md:ArtReference resolution="3840x2160" purpose="cover">CA_000752_699_00-US-16x9.jpg</md:ArtReference>
-			<md:ArtReference resolution="1920x2560" purpose="hero">CA_000752_699_00-US-3x4.jpg</md:ArtReference>			
+			<md:ArtReference resolution="1600x1200" purpose="boxart">CA_000752_699_00-4x3.jpg</md:ArtReference>
+			<md:ArtReference resolution="2560x1440" purpose="cover">CA_000752_699_00-16x9.jpg</md:ArtReference>
+			<md:ArtReference resolution="1200x1600" purpose="hero">CA_000752_699_00-3x4.jpg</md:ArtReference>			
 			<!-- Summary190 is required by the MEC XSD, but is not required by Amazon. Blank fields such as below are acceptable.  -->
 			<md:Summary190></md:Summary190>
 			<!-- Summary400 is required by Amazon -->
