@@ -39,7 +39,11 @@ try:
   # responseFile.close()
   apiResponseJson = json.loads(httpApiResponse.text)
   apiResponseJsonFormat = json.dumps(apiResponseJson, indent=2)
-  print(apiResponseJsonFormat)
+  
+  responseWriting = open(outputFPFile, "w")
+  responseWriting.write(apiResponseJsonFormat)
+  responseWriting.close()
+  
   #------------------------------
   # Parsing and POST JSON data
   responseJson = httpApiResponse.json()
