@@ -34,12 +34,9 @@ try:
   httpApiResponse = requests.request("GET", urlGetProfanitySegments, headers=headers, data=payload)
   httpApiResponse.raise_for_status()
   #------------------------------
-  with open(outputFPFile, "w") as outputJsonFile:
-    json.dumps(httpApiResponse.json(), outputJsonFile)
-  outputJsonFile.close()
-  # responseFile = open(outputFPFile, "w")
-  # responseFile.write(responseContentJson)
-  # responseFile.close()
+  responseFile = open(outputFPFile, "w")
+  responseFile.write(httpApiResponse.content)
+  responseFile.close()
   #------------------------------
   # Parsing and POST JSON data
   responseJson = httpApiResponse.json()
