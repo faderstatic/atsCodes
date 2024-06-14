@@ -51,7 +51,7 @@ try:
   genreXML += "</field></timespan></MetadataDocument>"
   parsedXML = xml.dom.minidom.parse(genreXML)
   genrePayload = parsedXML.toprettyxml()
-  print(genrePayload)
+  # print(genrePayload)
   #------------------------------
   # Update Cantemo metadata
   # headers = {
