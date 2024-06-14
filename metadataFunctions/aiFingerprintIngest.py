@@ -42,6 +42,7 @@ try:
   responseWriting.close()
 
   genreXML = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><group>Olympusat</group><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_genreAnalysis</name>"
+  moodXML = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><group>Olympusat</group><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_moodAnalysis</name>"
   #------------------------------
   # Parsing JSON and POST XML data
   responseJson = httpApiResponse.json()
@@ -49,9 +50,14 @@ try:
     # print(individualGenre)
     genreXML += f"<value>{individualGenre}</value>"
   genreXML += "</field></timespan></MetadataDocument>"
-  parsedXML = xml.dom.minidom.parseString(genreXML)
-  genrePayload = parsedXML.toprettyxml()
+  parsedGenreXML = xml.dom.minidom.parseString(genreXML)
+  genrePayload = parsedGenreXML.toprettyxml()
   # print(genrePayload)
+  for individualMood in responseJson["mood_tag"]:
+    moodXML += f"<value>{individualMood}</value>"
+  moodXML += "</field></timespan></MetadataDocument>"
+  parsedMoodXML = xml.dom.minidom.parseString(moodXML)
+  moodPayload = parsedMoodXML.toprettyxml()
   #------------------------------
   # Update Cantemo metadata
   headers = {
@@ -62,6 +68,8 @@ try:
   urlPutAnalysisInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata/"
   # genrePayload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_analysisReport</name><value>{errorReport}</value></field></timespan></MetadataDocument>"
   httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=genrePayload)
+  time.sleep(5)
+  httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=moodPayload)
   #------------------------------
   #------------------------------
 
