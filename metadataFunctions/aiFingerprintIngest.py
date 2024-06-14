@@ -49,9 +49,9 @@ try:
     print(individualGenre)
     genreXML += f"<value>{individualGenre}</value>"
   genreXML += "</field></timespan></MetadataDocument>"
-  # parsedXML = xml.dom.minidom.parse(genreXML)
-  # genrePayload = parsedXML.toprettyxml()
-  # print(genrePayload)
+  parsedXML = xml.dom.minidom.parseString(genreXML)
+  genrePayload = parsedXML.toprettyxml()
+  print(genrePayload)
   #------------------------------
   # Update Cantemo metadata
   # headers = {
