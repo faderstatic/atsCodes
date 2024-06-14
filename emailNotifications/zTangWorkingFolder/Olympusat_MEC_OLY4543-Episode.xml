@@ -159,7 +159,7 @@
 		
 		<!-- Sequence Info and Parent information is required for TV episodes and seasons -->
 		<md:SequenceInfo>
-			<md:Number>7</md:Number>
+			<md:Number>3</md:Number>
 		</md:SequenceInfo>
 		<md:Parent relationshipType="isepisodeof">
 			<md:ParentContentID>md:cid:org:olympusat:CandleintheTomb1</md:ParentContentID>
