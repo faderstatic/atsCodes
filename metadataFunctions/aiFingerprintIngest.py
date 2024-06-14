@@ -49,7 +49,7 @@ try:
     print(individualGenre)
     genreXML += f"<value>{individualGenre}</value>"
   genreXML += "</field></timespan></MetadataDocument>"
-  parsedXML = xml.dom.minidom.parse(genreXML)
+  # parsedXML = xml.dom.minidom.parse(genreXML)
   # genrePayload = parsedXML.toprettyxml()
   # print(genrePayload)
   #------------------------------
