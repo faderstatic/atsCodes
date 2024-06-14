@@ -13,6 +13,7 @@ import sys
 import datetime
 import time
 import subprocess
+import xml.dom.minidom
 import requests
 import json
 from requests.exceptions import HTTPError
@@ -34,36 +35,38 @@ try:
   httpApiResponse = requests.request("GET", urlGetProfanitySegments, headers=headers, data=payload)
   httpApiResponse.raise_for_status()
   #------------------------------
-  # responseFile = open(outputFPFile, "wb")
-  # responseFile.write(httpApiResponse.content)
-  # responseFile.close()
   apiResponseJson = json.loads(httpApiResponse.text)
   apiResponseJsonFormat = json.dumps(apiResponseJson, indent=2)
-  
   responseWriting = open(outputFPFile, "w")
   responseWriting.write(apiResponseJsonFormat)
   responseWriting.close()
-  
+
+  genreXML = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\">\
+    <group>Olympusat</group>\
+    <timespan start=\"-INF\" end=\"+INF\">\
+    <field>\
+    <name>oly_genreAnalysis</name>"
   #------------------------------
-  # Parsing and POST JSON data
+  # Parsing JSON and POST XML data
   responseJson = httpApiResponse.json()
-  # profanitySegment = responseJson["genre"]
   for individualGenre in responseJson["genre"]:
     print(individualGenre)
-    
-      #------------------------------
-      # Update Cantemo metadata
-      # headers = {
-      #   'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
-      #   'Cookie': 'csrftoken=obqpl1uZPs93ldSOFjsRbk2bL25JxPgBOb8t1zUH20fP0tUEdXNNjrYO8kzeOSah',
-      #   'Content-Type': 'application/json'
-      # }
-      # urlPutProfanityInfo = f"http://10.1.1.34/AVAPI/asset/{cantemoItemId}/timespan/bulk"
-      # httpApiResponse = requests.request("PUT", urlPutProfanityInfo, headers=headers, data=segmentPayload)
-      # httpApiResponse.raise_for_status()
-      # print(httpApiResponse.text)
-      # time.sleep(5)
-      #------------------------------
+    genreXML += f"<value>{individualGenre}</value>"
+  genreXML += "</field></timespan></MetadataDocument>"
+  parsedXML = xml.dom.minidom.parse(genreXML)
+  genrePayload = parsedXML.toprettyxml()
+  print(genrePayload)
+  #------------------------------
+  # Update Cantemo metadata
+  # headers = {
+  # 'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
+  # 'Cookie': 'csrftoken=HFOqrbk9cGt3qnc6WBIxWPjvCFX0udBdbJnzCv9jECumOjfyG7SS2lgVbFcaHBCc',
+  # 'Content-Type': 'application/xml'
+  # }
+  # urlPutAnalysisInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata/"
+  # genrePayload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_analysisReport</name><value>{errorReport}</value></field></timespan></MetadataDocument>"
+  # httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=genrePayload)
+  #------------------------------
   #------------------------------
 
 except HTTPError as http_err:
