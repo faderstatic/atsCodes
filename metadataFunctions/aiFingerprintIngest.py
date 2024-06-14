@@ -43,6 +43,7 @@ try:
 
   genreXML = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><group>Olympusat</group><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_genreAnalysis</name>"
   moodXML = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><group>Olympusat</group><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_moodAnalysis</name>"
+  keywordXML = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><group>Olympusat</group><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_keywordAnalysis</name>"
   #------------------------------
   # Parsing JSON and POST XML data
   responseJson = httpApiResponse.json()
@@ -58,6 +59,11 @@ try:
   moodXML += "</field></timespan></MetadataDocument>"
   parsedMoodXML = xml.dom.minidom.parseString(moodXML)
   moodPayload = parsedMoodXML.toprettyxml()
+  for individualKeyword in responseJson["keyword"]:
+    keywordXML += f"<value>{individualKeyword}</value>"
+  keywordXML += "</field></timespan></MetadataDocument>"
+  parsedKeywordXML = xml.dom.minidom.parseString(keywordXML)
+  keywordPayload = parsedKeywordXML.toprettyxml()
   #------------------------------
   # Update Cantemo metadata
   headers = {
@@ -70,6 +76,8 @@ try:
   httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=genrePayload)
   time.sleep(5)
   httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=moodPayload)
+  time.sleep(5)
+  httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=keywordPayload)
   #------------------------------
   #------------------------------
 
