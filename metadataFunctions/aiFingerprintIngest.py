@@ -22,7 +22,7 @@ try:
   cantemoItemId = sys.argv[1]
   # cantemoItemId = os.environ.get("portal_itemId")
   errorReport = ''
-  
+  outputFPFile = f"/mnt/c/Users/kkanjanapitak/Desktop/{cantemoItemId}_FP.json"
   #------------------------------
   # Making API call to Vionlabs to get fingerprints
   headers = {
@@ -34,14 +34,16 @@ try:
   httpApiResponse = requests.request("GET", urlGetProfanitySegments, headers=headers, data=payload)
   httpApiResponse.raise_for_status()
   #------------------------------
-
+  responseFile = open(outputFPFile, "w")
+  responseFile.write(httpApiResponse.text)
+  responseFile.close()
   #------------------------------
   # Parsing and POST JSON data
   responseJson = httpApiResponse.json()
   # profanitySegment = responseJson["genre"]
   for individualGenre in responseJson["genre"]:
-     print(individualGenre)
-      
+    print(individualGenre)
+    
       #------------------------------
       # Update Cantemo metadata
       # headers = {
