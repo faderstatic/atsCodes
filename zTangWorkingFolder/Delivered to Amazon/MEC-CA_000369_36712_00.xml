@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mdmec:CoreMetadata xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.movielabs.com/schema/mdmec/v2.9 ../mdmec-v2.9.xsd"
+ xmlns:md="http://www.movielabs.com/schema/md/v2.9/md"
+ xmlns:mdmec="http://www.movielabs.com/schema/mdmec/v2.9">
+	
+	<mdmec:Basic ContentID="md:cid:org:olympusat:CandleintheTomb1_7">
+		<md:LocalizedInfo language="en-US">
+			<!-- TitleDisplayUnlimited is required by Amazon. Limited to 250 characters. -->
+			<md:TitleDisplayUnlimited>Episode 07</md:TitleDisplayUnlimited>
+			<!-- TitleSort is required by the MEC XSD, but is not used by Amazon. Blank fields such as below are acceptable.  -->
+			<md:TitleSort></md:TitleSort>
+			<!-- md:ArtReference resolution="2560x1920" purpose="boxart">CA_000369_36712_00-still.jpg</md:ArtReference -->
+			<md:ArtReference resolution="1920x1080" purpose="cover">CA_000369_36712_00-still.jpg</md:ArtReference>
+			<!-- md:ArtReference resolution="1920x2560" purpose="hero">CA_000369_36712_00-3x4.jpg</md:ArtReference -->
+			<!-- Summary190 is required by the MEC XSD, but is not required by Amazon. Blank fields such as below are acceptable.  -->
+			<md:Summary190></md:Summary190>
+			<!-- Summary400 is required by Amazon -->
+			<md:Summary400>Divine bead with red spot pattern would break curse, leading to the assimilation of Zagrama tribe by Han.</md:Summary400>
+			<md:Summary4000>The prophet discovered that a divine bead with the red spot pattern in the Central Plains could break the curse. The Zagrama tribe embarked on an inland migration, gradually being absorbed by the Han civilization.</md:Summary4000>
+			<!-- Genres must be submitted using the AV Genre codes, such as below. -->
+			<!-- Genres may be provided in just one, or all LocalizedInfo blocks. See the spec documentation for more detail. -->
+			<!-- At least 1 genre is required. Up to 3 genres are allowed. -->
+			<md:Genre id="av_genre_action"></md:Genre>
+			<md:Genre id="av_subgenre_adventure"></md:Genre>
+			<md:Genre id="av_subgenre_fantasy"></md:Genre>
+			<!-- md:Genre id="av_subgenre_drama_historical"></md:Genre -->
+		</md:LocalizedInfo>
+		<md:LocalizedInfo language="es-MX">
+			<md:TitleDisplayUnlimited>Episode 07</md:TitleDisplayUnlimited>
+			<md:TitleSort></md:TitleSort>
+			<md:Summary190></md:Summary190>
+			<md:Summary400>Cuenta divina con patrón de mancha roja rompería maldición, llevando la asimilación de tribu Zagrama por Han.</md:Summary400>
+			<md:Summary4000>El profeta descubrió que una cuenta divina con el patrón de la mancha roja en las Llanuras Centrales podía romper la maldición. La tribu Zagrama se embarcó en una migración hacia el interior, siendo gradualmente absorbida por la civilización Han.</md:Summary4000>
+		</md:LocalizedInfo>
+		<!-- md:LocalizedInfo language="ja-JP">
+			<md:TitleDisplayUnlimited>新世界 </md:TitleDisplayUnlimited>
+			<md:TitleSort></md:TitleSort>
+			<md:Summary190></md:Summary190>
+			<md:Summary400>1962年、第２次世界大戦はアメリカの敗北に終わり、国土の東側は大ナチス帝国、西側は日本太平洋合衆国の統治下に置かれた。両国による圧政の最中、違う世界を映し出したフィルムが新たな希望として現れた。妹は姉にそのフィルムを託した直後、殺される。姉はフィルムが自由への鍵となると信じ、謎に包まれた制作者「高い城の男」を捜すことに没頭する。</md:Summary400>
+		</md:LocalizedInfo -->
+		<!-- end of Localized Info -->
+		
+		
+		<md:ReleaseYear>2022</md:ReleaseYear>
+		
+		<md:ReleaseDate>2022-01-01</md:ReleaseDate>
+		
+		<!-- Provide as much release history as possible.  -->
+		<md:ReleaseHistory>
+			<md:ReleaseType>SVOD</md:ReleaseType>
+			<md:DistrTerritory>
+				<md:country>US</md:country>
+			</md:DistrTerritory>
+			<md:Date>2022-01-01</md:Date>
+		</md:ReleaseHistory>
+		
+		<!-- WorkType is Required -->
+		<md:WorkType>episode</md:WorkType>
+
+		<!-- The ID used in the MMC and in the Avail must also be included in the AltIdentifier section -->
+		<md:AltIdentifier>
+			<md:Namespace>ORG</md:Namespace>
+			<md:Identifier>OLY_4541</md:Identifier>
+		</md:AltIdentifier>
+		<!-- md:AltIdentifier>
+			<md:Namespace>IMDB</md:Namespace>
+			<md:Identifier>tt4518590</md:Identifier>
+		</md:AltIdentifier -->
+		
+		<md:RatingSet>
+			<!-- each rating specifies exactly one country, system and value -->
+			<!-- At least one rating is required. If the work is not rated, use <md:notrated>true</md:notrated>  -->
+			<!-- see http://www.movielabs.com/md/ratings/current.html for ratings -->
+			<md:Rating>
+				<md:Region>
+					<md:country>US</md:country>
+				</md:Region>
+				<md:System>TVPG</md:System>
+				<md:Value>TV-14</md:Value>
+			</md:Rating>
+			<md:Rating>
+				<md:Region>
+					<md:country>MX</md:country>
+				</md:Region>
+				<md:System>RTC</md:System>
+				<md:Value>B</md:Value>
+			</md:Rating>
+		</md:RatingSet>
+			
+		<!-- people are used for the cast and crew.  -->
+		<md:People>
+			<md:Job>
+				<md:JobFunction>Actor</md:JobFunction>
+				<md:BillingBlockOrder>1</md:BillingBlockOrder>
+			</md:Job>
+			<md:Name>
+				<md:DisplayName language="en-US">Pan Yue Ming</md:DisplayName>
+				<md:DisplayName language="es-MX">Pan Yue Ming</md:DisplayName>
+			</md:Name>
+		</md:People>
+		<md:People>
+			<md:Job>
+				<md:JobFunction>Actor</md:JobFunction>
+				<md:BillingBlockOrder>2</md:BillingBlockOrder>
+			</md:Job>
+			<md:Name>
+				<md:DisplayName language="en-US">Jiang Chao</md:DisplayName>
+				<md:DisplayName language="es-MX">Jiang Chao</md:DisplayName>
+			</md:Name>
+		</md:People>
+		<md:People>
+			<md:Job>
+				<md:JobFunction>Actor</md:JobFunction>
+				<md:BillingBlockOrder>3</md:BillingBlockOrder>
+			</md:Job>
+			<md:Name>
+				<md:DisplayName language="en-US">Wang Kui Rong</md:DisplayName>
+				<md:DisplayName language="es-MX">Wang Kui Rong</md:DisplayName>
+			</md:Name>
+		</md:People>
+		<md:People>
+			<md:Job>
+				<md:JobFunction>Actor</md:JobFunction>
+				<md:BillingBlockOrder>4</md:BillingBlockOrder>
+			</md:Job>
+			<md:Name>
+				<md:DisplayName language="en-US">Zhang Yu Qi</md:DisplayName>
+				<md:DisplayName language="es-MX">Zhang Yu Qi</md:DisplayName>
+			</md:Name>
+		</md:People>
+		<md:People>
+			<md:Job>
+				<md:JobFunction>Producer</md:JobFunction>
+				<md:BillingBlockOrder>1</md:BillingBlockOrder>
+			</md:Job>
+			<md:Name>
+				<md:DisplayName language="en-US">Guan Hu</md:DisplayName>
+				<md:DisplayName language="es-MX">Guan Hu</md:DisplayName>
+			</md:Name>
+		</md:People>
+		<md:People>
+			<md:Job>
+				<md:JobFunction>Director</md:JobFunction>
+				<md:BillingBlockOrder>1</md:BillingBlockOrder>
+			</md:Job>
+			<md:Name>
+				<md:DisplayName language="en-US">Fei Zhen Xiang</md:DisplayName>
+				<md:DisplayName language="en-MX">Fei Zhen Xiang</md:DisplayName>
+			</md:Name>
+		</md:People>
+		
+		<!-- OriginalLanguage is required by Amazon -->
+		<md:OriginalLanguage>zh-CN</md:OriginalLanguage>
+		
+		<!-- AssociatedOrg is used to provide the Partner Alias and is required -->
+		<!-- Include the Partner Alias value in the @organizationID attribute and the value of "licensor" in the @role attribute -->
+		<md:AssociatedOrg organizationID="olympusat" role="licensor"></md:AssociatedOrg>
+		
+		<!-- Sequence Info and Parent information is required for TV episodes and seasons -->
+		<md:SequenceInfo>
+			<md:Number>7</md:Number>
+		</md:SequenceInfo>
+		<md:Parent relationshipType="isepisodeof">
+			<md:ParentContentID>md:cid:org:olympusat:CandleintheTomb1</md:ParentContentID>
+		</md:Parent>
+		
+	</mdmec:Basic>
+	
+	<!-- CompanyDisplayCredit is used to provide customer-facing studio credits. Required. -->
+	<mdmec:CompanyDisplayCredit>
+		<md:DisplayString language="en-US">Olympusat</md:DisplayString>
+	</mdmec:CompanyDisplayCredit>
+	
+	
+</mdmec:CoreMetadata>
