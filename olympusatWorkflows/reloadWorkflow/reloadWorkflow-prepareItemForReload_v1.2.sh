@@ -46,7 +46,7 @@ then
 
     sleep 1
 
-    if [[ "$itemOriginalQCStatus" == "pending" || "$itemOriginalQCStatus" == "approved" || "$itemOriginalQCStatus" == "rejected" ]];
+    if [[ "$itemOriginalQCStatus" == "approved" || "$itemOriginalQCStatus" == "rejected" ]];
     then
         echo "$(date +%Y/%m/%d_%H:%M:%S) - (reloadWorkflow) - [$itemId] - Setting Original QC Status to 'Pending'" >> "$logfile"
 
@@ -156,7 +156,7 @@ then
 
         sleep 5
 
-        #updateVidispineMetadata $itemId "title" "$itemTitle"
+        updateVidispineMetadata $itemId "title" "$itemTitle"
 
         echo "$(date +%Y/%m/%d_%H:%M:%S) - (reloadWorkflow) - [$itemId] - Prepare for Reload Workflow Completed" >> "$logfile"
 
