@@ -50,9 +50,17 @@ then
     then
         echo "$(date +%Y/%m/%d_%H:%M:%S) - (reloadWorkflow) - [$itemId] - Setting Original QC Status to 'Pending'" >> "$logfile"
 
-        updateVidispineMetadata $itemId "oly_originalContentQCStatus" "pending"
-        updateVidispineMetadata $itemId "oly_originalContentQCBy" ""
-        updateVidispineMetadata $itemId "oly_originalContentQCDate" ""
+        updateVidispineMetadata $itemId "Original Content" "oly_originalContentQCStatus" "pending"
+        updateVidispineMetadata $itemId "Original Content" "oly_originalContentQCBy" ""
+        updateVidispineMetadata $itemId "Original Content" "oly_originalContentQCDate" ""
+
+        sleep 1
+    else
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (reloadWorkflow) - [$itemId] - Setting Original QC Status to 'Pending'" >> "$logfile"
+
+        updateVidispineMetadata $itemId "Original Content" "oly_originalContentQCStatus" "pending"
+        updateVidispineMetadata $itemId "Original Content" "oly_originalContentQCBy" ""
+        updateVidispineMetadata $itemId "Original Content" "oly_originalContentQCDate" ""
 
         sleep 1
     fi
@@ -61,9 +69,9 @@ then
     then
         echo "$(date +%Y/%m/%d_%H:%M:%S) - (reloadWorkflow) - [$itemId] - Setting Final QC Status to 'Pending'" >> "$logfile"
 
-        updateVidispineMetadata $itemId "oly_finalQCStatus" "pending"
-        updateVidispineMetadata $itemId "oly_finalQCBy" ""
-        updateVidispineMetadata $itemId "oly_finalQCDate" ""
+        updateVidispineMetadata $itemId "Final Content" "oly_finalQCStatus" "pending"
+        updateVidispineMetadata $itemId "Final Content" "oly_finalQCBy" ""
+        updateVidispineMetadata $itemId "Final Content" "oly_finalQCDate" ""
 
         sleep 1
     fi
