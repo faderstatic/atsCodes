@@ -50,17 +50,17 @@ then
     then
         echo "$(date +%Y/%m/%d_%H:%M:%S) - (reloadWorkflow) - [$itemId] - Setting Original QC Status to 'Pending'" >> "$logfile"
 
-        updateVidispineMetadata $itemId "Original Content" "oly_originalContentQCStatus" "pending"
-        updateVidispineMetadata $itemId "Original Content" "oly_originalContentQCBy" ""
-        updateVidispineMetadata $itemId "Original Content" "oly_originalContentQCDate" ""
+        updateVidispineSubgroupMetadata $itemId "Original Content" "oly_originalContentQCStatus" "pending"
+        updateVidispineSubgroupMetadata $itemId "Original Content" "oly_originalContentQCBy" ""
+        updateVidispineSubgroupMetadata $itemId "Original Content" "oly_originalContentQCDate" ""
 
         sleep 1
     else
         echo "$(date +%Y/%m/%d_%H:%M:%S) - (reloadWorkflow) - [$itemId] - Setting Original QC Status to 'Pending'" >> "$logfile"
 
-        updateVidispineMetadata $itemId "Original Content" "oly_originalContentQCStatus" "pending"
-        updateVidispineMetadata $itemId "Original Content" "oly_originalContentQCBy" ""
-        updateVidispineMetadata $itemId "Original Content" "oly_originalContentQCDate" ""
+        updateVidispineSubgroupMetadata $itemId "Original Content" "oly_originalContentQCStatus" "pending"
+        updateVidispineSubgroupMetadata $itemId "Original Content" "oly_originalContentQCBy" ""
+        updateVidispineSubgroupMetadata $itemId "Original Content" "oly_originalContentQCDate" ""
 
         sleep 1
     fi
@@ -69,9 +69,9 @@ then
     then
         echo "$(date +%Y/%m/%d_%H:%M:%S) - (reloadWorkflow) - [$itemId] - Setting Final QC Status to 'Pending'" >> "$logfile"
 
-        updateVidispineMetadata $itemId "Final Content" "oly_finalQCStatus" "pending"
-        updateVidispineMetadata $itemId "Final Content" "oly_finalQCBy" ""
-        updateVidispineMetadata $itemId "Final Content" "oly_finalQCDate" ""
+        updateVidispineSubgroupMetadata $itemId "Final Content" "oly_finalQCStatus" "pending"
+        updateVidispineSubgroupMetadata $itemId "Final Content" "oly_finalQCBy" ""
+        updateVidispineSubgroupMetadata $itemId "Final Content" "oly_finalQCDate" ""
 
         sleep 1
     fi
