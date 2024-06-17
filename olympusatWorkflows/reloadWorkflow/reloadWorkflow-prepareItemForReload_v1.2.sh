@@ -55,14 +55,6 @@ then
         updateVidispineSubgroupMetadata $itemId "Original Content" "oly_originalContentQCDate" ""
 
         sleep 1
-    else
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (reloadWorkflow) - [$itemId] - Setting Original QC Status to 'Pending'" >> "$logfile"
-
-        updateVidispineSubgroupMetadata $itemId "Original Content" "oly_originalContentQCStatus" "pending"
-        updateVidispineSubgroupMetadata $itemId "Original Content" "oly_originalContentQCBy" ""
-        updateVidispineSubgroupMetadata $itemId "Original Content" "oly_originalContentQCDate" ""
-
-        sleep 1
     fi
 
     if [[ "$itemFinalQCStatus" == "approved" || "$itemFinalQCStatus" == "rejected" ]];
