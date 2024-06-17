@@ -148,8 +148,8 @@
 <manifest:AudioTrackID>md:audtrackid:eidr-x:6F6C-796D-7075-0000-4543-M:trailer.1.audio.en</manifest:AudioTrackID>
 </manifest:AudioTrackReference>
 </manifest:TrackMetadata>
-</manifest:Presentation>
-</manifest:Presentations -->
+</manifest:Presentation> -->
+</manifest:Presentations>
 <!-- manifest:PictureGroups>
 <manifest:PictureGroup PictureGroupID="md:picturegroupid:eidr-x:6F6C-796D-7075-0000-4543-M:feature">
 <manifest:Picture>
