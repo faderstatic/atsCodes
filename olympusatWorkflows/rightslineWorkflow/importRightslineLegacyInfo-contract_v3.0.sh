@@ -25,12 +25,12 @@ convertToCamelCase ()
     numberOfValues=$(echo "$currentFieldValue" | awk -F'[|,]' '{print NF}')
     for (( i=1 ; i<=$numberOfValues ; i++ ));
     do
-        currentValue=$(echo "$currentFieldValue" | awk -F'[|,]' '{print $'$i'}' | sed -e 's/[,.]//g')
-        firstWord=$(echo $currentValue | awk '{print $1}' | tr '[:upper:]' '[:lower:]')
+        currentValue=$(echo "$currentFieldValue" | awk -F'[|,]' '{print $'$i'}')
+        firstWord=$(echo $currentValue | awk '{print $1}' | tr '[:upper:]' '[:lower:]' | sed -e 's/[,.]//g')
         numberOfWords=$(echo $currentValue | awk '{print NF}')
         if [[ $numberOfWords -gt 1 ]];
         then
-            restOfTheWords=$(echo $currentValue | cut -d " " -f2-$NF | tr '[:upper:]' '[:lower:]' | sed 's/\([a-z]\)\([a-zA-Z0-9]*\)/\u\1\2/g' | sed -e 's/ //g')
+            restOfTheWords=$(echo $currentValue | cut -d " " -f2-$NF | tr '[:upper:]' '[:lower:]' | sed 's/\([a-z]\)\([a-zA-Z0-9]*\)/\u\1\2/g' | sed -e 's/[ ,.]//g')
         else
             restOfTheWords=""
         fi
