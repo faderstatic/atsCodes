@@ -20,27 +20,28 @@ IFS=$(echo -e "\n\b\015")
 # Internal funtions
 convertToCamelCase ()
 {
-    currentFieldValue=$1
-    combinedValue=""
-    numberOfValues=$(echo "$currentFieldValue" | awk -F'[|,]' '{print NF}')
-    for (( i=1 ; i<=$numberOfValues ; i++ ));
-    do
-        currentValue=$(echo "$currentFieldValue" | awk -F'[|,]' '{print $'$i'}')
-        firstWord=$(echo $currentValue | awk '{print $1}' | tr '[:upper:]' '[:lower:]' | sed -e 's/[,.]//g')
-        numberOfWords=$(echo $currentValue | awk '{print NF}')
+    #currentFieldValue=$1
+    currentValue=$1
+    #combinedValue=""
+    #numberOfValues=$(echo "$currentFieldValue" | awk -F'[|,]' '{print NF}')
+    #for (( i=1 ; i<=$numberOfValues ; i++ ));
+    #do
+        #currentValue=$(echo "$currentFieldValue" | awk -F'[|,]' '{print $'$i'}')
+        firstWord=$(echo $currentValue | awk -F ' ' '{print $1}' | tr '[:upper:]' '[:lower:]' | sed -e 's/[,.]//g')
+        numberOfWords=$(echo $currentValue | awk -F ' ' '{print NF}')
         if [[ $numberOfWords -gt 1 ]];
         then
-            restOfTheWords=$(echo $currentValue | cut -d " " -f2-$NF | tr '[:upper:]' '[:lower:]' | sed 's/\([a-z]\)\([a-zA-Z0-9]*\)/\u\1\2/g' | sed -e 's/[ ,.]//g')
+            restOfTheWords=$(echo $currentValue | cut -d " " -f2-$NF | tr '[:upper:]' '[:lower:]' | sed 's/\([a-z]\)\([a-zA-Z0-9]*\)/\u\1\2/g' | sed -e 's/[,.]//g')
         else
             restOfTheWords=""
         fi
-        if [[ "$combinedValue" = "" ]];
-        then
+        #if [[ "$combinedValue" = "" ]];
+        #then
             combinedValue=$(echo $firstWord$restOfTheWords)
-        else
-            combinedValue=$(echo $combinedValue,$firstWord$restOfTheWords)
-        fi
-    done
+        #else
+        #    combinedValue=$(echo $combinedValue,$firstWord$restOfTheWords)
+        #fi
+    #done
     echo "$combinedValue"
 }
 
