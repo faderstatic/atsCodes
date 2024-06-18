@@ -113,7 +113,7 @@ export contractCode=$(filterVidispineItemMetadata "$cantemoItemId" "metadata" "o
 
 if [ -z "$contractCode" ];
 then
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - Reading Information in CSV" >> "$logfile"
+    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - Reading Information in CSV" >> "$logfile"
     
     partialRow="false"
     lineReadComplete="false"
@@ -183,7 +183,7 @@ then
         # --------------------------------------------------
         # Writing XML File
 
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - Creating XML with Information" >> "$logfile"
+        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - Creating XML with Information" >> "$logfile"
 
         #fileDestination="/opt/olympusat/xmlsForMetadataImport/${fieldValue[3]}.xml"
         fileDestination="/opt/olympusat/xmlsForMetadataImport/"$cantemoItemId"-CONTRACT.xml"
@@ -210,7 +210,7 @@ then
                 "oly_licensor")
                     if [[ ! -z "${fieldValue[$columnCounter]}" ]];
                     then
-                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is NOT empty" >> "$logfile"
+                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is NOT empty" >> "$logfile"
                         fieldValue[$columnCounter]=$(convertToCamelCase ${fieldValue[$columnCounter]})
                         echo "      <field>
          <name>${fieldName[$columnCounter]}</name>
@@ -218,7 +218,7 @@ then
       </field>" >> "$fileDestination"
                         columnCounter=$(($columnCounter + 1))
                     else
-                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
+                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
                         columnCounter=$(($columnCounter + 1))
                     fi
                 ;;
@@ -230,7 +230,7 @@ then
                 "oly_rightslineContractId")
                     if [[ ! -z "${fieldValue[$columnCounter]}" ]];
                     then
-                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is NOT empty" >> "$logfile"
+                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is NOT empty" >> "$logfile"
                         numberOfCharacters=$(echo "${fieldValue[$columnCounter]}" | wc -c)
                         if [[ $numberOfCharacters != 1 ]];
                         then
@@ -254,7 +254,7 @@ then
                             columnCounter=$(($columnCounter + 1))
                         fi
                     else
-                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
+                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
                         columnCounter=$(($columnCounter + 1))
                     fi
                 ;;
@@ -262,14 +262,14 @@ then
                 *)
                     if [[ ! -z "${fieldValue[$columnCounter]}" ]];
                     then
-                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is NOT empty" >> "$logfile"
+                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is NOT empty" >> "$logfile"
                         echo "      <field>
          <name>${fieldName[$columnCounter]}</name>
          <value>${fieldValue[$columnCounter]}</value>
       </field>" >> "$fileDestination"
                         columnCounter=$(($columnCounter + 1))
                     else
-                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
+                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
                         columnCounter=$(($columnCounter + 1))
                     fi
                 ;;
@@ -283,7 +283,7 @@ then
         echo "    </timespan>
 </MetadataDocument>" >> "$fileDestination"
 
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - XML has been created {$cantemoItemId-CONTRACT.xml}" >> "$logfile"
+        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - XML has been created {$cantemoItemId-CONTRACT.xml}" >> "$logfile"
         # --------------------------------------------------
 
         sleep 5
@@ -294,13 +294,10 @@ then
         echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - Triggering API Call to Import XML into Cantemo" >> "$logfile"
 
         url="http://10.1.1.34:8080/API/import/sidecar/$cantemoItemId?sidecar=/opt/olympusat/xmlsForMetadataImport/$cantemoItemId-CONTRACT.xml"
-        #echo "Item ID - $cantemoItemId"
-        #echo "Item Title - $cantemoItemTitle"
-        #echo "URL - $url"
 
         curl --location --request POST $url --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0'
         
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - Moving XML to zCompleted Folder" >> "$logfile"
+        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - Moving XML to zCompleted Folder" >> "$logfile"
 
         sleep 2
 
