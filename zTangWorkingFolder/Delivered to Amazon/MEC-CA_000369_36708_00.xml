@@ -4,7 +4,7 @@
  xmlns:md="http://www.movielabs.com/schema/md/v2.9/md"
  xmlns:mdmec="http://www.movielabs.com/schema/mdmec/v2.9">
 	
-	<mdmec:Basic ContentID="md:cid:org:olympusat:CandleintheTomb1_3">
+	<mdmec:Basic ContentID="md:cid:org:olympusat:OLY_4543">
 		<md:LocalizedInfo language="en-US">
 			<!-- TitleDisplayUnlimited is required by Amazon. Limited to 250 characters. -->
 			<md:TitleDisplayUnlimited>Episode 03</md:TitleDisplayUnlimited>
@@ -162,7 +162,7 @@
 			<md:Number>3</md:Number>
 		</md:SequenceInfo>
 		<md:Parent relationshipType="isepisodeof">
-			<md:ParentContentID>md:cid:org:olympusat:CandleintheTomb1</md:ParentContentID>
+			<md:ParentContentID>md:cid:org:olympusat:OLY_4554</md:ParentContentID>
 		</md:Parent>
 		
 	</mdmec:Basic>

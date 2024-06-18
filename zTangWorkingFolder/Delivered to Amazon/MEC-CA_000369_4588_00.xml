@@ -4,7 +4,7 @@
  xmlns:md="http://www.movielabs.com/schema/md/v2.9/md"
  xmlns:mdmec="http://www.movielabs.com/schema/mdmec/v2.9">
 
-    <mdmec:Basic ContentID="md:cid:org:olympusat:CandleintheTomb">
+    <mdmec:Basic ContentID="md:cid:org:olympusat:OLY_4553">
         <md:LocalizedInfo language="en-US">
 
             <!-- TitleDisplayUnlimited is required by Amazon. Limited to 250 characters. -->

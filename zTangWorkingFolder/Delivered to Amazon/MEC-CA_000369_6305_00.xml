@@ -4,7 +4,7 @@
  xmlns:md="http://www.movielabs.com/schema/md/v2.9/md"
  xmlns:mdmec="http://www.movielabs.com/schema/mdmec/v2.9">
 	
-	<mdmec:Basic ContentID="md:cid:org:olympusat:CandleintheTomb1">
+	<mdmec:Basic ContentID="md:cid:org:olympusat:OLY_4554">
 		<md:LocalizedInfo language="en-US">
 			<!-- TitleDisplayUnlimited is required by Amazon. Limited to 250 characters. -->
 			<md:TitleDisplayUnlimited>Candle in the Tomb: The Lost Caverns | Season 1</md:TitleDisplayUnlimited>
@@ -140,7 +140,7 @@
 			<md:Number>1</md:Number>
 		</md:SequenceInfo>
 		<md:Parent relationshipType="isseasonof">
-			<md:ParentContentID>md:cid:org:olympusat:CandleintheTomb</md:ParentContentID>
+			<md:ParentContentID>md:cid:org:olympusat:OLY_4553</md:ParentContentID>
 		</md:Parent>
 		
 	</mdmec:Basic>
