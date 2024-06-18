@@ -88,8 +88,9 @@ countDaMuthaFukkingColumns ()
 # --------------------------------------------------
 # Set some parameters
 export cantemoItemId="$1"
-export columnHeader="$2"
-export inputFile="$3"
+export userName="$2"
+export columnHeader="$3"
+export inputFile="$4"
 export rightslineItemId=$(filterVidispineItemMetadata "$cantemoItemId" "metadata" "oly_rightslineItemId")
 export cantemoItemTitle=$(filterVidispineItemMetadata "$cantemoItemId" "metadata" "title")
 
