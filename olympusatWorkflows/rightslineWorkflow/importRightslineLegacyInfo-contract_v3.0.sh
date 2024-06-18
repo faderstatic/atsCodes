@@ -25,7 +25,7 @@ convertToCamelCase ()
     numberOfValues=$(echo "$currentFieldValue" | awk -F'[|,]' '{print NF}')
     for (( i=1 ; i<=$numberOfValues ; i++ ));
     do
-        currentValue=$(echo "$currentFieldValue" | awk -F'[|,]' '{print $'$i'}')
+        currentValue=$(echo "$currentFieldValue" | awk -F'[|,]' '{print $'$i'}' | sed -e 's/[,.]//g')
         firstWord=$(echo $currentValue | awk '{print $1}' | tr '[:upper:]' '[:lower:]')
         numberOfWords=$(echo $currentValue | awk '{print NF}')
         if [[ $numberOfWords -gt 1 ]];
