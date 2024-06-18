@@ -108,15 +108,12 @@ rightslineItemIdCleaned=$(echo $rightslineItemId | tr -d ' ')
 if [[ "$rightslineItemIdCleaned" != "$rightslineItemId" ]];
 then
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - Updating Cantemo with Sanitized Rightsline Item ID - [$rightslineItemId] - {$rightslineItemIdCleaned}" >> "$logfile"
-    echo "Updating Cantemo with Sanitized Rightsline Item ID - [$rightslineItemId] - {$rightslineItemIdCleaned}"
     updateVidispineMetadata $cantemoItemId "oly_rightslineItemId" "$rightslineItemIdCleaned"
 
     sleep 5
 
     export rightslineItemId=$(filterVidispineItemMetadata "$cantemoItemId" "metadata" "oly_rightslineItemId")
-    echo "Newly Updated Rightsline Item ID from Cantemo - [$rightslineItemId]"
-else
-    echo "rightslineItemIdCleaned {$rightslineItemIdCleaned} equals rightslineItemId [$rightslineItemId]"
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - Newly Updated Rightsline Item ID from Cantemo - [$rightslineItemId]" >> "$logfile"
 fi
 
 # --------------------------------------------------
@@ -126,7 +123,7 @@ httpResponse=$(curl --location --request GET $urlGetItemInfo --header 'Authoriza
 
 if [[ "$httpResponse" != *"metadataimported"* ]];
 then
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - Reading Information in CSV" >> "$logfile"
+    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - Reading Information in CSV" >> "$logfile"
     
     partialRow="false"
     lineReadComplete="false"
@@ -196,7 +193,7 @@ then
         # --------------------------------------------------
         # Writing XML File
         
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - Creating XML File with Information" >> "$logfile"
+        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - Creating XML File with Information" >> "$logfile"
 
         fileDestination="/opt/olympusat/xmlsForMetadataImport/$cantemoItemId.xml"
         fileDestinationSpanish=$(echo "/opt/olympusat/xmlsForMetadataImport/"$cantemoItemId"_ES.xml")
@@ -229,7 +226,7 @@ then
                 "Genres")
                     if [[ ! -z "${fieldValue[$columnCounter]}" ]];
                     then
-                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
+                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
                         fieldValue[$columnCounter]=$(convertToCamelCase ${fieldValue[$columnCounter]})
                         primaryGenre=$(echo "${fieldValue[$columnCounter]}" | awk -F "," '{print $1}')
                         secondaryGenres=$(echo "${fieldValue[$columnCounter]}" | cut -d "," -f2-$NF)
@@ -244,8 +241,7 @@ then
                         columnCounter=$(($columnCounter + 1))
                         createTags "$secondaryGenres" "oly_secondaryGenres" "$fileDestination"
                     else
-                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
-                        echo "[$fieldValue[$columnCounter]] Column is empty"
+                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
                         columnCounter=$(($columnCounter + 1))
                     fi
                 ;;
@@ -253,15 +249,14 @@ then
                 "oly_descriptionEs"|"oly_shortDescriptionEs"|"oly_socialDescriptionEs"|"oly_logLineEs")
                     if [[ ! -z "${fieldValue[$columnCounter]}" ]];
                     then
-                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
+                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
                         echo "        <field>
           <name>${fieldName[$columnCounter]}</name>
           <value>${fieldValue[$columnCounter]}</value>
         </field>" >> "$fileDestinationSpanish"
                         columnCounter=$(($columnCounter + 1))
                     else
-                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
-                        echo "[$fieldValue[$columnCounter]] Column is empty"
+                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
                         columnCounter=$(($columnCounter + 1))
                     fi
                 ;;
@@ -269,15 +264,14 @@ then
                 "oly_descriptionEn"|"oly_shortDescriptionEn"|"oly_socialDescriptionEn"|"oly_logLineEn")
                     if [[ ! -z "${fieldValue[$columnCounter]}" ]];
                     then
-                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
+                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
                         echo "        <field>
           <name>${fieldName[$columnCounter]}</name>
           <value>${fieldValue[$columnCounter]}</value>
         </field>" >> "$fileDestinationEnglish"
                         columnCounter=$(($columnCounter + 1))
                     else
-                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
-                        echo "[$fieldValue[$columnCounter]] Column is empty"
+                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
                         columnCounter=$(($columnCounter + 1))
                     fi
                 ;;
@@ -285,12 +279,11 @@ then
                 "oly_cast"|"oly_director"|"oly_producer"|"oly_tags"|"oly_productionCompany")
                     if [[ ! -z "${fieldValue[$columnCounter]}" ]];
                     then
-                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
+                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
                         createTags "${fieldValue[$columnCounter]}" "${fieldName[$columnCounter]}" "$fileDestination"
                         columnCounter=$(($columnCounter + 1))
                     else
-                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
-                        echo "[$fieldValue[$columnCounter]] Column is empty"
+                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
                         columnCounter=$(($columnCounter + 1))
                     fi
                 ;;
@@ -298,7 +291,7 @@ then
                 "oly_contentType"|"oly_originalMpaaRating"|"oly_originalRtcRating"|"oly_originalRating"|"oly_countryOfOrigin"|"oly_closedCaptionLanguage"|"oly_originalLanguage")
                     if [[ ! -z "${fieldValue[$columnCounter]}" ]];
                     then
-                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
+                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
                         fieldValue[$columnCounter]=$(convertToCamelCase ${fieldValue[$columnCounter]})
                         if [[ "${fieldName[$columnCounter]}" = "oly_countryOfOrigin" ]];
                         then
@@ -311,8 +304,7 @@ then
                         fi
                         columnCounter=$(($columnCounter + 1))
                     else
-                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
-                        echo "[$fieldValue[$columnCounter]] Column is empty"
+                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
                         columnCounter=$(($columnCounter + 1))
                     fi
                 ;;
@@ -328,15 +320,14 @@ then
                 "oly_clipLink"|"oly_promoLink"|"oly_trailerLink")
                     if [[ ! -z "${fieldValue[$columnCounter]}" ]];
                     then
-                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
+                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
                         echo "        <field>
           <name>${fieldName[$columnCounter]}</name>
           <value>${fieldValue[$columnCounter]}</value>
         </field>" >> "$fileDestinationExternal"
                         columnCounter=$(($columnCounter + 1))
                     else
-                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
-                        echo "[$fieldValue[$columnCounter]] Column is empty"
+                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
                         columnCounter=$(($columnCounter + 1))
                     fi
                 ;;
@@ -344,7 +335,7 @@ then
                 "oly_rightslineContractId")
                     if [[ ! -z "${fieldValue[$columnCounter]}" ]];
                     then
-                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
+                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
                         numberOfCharacters=$(echo "${fieldValue[$columnCounter]}" | wc -c)
                         if [[ $numberOfCharacters != 1 ]];
                         then
@@ -368,8 +359,7 @@ then
                             columnCounter=$(($columnCounter + 1))
                         fi
                     else
-                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
-                        echo "[$fieldValue[$columnCounter]] Column is empty"
+                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
                         columnCounter=$(($columnCounter + 1))
                     fi
                 ;;
@@ -381,15 +371,14 @@ then
                 *)
                     if [[ ! -z "${fieldValue[$columnCounter]}" ]];
                     then
-                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
+                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
                         echo "      <field>
          <name>${fieldName[$columnCounter]}</name>
          <value>${fieldValue[$columnCounter]}</value>
       </field>" >> "$fileDestination"
                         columnCounter=$(($columnCounter + 1))
                     else
-                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
-                        echo "[$fieldValue[$columnCounter]] Column is empty"
+                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
                         columnCounter=$(($columnCounter + 1))
                     fi
                 ;;
@@ -428,7 +417,7 @@ then
         echo "    </timespan>
 </MetadataDocument>" >> "$fileDestination"
 
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - XML has been created {$cantemoItemId.xml}" >> "$logfile"
+        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - XML has been created {$cantemoItemId.xml}" >> "$logfile"
         # --------------------------------------------------
 
         sleep 5
@@ -436,25 +425,22 @@ then
         # ----------------------------------------------------
         # API Call to Update Metadata
 
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - Triggering API Call to Import XML into Cantemo" >> "$logfile"
+        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - Triggering API Call to Import XML into Cantemo" >> "$logfile"
 
         url="http://10.1.1.34:8080/API/import/sidecar/$cantemoItemId?sidecar=/opt/olympusat/xmlsForMetadataImport/$cantemoItemId.xml"
-        #echo "Item ID - $cantemoItemId"
-        #echo "Item Title - $cantemoItemTitle"
-        #echo "URL - $url"
 
         curl --location --request POST $url --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0'
 
         sleep 2
 
-        #updateVidispineMetadata $cantemoItemId "oly_rightslineInfo" "metadataimported"
+        updateVidispineMetadata $cantemoItemId "oly_rightslineInfo" "metadataimported"
 
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - Moving XML to zCompleted Folder" >> "$logfile"
+        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - Moving XML to zCompleted Folder" >> "$logfile"
 
         sleep 2
 
         echo "Moving xml to zCompleted folder"
-        #mv "$fileDestination" "/opt/olympusat/xmlsForMetadataImport/zCompleted/"
+        mv "$fileDestination" "/opt/olympusat/xmlsForMetadataImport/zCompleted/"
 
         echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - Triggering Shell Script to Import Contract Information" >> "$logfile"
         bash -c "sudo /opt/olympusat/scriptsActive/importRightslineLegacyInfo-contract_v3.0.sh $cantemoItemId $userName oly_rightslineItemId /opt/olympusat/resources/RIGHTSLINE_CONTRACT_CODE_INFO_DATABASE_2024-05-07.csv > /dev/null 2>&1 &"
