@@ -666,7 +666,7 @@ then
                     if [[ "${fieldValue[$columnCounter]}" == "Yes" ]];
                     then
                         #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
-                        echo "<value>closedcaptionavailable</value>" >> "$fileDestinationClosedCaptionInfo"
+                        echo "           <value>closedcaptionavailable</value>" >> "$fileDestinationClosedCaptionInfo"
                         columnCounter=$(($columnCounter + 1))
                     else
                         #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
@@ -679,7 +679,7 @@ then
                     if [[ "${fieldValue[$columnCounter]}" == "Yes" ]];
                     then
                         #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
-                        echo "<value>broadcastedontvwithcc</value>" >> "$fileDestinationClosedCaptionInfo"
+                        echo "           <value>broadcastedontvwithcc</value>" >> "$fileDestinationClosedCaptionInfo"
                         columnCounter=$(($columnCounter + 1))
                     else
                         #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
@@ -758,7 +758,7 @@ then
 
         if [ -e "$fileDestinationClosedCaptionInfo" ];
         then
-            echo "        <field>
+            echo "      <field>
           <name>oly_closedCaptionInfo</name>" >> "$fileDestination"
             cat "$fileDestinationClosedCaptionInfo" >> "$fileDestination"
             echo "      </field>" >> "$fileDestination"
