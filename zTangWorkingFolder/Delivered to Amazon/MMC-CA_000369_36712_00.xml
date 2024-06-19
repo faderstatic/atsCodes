@@ -8,7 +8,7 @@
         <!--  Main audio file for movie  -->
         <manifest:Audio AudioTrackID="md:audtrackid:org:olympusat:OLY_4541-M:feature.audio.en">
             <md:Type>primary</md:Type>
-            <md:Language>es</md:Language>
+            <md:Language>es-MX</md:Language>
             <manifest:ContainerReference>
                 <manifest:ContainerLocation>CA_000369_36712_00.mp4</manifest:ContainerLocation>
             </manifest:ContainerReference>
