@@ -209,20 +209,16 @@ then
       <field>
          <name>title</name>
          <value>$cantemoItemTitle</value>
-      </field>
-      <field>
-         <name>oly_rightslineInfo</name>
-         <value>metadataimported</value>
       </field>" > "$fileDestination"
         # --------------------------------------------------
 
         # --------------------------------------------------
         # Checking Cantemo Item for existing metadata
 
-        urlGetItemBulkMetadata="http://10.1.1.34:8080/API/item/$cantemoItemId/metadata?field=oly_rightslineEntityTitle%2Coly_titleCode%2Coly_rightslineContractId%2Coly_contentType%2Coly_cast%2Coly_director%2Coly_episodeNumber%2Coly_firstUseDate%2Coly_producer%2Coly_originalMpaaRating%2Coly_originalRtcRating%2Coly_originalRating%2Coly_readyForAirDate%2Coly_seasonNumber%2Coly_titleEn%2Coly_titleEs%2Coly_closedCaptionInfo%2Coly_countryOfOrigin%2Coly_primaryGenre%2Coly_secondaryGenres%2Coly_closedCaptionLanguage%2Coly_originalTitle%2Coly_productionCompany%2Coly_tags%2Coly_productionYear%2Coly_numberOfEpisodes%2Coly_totalSeasonsBySeries%2Coly_totalEpisodesBySeries%2Coly_totalEpisodesBySeason%2Coly_editorNotes%2Coly_format%2Coly_timecode&terse=yes&includeConstraintValue=all"
+        urlGetItemBulkMetadata="http://10.1.1.34:8080/API/item/$cantemoItemId/metadata?field=oly_rightslineEntityTitle%2Coly_titleCode%2Coly_rightslineContractId%2Coly_contentType%2Coly_originalLanguage%2Coly_cast%2Coly_director%2Coly_episodeNumber%2Coly_firstUseDate%2Coly_producer%2Coly_originalMpaaRating%2Coly_originalRtcRating%2Coly_originalRating%2Coly_readyForAirDate%2Coly_seasonNumber%2Coly_titleEn%2Coly_titleEs%2Coly_closedCaptionInfo%2Coly_countryOfOrigin%2Coly_primaryGenre%2Coly_secondaryGenres%2Coly_closedCaptionLanguage%2Coly_originalTitle%2Coly_productionCompany%2Coly_tags%2Coly_productionYear%2Coly_numberOfEpisodes%2Coly_totalSeasonsBySeries%2Coly_totalEpisodesBySeries%2Coly_totalEpisodesBySeason%2Coly_editorNotes%2Coly_format%2Coly_timecode&terse=yes&includeConstraintValue=all"
         bulkMetadataHttpResponse=$(curl --location --request GET $urlGetItemBulkMetadata --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=Tkb9vkSC8v4SceB8CHUyB3iaMPjvgoHrzhLrvo36agG3wqv0jHc7nsOtdTo9JEyM')
 
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - Bulk Metadata {$bulkMetadataHttpResponse}" >> "$logfile"
+        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - Bulk Metadata {$bulkMetadataHttpResponse}" >> "$logfile"
 
         if [[ "$bulkMetadataHttpResponse" != *"</oly_rightslineEntityTitle>"* ]];
         then
@@ -250,6 +246,13 @@ then
             echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_contentType IS EMPTY" >> "$logfile"
         else
             echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_contentType IS NOT EMPTY" >> "$logfile"
+        fi
+
+        if [[ "$bulkMetadataHttpResponse" != *"</oly_originalLanguage>"* ]];
+        then
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_originalLanguage IS EMPTY" >> "$logfile"
+        else
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_originalLanguage IS NOT EMPTY" >> "$logfile"
         fi
 
         if [[ "$bulkMetadataHttpResponse" != *"</oly_cast>"* ]];
@@ -460,7 +463,7 @@ then
         urlGetItemSpaSynopMetadata="http://10.1.1.34:8080/API/item/$cantemoItemId/metadata?field=oly_descriptionEs%2Coly_shortDescriptionEs%2Coly_socialDescriptionEs%2Coly_logLineEs&group=Spanish%20Synopsis&terse=yes"
         spaSynopMetadataHttpResponse=$(curl --location --request GET $urlGetItemSpaSynopMetadata --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=Tkb9vkSC8v4SceB8CHUyB3iaMPjvgoHrzhLrvo36agG3wqv0jHc7nsOtdTo9JEyM')
 
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - Spanish Synopsis Metadata {$spaSynopMetadataHttpResponse}" >> "$logfile"
+        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - Spanish Synopsis Metadata {$spaSynopMetadataHttpResponse}" >> "$logfile"
 
         if [[ "$spaSynopMetadataHttpResponse" != *"</oly_descriptionEs>"* ]];
         then
@@ -495,7 +498,7 @@ then
         urlGetItemEngSynopMetadata="http://10.1.1.34:8080/API/item/$cantemoItemId/metadata?field=oly_descriptionEn%2Coly_shortDescriptionEn%2Coly_socialDescriptionEn%2Coly_logLineEn&group=English%20Synopsis&terse=yes"
         engSynopMetadataHttpResponse=$(curl --location --request GET $urlGetItemEngSynopMetadata --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=Tkb9vkSC8v4SceB8CHUyB3iaMPjvgoHrzhLrvo36agG3wqv0jHc7nsOtdTo9JEyM')
 
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - English Synopsis Metadata {$engSynopMetadataHttpResponse}" >> "$logfile"
+        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - English Synopsis Metadata {$engSynopMetadataHttpResponse}" >> "$logfile"
 
         if [[ "$engSynopMetadataHttpResponse" != *"</oly_descriptionEn>"* ]];
         then
@@ -530,7 +533,7 @@ then
         urlGetItemExtResourcesMetadata="http://10.1.1.34:8080/API/item/$cantemoItemId/metadata?field=oly_trailerLink%2Coly_clipLink%2Coly_promoLink%2Coly_screenerLink&group=External%20Resources&terse=yes"
         extResourcesMetadataHttpResponse=$(curl --location --request GET $urlGetItemExtResourcesMetadata --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=Tkb9vkSC8v4SceB8CHUyB3iaMPjvgoHrzhLrvo36agG3wqv0jHc7nsOtdTo9JEyM')
 
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - English Synopsis Metadata {$engSynopMetadataHttpResponse}" >> "$logfile"
+        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - English Synopsis Metadata {$engSynopMetadataHttpResponse}" >> "$logfile"
 
         if [[ "$extResourcesMetadataHttpResponse" != *"</oly_trailerLink>"* ]];
         then
@@ -777,18 +780,14 @@ then
 
         url="http://10.1.1.34:8080/API/import/sidecar/$cantemoItemId?sidecar=/opt/olympusat/xmlsForMetadataImport/$cantemoItemId.xml"
 
-        curl --location --request POST $url --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0'
-
-        #sleep 2
-
-        #updateVidispineMetadata $cantemoItemId "oly_rightslineInfo" "metadataimported"
+        #curl --location --request POST $url --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0'
 
         #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - Moving XML to zCompleted Folder" >> "$logfile"
 
         sleep 2
 
         echo "Moving xml to zCompleted folder"
-        mv "$fileDestination" "/opt/olympusat/xmlsForMetadataImport/zCompleted/"
+        #mv "$fileDestination" "/opt/olympusat/xmlsForMetadataImport/zCompleted/"
 
         echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - Triggering Shell Script to Import Contract Information" >> "$logfile"
         #bash -c "sudo /opt/olympusat/scriptsNonActive/importRightslineLegacyInfo-contract_v3.0.sh $cantemoItemId $userName oly_rightslineItemId /opt/olympusat/resources/RIGHTSLINE_CONTRACT_CODE_INFO_DATABASE_2024-05-07.csv > /dev/null 2>&1 &"
