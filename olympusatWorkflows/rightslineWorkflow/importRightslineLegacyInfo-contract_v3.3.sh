@@ -283,7 +283,7 @@ then
     echo "    </timespan>
 </MetadataDocument>" >> "$fileDestination"
 
-    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - XML has been created {$cantemoItemId-CONTRACT.xml}" >> "$logfile"
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - XML has been created {$cantemoItemId-CONTRACT.xml}" >> "$logfile"
     # --------------------------------------------------
 
     sleep 5
