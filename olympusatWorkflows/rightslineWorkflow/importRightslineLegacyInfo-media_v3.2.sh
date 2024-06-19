@@ -666,7 +666,7 @@ then
                     if [[ "${fieldValue[$columnCounter]}" == "Yes" ]];
                     then
                         #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
-                        echo "           <value>closedcaptionavailable</value>" >> "$fileDestinationClosedCaptionInfo"
+                        echo "          <value>closedcaptionavailable</value>" >> "$fileDestinationClosedCaptionInfo"
                         columnCounter=$(($columnCounter + 1))
                     else
                         #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
@@ -679,7 +679,7 @@ then
                     if [[ "${fieldValue[$columnCounter]}" == "Yes" ]];
                     then
                         #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
-                        echo "           <value>broadcastedontvwithcc</value>" >> "$fileDestinationClosedCaptionInfo"
+                        echo "          <value>broadcastedontvwithcc</value>" >> "$fileDestinationClosedCaptionInfo"
                         columnCounter=$(($columnCounter + 1))
                     else
                         #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
@@ -795,7 +795,7 @@ then
         echo "    </timespan>
 </MetadataDocument>" >> "$fileDestination"
 
-        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - XML has been created {$cantemoItemId.xml}" >> "$logfile"
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - XML has been created {$cantemoItemId.xml}" >> "$logfile"
         # --------------------------------------------------
 
         sleep 5
@@ -803,20 +803,20 @@ then
         # ----------------------------------------------------
         # API Call to Update Metadata
 
-        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - Triggering API Call to Import XML into Cantemo" >> "$logfile"
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - Triggering API Call to Import XML into Cantemo" >> "$logfile"
 
         url="http://10.1.1.34:8080/API/import/sidecar/$cantemoItemId?sidecar=/opt/olympusat/xmlsForMetadataImport/$cantemoItemId.xml"
 
-        #curl --location --request POST $url --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0'
+        curl --location --request POST $url --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0'
 
-        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - Moving XML to zCompleted Folder" >> "$logfile"
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - Moving XML to zCompleted Folder" >> "$logfile"
 
         sleep 2
 
-        #mv "$fileDestination" "/opt/olympusat/xmlsForMetadataImport/zCompleted/"
+        mv "$fileDestination" "/opt/olympusat/xmlsForMetadataImport/zCompleted/"
 
         echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - Triggering Shell Script to Import Contract Information" >> "$logfile"
-        #bash -c "sudo /opt/olympusat/scriptsNonActive/importRightslineLegacyInfo-contract_v3.0.sh $cantemoItemId $userName oly_rightslineItemId /opt/olympusat/resources/RIGHTSLINE_CONTRACT_CODE_INFO_DATABASE_2024-05-07.csv > /dev/null 2>&1 &"
+        bash -c "sudo /opt/olympusat/scriptsNonActive/importRightslineLegacyInfo-contract_v3.2.sh $cantemoItemId $userName oly_rightslineItemId /opt/olympusat/resources/RIGHTSLINE_CONTRACT_CODE_INFO_DATABASE_2024-05-07.csv > /dev/null 2>&1 &"
 
     else
         echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - Import Metadata Job Skipped - No Matching Rightsline Item Id Found in CSV" >> "$logfile"
