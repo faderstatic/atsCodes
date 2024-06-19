@@ -150,7 +150,10 @@ do
 done
 for matchedRow in $(grep -n "$inputFile" -e "\<$rightslineItemId\>" | awk -F ',' '{print $'$rightslineIdColumn'}')
 do
+    echo "matchedRow = $matchedRow"
     matchedValue=$(echo $matchedRow | awk -F ':' '{print $2}')
+    echo "matchedValue = $matchedValue"
+    echo "rightslineItemId = $rightslineItemId"
     if [[ $matchedValue -eq $rightslineItemId ]];
     then
         matchedRowNumber=$(echo $matchedRow | awk -F ':' '{print $1}')
