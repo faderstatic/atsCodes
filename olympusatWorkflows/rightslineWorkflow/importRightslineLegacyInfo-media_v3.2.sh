@@ -662,7 +662,6 @@ then
                 ;;
 
                 "oly_closedCaptionInfo-closedcaptionavailable")
-                    echo "(${fieldName[$columnCounter]}) is set to (${fieldValue[$columnCounter]})"
                     if [[ "${fieldValue[$columnCounter]}" == "Yes" ]];
                     then
                         #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
@@ -675,7 +674,6 @@ then
                 ;;
 
                 "oly_closedCaptionInfo-broadcastedontvwithcc")
-                    echo "(${fieldName[$columnCounter]}) is set to (${fieldValue[$columnCounter]})"
                     if [[ "${fieldValue[$columnCounter]}" == "Yes" ]];
                     then
                         #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
