@@ -64,54 +64,52 @@ try:
   }
   payload = {}
   # urlGetProfanitySegments = f"https://apis.prod.vionlabs.com/results/profanity/v1/segments/{cantemoItemId}?&key=kt8cyimHXxUzFNGyhd7c7g"
-  urlGetProfanitySegments = f"https://apis.prod.vionlabs.com/results/profanity/v1/segments/OLT-003?&key=kt8cyimHXxUzFNGyhd7c7g"
-  httpApiResponse = requests.request("GET", urlGetProfanitySegments, headers=headers, data=payload)
+  urlGetAdbreaksSegments = f"https://apis.prod.vionlabs.com/results/adbreaks/v2/filter/frame/OLT-003?&key=kt8cyimHXxUzFNGyhd7c7g"
+  httpApiResponse = requests.request("GET", urlGetAdbreaksSegments, headers=headers, data=payload)
   httpApiResponse.raise_for_status()
   #------------------------------
 
   #------------------------------
   # Parsing and POST JSON data
   responseJson = httpApiResponse.json()
-  profanitySegment = responseJson["profanity"]
-  for individualSegment in profanitySegment["segments"]:
-    profanityScore = individualSegment["score"]
-    profanityScore *= 100
-    profanityScore = round(profanityScore, 2)
-    if profanityScore >= 80:
-      startingTimecode = int(individualSegment["start"] * timebaseMultiplier)
-      endingTimecode = int(individualSegment["end"] * timebaseMultiplier)
-      # segmentPayload = '{"comment": "Profanity level '+str(profanityScore)+' of 100", "start_tc": "'+str(startingTimecode)+f"@{itemTimebase}"+'", "end_tc": "'+str(endingTimecode)+f"@{itemTimebase}"+'"}'
+  adbreaksSegment = responseJson["adbreak"]
+  for rankingSegment in adbreaksSegment["rank"]:
+    print(rankingSegment)
+    for candidateSegment in rankingSegment["candidates"]:
+      print(candidateSegment)
+      candidateTimecode = int(candidateSegment * timebaseMultiplier)
+      endingTimecode = int(candidateSegment + 10)
       segmentPayload = json.dumps([
         {
           "start": {
-          "frame": startingTimecode,
-          "numerator": timebaseNumerator,
-          "denominator": timebaseDenominator
-        },
-        "end": {
-          "frame": endingTimecode,
-          "numerator": timebaseNumerator,
-          "denominator": timebaseDenominator
-        },
-        "type": "AvMarker",
-        "metadata": [
+            "frame": candidateTimecode,
+            "numerator": timebaseNumerator,
+            "denominator": timebaseDenominator
+          },
+          "end": {
+            "frame": endingTimecode,
+            "numerator": timebaseNumerator,
+            "denominator": timebaseDenominator
+          },
+          "type": "AvAdBreak",
+          "metadata": [
           {
             "key": "av_marker_description",
-            "value": '"Profanity level '+str(profanityScore)+' of 100"'
+            "value": '"Rank '+str(rankingSegment)+'"'
           },
           {
             "key": "title",
-            "value": "Profanity"
+            "value": "Breaks"
           },
           {
             "key": "av_marker_track_id",
-            "value": "av:track:audio:issues"
+            "value": "av:adbreak:track:break"
           }
-        ],
-        "assetId": '"'+cantemoItemId+'"'
-      }
-    ])
-      
+          ],
+          "assetId": '"'+cantemoItemId+'"'
+        }
+      ])
+      print(segmentPayload)
       #------------------------------
       # Update Cantemo metadata
       headers = {
@@ -120,10 +118,10 @@ try:
         'Content-Type': 'application/json'
       }
       urlPutProfanityInfo = f"http://10.1.1.34/AVAPI/asset/{cantemoItemId}/timespan/bulk"
-      httpApiResponse = requests.request("PUT", urlPutProfanityInfo, headers=headers, data=segmentPayload)
-      httpApiResponse.raise_for_status()
-      print(httpApiResponse.text)
-      time.sleep(5)
+      # httpApiResponse = requests.request("PUT", urlPutProfanityInfo, headers=headers, data=segmentPayload)
+      # httpApiResponse.raise_for_status()
+      # print(httpApiResponse.text)
+      # time.sleep(5)
       #------------------------------
   #------------------------------
 
