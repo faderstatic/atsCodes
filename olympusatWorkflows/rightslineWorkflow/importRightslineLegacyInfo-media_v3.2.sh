@@ -662,6 +662,7 @@ then
                 ;;
 
                 "oly_closedCaptionInfo-closedcaptionavailable"|"oly_closedCaptionInfo-broadcastedontvwithcc")
+                    echo "(${fieldName[$columnCounter]}) is set to (${fieldValue[$columnCounter]})"
                     if [[ "${fieldName[$columnCounter]}" == "oly_closedCaptionInfo-closedcaptionavailable" && ! -z "oly_closedCaptionInfo-closedcaptionavailable" ]];
                     then
                         #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
