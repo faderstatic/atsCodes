@@ -72,58 +72,57 @@ try:
   #------------------------------
   # Parsing and POST JSON data
   responseJson = httpApiResponse.json()
-  adbreaksSegment = responseJson["adbreak"]
-  print(adbreaksSegment)
-  for rankingSegment in adbreaksSegment["rank"]:
-    print(rankingSegment)
-    for candidateSegment in rankingSegment["candidates"]:
-      print(candidateSegment)
-      candidateTimecode = int(candidateSegment * timebaseMultiplier)
-      endingTimecode = int(candidateSegment + 10)
-      segmentPayload = json.dumps([
-        {
-          "start": {
-            "frame": candidateTimecode,
-            "numerator": timebaseNumerator,
-            "denominator": timebaseDenominator
-          },
-          "end": {
-            "frame": endingTimecode,
-            "numerator": timebaseNumerator,
-            "denominator": timebaseDenominator
-          },
-          "type": "AvAdBreak",
-          "metadata": [
+  for adbreaksSegment in responseJson["adbreak"]:
+    for rankingSegment in adbreaksSegment["rank"]:
+      print(rankingSegment)
+      for candidateSegment in rankingSegment["candidates"]:
+        print(candidateSegment)
+        candidateTimecode = int(candidateSegment * timebaseMultiplier)
+        endingTimecode = int(candidateSegment + 10)
+        segmentPayload = json.dumps([
           {
-            "key": "av_marker_description",
-            "value": '"Rank '+str(rankingSegment)+'"'
-          },
-          {
-            "key": "title",
-            "value": "Breaks"
-          },
-          {
-            "key": "av_marker_track_id",
-            "value": "av:adbreak:track:break"
+            "start": {
+              "frame": candidateTimecode,
+              "numerator": timebaseNumerator,
+              "denominator": timebaseDenominator
+            },
+            "end": {
+              "frame": endingTimecode,
+              "numerator": timebaseNumerator,
+              "denominator": timebaseDenominator
+            },
+            "type": "AvAdBreak",
+            "metadata": [
+            {
+              "key": "av_marker_description",
+              "value": '"Rank '+str(rankingSegment)+'"'
+            },
+            {
+              "key": "title",
+              "value": "Breaks"
+            },
+            {
+              "key": "av_marker_track_id",
+              "value": "av:adbreak:track:break"
+            }
+            ],
+            "assetId": '"'+cantemoItemId+'"'
           }
-          ],
-          "assetId": '"'+cantemoItemId+'"'
+        ])
+        print(segmentPayload)
+        #------------------------------
+        # Update Cantemo metadata
+        headers = {
+          'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
+          'Cookie': 'csrftoken=obqpl1uZPs93ldSOFjsRbk2bL25JxPgBOb8t1zUH20fP0tUEdXNNjrYO8kzeOSah',
+          'Content-Type': 'application/json'
         }
-      ])
-      print(segmentPayload)
-      #------------------------------
-      # Update Cantemo metadata
-      headers = {
-        'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
-        'Cookie': 'csrftoken=obqpl1uZPs93ldSOFjsRbk2bL25JxPgBOb8t1zUH20fP0tUEdXNNjrYO8kzeOSah',
-        'Content-Type': 'application/json'
-      }
-      urlPutProfanityInfo = f"http://10.1.1.34/AVAPI/asset/{cantemoItemId}/timespan/bulk"
-      # httpApiResponse = requests.request("PUT", urlPutProfanityInfo, headers=headers, data=segmentPayload)
-      # httpApiResponse.raise_for_status()
-      # print(httpApiResponse.text)
-      # time.sleep(5)
-      #------------------------------
+        urlPutProfanityInfo = f"http://10.1.1.34/AVAPI/asset/{cantemoItemId}/timespan/bulk"
+        # httpApiResponse = requests.request("PUT", urlPutProfanityInfo, headers=headers, data=segmentPayload)
+        # httpApiResponse.raise_for_status()
+        # print(httpApiResponse.text)
+        # time.sleep(5)
+        #------------------------------
   #------------------------------
 
 except HTTPError as http_err:
