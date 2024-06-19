@@ -477,6 +477,8 @@ then
 
         curl --location --request POST $url --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0'
 
+        sleep 2
+        
         echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - Moving XML to zCompleted Folder" >> "$logfile"
 
         sleep 2
