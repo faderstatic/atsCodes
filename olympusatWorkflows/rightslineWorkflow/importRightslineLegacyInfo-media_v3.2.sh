@@ -662,7 +662,7 @@ then
                 ;;
 
                 "oly_closedCaptionInfo-closedcaptionavailable"|"oly_closedCaptionInfo-broadcastedontvwithcc")
-                    if [[ ! -z "oly_closedCaptionInfo-closedcaptionavailable" ]];
+                    if [[ "${fieldValue[$columnCounter]}" == "oly_closedCaptionInfo-closedcaptionavailable" && ! -z "oly_closedCaptionInfo-closedcaptionavailable" ]];
                     then
                         #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
                         echo "<value>closedcaptionavailable</value>" >> "$fileDestinationClosedCaptionInfo"
@@ -671,7 +671,7 @@ then
                         #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
                         columnCounter=$(($columnCounter + 1))
                     fi
-                    if [[ ! -z "oly_closedCaptionInfo-broadcastedontvwithcc" ]];
+                    if [[ "${fieldValue[$columnCounter]}" == "oly_closedCaptionInfo-broadcastedontvwithcc" && ! -z "oly_closedCaptionInfo-broadcastedontvwithcc" ]];
                     then
                         #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
                         echo "<value>broadcastedontvwithcc</value>" >> "$fileDestinationClosedCaptionInfo"
@@ -812,7 +812,6 @@ then
 
         sleep 2
 
-        echo "Moving xml to zCompleted folder"
         #mv "$fileDestination" "/opt/olympusat/xmlsForMetadataImport/zCompleted/"
 
         echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - Triggering Shell Script to Import Contract Information" >> "$logfile"
