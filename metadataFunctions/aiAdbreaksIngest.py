@@ -72,11 +72,11 @@ try:
   #------------------------------
   # Parsing and POST JSON data
   responseJson = httpApiResponse.json()
-  for adbreaksSegment in responseJson["rank"]:
-    print(adbreaksSegment)
-    rankingSegment = adbreaksSegment["rank"]
+  for adbreakSegment in responseJson["adbreak"]:
+    print(adbreakSegment)
+    rankingSegment = adbreakSegment["rank"]
     print(rankingSegment)
-    for candidateSegment in adbreaksSegment["candidates"]:
+    for candidateSegment in adbreakSegment["candidates"]:
       print(candidateSegment)
       candidateTimecode = int(candidateSegment * timebaseMultiplier)
       endingTimecode = int(candidateSegment + 10)
