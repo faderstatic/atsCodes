@@ -105,92 +105,84 @@ logfile="/opt/olympusat/logs/importRightslineLegacyInfo-$mydate.log"
 echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - Import Contract Metadata Job Initiated" >> "$logfile"
 rightslineItemId=$(echo $rightslineItemId | tr -d ' ')
 
+#echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - Reading Information in CSV" >> "$logfile"
+
+partialRow="false"
+lineReadComplete="false"
+
 # --------------------------------------------------
-# Check to see if import has already ran on item
-#urlGetItemInfo="http://10.1.1.34:8080/API/item/$cantemoItemId/metadata?field=oly_contractCode&terse=yes"
-#httpResponse=$(curl --location --request GET $urlGetItemInfo --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=Tkb9vkSC8v4SceB8CHUyB3iaMPjvgoHrzhLrvo36agG3wqv0jHc7nsOtdTo9JEyM')
-export contractCode=$(filterVidispineItemMetadata "$cantemoItemId" "metadata" "oly_contractCode")
-
-if [ -z "$contractCode" ];
-then
-    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - Reading Information in CSV" >> "$logfile"
-    
-    partialRow="false"
-    lineReadComplete="false"
-
-    # --------------------------------------------------
-    # Read Header Row Values and Count Columns
-    headerRow=$(sed -n '1p' "$inputFile")
-    columnCounter=1
-    noMoreColumns="false"
-    while [ "$noMoreColumns" == "false" ];
-    do
-        if [[ $columnCounter -eq 1 ]];
-        then
-            fieldName[$columnCounter]=$(echo $headerRow | awk 'BEGIN { FPAT = "([^,]*)|(\"[^\"]+\")" } {print $'$columnCounter'}' | sed -e 's/\"//g') #| sed -e 's/^.//')
-        else
-            fieldName[$columnCounter]=$(echo $headerRow | awk 'BEGIN { FPAT = "([^,]*)|(\"[^\"]+\")" } {print $'$columnCounter'}' | sed -e 's/\"//g')
-        fi
-        if [[ "${fieldName[$columnCounter]}" == *"$columnHeader" ]];
-        then
-            rightslineIdColumn=$columnCounter
-        fi
-        if [[ "${fieldName[$columnCounter]}" = "" ]];
-        then
-            noMoreColumns="true"
-            columnCounts=$(($columnCounter -1))
-        else
-            columnCounter=$(($columnCounter + 1))
-        fi
-    done
-    for matchedRow in $(grep -n "$inputFile" -e "\<$rightslineItemId\>" | awk -F ',' '{print $'$rightslineIdColumn'}')
-    do
-        matchedValue=$(echo $matchedRow | awk -F ':' '{print $2}')
-        if [[ $matchedValue -eq $rightslineItemId ]];
-        then
-            matchedRowNumber=$(echo $matchedRow | awk -F ':' '{print $1}')
-        fi
-    done
-    # --------------------------------------------------
-
-    # --------------------------------------------------
-    # Read Specific Line
-    if [ ! -z "$matchedRowNumber" ];
+# Read Header Row Values and Count Columns
+headerRow=$(sed -n '1p' "$inputFile")
+columnCounter=1
+noMoreColumns="false"
+while [ "$noMoreColumns" == "false" ];
+do
+    if [[ $columnCounter -eq 1 ]];
     then
+        fieldName[$columnCounter]=$(echo $headerRow | awk 'BEGIN { FPAT = "([^,]*)|(\"[^\"]+\")" } {print $'$columnCounter'}' | sed -e 's/\"//g') #| sed -e 's/^.//')
+    else
+        fieldName[$columnCounter]=$(echo $headerRow | awk 'BEGIN { FPAT = "([^,]*)|(\"[^\"]+\")" } {print $'$columnCounter'}' | sed -e 's/\"//g')
+    fi
+    if [[ "${fieldName[$columnCounter]}" == *"$columnHeader" ]];
+    then
+        rightslineIdColumn=$columnCounter
+    fi
+    if [[ "${fieldName[$columnCounter]}" = "" ]];
+    then
+        noMoreColumns="true"
+        columnCounts=$(($columnCounter -1))
+    else
+        columnCounter=$(($columnCounter + 1))
+    fi
+done
+for matchedRow in $(grep -n "$inputFile" -e "\<$rightslineItemId\>" | awk -F ',' '{print $'$rightslineIdColumn'}')
+do
+    matchedValue=$(echo $matchedRow | awk -F ':' '{print $2}')
+    if [[ $matchedValue -eq $rightslineItemId ]];
+    then
+        matchedRowNumber=$(echo $matchedRow | awk -F ':' '{print $1}')
+    fi
+done
+# --------------------------------------------------
 
-        line=$(sed -n ''$matchedRowNumber'p' "$inputFile")
-        cleanLine=$(echo $line | sed -e 's/\"\"/-/g')
-        # columnsForThisRow=$(echo "$cleanLine" | awk 'BEGIN { FPAT = "([^,]*)|(\"[^\"]+)|(\"[^\"]+\")" } {print NF+1}' )
+# --------------------------------------------------
+# Read Specific Line
+if [ ! -z "$matchedRowNumber" ];
+then
+
+    line=$(sed -n ''$matchedRowNumber'p' "$inputFile")
+    cleanLine=$(echo $line | sed -e 's/\"\"/-/g')
+    # columnsForThisRow=$(echo "$cleanLine" | awk 'BEGIN { FPAT = "([^,]*)|(\"[^\"]+)|(\"[^\"]+\")" } {print NF+1}' )
+    columnsForThisRow=$(countDaMuthaFukkingColumns "$cleanLine")
+    while [[ $columnsForThisRow -lt $columnCounts ]];
+    do
+        matchedRowNumber=$(($matchedRowNumber + 1))
+        nextLine=$(sed -n ''$matchedRowNumber'p' "$inputFile")
+        cleanNextLine=$(echo $nextLine | sed -e 's/\"\"/-/g')
+        cleanLine="$cleanLine $cleanNextLine"
         columnsForThisRow=$(countDaMuthaFukkingColumns "$cleanLine")
-        while [[ $columnsForThisRow -lt $columnCounts ]];
-        do
-            matchedRowNumber=$(($matchedRowNumber + 1))
-            nextLine=$(sed -n ''$matchedRowNumber'p' "$inputFile")
-            cleanNextLine=$(echo $nextLine | sed -e 's/\"\"/-/g')
-            cleanLine="$cleanLine $cleanNextLine"
-            columnsForThisRow=$(countDaMuthaFukkingColumns "$cleanLine")
-        done
+    done
 
-        columnCounter=1
-        while [[ $columnCounter -le $columnCounts ]];
-        do
-            fieldValue[$columnCounter]=$(echo $cleanLine | awk 'BEGIN { FPAT = "([^,]*)|(\"[^\"]+)|(\"[^\"]+\")" } {print $'$columnCounter'}' | sed -e 's/\"//g')
-            columnCounter=$(($columnCounter + 1))
-        done
+    columnCounter=1
+    while [[ $columnCounter -le $columnCounts ]];
+    do
+        fieldValue[$columnCounter]=$(echo $cleanLine | awk 'BEGIN { FPAT = "([^,]*)|(\"[^\"]+)|(\"[^\"]+\")" } {print $'$columnCounter'}' | sed -e 's/\"//g')
+        columnCounter=$(($columnCounter + 1))
+    done
 
-        # --------------------------------------------------
+    # --------------------------------------------------
 
-        # --------------------------------------------------
-        # Writing XML File
+    # --------------------------------------------------
+    # Writing XML File
 
-        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - Creating XML with Information" >> "$logfile"
+    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - Creating XML with Information" >> "$logfile"
 
-        #fileDestination="/opt/olympusat/xmlsForMetadataImport/${fieldValue[3]}.xml"
-        fileDestination="/opt/olympusat/xmlsForMetadataImport/"$cantemoItemId"-CONTRACT.xml"
+    #fileDestination="/opt/olympusat/xmlsForMetadataImport/${fieldValue[3]}.xml"
+    fileDestination="/opt/olympusat/xmlsForMetadataImport/"$cantemoItemId"-CONTRACT.xml"
 
-        # --------------------------------------------------
-        # Print XML header
-        echo "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>
+    # --------------------------------------------------
+    # Print XML header
+    echo "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>
 <MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\">
   <group>Olympusat</group>
     <timespan end=\"+INF\" start=\"-INF\">
@@ -198,119 +190,125 @@ then
          <name>title</name>
          <value>$cantemoItemTitle</value>
       </field>" > "$fileDestination"
-        # --------------------------------------------------
+    # --------------------------------------------------
 
-        # --------------------------------------------------
-        # Choose what information from the CSV export file needed to be printed
-        columnCounter=1
-        while [ $columnCounter -le $columnCounts ];
-        do
-            case "${fieldName[$columnCounter]}" in
+    # --------------------------------------------------
+    # Checking Cantemo Item for existing metadata
 
-                "oly_licensor")
-                    if [[ ! -z "${fieldValue[$columnCounter]}" ]];
-                    then
-                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is NOT empty" >> "$logfile"
-                        fieldValue[$columnCounter]=$(convertToCamelCase ${fieldValue[$columnCounter]})
-                        echo "      <field>
+    urlGetItemMetadata="http://10.1.1.34:8080/API/item/$cantemoItemId/metadata?field=oly_rightslineContractId%2Coly_contractCode%2Coly_licensor&terse=yes&includeConstraintValue=all"
+    bulkMetadataHttpResponse=$(curl --location --request GET $urlGetItemMetadata --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=Tkb9vkSC8v4SceB8CHUyB3iaMPjvgoHrzhLrvo36agG3wqv0jHc7nsOtdTo9JEyM')
+
+    sleep 1
+
+    # --------------------------------------------------
+    # Choose what information from the CSV export file needed to be printed
+    columnCounter=1
+    while [ $columnCounter -le $columnCounts ];
+    do
+        case "${fieldName[$columnCounter]}" in
+
+            "oly_licensor")
+                if [[ ! -z "${fieldValue[$columnCounter]}" && "$bulkMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
+                then
+                    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is NOT empty" >> "$logfile"
+                    fieldValue[$columnCounter]=$(convertToCamelCase ${fieldValue[$columnCounter]})
+                    echo "      <field>
          <name>${fieldName[$columnCounter]}</name>
          <value>${fieldValue[$columnCounter]}</value>
       </field>" >> "$fileDestination"
-                        columnCounter=$(($columnCounter + 1))
-                    else
-                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
-                        columnCounter=$(($columnCounter + 1))
-                    fi
-                ;;
-
-                "oly_rightslineItemId")
                     columnCounter=$(($columnCounter + 1))
-                ;;
+                else
+                    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
+                    columnCounter=$(($columnCounter + 1))
+                fi
+            ;;
 
-                "oly_rightslineContractId")
-                    if [[ ! -z "${fieldValue[$columnCounter]}" ]];
+            "oly_rightslineItemId")
+                columnCounter=$(($columnCounter + 1))
+            ;;
+
+            "oly_rightslineContractId")
+                if [[ ! -z "${fieldValue[$columnCounter]}" && "$bulkMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
+                then
+                    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is NOT empty" >> "$logfile"
+                    numberOfCharacters=$(echo "${fieldValue[$columnCounter]}" | wc -c)
+                    if [[ $numberOfCharacters != 1 ]];
                     then
-                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is NOT empty" >> "$logfile"
-                        numberOfCharacters=$(echo "${fieldValue[$columnCounter]}" | wc -c)
-                        if [[ $numberOfCharacters != 1 ]];
-                        then
-                            contractString="CA_"
-                            missingCharacters=$((7 - $numberOfCharacters))
-                            for (( k=1 ; k<=$missingCharacters ; k++ ));
-                            do
-                                contractString="$contractString""0"
-                            done
-                            contractString="$contractString""${fieldValue[$columnCounter]}"
-                            echo "      <field>
+                        contractString="CA_"
+                        missingCharacters=$((7 - $numberOfCharacters))
+                        for (( k=1 ; k<=$missingCharacters ; k++ ));
+                        do
+                            contractString="$contractString""0"
+                        done
+                        contractString="$contractString""${fieldValue[$columnCounter]}"
+                        echo "      <field>
          <name>${fieldName[$columnCounter]}</name>
          <value>$contractString</value>
       </field>" >> "$fileDestination"
-                            columnCounter=$(($columnCounter + 1))
-                        else
-                            echo "      <field>
-         <name>${fieldName[$columnCounter]}</name>
-         <value>$contractString</value>
-      </field>" >> "$fileDestination"
-                            columnCounter=$(($columnCounter + 1))
-                        fi
+                        columnCounter=$(($columnCounter + 1))
                     else
-                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
+                        echo "      <field>
+         <name>${fieldName[$columnCounter]}</name>
+         <value>$contractString</value>
+      </field>" >> "$fileDestination"
                         columnCounter=$(($columnCounter + 1))
                     fi
-                ;;
+                else
+                    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
+                    columnCounter=$(($columnCounter + 1))
+                fi
+            ;;
 
-                *)
-                    if [[ ! -z "${fieldValue[$columnCounter]}" ]];
-                    then
-                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is NOT empty" >> "$logfile"
-                        echo "      <field>
+            *)
+                if [[ ! -z "${fieldValue[$columnCounter]}" && "$bulkMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
+                then
+                    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is NOT empty" >> "$logfile"
+                    echo "      <field>
          <name>${fieldName[$columnCounter]}</name>
          <value>${fieldValue[$columnCounter]}</value>
       </field>" >> "$fileDestination"
-                        columnCounter=$(($columnCounter + 1))
-                    else
-                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
-                        columnCounter=$(($columnCounter + 1))
-                    fi
-                ;;
+                    columnCounter=$(($columnCounter + 1))
+                else
+                    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
+                    columnCounter=$(($columnCounter + 1))
+                fi
+            ;;
 
-            esac
-        done
-        # --------------------------------------------------
+        esac
+    done
+    # --------------------------------------------------
 
-        # --------------------------------------------------
-        # Print XML footer
-        echo "    </timespan>
+    # --------------------------------------------------
+    # Print XML footer
+    echo "    </timespan>
 </MetadataDocument>" >> "$fileDestination"
 
-        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - XML has been created {$cantemoItemId-CONTRACT.xml}" >> "$logfile"
-        # --------------------------------------------------
+    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - XML has been created {$cantemoItemId-CONTRACT.xml}" >> "$logfile"
+    # --------------------------------------------------
 
-        sleep 5
+    sleep 5
 
-        # ----------------------------------------------------
-        # API Call to Update Metadata
+    # ----------------------------------------------------
+    # API Call to Update Metadata
 
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - Triggering API Call to Import XML into Cantemo" >> "$logfile"
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - Triggering API Call to Import XML into Cantemo" >> "$logfile"
 
-        url="http://10.1.1.34:8080/API/import/sidecar/$cantemoItemId?sidecar=/opt/olympusat/xmlsForMetadataImport/$cantemoItemId-CONTRACT.xml"
+    url="http://10.1.1.34:8080/API/import/sidecar/$cantemoItemId?sidecar=/opt/olympusat/xmlsForMetadataImport/$cantemoItemId-CONTRACT.xml"
 
-        curl --location --request POST $url --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0'
-        
-        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - Moving XML to zCompleted Folder" >> "$logfile"
+    curl --location --request POST $url --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0'
+    
+    sleep 2
+    
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - Moving XML to zCompleted Folder" >> "$logfile"
 
-        sleep 2
+    sleep 2
 
-        mv "$fileDestination" "/opt/olympusat/xmlsForMetadataImport/zCompleted/"
+    mv "$fileDestination" "/opt/olympusat/xmlsForMetadataImport/zCompleted/"
 
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - Import Rightsline Legacy Information Completed" >> "$logfile"
-
-    else
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - Import Metadata Job Skipped - No Matching Rightsline Item Id Found in CSV" >> "$logfile"
-    fi
-else
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - Item Already has Contract Code Set - Skipping Import Contract Information" >> "$logfile"
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - Import Rightsline Legacy Information Completed" >> "$logfile"
+
+else
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - Import Metadata Job Skipped - No Matching Rightsline Item Id Found in CSV" >> "$logfile"
 fi
 
 IFS=$saveIFS
