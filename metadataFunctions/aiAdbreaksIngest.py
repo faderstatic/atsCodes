@@ -98,12 +98,12 @@ try:
             "value": '"Rank '+str(rankingSegment)+'"'
           },
           {
-            "key": "title",
-            "value": "Start, End, Breaks"
+            "key": "av_marker_track_id",
+            "value": "AvAdBreak"
           },
           {
-            "key": "av_marker_track_id",
-            "value": "av:adbreak:track:break"
+            "key": "ad_break_type",
+            "value": "av:adbreak:marker:break"
           }
           ],
           "assetId": '"'+cantemoItemId+'"'
