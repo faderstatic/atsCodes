@@ -219,16 +219,30 @@ then
         # --------------------------------------------------
         # Checking Cantemo Item for existing metadata
 
-        urlGetItemBulkMetadata="http://10.1.1.34:8080/API/item/$cantemoItemId/metadata?field=oly_rightslineEntityTitle%2Coly_titleCode%2Coly_rightslineContractId%2Coly_contentType%2Coly_cast%2Coly_director%2Coly_episodeNumber%2Coly_firstUseDate%2Coly_producer%2Coly_originalMpaaRating%2Coly_originalRtcRating%2Coly_originalRating%2Coly_readyForAirDate%2Coly_seasonNumber%2Coly_titleEn%2Coly_titleEs%2Coly_closedCaptionInfo%2Coly_countryOfOrigin%2Coly_primaryGenre%2Coly_secondaryGenres%2Coly_closedCaptionLanguage%2Coly_originalTitle%2Coly_productionCompany%2Coly_tags%2Coly_productionYear%2Coly_numberOfEpisodes%2Coly_totalSeasonBySeries%2Coly_editorNotes%2Coly_format%2Coly_timecode&terse=yes&includeConstraintValue=all"
+        urlGetItemBulkMetadata="http://10.1.1.34:8080/API/item/$cantemoItemId/metadata?field=oly_rightslineEntityTitle%2Coly_titleCode%2Coly_rightslineContractId%2Coly_contentType%2Coly_cast%2Coly_director%2Coly_episodeNumber%2Coly_firstUseDate%2Coly_producer%2Coly_originalMpaaRating%2Coly_originalRtcRating%2Coly_originalRating%2Coly_readyForAirDate%2Coly_seasonNumber%2Coly_titleEn%2Coly_titleEs%2Coly_closedCaptionInfo%2Coly_countryOfOrigin%2Coly_primaryGenre%2Coly_secondaryGenres%2Coly_closedCaptionLanguage%2Coly_originalTitle%2Coly_productionCompany%2Coly_tags%2Coly_productionYear%2Coly_numberOfEpisodes%2Coly_totalSeasonsBySeries%2Coly_totalEpisodesBySeries%2Coly_totalEpisodesBySeason%2Coly_editorNotes%2Coly_format%2Coly_timecode&terse=yes&includeConstraintValue=all"
         bulkMetadataHttpResponse=$(curl --location --request GET $urlGetItemBulkMetadata --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=Tkb9vkSC8v4SceB8CHUyB3iaMPjvgoHrzhLrvo36agG3wqv0jHc7nsOtdTo9JEyM')
 
         echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - Bulk Metadata {$bulkMetadataHttpResponse}" >> "$logfile"
 
-        if [[ "$bulkMetadataHttpResponse" != *"</oly_cast>"* ]];
+        if [[ "$bulkMetadataHttpResponse" != *"</oly_rightslineEntityTitle>"* ]];
         then
-            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_cast IS EMPTY" >> "$logfile"
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_rightslineEntityTitle IS EMPTY" >> "$logfile"
         else
-            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_cast IS NOT EMPTY" >> "$logfile"
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_rightslineEntityTitle IS NOT EMPTY" >> "$logfile"
+        fi
+
+        if [[ "$bulkMetadataHttpResponse" != *"</oly_titleCode>"* ]];
+        then
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_titleCode IS EMPTY" >> "$logfile"
+        else
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_titleCode IS NOT EMPTY" >> "$logfile"
+        fi
+
+        if [[ "$bulkMetadataHttpResponse" != *"</oly_rightslineContractId>"* ]];
+        then
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_rightslineContractId IS EMPTY" >> "$logfile"
+        else
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_rightslineContractId IS NOT EMPTY" >> "$logfile"
         fi
 
         if [[ "$bulkMetadataHttpResponse" != *"</oly_contentType>"* ]];
@@ -238,11 +252,18 @@ then
             echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_contentType IS NOT EMPTY" >> "$logfile"
         fi
 
-        if [[ "$bulkMetadataHttpResponse" != *"</oly_editorNotes>"* ]];
+        if [[ "$bulkMetadataHttpResponse" != *"</oly_cast>"* ]];
         then
-            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_editorNotes IS EMPTY" >> "$logfile"
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_cast IS EMPTY" >> "$logfile"
         else
-            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_editorNotes IS NOT EMPTY" >> "$logfile"
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_cast IS NOT EMPTY" >> "$logfile"
+        fi
+
+        if [[ "$bulkMetadataHttpResponse" != *"</oly_director>"* ]];
+        then
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_director IS EMPTY" >> "$logfile"
+        else
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_director IS NOT EMPTY" >> "$logfile"
         fi
 
         if [[ "$bulkMetadataHttpResponse" != *"</oly_episodeNumber>"* ]];
@@ -252,6 +273,174 @@ then
             echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_episodeNumber IS NOT EMPTY" >> "$logfile"
         fi
 
+        if [[ "$bulkMetadataHttpResponse" != *"</oly_firstUseDate>"* ]];
+        then
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_firstUseDate IS EMPTY" >> "$logfile"
+        else
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_firstUseDate IS NOT EMPTY" >> "$logfile"
+        fi
+
+        if [[ "$bulkMetadataHttpResponse" != *"</oly_producer>"* ]];
+        then
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_producer IS EMPTY" >> "$logfile"
+        else
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_producer IS NOT EMPTY" >> "$logfile"
+        fi
+
+        if [[ "$bulkMetadataHttpResponse" != *"</oly_originalMpaaRating>"* ]];
+        then
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_originalMpaaRating IS EMPTY" >> "$logfile"
+        else
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_originalMpaaRating IS NOT EMPTY" >> "$logfile"
+        fi
+
+        if [[ "$bulkMetadataHttpResponse" != *"</oly_originalRtcRating>"* ]];
+        then
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_originalRtcRating IS EMPTY" >> "$logfile"
+        else
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_originalRtcRating IS NOT EMPTY" >> "$logfile"
+        fi
+
+        if [[ "$bulkMetadataHttpResponse" != *"</oly_originalRating>"* ]];
+        then
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_originalRating IS EMPTY" >> "$logfile"
+        else
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_originalRating IS NOT EMPTY" >> "$logfile"
+        fi
+
+        if [[ "$bulkMetadataHttpResponse" != *"</oly_readyForAirDate>"* ]];
+        then
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_readyForAirDate IS EMPTY" >> "$logfile"
+        else
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_readyForAirDate IS NOT EMPTY" >> "$logfile"
+        fi
+
+        if [[ "$bulkMetadataHttpResponse" != *"</oly_seasonNumber>"* ]];
+        then
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_seasonNumber IS EMPTY" >> "$logfile"
+        else
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_seasonNumber IS NOT EMPTY" >> "$logfile"
+        fi
+
+        if [[ "$bulkMetadataHttpResponse" != *"</oly_titleEn>"* ]];
+        then
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_titleEn IS EMPTY" >> "$logfile"
+        else
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_titleEn IS NOT EMPTY" >> "$logfile"
+        fi
+
+        if [[ "$bulkMetadataHttpResponse" != *"</oly_titleEs>"* ]];
+        then
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_titleEs IS EMPTY" >> "$logfile"
+        else
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_titleEs IS NOT EMPTY" >> "$logfile"
+        fi
+
+        if [[ "$bulkMetadataHttpResponse" != *"</oly_closedCaptionInfo>"* ]];
+        then
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_closedCaptionInfo IS EMPTY" >> "$logfile"
+        else
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_closedCaptionInfo IS NOT EMPTY" >> "$logfile"
+        fi
+
+        if [[ "$bulkMetadataHttpResponse" != *"</oly_countryOfOrigin>"* ]];
+        then
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_countryOfOrigin IS EMPTY" >> "$logfile"
+        else
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_countryOfOrigin IS NOT EMPTY" >> "$logfile"
+        fi
+
+        if [[ "$bulkMetadataHttpResponse" != *"</oly_primaryGenre>"* ]];
+        then
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_primaryGenre IS EMPTY" >> "$logfile"
+        else
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_primaryGenre IS NOT EMPTY" >> "$logfile"
+        fi
+
+        if [[ "$bulkMetadataHttpResponse" != *"</oly_secondaryGenres>"* ]];
+        then
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_secondaryGenres IS EMPTY" >> "$logfile"
+        else
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_secondaryGenres IS NOT EMPTY" >> "$logfile"
+        fi
+
+        if [[ "$bulkMetadataHttpResponse" != *"</oly_closedCaptionLanguage>"* ]];
+        then
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_closedCaptionLanguage IS EMPTY" >> "$logfile"
+        else
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_closedCaptionLanguage IS NOT EMPTY" >> "$logfile"
+        fi
+
+        if [[ "$bulkMetadataHttpResponse" != *"</oly_originalTitle>"* ]];
+        then
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_originalTitle IS EMPTY" >> "$logfile"
+        else
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_originalTitle IS NOT EMPTY" >> "$logfile"
+        fi
+
+        if [[ "$bulkMetadataHttpResponse" != *"</oly_productionCompany>"* ]];
+        then
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_productionCompany IS EMPTY" >> "$logfile"
+        else
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_productionCompany IS NOT EMPTY" >> "$logfile"
+        fi
+
+        if [[ "$bulkMetadataHttpResponse" != *"</oly_tags>"* ]];
+        then
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_tags IS EMPTY" >> "$logfile"
+        else
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_tags IS NOT EMPTY" >> "$logfile"
+        fi
+
+        if [[ "$bulkMetadataHttpResponse" != *"</oly_productionYear>"* ]];
+        then
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_productionYear IS EMPTY" >> "$logfile"
+        else
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_productionYear IS NOT EMPTY" >> "$logfile"
+        fi
+
+        if [[ "$bulkMetadataHttpResponse" != *"</oly_numberOfEpisodes>"* ]];
+        then
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_firstUseDate IS EMPTY" >> "$logfile"
+        else
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_firstUseDate IS NOT EMPTY" >> "$logfile"
+        fi
+
+        if [[ "$bulkMetadataHttpResponse" != *"</oly_totalSeasonsBySeries>"* ]];
+        then
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_totalSeasonsBySeries IS EMPTY" >> "$logfile"
+        else
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_totalSeasonsBySeries IS NOT EMPTY" >> "$logfile"
+        fi
+
+        if [[ "$bulkMetadataHttpResponse" != *"</oly_totalEpisodesBySeries>"* ]];
+        then
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_totalEpisodesBySeries IS EMPTY" >> "$logfile"
+        else
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_totalEpisodesBySeries IS NOT EMPTY" >> "$logfile"
+        fi
+
+        if [[ "$bulkMetadataHttpResponse" != *"</oly_totalEpisodesBySeason>"* ]];
+        then
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_totalEpisodesBySeason IS EMPTY" >> "$logfile"
+        else
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_totalEpisodesBySeason IS NOT EMPTY" >> "$logfile"
+        fi
+
+        if [[ "$bulkMetadataHttpResponse" != *"</oly_editorNotes>"* ]];
+        then
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_editorNotes IS EMPTY" >> "$logfile"
+        else
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_editorNotes IS NOT EMPTY" >> "$logfile"
+        fi
+
+        if [[ "$bulkMetadataHttpResponse" != *"</oly_timecode>"* ]];
+        then
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_timecode IS EMPTY" >> "$logfile"
+        else
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_timecode IS NOT EMPTY" >> "$logfile"
+        fi
+
         sleep 1
 
         urlGetItemSpaSynopMetadata="http://10.1.1.34:8080/API/item/$cantemoItemId/metadata?field=oly_descriptionEs%2Coly_shortDescriptionEs%2Coly_socialDescriptionEs%2Coly_logLineEs&group=Spanish%20Synopsis&terse=yes"
@@ -259,28 +448,28 @@ then
 
         echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - Spanish Synopsis Metadata {$spaSynopMetadataHttpResponse}" >> "$logfile"
 
-        if [[ "$spaSynopMetadataHttpResponse" != "</oly_descriptionEs>" ]];
+        if [[ "$spaSynopMetadataHttpResponse" != *"</oly_descriptionEs>"* ]];
         then
             echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_descriptionEs IS EMPTY" >> "$logfile"
         else
             echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_descriptionEs IS NOT EMPTY" >> "$logfile"
         fi
 
-        if [[ "$spaSynopMetadataHttpResponse" != "</oly_shortDescriptionEs>" ]];
+        if [[ "$spaSynopMetadataHttpResponse" != *"</oly_shortDescriptionEs>"* ]];
         then
             echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_shortDescriptionEs IS EMPTY" >> "$logfile"
         else
             echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_shortDescriptionEs IS NOT EMPTY" >> "$logfile"
         fi
 
-        if [[ "$spaSynopMetadataHttpResponse" != "</oly_socialDescriptionEs>" ]];
+        if [[ "$spaSynopMetadataHttpResponse" != *"</oly_socialDescriptionEs>"* ]];
         then
             echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_socialDescriptionEs IS EMPTY" >> "$logfile"
         else
             echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_socialDescriptionEs IS NOT EMPTY" >> "$logfile"
         fi
 
-        if [[ "$spaSynopMetadataHttpResponse" != "</oly_logLineEs>" ]];
+        if [[ "$spaSynopMetadataHttpResponse" != *"</oly_logLineEs>"* ]];
         then
             echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_logLineEs IS EMPTY" >> "$logfile"
         else
@@ -294,28 +483,28 @@ then
 
         echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - English Synopsis Metadata {$engSynopMetadataHttpResponse}" >> "$logfile"
 
-        if [[ "$engSynopMetadataHttpResponse" != "</oly_descriptionEn>" ]];
+        if [[ "$engSynopMetadataHttpResponse" != *"</oly_descriptionEn>"* ]];
         then
             echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_descriptionEn IS EMPTY" >> "$logfile"
         else
             echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_descriptionEn IS NOT EMPTY" >> "$logfile"
         fi
 
-        if [[ "$engSynopMetadataHttpResponse" != "</oly_shortDescriptionEn>" ]];
+        if [[ "$engSynopMetadataHttpResponse" != *"</oly_shortDescriptionEn>"* ]];
         then
             echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_shortDescriptionEn IS EMPTY" >> "$logfile"
         else
             echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_shortDescriptionEn IS NOT EMPTY" >> "$logfile"
         fi
 
-        if [[ "$engSynopMetadataHttpResponse" != "</oly_socialDescriptionEn>" ]];
+        if [[ "$engSynopMetadataHttpResponse" != *"</oly_socialDescriptionEn>"* ]];
         then
             echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_socialDescriptionEn IS EMPTY" >> "$logfile"
         else
             echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_socialDescriptionEn IS NOT EMPTY" >> "$logfile"
         fi
 
-        if [[ "$engSynopMetadataHttpResponse" != "</oly_logLineEn>" ]];
+        if [[ "$engSynopMetadataHttpResponse" != *"</oly_logLineEn>"* ]];
         then
             echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_logLineEn IS EMPTY" >> "$logfile"
         else
@@ -329,28 +518,28 @@ then
 
         echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - English Synopsis Metadata {$engSynopMetadataHttpResponse}" >> "$logfile"
 
-        if [[ "$extResourcesMetadataHttpResponse" != "</oly_trailerLink>" ]];
+        if [[ "$extResourcesMetadataHttpResponse" != *"</oly_trailerLink>"* ]];
         then
             echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_trailerLink IS EMPTY" >> "$logfile"
         else
             echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_trailerLink IS NOT EMPTY" >> "$logfile"
         fi
 
-        if [[ "$extResourcesMetadataHttpResponse" != "</oly_clipLink>" ]];
+        if [[ "$extResourcesMetadataHttpResponse" != *"</oly_clipLink>"* ]];
         then
             echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_clipLink IS EMPTY" >> "$logfile"
         else
             echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_clipLink IS NOT EMPTY" >> "$logfile"
         fi
 
-        if [[ "$extResourcesMetadataHttpResponse" != "</oly_promoLink>" ]];
+        if [[ "$extResourcesMetadataHttpResponse" != *"</oly_promoLink>"* ]];
         then
             echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_promoLink IS EMPTY" >> "$logfile"
         else
             echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_promoLink IS NOT EMPTY" >> "$logfile"
         fi
 
-        if [[ "$extResourcesMetadataHttpResponse" != "</oly_screenerLink>" ]];
+        if [[ "$extResourcesMetadataHttpResponse" != *"</oly_screenerLink>"* ]];
         then
             echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - oly_screenerLink IS EMPTY" >> "$logfile"
         else
