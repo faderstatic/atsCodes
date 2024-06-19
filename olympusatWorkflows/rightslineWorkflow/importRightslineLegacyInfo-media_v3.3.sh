@@ -481,7 +481,7 @@ then
     mv "$fileDestination" "/opt/olympusat/xmlsForMetadataImport/zCompleted/"
 
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - Triggering Shell Script to Import Contract Information" >> "$logfile"
-    bash -c "sudo /opt/olympusat/scriptsNonActive/importRightslineLegacyInfo-contract_v3.2.sh $cantemoItemId $userName oly_rightslineItemId /opt/olympusat/resources/RIGHTSLINE_CONTRACT_CODE_INFO_DATABASE_2024-05-07.csv > /dev/null 2>&1 &"
+    bash -c "sudo /opt/olympusat/scriptsNonActive/importRightslineLegacyInfo-contract_v3.3.sh $cantemoItemId $userName oly_rightslineItemId /opt/olympusat/resources/RIGHTSLINE_CONTRACT_CODE_INFO_DATABASE_2024-05-07.csv > /dev/null 2>&1 &"
 
 else
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - Import Metadata Job Skipped - No Matching Rightsline Item Id Found in CSV" >> "$logfile"
