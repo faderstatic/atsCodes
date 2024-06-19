@@ -371,28 +371,86 @@ then
             "oly_rightslineContractId")
                 if [[ ! -z "${fieldValue[$columnCounter]}" && "$bulkMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
                 then
-                    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
-                    numberOfCharacters=$(echo "${fieldValue[$columnCounter]}" | wc -c)
-                    if [[ $numberOfCharacters != 1 ]];
+                    if [[ "${fieldValue[$columnCounter]}" == *"|"* ]];
                     then
-                        contractString="CA_"
-                        missingCharacters=$((7 - $numberOfCharacters))
-                        for (( k=1 ; k<=$missingCharacters ; k++ ));
-                        do
-                            contractString="$contractString""0"
-                        done
-                        contractString="$contractString""${fieldValue[$columnCounter]}"
-                        echo "      <field>
+                        firstContractId=$(echo "${fieldValue[$columnCounter]}" | awk -F '|' '{print $1}')
+                        echo "firstContractId = $firstContractId"
+                        secondContractId=$(echo "${fieldValue[$columnCounter]}" | awk -F '|' '{print $2}')
+                        echo "firstContractId = $secondContractId"
+
+                        firstIdNumberOfCharacters=$(echo "$firstContractId" | wc -c)
+                        echo "firstIdNumberOfCharacters = $firstIdNumberOfCharacters"
+                        if [[ $firstIdNumberOfCharacters != 1 ]];
+                        then
+                            firstContractString="CA_"
+                            missingCharacters=$((7 - $firstIdNumberOfCharacters))
+                            for (( k=1 ; k<=$missingCharacters ; k++ ));
+                            do
+                                firstContractString="$firstContractString""0"
+                            done
+                            firstContractString="$firstContractString""$firstContractId"
+                            echo "firstContractString = $firstContractString"
+                            echo "      <field>
          <name>${fieldName[$columnCounter]}</name>
-         <value>$contractString</value>
+         <value>$firstContractString</value>
       </field>" >> "$fileDestination"
-                        columnCounter=$(($columnCounter + 1))
+                            columnCounter=$(($columnCounter + 1))
+                        else
+                            echo "      <field>
+         <name>${fieldName[$columnCounter]}</name>
+         <value>$firstContractString</value>
+      </field>" >> "$fileDestination"
+                            columnCounter=$(($columnCounter + 1))
+                        fi
+
+                        secondIdNumberOfCharacters=$(echo "$secondContractId" | wc -c)
+                        echo "secondIdNumberOfCharacters = $secondIdNumberOfCharacters"
+                        if [[ $secondIdNumberOfCharacters != 1 ]];
+                        then
+                            secondContractString="CA_"
+                            missingCharacters=$((7 - $secondIdNumberOfCharacters))
+                            for (( k=1 ; k<=$missingCharacters ; k++ ));
+                            do
+                                secondContractString="$secondContractString""0"
+                            done
+                            secondContractString="$secondContractString""$secondContractId"
+                            echo "secondContractString = $secondContractString"
+                            echo "      <field>
+         <name>oly_alternateContractIds</name>
+         <value>$secondContractString</value>
+      </field>" >> "$fileDestination"
+                            columnCounter=$(($columnCounter + 1))
+                        else
+                            echo "      <field>
+         <name>oly_alternateContractIds</name>
+         <value>$secondContractString</value>
+      </field>" >> "$fileDestination"
+                            columnCounter=$(($columnCounter + 1))
+                        fi
                     else
-                        echo "      <field>
+                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
+                        numberOfCharacters=$(echo "${fieldValue[$columnCounter]}" | wc -c)
+                        if [[ $numberOfCharacters != 1 ]];
+                        then
+                            contractString="CA_"
+                            missingCharacters=$((7 - $numberOfCharacters))
+                            for (( k=1 ; k<=$missingCharacters ; k++ ));
+                            do
+                                contractString="$contractString""0"
+                            done
+                            contractString="$contractString""${fieldValue[$columnCounter]}"
+                            echo "      <field>
          <name>${fieldName[$columnCounter]}</name>
          <value>$contractString</value>
       </field>" >> "$fileDestination"
-                        columnCounter=$(($columnCounter + 1))
+                            columnCounter=$(($columnCounter + 1))
+                        else
+                            echo "      <field>
+         <name>${fieldName[$columnCounter]}</name>
+         <value>$contractString</value>
+      </field>" >> "$fileDestination"
+                            columnCounter=$(($columnCounter + 1))
+                        fi
                     fi
                 else
                     #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
