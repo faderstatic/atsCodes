@@ -109,7 +109,7 @@ try:
           "assetId": '"'+cantemoItemId+'"'
         }
       ])
-      print(segmentPayload)
+      # print(segmentPayload)
       #------------------------------
       # Update Cantemo metadata
       headers = {
