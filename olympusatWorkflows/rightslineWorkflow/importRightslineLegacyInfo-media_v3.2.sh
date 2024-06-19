@@ -663,7 +663,7 @@ then
 
                 "oly_closedCaptionInfo-closedcaptionavailable"|"oly_closedCaptionInfo-broadcastedontvwithcc")
                     echo "(${fieldName[$columnCounter]}) is set to (${fieldValue[$columnCounter]})"
-                    if [[ "${fieldName[$columnCounter]}" == "oly_closedCaptionInfo-closedcaptionavailable" && "oly_closedCaptionInfo-closedcaptionavailable" == "Yes" ]];
+                    if [[ "${fieldName[$columnCounter]}" == "oly_closedCaptionInfo-closedcaptionavailable" && "${fieldValue[$columnCounter]}" == "Yes" ]];
                     then
                         #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
                         echo "<value>closedcaptionavailable</value>" >> "$fileDestinationClosedCaptionInfo"
@@ -672,7 +672,7 @@ then
                         #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
                         columnCounter=$(($columnCounter + 1))
                     fi
-                    if [[ "${fieldName[$columnCounter]}" == "oly_closedCaptionInfo-broadcastedontvwithcc" && "oly_closedCaptionInfo-broadcastedontvwithcc" == "Yes" ]];
+                    if [[ "${fieldName[$columnCounter]}" == "oly_closedCaptionInfo-broadcastedontvwithcc" && "${fieldValue[$columnCounter]}" == "Yes" ]];
                     then
                         #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
                         echo "<value>broadcastedontvwithcc</value>" >> "$fileDestinationClosedCaptionInfo"
