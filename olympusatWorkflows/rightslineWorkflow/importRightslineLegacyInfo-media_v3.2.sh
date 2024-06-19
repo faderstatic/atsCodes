@@ -199,6 +199,7 @@ then
         fileDestinationSpanish=$(echo "/opt/olympusat/xmlsForMetadataImport/"$cantemoItemId"_ES.xml")
         fileDestinationEnglish=$(echo "/opt/olympusat/xmlsForMetadataImport/"$cantemoItemId"_EN.xml")
         fileDestinationExternal=$(echo "/opt/olympusat/xmlsForMetadataImport/"$cantemoItemId"_External.xml")
+        fileDestinationClosedCaptionInfo=$(echo "/opt/olympusat/xmlsForMetadataImport/"$cantemoItemId"_ClosedCaptionInfo.xml")
 
         # --------------------------------------------------
         # Print XML header
@@ -660,8 +661,25 @@ then
                     fi
                 ;;
 
-                "oly_closedCaptionInfo-closedcaptionavailable")
-                    columnCounter=$(($columnCounter + 1))
+                "oly_closedCaptionInfo-closedcaptionavailable"|"oly_closedCaptionInfo-broadcastedontvwithcc")
+                    if [[ ! -z "oly_closedCaptionInfo-closedcaptionavailable" ]];
+                    then
+                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
+                        echo "<value>closedcaptionavailable</value>" >> "$fileDestinationClosedCaptionInfo"
+                        columnCounter=$(($columnCounter + 1))
+                    else
+                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
+                        columnCounter=$(($columnCounter + 1))
+                    fi
+                    if [[ ! -z "oly_closedCaptionInfo-broadcastedontvwithcc" ]];
+                    then
+                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
+                        echo "<value>broadcastedontvwithcc</value>" >> "$fileDestinationClosedCaptionInfo"
+                        columnCounter=$(($columnCounter + 1))
+                    else
+                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
+                        columnCounter=$(($columnCounter + 1))
+                    fi
                 ;;
 
                 "oly_closedCaptionInfo-broadcastedontvwithcc")
@@ -737,28 +755,36 @@ then
             esac
         done
 
+        if [ -e "$fileDestinationClosedCaptionInfo" ];
+        then
+            echo "        <field>
+          <name>oly_closedCaptionInfo</name>" >> "$fileDestination"
+            cat "$fileDestinationClosedCaptionInfo" >> "$fileDestination"
+            echo "      </field>" >> "$fileDestination"
+            #rm -f "$fileDestinationClosedCaptionInfo"
+        fi
         if [ -e "$fileDestinationExternal" ];
         then
             echo "      <group>
         <name>External Resources</name>" >> "$fileDestination"
-        cat "$fileDestinationExternal" >> "$fileDestination"
-        echo "      </group>" >> "$fileDestination"
+            cat "$fileDestinationExternal" >> "$fileDestination"
+            echo "      </group>" >> "$fileDestination"
             rm -f "$fileDestinationExternal"
         fi
         if [ -e "$fileDestinationSpanish" ];
         then
             echo "      <group>
         <name>Spanish Synopsis</name>" >> "$fileDestination"
-        cat "$fileDestinationSpanish" >> "$fileDestination"
-        echo "      </group>" >> "$fileDestination"
+            cat "$fileDestinationSpanish" >> "$fileDestination"
+            echo "      </group>" >> "$fileDestination"
             rm -f "$fileDestinationSpanish"
         fi
         if [ -e "$fileDestinationEnglish" ];
         then
             echo "      <group>
         <name>English Synopsis</name>" >> "$fileDestination"
-        cat "$fileDestinationEnglish" >> "$fileDestination"
-        echo "      </group>" >> "$fileDestination"
+            cat "$fileDestinationEnglish" >> "$fileDestination"
+            echo "      </group>" >> "$fileDestination"
             rm -f "$fileDestinationEnglish"
         fi
         # --------------------------------------------------
