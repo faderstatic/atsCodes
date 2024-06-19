@@ -81,7 +81,7 @@
             <manifest:ContainerReference>
                 <manifest:ContainerLocation>CA_000752_699_00-3x4_IT.jpg</manifest:ContainerLocation>
             </manifest:ContainerReference>
-        </manifest:Image -->
+        </manifest:Image>
         <manifest:Image ImageID="md:imageid:org:olympusat:OLY_5544:art.es">
             <md:Width>1200</md:Width>
             <md:Height>16000</md:Height>
@@ -100,7 +100,7 @@
                 <manifest:ContainerLocation>CA_000752_699_00-3x4.jpg</manifest:ContainerLocation>
             </manifest:ContainerReference>
         </manifest:Image>
-        <!-- manifest:Image ImageID="md:imageid:org:olympusat:OLY_5544:art.ko">
+        <manifest:Image ImageID="md:imageid:org:olympusat:OLY_5544:art.ko">
             <md:Width>1000</md:Width>
             <md:Height>1440</md:Height>
             <md:Encoding>jpg</md:Encoding>
@@ -150,9 +150,9 @@
         </manifest:TrackMetadata -->
         </manifest:Presentation>
     </manifest:Presentations>
-    <manifest:PictureGroups>
+    <!-- manifest:PictureGroups>
         <manifest:PictureGroup PictureGroupID="md:picturegroupid:org:olympusat:OLY_5544:feature">
-            <!-- manifest:Picture>
+            <manifest:Picture>
                 <manifest:PictureID>md:pictureid:org:olympusat:OLY_5544:art.en</manifest:PictureID>
                 <manifest:ImageID>md:imageid:org:olympusat:OLY_5544:art.en</manifest:ImageID>
                 <manifest:LanguageInImage>en</manifest:LanguageInImage>
@@ -171,7 +171,7 @@
                 <manifest:PictureID>md:pictureid:org:olympusat:OLY_5544:art.it</manifest:PictureID>
                 <manifest:ImageID>md:imageid:org:olympusat:OLY_5544:art.it</manifest:ImageID>
                 <manifest:LanguageInImage>it</manifest:LanguageInImage>
-            </manifest:Picture -->
+            </manifest:Picture>
             <manifest:Picture>
                 <manifest:PictureID>md:pictureid:org:olympusat:OLY_5544:art.es</manifest:PictureID>
                 <manifest:ImageID>md:imageid:org:olympusat:OLY_5544:art.es</manifest:ImageID>
@@ -182,20 +182,20 @@
                 <manifest:ImageID>md:imageid:org:olympusat:OLY_5544:art.es-419</manifest:ImageID>
                 <manifest:LanguageInImage>es-419</manifest:LanguageInImage>
             </manifest:Picture>
-            <!-- manifest:Picture>
+            <manifest:Picture>
                 <manifest:PictureID>md:pictureid:org:olympusat:OLY_5544:art.ko</manifest:PictureID>
                 <manifest:ImageID>md:imageid:org:olympusat:OLY_5544:art.ko</manifest:ImageID>
                 <manifest:LanguageInImage>ko</manifest:LanguageInImage>
-            </manifest:Picture -->
+            </manifest:Picture>
         </manifest:PictureGroup>
-        <!-- manifest:PictureGroup PictureGroupID="md:picturegroupid:org:olympusat:OLY_5544:trailer.1">
+        <manifest:PictureGroup PictureGroupID="md:picturegroupid:org:olympusat:OLY_5544:trailer.1">
             <manifest:Picture>
                 <manifest:PictureID>md:pictureid:org:olympusat:OLY_5544:art.en</manifest:PictureID>
                 <manifest:ImageID>md:imageid:org:olympusat:OLY_5544:art.en</manifest:ImageID>
                 <manifest:LanguageInImage>en</manifest:LanguageInImage>
             </manifest:Picture>
-        </manifest:PictureGroup -->
-    </manifest:PictureGroups>
+        </manifest:PictureGroup>
+    </manifest:PictureGroups -->
     <manifest:Experiences>
         <!--  Root Experience  -->
         <manifest:Experience ExperienceID="md:experienceid:org:olympusat:OLY_5544:experience" version="1.0">

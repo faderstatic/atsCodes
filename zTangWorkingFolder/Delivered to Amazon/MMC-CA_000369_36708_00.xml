@@ -46,7 +46,7 @@
             </manifest:ContainerReference>
         </manifest:Subtitle -->
         <!--   movie poster artwork is listed as images   -->
-        <manifest:Image ImageID="md:imageid:org:olympusat:OLY_4543-M:art.en">
+        <!-- manifest:Image ImageID="md:imageid:org:olympusat:OLY_4543-M:art.en">
             <md:Width>1200</md:Width>
             <md:Height>1600</md:Height>
             <md:Encoding>jpg</md:Encoding>
@@ -55,7 +55,7 @@
                 <manifest:ContainerLocation>CA_000369_4588_00-3x4.jpg</manifest:ContainerLocation>
             </manifest:ContainerReference>
         </manifest:Image>
-        <!-- manifest:Image ImageID="md:imageid:org:olympusat:OLY_4543-M:art.fr">
+        <manifest:Image ImageID="md:imageid:org:olympusat:OLY_4543-M:art.fr">
             <md:Width>1789</md:Width>
             <md:Height>2560</md:Height>
             <md:Encoding>jpg</md:Encoding>
@@ -108,13 +108,13 @@
             <manifest:ContainerReference>
                 <manifest:ContainerLocation>CA_000369_36708_00_art_KO.jpg</manifest:ContainerLocation>
             </manifest:ContainerReference>
-        </manifest:Image -->
+        </manifest:Image>
         <manifest:Metadata ContentID="md:cid:org:olympusat:OLY_4543">
             <manifest:ContainerReference type="common">
                 <manifest:ContainerLocation>MEC-CA_000369_36708_00.xml</manifest:ContainerLocation>
             </manifest:ContainerReference>
         </manifest:Metadata>
-        <!-- manifest:Metadata ContentID="md:cid:org:olympusat:OLY_4543-M:trailer.1">
+        <manifest:Metadata ContentID="md:cid:org:olympusat:OLY_4543-M:trailer.1">
         <manifest:ContainerReference type="common">
         <manifest:ContainerLocation>MEC-CA_000369_36708_00_Trailer1.xml</manifest:ContainerLocation>
         </manifest:ContainerReference>
@@ -150,14 +150,14 @@
             </manifest:TrackMetadata>
         </manifest:Presentation -->
     </manifest:Presentations>
-    <manifest:PictureGroups>
+    <!-- manifest:PictureGroups>
         <manifest:PictureGroup PictureGroupID="md:picturegroupid:org:olympusat:OLY_4543-M:feature">
             <manifest:Picture>
                 <manifest:PictureID>md:pictureid:org:olympusat:OLY_4543-M:art.en</manifest:PictureID>
                 <manifest:ImageID>md:imageid:org:olympusat:OLY_4543-M:art.en</manifest:ImageID>
                 <manifest:LanguageInImage>en</manifest:LanguageInImage>
             </manifest:Picture>
-            <!-- manifest:Picture>
+            <manifest:Picture>
                 <manifest:PictureID>md:pictureid:org:olympusat:OLY_4543-M:art.fr</manifest:PictureID>
                 <manifest:ImageID>md:imageid:org:olympusat:OLY_4543-M:art.fr</manifest:ImageID>
                 <manifest:LanguageInImage>fr</manifest:LanguageInImage>
@@ -193,9 +193,9 @@
                 <manifest:PictureID>md:pictureid:org:olympusat:OLY_4543-M:art.en</manifest:PictureID>
                 <manifest:ImageID>md:imageid:org:olympusat:OLY_4543-M:art.en</manifest:ImageID>
                 <manifest:LanguageInImage>en</manifest:LanguageInImage>
-            </manifest:Picture -->
+            </manifest:Picture>
         </manifest:PictureGroup>
-    </manifest:PictureGroups>
+    </manifest:PictureGroups -->
     <manifest:Experiences>
         <!--  Root Experience  -->
         <manifest:Experience ExperienceID="md:experienceid:org:olympusat:OLY_4543-M:experience" version="1.0">
