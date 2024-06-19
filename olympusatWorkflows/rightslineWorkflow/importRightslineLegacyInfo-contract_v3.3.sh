@@ -208,7 +208,7 @@ then
         case "${fieldName[$columnCounter]}" in
 
             "oly_licensor")
-                if [[ ! -z "${fieldValue[$columnCounter]}" && "$bulkMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
+                if [[ ! -z "${fieldValue[$columnCounter]}" ]];
                 then
                     #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is NOT empty" >> "$logfile"
                     fieldValue[$columnCounter]=$(convertToCamelCase ${fieldValue[$columnCounter]})
