@@ -572,7 +572,7 @@ then
             case "${fieldName[$columnCounter]}" in
 
                 "Genres")
-                    if [[ ! -z "${fieldValue[$columnCounter]}" ]];
+                    if [[ ! -z "${fieldValue[$columnCounter]}" && "$bulkMetadataHttpResponse" != *"</oly_primaryGenre>"* ]];
                     then
                         #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
                         fieldValue[$columnCounter]=$(convertToCamelCase ${fieldValue[$columnCounter]})
@@ -595,7 +595,7 @@ then
                 ;;
 
                 "oly_descriptionEs"|"oly_shortDescriptionEs"|"oly_socialDescriptionEs"|"oly_logLineEs")
-                    if [[ ! -z "${fieldValue[$columnCounter]}" ]];
+                    if [[ ! -z "${fieldValue[$columnCounter]}" && "$spaSynopMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
                     then
                         #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
                         echo "        <field>
@@ -610,7 +610,7 @@ then
                 ;;
 
                 "oly_descriptionEn"|"oly_shortDescriptionEn"|"oly_socialDescriptionEn"|"oly_logLineEn")
-                    if [[ ! -z "${fieldValue[$columnCounter]}" ]];
+                    if [[ ! -z "${fieldValue[$columnCounter]}" && "$engSynopMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
                     then
                         #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
                         echo "        <field>
@@ -625,7 +625,7 @@ then
                 ;;
 
                 "oly_cast"|"oly_director"|"oly_producer"|"oly_tags"|"oly_productionCompany")
-                    if [[ ! -z "${fieldValue[$columnCounter]}" ]];
+                    if [[ ! -z "${fieldValue[$columnCounter]}" && "$bulkMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
                     then
                         #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
                         createTags "${fieldValue[$columnCounter]}" "${fieldName[$columnCounter]}" "$fileDestination"
@@ -637,7 +637,7 @@ then
                 ;;
 
                 "oly_contentType"|"oly_originalMpaaRating"|"oly_originalRtcRating"|"oly_originalRating"|"oly_countryOfOrigin"|"oly_closedCaptionLanguage"|"oly_originalLanguage")
-                    if [[ ! -z "${fieldValue[$columnCounter]}" ]];
+                    if [[ ! -z "${fieldValue[$columnCounter]}" && "$bulkMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
                     then
                         #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
                         fieldValue[$columnCounter]=$(convertToCamelCase ${fieldValue[$columnCounter]})
@@ -666,7 +666,7 @@ then
                 ;;
 
                 "oly_clipLink"|"oly_promoLink"|"oly_trailerLink")
-                    if [[ ! -z "${fieldValue[$columnCounter]}" ]];
+                    if [[ ! -z "${fieldValue[$columnCounter]}" && "$extResourcesMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
                     then
                         #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
                         echo "        <field>
@@ -681,7 +681,7 @@ then
                 ;;
 
                 "oly_rightslineContractId")
-                    if [[ ! -z "${fieldValue[$columnCounter]}" ]];
+                    if [[ ! -z "${fieldValue[$columnCounter]}" && "$bulkMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
                     then
                         #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
                         numberOfCharacters=$(echo "${fieldValue[$columnCounter]}" | wc -c)
@@ -717,7 +717,7 @@ then
                 ;;
 
                 *)
-                    if [[ ! -z "${fieldValue[$columnCounter]}" ]];
+                    if [[ ! -z "${fieldValue[$columnCounter]}" && "$bulkMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
                     then
                         #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
                         echo "      <field>
