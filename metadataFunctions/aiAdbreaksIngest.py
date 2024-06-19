@@ -118,10 +118,10 @@ try:
         'Content-Type': 'application/json'
       }
       urlPutProfanityInfo = f"http://10.1.1.34/AVAPI/asset/{cantemoItemId}/timespan/bulk"
-      # httpApiResponse = requests.request("PUT", urlPutProfanityInfo, headers=headers, data=segmentPayload)
-      # httpApiResponse.raise_for_status()
+      httpApiResponse = requests.request("PUT", urlPutProfanityInfo, headers=headers, data=segmentPayload)
+      httpApiResponse.raise_for_status()
       # print(httpApiResponse.text)
-      # time.sleep(5)
+      time.sleep(5)
       #------------------------------
   #------------------------------
 
