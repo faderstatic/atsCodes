@@ -78,7 +78,7 @@ try:
     print(rankingSegment)
     for candidateSegment in adbreakSegment["candidates"]:
       print(candidateSegment)
-      candidateTimecode = int(candidateSegment * timebaseMultiplier)
+      candidateTimecode = int(candidateSegment)
       endingTimecode = int(candidateSegment + 10)
       segmentPayload = json.dumps([
         {
