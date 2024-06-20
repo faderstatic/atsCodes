@@ -462,6 +462,34 @@ then
                 columnCounter=$(($columnCounter + 1))
             ;;
 
+            "oly_numberOfEpisodes")
+                if [[ ! -z "${fieldValue[$columnCounter]}" ]];
+                then
+                    echo "fieldValue[5] = ${fieldValue[5]}"
+                    if [[ "${fieldValue[5]}" == "Series" && "$bulkMetadataHttpResponse" != *"</oly_totalEpisodesBySeries>"* ]];
+                    then
+                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
+                        echo "      <field>
+         <name>oly_totalEpisodesBySeries</name>
+         <value>${fieldValue[$columnCounter]}</value>
+      </field>" >> "$fileDestination"
+                        columnCounter=$(($columnCounter + 1))
+                    fi
+                    if [[ "${fieldValue[5]}" == "Season" && "$bulkMetadataHttpResponse" != *"</oly_totalEpisodesBySeason>"* ]];
+                    then
+                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
+                        echo "      <field>
+         <name>oly_totalEpisodesBySeason</name>
+         <value>${fieldValue[$columnCounter]}</value>
+      </field>" >> "$fileDestination"
+                        columnCounter=$(($columnCounter + 1))
+                    fi
+                else
+                    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
+                    columnCounter=$(($columnCounter + 1))
+                fi
+            ;;
+            
             *)
                 if [[ ! -z "${fieldValue[$columnCounter]}" && "$bulkMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
                 then
