@@ -150,10 +150,10 @@ do
 done
 for matchedRow in $(grep -n "$inputFile" -e "\<$rightslineItemId\>" | awk -F ',' '{print $'$rightslineIdColumn'}')
 do
-    echo "matchedRow = $matchedRow"
+    #echo "matchedRow = $matchedRow"
     matchedValue=$(echo $matchedRow | awk -F ':' '{print $2}')
-    echo "matchedValue = $matchedValue"
-    echo "rightslineItemId = $rightslineItemId"
+    #echo "matchedValue = $matchedValue"
+    #echo "rightslineItemId = $rightslineItemId"
     if [[ $matchedValue -eq $rightslineItemId ]];
     then
         matchedRowNumber=$(echo $matchedRow | awk -F ':' '{print $1}')
@@ -465,7 +465,6 @@ then
             "oly_numberOfEpisodes")
                 if [[ ! -z "${fieldValue[$columnCounter]}" ]];
                 then
-                    echo "fieldValue[5] = ${fieldValue[5]}"
                     if [[ "${fieldValue[5]}" == "Series" && "$bulkMetadataHttpResponse" != *"</oly_totalEpisodesBySeries>"* ]];
                     then
                         #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
