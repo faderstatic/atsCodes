@@ -27,8 +27,8 @@
             <!-- Genres may be provided in just one, or all LocalizedInfo blocks. See the spec documentation for more detail. -->
             <!-- At least 1 genre is required. Up to 3 genres are allowed. --> 
             <md:Genre id="av_genre_adventure"></md:Genre>
-            <md:Genre id="av_subgenre_thriller"></md:Genre>
-            <md:Genre id="av_subgenre_fantasy"></md:Genre>
+            <md:Genre id="av_subgenre_action_suspense"></md:Genre>
+            <md:Genre id="av_subgenre_adventure_fantasy"></md:Genre>
             <!-- md:Genre id="av_subgenre_drama_historical"></md:Genre -->
         </md:LocalizedInfo>
         <md:LocalizedInfo language="es-MX">
