@@ -150,10 +150,7 @@ do
 done
 for matchedRow in $(grep -n "$inputFile" -e "\<$rightslineItemId\>" | awk -F ',' '{print $'$rightslineIdColumn'}')
 do
-    #echo "matchedRow = $matchedRow"
     matchedValue=$(echo $matchedRow | awk -F ':' '{print $2}')
-    #echo "matchedValue = $matchedValue"
-    #echo "rightslineItemId = $rightslineItemId"
     if [[ $matchedValue -eq $rightslineItemId ]];
     then
         matchedRowNumber=$(echo $matchedRow | awk -F ':' '{print $1}')
@@ -374,12 +371,9 @@ then
                     if [[ "${fieldValue[$columnCounter]}" == *"|"* ]];
                     then
                         firstContractId=$(echo "${fieldValue[$columnCounter]}" | awk -F '|' '{print $1}')
-                        echo "firstContractId = $firstContractId"
                         secondContractId=$(echo "${fieldValue[$columnCounter]}" | awk -F '|' '{print $2}')
-                        echo "firstContractId = $secondContractId"
 
                         firstIdNumberOfCharacters=$(echo "$firstContractId" | wc -c)
-                        echo "firstIdNumberOfCharacters = $firstIdNumberOfCharacters"
                         if [[ $firstIdNumberOfCharacters != 1 ]];
                         then
                             firstContractString="CA_"
@@ -389,7 +383,6 @@ then
                                 firstContractString="$firstContractString""0"
                             done
                             firstContractString="$firstContractString""$firstContractId"
-                            echo "firstContractString = $firstContractString"
                             echo "      <field>
          <name>${fieldName[$columnCounter]}</name>
          <value>$firstContractString</value>
@@ -404,7 +397,6 @@ then
                         fi
 
                         secondIdNumberOfCharacters=$(echo "$secondContractId" | wc -c)
-                        echo "secondIdNumberOfCharacters = $secondIdNumberOfCharacters"
                         if [[ $secondIdNumberOfCharacters != 1 ]];
                         then
                             secondContractString="CA_"
@@ -414,7 +406,6 @@ then
                                 secondContractString="$secondContractString""0"
                             done
                             secondContractString="$secondContractString""$secondContractId"
-                            echo "secondContractString = $secondContractString"
                             echo "      <field>
          <name>oly_alternateContractIds</name>
          <value>$secondContractString</value>
@@ -557,8 +548,7 @@ then
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadta) - [$cantemoItemId] - Triggering API Call to Import XML into Cantemo" >> "$logfile"
 
     url="http://10.1.1.34:8080/API/import/sidecar/$cantemoItemId?sidecar=/opt/olympusat/xmlsForMetadataImport/$cantemoItemId.xml"
-
-    curl --location --request POST $url --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0'
+    importXmlHttpResponse=$(curl --location --request POST $url --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0')
 
     sleep 2
     
