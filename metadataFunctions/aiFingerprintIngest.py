@@ -78,6 +78,10 @@ try:
   httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=moodPayload)
   time.sleep(5)
   httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=keywordPayload)
+  keywordApiFile = f"/mnt/c/Users/kkanjanapitak/Desktop/{cantemoItemId}_FP.json"
+  keywordWriting = open(keywordApiFile, "w")
+  keywordWriting.write(keywordPayload)
+  keywordWriting.close()
   #------------------------------
   #------------------------------
 
