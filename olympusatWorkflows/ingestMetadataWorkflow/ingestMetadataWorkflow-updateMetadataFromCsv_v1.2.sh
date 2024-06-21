@@ -218,6 +218,7 @@ then
                 columnCounter=$(($columnCounter + 1))
             else
                 columnCounter=$(($columnCounter + 1))
+            fi
         done
 
         # --------------------------------------------------
