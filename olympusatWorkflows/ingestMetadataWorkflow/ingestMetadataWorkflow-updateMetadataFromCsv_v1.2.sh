@@ -361,6 +361,10 @@ then
                         then
                             #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
                             fieldValue[$columnCounter]=$(convertLicensorToCamelCase ${fieldValue[$columnCounter]})
+                            echo "        <field>
+          <name>${fieldName[$columnCounter]}</name>
+          <value>${fieldValue[$columnCounter]}</value>
+        </field>" >> "$fileDestination"
                             echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - Licensor After Conversion - [${fieldValue[$columnCounter]}]" >> "$logfile"
                             columnCounter=$(($columnCounter + 1))
                         else
