@@ -206,6 +206,21 @@ then
         done
 
         # --------------------------------------------------
+        # Checking last column (updateInCantemo) for y or yes
+
+        columnCounter=1
+        while [[ $columnCounter -le $columnCounts ]];
+        do
+            if [[ $columnCounter -eq $columnCounts ]];
+            then
+                fieldValue[$columnCounter]=$(echo $cleanLine | awk 'BEGIN { FPAT = "([^,]*)|(\"[^\"]+)|(\"[^\"]+\")" } {print $'$columnCounter'}' | sed -e 's/\"//g' | tr '[:upper:]' '[:lower:]')
+                echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - Check updateInCantemo column - Column - {$fieldValue[$columnCounter]} - Value - [${fieldValue[$columnCounter]}]" >> "$logfile"
+                columnCounter=$(($columnCounter + 1))
+            else
+                columnCounter=$(($columnCounter + 1))
+        done
+
+        # --------------------------------------------------
 
         # --------------------------------------------------
         # Writing XML File
