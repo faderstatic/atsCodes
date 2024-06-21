@@ -204,46 +204,32 @@ then
             fieldValue[$columnCounter]=$(echo $cleanLine | awk 'BEGIN { FPAT = "([^,]*)|(\"[^\"]+)|(\"[^\"]+\")" } {print $'$columnCounter'}' | sed -e 's/\"//g')
             columnCounter=$(($columnCounter + 1))
 
+            # --------------------------------------------------
             # Checking last column (updateInCantemo) for y or yes
             if [[ $columnCounter -eq $columnCounts ]];
             then
                 updateInCantemoValue[$columnCounter]=$(echo $cleanLine | awk 'BEGIN { FPAT = "([^,]*)|(\"[^\"]+)|(\"[^\"]+\")" } {print $'$columnCounter'}' | sed -e 's/\"//g' | tr '[:upper:]' '[:lower:]')
                 echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - Check updateInCantemo column - Column - {$updateInCantemoValue[$columnCounter]} - Value - [${updateInCantemoValue[$columnCounter]}]" >> "$logfile"
             fi
+            # --------------------------------------------------
         done
 
-        # --------------------------------------------------
-        # Checking last column (updateInCantemo) for y or yes
+        if [[ "${updateInCantemoValue[$columnCounter]}" == "y" || "${updateInCantemoValue[$columnCounter]}" == "yes" ]];
+        then
+            # --------------------------------------------------
+            # Writing XML File
+            
+            #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - Creating XML File with Information" >> "$logfile"
 
-        #columnCounter=1
-        #while [[ $columnCounter -le $columnCounts ]];
-        #do
-        #    if [[ $columnCounter -eq $columnCounts ]];
-        #    then
-        #        fieldValue[$columnCounter]=$(echo $cleanLine | awk 'BEGIN { FPAT = "([^,]*)|(\"[^\"]+)|(\"[^\"]+\")" } {print $'$columnCounter'}' | sed -e 's/\"//g' | tr '[:upper:]' '[:lower:]')
-        #        echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - Check updateInCantemo column - Column - {$fieldValue[$columnCounter]} - Value - [${fieldValue[$columnCounter]}]" >> "$logfile"
-        #        columnCounter=$(($columnCounter + 1))
-        #    else
-        #        columnCounter=$(($columnCounter + 1))
-        #    fi
-        #done
+            fileDestination="/opt/olympusat/xmlsForMetadataImport/$cantemoItemId.xml"
+            fileDestinationSpanish=$(echo "/opt/olympusat/xmlsForMetadataImport/"$cantemoItemId"_ES.xml")
+            fileDestinationEnglish=$(echo "/opt/olympusat/xmlsForMetadataImport/"$cantemoItemId"_EN.xml")
+            fileDestinationExternal=$(echo "/opt/olympusat/xmlsForMetadataImport/"$cantemoItemId"_External.xml")
+            fileDestinationClosedCaptionInfo=$(echo "/opt/olympusat/xmlsForMetadataImport/"$cantemoItemId"_ClosedCaptionInfo.xml")
 
-        # --------------------------------------------------
-
-        # --------------------------------------------------
-        # Writing XML File
-        
-        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - Creating XML File with Information" >> "$logfile"
-
-        fileDestination="/opt/olympusat/xmlsForMetadataImport/$cantemoItemId.xml"
-        fileDestinationSpanish=$(echo "/opt/olympusat/xmlsForMetadataImport/"$cantemoItemId"_ES.xml")
-        fileDestinationEnglish=$(echo "/opt/olympusat/xmlsForMetadataImport/"$cantemoItemId"_EN.xml")
-        fileDestinationExternal=$(echo "/opt/olympusat/xmlsForMetadataImport/"$cantemoItemId"_External.xml")
-        fileDestinationClosedCaptionInfo=$(echo "/opt/olympusat/xmlsForMetadataImport/"$cantemoItemId"_ClosedCaptionInfo.xml")
-
-        # --------------------------------------------------
-        # Print XML header
-        echo "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>
+            # --------------------------------------------------
+            # Print XML header
+            echo "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>
 <MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\">
   <group>Olympusat</group>
     <timespan end=\"+INF\" start=\"-INF\">
@@ -251,223 +237,227 @@ then
          <name>title</name>
          <value>$cantemoItemTitle</value>
       </field>" > "$fileDestination"
-        # --------------------------------------------------
+            # --------------------------------------------------
 
-        # --------------------------------------------------
-        # Checking Cantemo Item for existing metadata
+            # --------------------------------------------------
+            # Checking Cantemo Item for existing metadata
 
-        #urlGetItemBulkMetadata="http://10.1.1.34:8080/API/item/$cantemoItemId/metadata?field=oly_alternateContractIds%2Coly_cast%2Coly_castExtended%2Coly_contentFlags%2Coly_contentType%2Coly_contractCode%2Coly_countryOfOrigin%2Coly_director%2Coly_episodeNumber%2Coly_legacyAiredFilename%2Coly_legacyAiredFilepath%2Coly_licensor%2Coly_numberOfEpisodes%2Coly_originalFileFlags%2Coly_originalLanguage%2Coly_originalMpaaRating%2Coly_originalRating%2Coly_originalRtcRating%2Coly_originalTitle%2Coly_primaryGenre%2Coly_producer%2Coly_productionCompany%2Coly_productionYear%2Coly_reasonsForOriginalRating%2Coly_rightslineContractId%2Coly_rightslineEntityTitle%2Coly_rightslineItemId%2Coly_seasonNumber%2Coly_tags%2Coly_titleCode%2Coly_titleEn%2Coly_titleEs%2Coly_totalDurationBySeason%2Coly_totalDurationBySeries%2Coly_totalEpisodesBySeason%2Coly_totalEpisodesBySeries%2Coly_totalSeasonsBySeries%2Coly_versionType%2Coly_timecode&terse=yes&includeConstraintValue=all"
-        #bulkMetadataHttpResponse=$(curl --location --request GET $urlGetItemBulkMetadata --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=Tkb9vkSC8v4SceB8CHUyB3iaMPjvgoHrzhLrvo36agG3wqv0jHc7nsOtdTo9JEyM')
+            #urlGetItemBulkMetadata="http://10.1.1.34:8080/API/item/$cantemoItemId/metadata?field=oly_alternateContractIds%2Coly_cast%2Coly_castExtended%2Coly_contentFlags%2Coly_contentType%2Coly_contractCode%2Coly_countryOfOrigin%2Coly_director%2Coly_episodeNumber%2Coly_legacyAiredFilename%2Coly_legacyAiredFilepath%2Coly_licensor%2Coly_numberOfEpisodes%2Coly_originalFileFlags%2Coly_originalLanguage%2Coly_originalMpaaRating%2Coly_originalRating%2Coly_originalRtcRating%2Coly_originalTitle%2Coly_primaryGenre%2Coly_producer%2Coly_productionCompany%2Coly_productionYear%2Coly_reasonsForOriginalRating%2Coly_rightslineContractId%2Coly_rightslineEntityTitle%2Coly_rightslineItemId%2Coly_seasonNumber%2Coly_tags%2Coly_titleCode%2Coly_titleEn%2Coly_titleEs%2Coly_totalDurationBySeason%2Coly_totalDurationBySeries%2Coly_totalEpisodesBySeason%2Coly_totalEpisodesBySeries%2Coly_totalSeasonsBySeries%2Coly_versionType%2Coly_timecode&terse=yes&includeConstraintValue=all"
+            #bulkMetadataHttpResponse=$(curl --location --request GET $urlGetItemBulkMetadata --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=Tkb9vkSC8v4SceB8CHUyB3iaMPjvgoHrzhLrvo36agG3wqv0jHc7nsOtdTo9JEyM')
 
-        #sleep 1
+            #sleep 1
 
-        #urlGetItemSpaSynopMetadata="http://10.1.1.34:8080/API/item/$cantemoItemId/metadata?field=oly_descriptionEs%2Coly_shortDescriptionEs%2Coly_socialDescriptionEs%2Coly_logLineEs&group=Spanish%20Synopsis&terse=yes"
-        #spaSynopMetadataHttpResponse=$(curl --location --request GET $urlGetItemSpaSynopMetadata --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=Tkb9vkSC8v4SceB8CHUyB3iaMPjvgoHrzhLrvo36agG3wqv0jHc7nsOtdTo9JEyM')
+            #urlGetItemSpaSynopMetadata="http://10.1.1.34:8080/API/item/$cantemoItemId/metadata?field=oly_descriptionEs%2Coly_shortDescriptionEs%2Coly_socialDescriptionEs%2Coly_logLineEs&group=Spanish%20Synopsis&terse=yes"
+            #spaSynopMetadataHttpResponse=$(curl --location --request GET $urlGetItemSpaSynopMetadata --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=Tkb9vkSC8v4SceB8CHUyB3iaMPjvgoHrzhLrvo36agG3wqv0jHc7nsOtdTo9JEyM')
 
-        #sleep 1
+            #sleep 1
 
-        #urlGetItemEngSynopMetadata="http://10.1.1.34:8080/API/item/$cantemoItemId/metadata?field=oly_descriptionEn%2Coly_shortDescriptionEn%2Coly_socialDescriptionEn%2Coly_logLineEn&group=English%20Synopsis&terse=yes"
-        #engSynopMetadataHttpResponse=$(curl --location --request GET $urlGetItemEngSynopMetadata --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=Tkb9vkSC8v4SceB8CHUyB3iaMPjvgoHrzhLrvo36agG3wqv0jHc7nsOtdTo9JEyM')
+            #urlGetItemEngSynopMetadata="http://10.1.1.34:8080/API/item/$cantemoItemId/metadata?field=oly_descriptionEn%2Coly_shortDescriptionEn%2Coly_socialDescriptionEn%2Coly_logLineEn&group=English%20Synopsis&terse=yes"
+            #engSynopMetadataHttpResponse=$(curl --location --request GET $urlGetItemEngSynopMetadata --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=Tkb9vkSC8v4SceB8CHUyB3iaMPjvgoHrzhLrvo36agG3wqv0jHc7nsOtdTo9JEyM')
 
-        #sleep 1
+            #sleep 1
 
-        #urlGetItemExtResourcesMetadata="http://10.1.1.34:8080/API/item/$cantemoItemId/metadata?field=oly_trailerLink%2Coly_clipLink%2Coly_promoLink%2Coly_screenerLink&group=External%20Resources&terse=yes"
-        #extResourcesMetadataHttpResponse=$(curl --location --request GET $urlGetItemExtResourcesMetadata --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=Tkb9vkSC8v4SceB8CHUyB3iaMPjvgoHrzhLrvo36agG3wqv0jHc7nsOtdTo9JEyM')
+            #urlGetItemExtResourcesMetadata="http://10.1.1.34:8080/API/item/$cantemoItemId/metadata?field=oly_trailerLink%2Coly_clipLink%2Coly_promoLink%2Coly_screenerLink&group=External%20Resources&terse=yes"
+            #extResourcesMetadataHttpResponse=$(curl --location --request GET $urlGetItemExtResourcesMetadata --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=Tkb9vkSC8v4SceB8CHUyB3iaMPjvgoHrzhLrvo36agG3wqv0jHc7nsOtdTo9JEyM')
 
-        #sleep 1
+            #sleep 1
 
-        # --------------------------------------------------
+            # --------------------------------------------------
 
-        # --------------------------------------------------
-        # Choose what information from the CSV export file needed to be printed
-        columnCounter=1
-        while [ $columnCounter -le $columnCounts ];
-        do
-            case "${fieldName[$columnCounter]}" in
+            # --------------------------------------------------
+            # Choose what information from the CSV export file needed to be printed
+            columnCounter=1
+            while [ $columnCounter -le $columnCounts ];
+            do
+                case "${fieldName[$columnCounter]}" in
 
-                "itemId"|"type"|"itemTitle"|"oly_rightslineContractId"|"oly_rightslineEntityTitle"|"oly_rightslineItemId"|"oly_titleCode"|"oly_numberOfEpisodes")
-                    # Skip and do nothing with this column
-                    columnCounter=$(($columnCounter + 1))
-                ;;
-
-                "oly_cast"|"oly_director"|"oly_producer"|"oly_tags"|"oly_productionCompany")
-                    #if [[ ! -z "${fieldValue[$columnCounter]}" && "$bulkMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
-                    if [[ ! -z "${fieldValue[$columnCounter]}" ]];
-                    then
-                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
-                        createTags "${fieldValue[$columnCounter]}" "${fieldName[$columnCounter]}" "$fileDestination"
+                    "itemId"|"type"|"itemTitle"|"oly_rightslineContractId"|"oly_rightslineEntityTitle"|"oly_rightslineItemId"|"oly_titleCode"|"oly_numberOfEpisodes")
+                        # Skip and do nothing with this column
                         columnCounter=$(($columnCounter + 1))
-                    else
-                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
-                        columnCounter=$(($columnCounter + 1))
-                    fi
-                ;;
+                    ;;
 
-                "oly_contentFlags"|"oly_originalFileFlags")
-                    #if [[ ! -z "${fieldValue[$columnCounter]}" && "$bulkMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
-                    if [[ ! -z "${fieldValue[$columnCounter]}" ]];
-                    then
-                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
-                        fieldValue[$columnCounter]=$(convertToCaseForFlags ${fieldValue[$columnCounter]})
-                        createTags "${fieldValue[$columnCounter]}" "${fieldName[$columnCounter]}" "$fileDestination"
-                        columnCounter=$(($columnCounter + 1))
-                    else
-                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
-                        columnCounter=$(($columnCounter + 1))
-                    fi
-                ;;
-
-                "oly_contentType"|"oly_licensor"|"oly_originalLanguage"|"oly_countryOfOrigin"|"oly_originalMpaaRating"|"oly_originalRtcRating"|"oly_originalRating"|"oly_primaryGenre"|"oly_secondaryGenres"|"oly_reasonForOriginalRating"|"oly_closedCaptionLanguage"|"oly_versionType")
-                    #if [[ ! -z "${fieldValue[$columnCounter]}" && "$bulkMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
-                    if [[ ! -z "${fieldValue[$columnCounter]}" ]];
-                    then
-                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
-                        fieldValue[$columnCounter]=$(convertToCamelCase ${fieldValue[$columnCounter]})
-                        if [[ "${fieldName[$columnCounter]}" = "oly_countryOfOrigin" || "${fieldName[$columnCounter]}" = "oly_secondaryGenres" || "${fieldName[$columnCounter]}" = "oly_reasonForOriginalRating" ]];
+                    "oly_cast"|"oly_director"|"oly_producer"|"oly_tags"|"oly_productionCompany")
+                        #if [[ ! -z "${fieldValue[$columnCounter]}" && "$bulkMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
+                        if [[ ! -z "${fieldValue[$columnCounter]}" ]];
                         then
+                            #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
                             createTags "${fieldValue[$columnCounter]}" "${fieldName[$columnCounter]}" "$fileDestination"
+                            columnCounter=$(($columnCounter + 1))
                         else
+                            #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
+                            columnCounter=$(($columnCounter + 1))
+                        fi
+                    ;;
+
+                    "oly_contentFlags"|"oly_originalFileFlags")
+                        #if [[ ! -z "${fieldValue[$columnCounter]}" && "$bulkMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
+                        if [[ ! -z "${fieldValue[$columnCounter]}" ]];
+                        then
+                            #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
+                            fieldValue[$columnCounter]=$(convertToCaseForFlags ${fieldValue[$columnCounter]})
+                            createTags "${fieldValue[$columnCounter]}" "${fieldName[$columnCounter]}" "$fileDestination"
+                            columnCounter=$(($columnCounter + 1))
+                        else
+                            #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
+                            columnCounter=$(($columnCounter + 1))
+                        fi
+                    ;;
+
+                    "oly_contentType"|"oly_licensor"|"oly_originalLanguage"|"oly_countryOfOrigin"|"oly_originalMpaaRating"|"oly_originalRtcRating"|"oly_originalRating"|"oly_primaryGenre"|"oly_secondaryGenres"|"oly_reasonForOriginalRating"|"oly_closedCaptionLanguage"|"oly_versionType")
+                        #if [[ ! -z "${fieldValue[$columnCounter]}" && "$bulkMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
+                        if [[ ! -z "${fieldValue[$columnCounter]}" ]];
+                        then
+                            #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
+                            fieldValue[$columnCounter]=$(convertToCamelCase ${fieldValue[$columnCounter]})
+                            if [[ "${fieldName[$columnCounter]}" = "oly_countryOfOrigin" || "${fieldName[$columnCounter]}" = "oly_secondaryGenres" || "${fieldName[$columnCounter]}" = "oly_reasonForOriginalRating" ]];
+                            then
+                                createTags "${fieldValue[$columnCounter]}" "${fieldName[$columnCounter]}" "$fileDestination"
+                            else
+                                echo "      <field>
+         <name>${fieldName[$columnCounter]}</name>
+         <value>${fieldValue[$columnCounter]}</value>
+      </field>" >> "$fileDestination"
+                            fi
+                            columnCounter=$(($columnCounter + 1))
+                        else
+                            #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
+                            columnCounter=$(($columnCounter + 1))
+                        fi
+                    ;;
+
+                    "oly_descriptionEs"|"oly_shortDescriptionEs"|"oly_socialDescriptionEs"|"oly_logLineEs")
+                        #if [[ ! -z "${fieldValue[$columnCounter]}" && "$spaSynopMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
+                        if [[ ! -z "${fieldValue[$columnCounter]}" ]];
+                        then
+                            #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
+                            echo "        <field>
+          <name>${fieldName[$columnCounter]}</name>
+          <value>${fieldValue[$columnCounter]}</value>
+        </field>" >> "$fileDestinationSpanish"
+                            columnCounter=$(($columnCounter + 1))
+                        else
+                            #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
+                            columnCounter=$(($columnCounter + 1))
+                        fi
+                    ;;
+
+                    "oly_descriptionEn"|"oly_shortDescriptionEn"|"oly_socialDescriptionEn"|"oly_logLineEn")
+                        #if [[ ! -z "${fieldValue[$columnCounter]}" && "$engSynopMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
+                        if [[ ! -z "${fieldValue[$columnCounter]}" ]];
+                        then
+                            #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
+                            echo "        <field>
+          <name>${fieldName[$columnCounter]}</name>
+          <value>${fieldValue[$columnCounter]}</value>
+        </field>" >> "$fileDestinationEnglish"
+                            columnCounter=$(($columnCounter + 1))
+                        else
+                            #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
+                            columnCounter=$(($columnCounter + 1))
+                        fi
+                    ;;
+
+                    "oly_clipLink"|"oly_promoLink"|"oly_trailerLink")
+                        #if [[ ! -z "${fieldValue[$columnCounter]}" && "$extResourcesMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
+                        if [[ ! -z "${fieldValue[$columnCounter]}" ]];
+                        then
+                            #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
+                            echo "        <field>
+          <name>${fieldName[$columnCounter]}</name>
+          <value>${fieldValue[$columnCounter]}</value>
+        </field>" >> "$fileDestinationExternal"
+                            columnCounter=$(($columnCounter + 1))
+                        else
+                            #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
+                            columnCounter=$(($columnCounter + 1))
+                        fi
+                    ;;
+                    
+                    # oly_alternateContractIds, oly_castExtended, oly_contractCode, oly_episodeNumber, oly_legacyAiredFilename, oly_legacyAiredFilepath, oly_originalTitle, oly_productionYear, oly_seasonNumber, oly_seriesName, oly_titleEn, oly_titleEs, oly_totalDurationBySeason, oly_totalDurationBySeries, oly_totalEpisodesBySeason, oly_totalEpisodesBySeries, oly_totalSeasonsBySeries 
+                    *)
+                        #if [[ ! -z "${fieldValue[$columnCounter]}" && "$bulkMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
+                        if [[ ! -z "${fieldValue[$columnCounter]}" ]];
+                        then
+                            #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
                             echo "      <field>
          <name>${fieldName[$columnCounter]}</name>
          <value>${fieldValue[$columnCounter]}</value>
       </field>" >> "$fileDestination"
+                            columnCounter=$(($columnCounter + 1))
+                        else
+                            #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
+                            columnCounter=$(($columnCounter + 1))
                         fi
-                        columnCounter=$(($columnCounter + 1))
-                    else
-                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
-                        columnCounter=$(($columnCounter + 1))
-                    fi
-                ;;
+                    ;;
 
-                "oly_descriptionEs"|"oly_shortDescriptionEs"|"oly_socialDescriptionEs"|"oly_logLineEs")
-                    #if [[ ! -z "${fieldValue[$columnCounter]}" && "$spaSynopMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
-                    if [[ ! -z "${fieldValue[$columnCounter]}" ]];
-                    then
-                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
-                        echo "        <field>
-          <name>${fieldName[$columnCounter]}</name>
-          <value>${fieldValue[$columnCounter]}</value>
-        </field>" >> "$fileDestinationSpanish"
-                        columnCounter=$(($columnCounter + 1))
-                    else
-                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
-                        columnCounter=$(($columnCounter + 1))
-                    fi
-                ;;
+                esac
+            done
 
-                "oly_descriptionEn"|"oly_shortDescriptionEn"|"oly_socialDescriptionEn"|"oly_logLineEn")
-                    #if [[ ! -z "${fieldValue[$columnCounter]}" && "$engSynopMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
-                    if [[ ! -z "${fieldValue[$columnCounter]}" ]];
-                    then
-                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
-                        echo "        <field>
-          <name>${fieldName[$columnCounter]}</name>
-          <value>${fieldValue[$columnCounter]}</value>
-        </field>" >> "$fileDestinationEnglish"
-                        columnCounter=$(($columnCounter + 1))
-                    else
-                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
-                        columnCounter=$(($columnCounter + 1))
-                    fi
-                ;;
-
-                "oly_clipLink"|"oly_promoLink"|"oly_trailerLink")
-                    #if [[ ! -z "${fieldValue[$columnCounter]}" && "$extResourcesMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
-                    if [[ ! -z "${fieldValue[$columnCounter]}" ]];
-                    then
-                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
-                        echo "        <field>
-          <name>${fieldName[$columnCounter]}</name>
-          <value>${fieldValue[$columnCounter]}</value>
-        </field>" >> "$fileDestinationExternal"
-                        columnCounter=$(($columnCounter + 1))
-                    else
-                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
-                        columnCounter=$(($columnCounter + 1))
-                    fi
-                ;;
-                
-                # oly_alternateContractIds, oly_castExtended, oly_contractCode, oly_episodeNumber, oly_legacyAiredFilename, oly_legacyAiredFilepath, oly_originalTitle, oly_productionYear, oly_seasonNumber, oly_seriesName, oly_titleEn, oly_titleEs, oly_totalDurationBySeason, oly_totalDurationBySeries, oly_totalEpisodesBySeason, oly_totalEpisodesBySeries, oly_totalSeasonsBySeries 
-                *)
-                    #if [[ ! -z "${fieldValue[$columnCounter]}" && "$bulkMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
-                    if [[ ! -z "${fieldValue[$columnCounter]}" ]];
-                    then
-                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
-                        echo "      <field>
-         <name>${fieldName[$columnCounter]}</name>
-         <value>${fieldValue[$columnCounter]}</value>
-      </field>" >> "$fileDestination"
-                        columnCounter=$(($columnCounter + 1))
-                    else
-                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
-                        columnCounter=$(($columnCounter + 1))
-                    fi
-                ;;
-
-            esac
-        done
-
-        if [ -e "$fileDestinationClosedCaptionInfo" ];
-        then
-            echo "      <field>
+            if [ -e "$fileDestinationClosedCaptionInfo" ];
+            then
+                echo "      <field>
           <name>oly_closedCaptionInfo</name>" >> "$fileDestination"
-            cat "$fileDestinationClosedCaptionInfo" >> "$fileDestination"
-            echo "      </field>" >> "$fileDestination"
-            rm -f "$fileDestinationClosedCaptionInfo"
-        fi
-        if [ -e "$fileDestinationExternal" ];
-        then
-            echo "      <group>
+                cat "$fileDestinationClosedCaptionInfo" >> "$fileDestination"
+                echo "      </field>" >> "$fileDestination"
+                rm -f "$fileDestinationClosedCaptionInfo"
+            fi
+            if [ -e "$fileDestinationExternal" ];
+            then
+                echo "      <group>
         <name>External Resources</name>" >> "$fileDestination"
-            cat "$fileDestinationExternal" >> "$fileDestination"
-            echo "      </group>" >> "$fileDestination"
-            rm -f "$fileDestinationExternal"
-        fi
-        if [ -e "$fileDestinationSpanish" ];
-        then
-            echo "      <group>
+                cat "$fileDestinationExternal" >> "$fileDestination"
+                echo "      </group>" >> "$fileDestination"
+                rm -f "$fileDestinationExternal"
+            fi
+            if [ -e "$fileDestinationSpanish" ];
+            then
+                echo "      <group>
         <name>Spanish Synopsis</name>" >> "$fileDestination"
-            cat "$fileDestinationSpanish" >> "$fileDestination"
-            echo "      </group>" >> "$fileDestination"
-            rm -f "$fileDestinationSpanish"
-        fi
-        if [ -e "$fileDestinationEnglish" ];
-        then
-            echo "      <group>
+                cat "$fileDestinationSpanish" >> "$fileDestination"
+                echo "      </group>" >> "$fileDestination"
+                rm -f "$fileDestinationSpanish"
+            fi
+            if [ -e "$fileDestinationEnglish" ];
+            then
+                echo "      <group>
         <name>English Synopsis</name>" >> "$fileDestination"
-            cat "$fileDestinationEnglish" >> "$fileDestination"
-            echo "      </group>" >> "$fileDestination"
-            rm -f "$fileDestinationEnglish"
-        fi
-        # --------------------------------------------------
+                cat "$fileDestinationEnglish" >> "$fileDestination"
+                echo "      </group>" >> "$fileDestination"
+                rm -f "$fileDestinationEnglish"
+            fi
+            # --------------------------------------------------
 
-        # --------------------------------------------------
-        # Print XML footer
-        echo "    </timespan>
+            # --------------------------------------------------
+            # Print XML footer
+            echo "    </timespan>
 </MetadataDocument>" >> "$fileDestination"
 
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - XML has been created {$cantemoItemId.xml}" >> "$logfile"
-        # --------------------------------------------------
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - XML has been created {$cantemoItemId.xml}" >> "$logfile"
+            # --------------------------------------------------
 
-        sleep 5
+            sleep 5
 
-        # ----------------------------------------------------
-        # API Call to Update Metadata
+            # ----------------------------------------------------
+            # API Call to Update Metadata
 
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - Triggering API Call to Import XML into Cantemo" >> "$logfile"
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - Triggering API Call to Import XML into Cantemo" >> "$logfile"
 
-        url="http://10.1.1.34:8080/API/import/sidecar/$cantemoItemId?sidecar=/opt/olympusat/xmlsForMetadataImport/$cantemoItemId.xml"
-        #importXmlHttpResponse=$(curl --location --request POST $url --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0')
+            url="http://10.1.1.34:8080/API/import/sidecar/$cantemoItemId?sidecar=/opt/olympusat/xmlsForMetadataImport/$cantemoItemId.xml"
+            #importXmlHttpResponse=$(curl --location --request POST $url --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0')
 
-        sleep 2
-        
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - Moving XML to zCompleted Folder" >> "$logfile"
+            sleep 2
+            
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - Moving XML to zCompleted Folder" >> "$logfile"
 
-        sleep 2
+            sleep 2
 
-        #mv "$fileDestination" "/opt/olympusat/xmlsForMetadataImport/zCompleted/"
+            #mv "$fileDestination" "/opt/olympusat/xmlsForMetadataImport/zCompleted/"
 
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - Import Metadata Job Completed" >> "$logfile"
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - Import Metadata Job Completed" >> "$logfile"
+
+        else
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - Import Metadata Job Skipped - updateInCantemo is not set with y or yes" >> "$logfile"
+        fi
 
     else
         echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - Import Metadata Job Skipped - No Matching Rightsline Item Id Found in CSV - {$rightslineItemId}" >> "$logfile"
