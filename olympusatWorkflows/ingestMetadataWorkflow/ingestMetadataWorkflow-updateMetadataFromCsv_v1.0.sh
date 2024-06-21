@@ -222,25 +222,25 @@ then
     # --------------------------------------------------
     # Checking Cantemo Item for existing metadata
 
-    urlGetItemBulkMetadata="http://10.1.1.34:8080/API/item/$cantemoItemId/metadata?field=oly_alternateContractIds%2Coly_cast%2Coly_castExtended%2Coly_contentFlags%2Coly_contentType%2Coly_contractCode%2Coly_countryOfOrigin%2Coly_director%2Coly_episodeNumber%2Coly_legacyAiredFilename%2Coly_legacyAiredFilepath%2Coly_licensor%2Coly_numberOfEpisodes%2Coly_originalFileFlags%2Coly_originalLanguage%2Coly_originalMpaaRating%2Coly_originalRating%2Coly_originalRtcRating%2Coly_originalTitle%2Coly_primaryGenre%2Coly_producer%2Coly_productionCompany%2Coly_productionYear%2Coly_reasonsForOriginalRating%2Coly_rightslineContractId%2Coly_rightslineEntityTitle%2Coly_rightslineItemId%2Coly_seasonNumber%2Coly_tags%2Coly_titleCode%2Coly_titleEn%2Coly_titleEs%2Coly_totalDurationBySeason%2Coly_totalDurationBySeries%2Coly_totalEpisodesBySeason%2Coly_totalEpisodesBySeries%2Coly_totalSeasonsBySeries%2Coly_versionType%2Coly_timecode&terse=yes&includeConstraintValue=all"
-    bulkMetadataHttpResponse=$(curl --location --request GET $urlGetItemBulkMetadata --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=Tkb9vkSC8v4SceB8CHUyB3iaMPjvgoHrzhLrvo36agG3wqv0jHc7nsOtdTo9JEyM')
+    #urlGetItemBulkMetadata="http://10.1.1.34:8080/API/item/$cantemoItemId/metadata?field=oly_alternateContractIds%2Coly_cast%2Coly_castExtended%2Coly_contentFlags%2Coly_contentType%2Coly_contractCode%2Coly_countryOfOrigin%2Coly_director%2Coly_episodeNumber%2Coly_legacyAiredFilename%2Coly_legacyAiredFilepath%2Coly_licensor%2Coly_numberOfEpisodes%2Coly_originalFileFlags%2Coly_originalLanguage%2Coly_originalMpaaRating%2Coly_originalRating%2Coly_originalRtcRating%2Coly_originalTitle%2Coly_primaryGenre%2Coly_producer%2Coly_productionCompany%2Coly_productionYear%2Coly_reasonsForOriginalRating%2Coly_rightslineContractId%2Coly_rightslineEntityTitle%2Coly_rightslineItemId%2Coly_seasonNumber%2Coly_tags%2Coly_titleCode%2Coly_titleEn%2Coly_titleEs%2Coly_totalDurationBySeason%2Coly_totalDurationBySeries%2Coly_totalEpisodesBySeason%2Coly_totalEpisodesBySeries%2Coly_totalSeasonsBySeries%2Coly_versionType%2Coly_timecode&terse=yes&includeConstraintValue=all"
+    #bulkMetadataHttpResponse=$(curl --location --request GET $urlGetItemBulkMetadata --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=Tkb9vkSC8v4SceB8CHUyB3iaMPjvgoHrzhLrvo36agG3wqv0jHc7nsOtdTo9JEyM')
 
-    sleep 1
+    #sleep 1
 
-    urlGetItemSpaSynopMetadata="http://10.1.1.34:8080/API/item/$cantemoItemId/metadata?field=oly_descriptionEs%2Coly_shortDescriptionEs%2Coly_socialDescriptionEs%2Coly_logLineEs&group=Spanish%20Synopsis&terse=yes"
-    spaSynopMetadataHttpResponse=$(curl --location --request GET $urlGetItemSpaSynopMetadata --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=Tkb9vkSC8v4SceB8CHUyB3iaMPjvgoHrzhLrvo36agG3wqv0jHc7nsOtdTo9JEyM')
+    #urlGetItemSpaSynopMetadata="http://10.1.1.34:8080/API/item/$cantemoItemId/metadata?field=oly_descriptionEs%2Coly_shortDescriptionEs%2Coly_socialDescriptionEs%2Coly_logLineEs&group=Spanish%20Synopsis&terse=yes"
+    #spaSynopMetadataHttpResponse=$(curl --location --request GET $urlGetItemSpaSynopMetadata --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=Tkb9vkSC8v4SceB8CHUyB3iaMPjvgoHrzhLrvo36agG3wqv0jHc7nsOtdTo9JEyM')
 
-    sleep 1
+    #sleep 1
 
-    urlGetItemEngSynopMetadata="http://10.1.1.34:8080/API/item/$cantemoItemId/metadata?field=oly_descriptionEn%2Coly_shortDescriptionEn%2Coly_socialDescriptionEn%2Coly_logLineEn&group=English%20Synopsis&terse=yes"
-    engSynopMetadataHttpResponse=$(curl --location --request GET $urlGetItemEngSynopMetadata --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=Tkb9vkSC8v4SceB8CHUyB3iaMPjvgoHrzhLrvo36agG3wqv0jHc7nsOtdTo9JEyM')
+    #urlGetItemEngSynopMetadata="http://10.1.1.34:8080/API/item/$cantemoItemId/metadata?field=oly_descriptionEn%2Coly_shortDescriptionEn%2Coly_socialDescriptionEn%2Coly_logLineEn&group=English%20Synopsis&terse=yes"
+    #engSynopMetadataHttpResponse=$(curl --location --request GET $urlGetItemEngSynopMetadata --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=Tkb9vkSC8v4SceB8CHUyB3iaMPjvgoHrzhLrvo36agG3wqv0jHc7nsOtdTo9JEyM')
 
-    sleep 1
+    #sleep 1
 
-    urlGetItemExtResourcesMetadata="http://10.1.1.34:8080/API/item/$cantemoItemId/metadata?field=oly_trailerLink%2Coly_clipLink%2Coly_promoLink%2Coly_screenerLink&group=External%20Resources&terse=yes"
-    extResourcesMetadataHttpResponse=$(curl --location --request GET $urlGetItemExtResourcesMetadata --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=Tkb9vkSC8v4SceB8CHUyB3iaMPjvgoHrzhLrvo36agG3wqv0jHc7nsOtdTo9JEyM')
+    #urlGetItemExtResourcesMetadata="http://10.1.1.34:8080/API/item/$cantemoItemId/metadata?field=oly_trailerLink%2Coly_clipLink%2Coly_promoLink%2Coly_screenerLink&group=External%20Resources&terse=yes"
+    #extResourcesMetadataHttpResponse=$(curl --location --request GET $urlGetItemExtResourcesMetadata --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=Tkb9vkSC8v4SceB8CHUyB3iaMPjvgoHrzhLrvo36agG3wqv0jHc7nsOtdTo9JEyM')
 
-    sleep 1
+    #sleep 1
 
     # --------------------------------------------------
 
@@ -251,7 +251,7 @@ then
     do
         case "${fieldName[$columnCounter]}" in
 
-            "type"|"itemTitle"|"oly_rightslineContractId"|"oly_rightslineEntityTitle"|"oly_rightslineItemId"|"oly_titleCode"|"oly_numberOfEpisodes")
+            "itemId"|"type"|"itemTitle"|"oly_rightslineContractId"|"oly_rightslineEntityTitle"|"oly_rightslineItemId"|"oly_titleCode"|"oly_numberOfEpisodes")
                 # Skip and do nothing with this column
                 columnCounter=$(($columnCounter + 1))
             ;;
