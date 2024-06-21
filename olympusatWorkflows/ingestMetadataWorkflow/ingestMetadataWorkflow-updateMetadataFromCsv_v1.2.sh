@@ -95,6 +95,7 @@ convertLicensorToCamelCase ()
         #fi
     #done
     echo "$combinedValue"
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - Internal Function - Licensor Converted - {$combinedValue} " >> "$logfile"
 }
 
 createTags ()
@@ -354,10 +355,13 @@ then
 
                     "oly_licensor")
                         #if [[ ! -z "${fieldValue[$columnCounter]}" && "$bulkMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
+                        
+                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - Licensor Before Conversion - [${fieldValue[$columnCounter]}]" >> "$logfile"
                         if [[ ! -z "${fieldValue[$columnCounter]}" ]];
                         then
                             #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
                             fieldValue[$columnCounter]=$(convertLicensorToCamelCase ${fieldValue[$columnCounter]})
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - Licensor After Conversion - [${fieldValue[$columnCounter]}]" >> "$logfile"
                             columnCounter=$(($columnCounter + 1))
                         else
                             #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
