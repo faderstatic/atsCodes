@@ -129,7 +129,7 @@ echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - 
 # --------------------------------------------------
 # Check for csv with filename that starts with 'metadata_export_' & contains username
 
-export inputFile="'$inputFolder'metadata_export_$userName.csv"
+export inputFile="$inputFolder/metadata_export_$userName.csv"
 echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - Input File - {$inputFile}" >> "$logfile"
 
 if [[ -e "$inputFile" ]];
