@@ -44,6 +44,32 @@ convertToCamelCase ()
     echo "$combinedValue"
 }
 
+convertToCaseForFlags ()
+{
+    currentFieldValue=$1
+    combinedValue=""
+    numberOfValues=$(echo "$currentFieldValue" | awk -F'[|,]' '{print NF}')
+    for (( i=1 ; i<=$numberOfValues ; i++ ));
+    do
+        currentValue=$(echo "$currentFieldValue" | awk -F'[|,]' '{print $'$i'}')
+        firstWord=$(echo $currentValue | awk '{print $1}' | tr '[:upper:]' '[:lower:]')
+        numberOfWords=$(echo $currentValue | awk '{print NF}')
+        if [[ $numberOfWords -gt 1 ]];
+        then
+            restOfTheWords=$(echo $currentValue | cut -d " " -f2-$NF | sed -e 's/ //g' | tr '[:upper:]' '[:lower:]')
+        else
+            restOfTheWords=""
+        fi
+        if [[ "$combinedValue" = "" ]];
+        then
+            combinedValue=$(echo $firstWord$restOfTheWords)
+        else
+            combinedValue=$(echo $combinedValue,$firstWord$restOfTheWords)
+        fi
+    done
+    echo "$combinedValue"
+}
+
 createTags ()
 {
     currentFieldValue="$1"
@@ -225,61 +251,14 @@ then
     do
         case "${fieldName[$columnCounter]}" in
 
-            "Genres")
-                if [[ ! -z "${fieldValue[$columnCounter]}" && "$bulkMetadataHttpResponse" != *"</oly_primaryGenre>"* ]];
-                then
-                    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
-                    fieldValue[$columnCounter]=$(convertToCamelCase ${fieldValue[$columnCounter]})
-                    primaryGenre=$(echo "${fieldValue[$columnCounter]}" | awk -F "," '{print $1}')
-                    secondaryGenres=$(echo "${fieldValue[$columnCounter]}" | cut -d "," -f2-$NF)
-                    if [[ "$primaryGenre" = "$secondaryGenres" || -z "$secondaryGenres" ]];
-                    then
-                        secondaryGenres=""
-                    fi
-                    echo "      <field>
-         <name>oly_primaryGenre</name>
-         <value>$primaryGenre</value>
-      </field>" >> "$fileDestination"
-                    columnCounter=$(($columnCounter + 1))
-                    createTags "$secondaryGenres" "oly_secondaryGenres" "$fileDestination"
-                else
-                    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
-                    columnCounter=$(($columnCounter + 1))
-                fi
-            ;;
-
-            "oly_descriptionEs"|"oly_shortDescriptionEs"|"oly_socialDescriptionEs"|"oly_logLineEs")
-                if [[ ! -z "${fieldValue[$columnCounter]}" && "$spaSynopMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
-                then
-                    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
-                    echo "        <field>
-          <name>${fieldName[$columnCounter]}</name>
-          <value>${fieldValue[$columnCounter]}</value>
-        </field>" >> "$fileDestinationSpanish"
-                    columnCounter=$(($columnCounter + 1))
-                else
-                    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
-                    columnCounter=$(($columnCounter + 1))
-                fi
-            ;;
-
-            "oly_descriptionEn"|"oly_shortDescriptionEn"|"oly_socialDescriptionEn"|"oly_logLineEn")
-                if [[ ! -z "${fieldValue[$columnCounter]}" && "$engSynopMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
-                then
-                    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
-                    echo "        <field>
-          <name>${fieldName[$columnCounter]}</name>
-          <value>${fieldValue[$columnCounter]}</value>
-        </field>" >> "$fileDestinationEnglish"
-                    columnCounter=$(($columnCounter + 1))
-                else
-                    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
-                    columnCounter=$(($columnCounter + 1))
-                fi
+            "type"|"itemTitle"|"oly_rightslineContractId"|"oly_rightslineEntityTitle"|"oly_rightslineItemId"|"oly_titleCode"|"oly_numberOfEpisodes")
+                # Skip and do nothing with this column
+                columnCounter=$(($columnCounter + 1))
             ;;
 
             "oly_cast"|"oly_director"|"oly_producer"|"oly_tags"|"oly_productionCompany")
-                if [[ ! -z "${fieldValue[$columnCounter]}" && "$bulkMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
+                #if [[ ! -z "${fieldValue[$columnCounter]}" && "$bulkMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
+                if [[ ! -z "${fieldValue[$columnCounter]}" ]];
                 then
                     #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
                     createTags "${fieldValue[$columnCounter]}" "${fieldName[$columnCounter]}" "$fileDestination"
@@ -290,12 +269,27 @@ then
                 fi
             ;;
 
-            "oly_contentType"|"oly_originalMpaaRating"|"oly_originalRtcRating"|"oly_originalRating"|"oly_countryOfOrigin"|"oly_closedCaptionLanguage"|"oly_originalLanguage")
-                if [[ ! -z "${fieldValue[$columnCounter]}" && "$bulkMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
+            "oly_contentFlags"|"oly_originalFileFlags")
+                #if [[ ! -z "${fieldValue[$columnCounter]}" && "$bulkMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
+                if [[ ! -z "${fieldValue[$columnCounter]}" ]];
+                then
+                    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
+                    fieldValue[$columnCounter]=$(convertToCaseForFlags ${fieldValue[$columnCounter]})
+                    createTags "${fieldValue[$columnCounter]}" "${fieldName[$columnCounter]}" "$fileDestination"
+                    columnCounter=$(($columnCounter + 1))
+                else
+                    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
+                    columnCounter=$(($columnCounter + 1))
+                fi
+            ;;
+
+            "oly_contentType"|"oly_licensor"|"oly_originalLanguage"|"oly_countryOfOrigin"|"oly_originalMpaaRating"|"oly_originalRtcRating"|"oly_originalRating"|"oly_primaryGenre"|"oly_secondaryGenres"|"oly_reasonForOriginalRating"|"oly_closedCaptionLanguage"|"oly_versionType")
+                #if [[ ! -z "${fieldValue[$columnCounter]}" && "$bulkMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
+                if [[ ! -z "${fieldValue[$columnCounter]}" ]];
                 then
                     #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
                     fieldValue[$columnCounter]=$(convertToCamelCase ${fieldValue[$columnCounter]})
-                    if [[ "${fieldName[$columnCounter]}" = "oly_countryOfOrigin" ]];
+                    if [[ "${fieldName[$columnCounter]}" = "oly_countryOfOrigin" || "${fieldName[$columnCounter]}" = "oly_secondaryGenres" || "${fieldName[$columnCounter]}" = "oly_reasonForOriginalRating" ]];
                     then
                         createTags "${fieldValue[$columnCounter]}" "${fieldName[$columnCounter]}" "$fileDestination"
                     else
@@ -311,11 +305,15 @@ then
                 fi
             ;;
 
-            "oly_closedCaptionInfo-closedcaptionavailable")
-                if [[ "${fieldValue[$columnCounter]}" == "Yes" ]];
+            "oly_descriptionEs"|"oly_shortDescriptionEs"|"oly_socialDescriptionEs"|"oly_logLineEs")
+                #if [[ ! -z "${fieldValue[$columnCounter]}" && "$spaSynopMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
+                if [[ ! -z "${fieldValue[$columnCounter]}" ]];
                 then
                     #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
-                    echo "          <value>closedcaptionavailable</value>" >> "$fileDestinationClosedCaptionInfo"
+                    echo "        <field>
+          <name>${fieldName[$columnCounter]}</name>
+          <value>${fieldValue[$columnCounter]}</value>
+        </field>" >> "$fileDestinationSpanish"
                     columnCounter=$(($columnCounter + 1))
                 else
                     #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
@@ -323,11 +321,15 @@ then
                 fi
             ;;
 
-            "oly_closedCaptionInfo-broadcastedontvwithcc")
-                if [[ "${fieldValue[$columnCounter]}" == "Yes" ]];
+            "oly_descriptionEn"|"oly_shortDescriptionEn"|"oly_socialDescriptionEn"|"oly_logLineEn")
+                #if [[ ! -z "${fieldValue[$columnCounter]}" && "$engSynopMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
+                if [[ ! -z "${fieldValue[$columnCounter]}" ]];
                 then
                     #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
-                    echo "          <value>broadcastedontvwithcc</value>" >> "$fileDestinationClosedCaptionInfo"
+                    echo "        <field>
+          <name>${fieldName[$columnCounter]}</name>
+          <value>${fieldValue[$columnCounter]}</value>
+        </field>" >> "$fileDestinationEnglish"
                     columnCounter=$(($columnCounter + 1))
                 else
                     #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
@@ -336,7 +338,8 @@ then
             ;;
 
             "oly_clipLink"|"oly_promoLink"|"oly_trailerLink")
-                if [[ ! -z "${fieldValue[$columnCounter]}" && "$extResourcesMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
+                #if [[ ! -z "${fieldValue[$columnCounter]}" && "$extResourcesMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
+                if [[ ! -z "${fieldValue[$columnCounter]}" ]];
                 then
                     #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
                     echo "        <field>
@@ -349,124 +352,11 @@ then
                     columnCounter=$(($columnCounter + 1))
                 fi
             ;;
-
-            "oly_rightslineContractId")
-                if [[ ! -z "${fieldValue[$columnCounter]}" && "$bulkMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
-                then
-                    if [[ "${fieldValue[$columnCounter]}" == *"|"* ]];
-                    then
-                        firstContractId=$(echo "${fieldValue[$columnCounter]}" | awk -F '|' '{print $1}')
-                        secondContractId=$(echo "${fieldValue[$columnCounter]}" | awk -F '|' '{print $2}')
-
-                        firstIdNumberOfCharacters=$(echo "$firstContractId" | wc -c)
-                        if [[ $firstIdNumberOfCharacters != 1 ]];
-                        then
-                            firstContractString="CA_"
-                            missingCharacters=$((7 - $firstIdNumberOfCharacters))
-                            for (( k=1 ; k<=$missingCharacters ; k++ ));
-                            do
-                                firstContractString="$firstContractString""0"
-                            done
-                            firstContractString="$firstContractString""$firstContractId"
-                            echo "      <field>
-         <name>${fieldName[$columnCounter]}</name>
-         <value>$firstContractString</value>
-      </field>" >> "$fileDestination"
-                            columnCounter=$(($columnCounter + 1))
-                        else
-                            echo "      <field>
-         <name>${fieldName[$columnCounter]}</name>
-         <value>$firstContractString</value>
-      </field>" >> "$fileDestination"
-                            columnCounter=$(($columnCounter + 1))
-                        fi
-
-                        secondIdNumberOfCharacters=$(echo "$secondContractId" | wc -c)
-                        if [[ $secondIdNumberOfCharacters != 1 ]];
-                        then
-                            secondContractString="CA_"
-                            missingCharacters=$((7 - $secondIdNumberOfCharacters))
-                            for (( k=1 ; k<=$missingCharacters ; k++ ));
-                            do
-                                secondContractString="$secondContractString""0"
-                            done
-                            secondContractString="$secondContractString""$secondContractId"
-                            echo "      <field>
-         <name>oly_alternateContractIds</name>
-         <value>$secondContractString</value>
-      </field>" >> "$fileDestination"
-                            columnCounter=$(($columnCounter + 1))
-                        else
-                            echo "      <field>
-         <name>oly_alternateContractIds</name>
-         <value>$secondContractString</value>
-      </field>" >> "$fileDestination"
-                            columnCounter=$(($columnCounter + 1))
-                        fi
-                    else
-                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
-                        numberOfCharacters=$(echo "${fieldValue[$columnCounter]}" | wc -c)
-                        if [[ $numberOfCharacters != 1 ]];
-                        then
-                            contractString="CA_"
-                            missingCharacters=$((7 - $numberOfCharacters))
-                            for (( k=1 ; k<=$missingCharacters ; k++ ));
-                            do
-                                contractString="$contractString""0"
-                            done
-                            contractString="$contractString""${fieldValue[$columnCounter]}"
-                            echo "      <field>
-         <name>${fieldName[$columnCounter]}</name>
-         <value>$contractString</value>
-      </field>" >> "$fileDestination"
-                            columnCounter=$(($columnCounter + 1))
-                        else
-                            echo "      <field>
-         <name>${fieldName[$columnCounter]}</name>
-         <value>$contractString</value>
-      </field>" >> "$fileDestination"
-                            columnCounter=$(($columnCounter + 1))
-                        fi
-                    fi
-                else
-                    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
-                    columnCounter=$(($columnCounter + 1))
-                fi
-            ;;
-
-            "oly_rightslineItemId")
-                columnCounter=$(($columnCounter + 1))
-            ;;
-
-            "oly_numberOfEpisodes")
-                if [[ ! -z "${fieldValue[$columnCounter]}" ]];
-                then
-                    if [[ "${fieldValue[5]}" == "Series" && "$bulkMetadataHttpResponse" != *"</oly_totalEpisodesBySeries>"* ]];
-                    then
-                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
-                        echo "      <field>
-         <name>oly_totalEpisodesBySeries</name>
-         <value>${fieldValue[$columnCounter]}</value>
-      </field>" >> "$fileDestination"
-                        columnCounter=$(($columnCounter + 1))
-                    fi
-                    if [[ "${fieldValue[5]}" == "Season" && "$bulkMetadataHttpResponse" != *"</oly_totalEpisodesBySeason>"* ]];
-                    then
-                        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
-                        echo "      <field>
-         <name>oly_totalEpisodesBySeason</name>
-         <value>${fieldValue[$columnCounter]}</value>
-      </field>" >> "$fileDestination"
-                        columnCounter=$(($columnCounter + 1))
-                    fi
-                else
-                    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
-                    columnCounter=$(($columnCounter + 1))
-                fi
-            ;;
             
+            # oly_alternateContractIds, oly_castExtended, oly_contractCode, oly_episodeNumber, oly_legacyAiredFilename, oly_legacyAiredFilepath, oly_originalTitle, oly_productionYear, oly_seasonNumber, oly_seriesName, oly_titleEn, oly_titleEs, oly_totalDurationBySeason, oly_totalDurationBySeries, oly_totalEpisodesBySeason, oly_totalEpisodesBySeries, oly_totalSeasonsBySeries 
             *)
-                if [[ ! -z "${fieldValue[$columnCounter]}" && "$bulkMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
+                #if [[ ! -z "${fieldValue[$columnCounter]}" && "$bulkMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
+                if [[ ! -z "${fieldValue[$columnCounter]}" ]];
                 then
                     #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
                     echo "      <field>
@@ -533,7 +423,7 @@ then
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - Triggering API Call to Import XML into Cantemo" >> "$logfile"
 
     url="http://10.1.1.34:8080/API/import/sidecar/$cantemoItemId?sidecar=/opt/olympusat/xmlsForMetadataImport/$cantemoItemId.xml"
-    importXmlHttpResponse=$(curl --location --request POST $url --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0')
+    #importXmlHttpResponse=$(curl --location --request POST $url --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0')
 
     sleep 2
     
@@ -541,10 +431,9 @@ then
 
     sleep 2
 
-    mv "$fileDestination" "/opt/olympusat/xmlsForMetadataImport/zCompleted/"
+    #mv "$fileDestination" "/opt/olympusat/xmlsForMetadataImport/zCompleted/"
 
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - Triggering Shell Script to Import Contract Information" >> "$logfile"
-    bash -c "sudo /opt/olympusat/scriptsActive/importRightslineLegacyInfo-contract_v3.4.sh $cantemoItemId $userName oly_rightslineItemId /opt/olympusat/resources/RIGHTSLINE_CONTRACT_CODE_INFO_DATABASE_2024-05-07.csv > /dev/null 2>&1 &"
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - Import Metadata Job Completed" >> "$logfile"
 
 else
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - Import Metadata Job Skipped - No Matching Rightsline Item Id Found in CSV - {$rightslineItemId}" >> "$logfile"
