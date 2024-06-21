@@ -70,6 +70,33 @@ convertToCaseForFlags ()
     echo "$combinedValue"
 }
 
+convertLicensorToCamelCase ()
+{
+    #currentFieldValue=$1
+    currentValue=$1
+    #combinedValue=""
+    #numberOfValues=$(echo "$currentFieldValue" | awk -F'[|,]' '{print NF}')
+    #for (( i=1 ; i<=$numberOfValues ; i++ ));
+    #do
+        #currentValue=$(echo "$currentFieldValue" | awk -F'[|,]' '{print $'$i'}')
+        firstWord=$(echo $currentValue | awk -F ' ' '{print $1}' | tr '[:upper:]' '[:lower:]' | sed -e 's/[,.]//g')
+        numberOfWords=$(echo $currentValue | awk -F ' ' '{print NF}')
+        if [[ $numberOfWords -gt 1 ]];
+        then
+            restOfTheWords=$(echo $currentValue | cut -d " " -f2-$NF | tr '[:upper:]' '[:lower:]' | sed 's/\([a-z]\)\([a-zA-Z0-9]*\)/\u\1\2/g' | sed -e 's/[ ,.]//g')
+        else
+            restOfTheWords=""
+        fi
+        #if [[ "$combinedValue" = "" ]];
+        #then
+            combinedValue=$(echo $firstWord$restOfTheWords)
+        #else
+        #    combinedValue=$(echo $combinedValue,$firstWord$restOfTheWords)
+        #fi
+    #done
+    echo "$combinedValue"
+}
+
 createTags ()
 {
     currentFieldValue="$1"
@@ -271,7 +298,7 @@ then
             do
                 case "${fieldName[$columnCounter]}" in
 
-                    "itemId"|"type"|"itemTitle"|"oly_rightslineContractId"|"oly_rightslineEntityTitle"|"oly_rightslineItemId"|"oly_titleCode"|"oly_numberOfEpisodes")
+                    "itemId"|"type"|"itemTitle"|"oly_rightslineContractId"|"oly_rightslineEntityTitle"|"oly_rightslineItemId"|"oly_titleCode"|"oly_numberOfEpisodes"|"updateInCantemo")
                         # Skip and do nothing with this column
                         columnCounter=$(($columnCounter + 1))
                     ;;
@@ -303,7 +330,7 @@ then
                         fi
                     ;;
 
-                    "oly_contentType"|"oly_licensor"|"oly_originalLanguage"|"oly_countryOfOrigin"|"oly_originalMpaaRating"|"oly_originalRtcRating"|"oly_originalRating"|"oly_primaryGenre"|"oly_secondaryGenres"|"oly_reasonForOriginalRating"|"oly_closedCaptionLanguage"|"oly_versionType")
+                    "oly_contentType"|"oly_originalLanguage"|"oly_countryOfOrigin"|"oly_originalMpaaRating"|"oly_originalRtcRating"|"oly_originalRating"|"oly_primaryGenre"|"oly_secondaryGenres"|"oly_reasonForOriginalRating"|"oly_closedCaptionLanguage"|"oly_versionType")
                         #if [[ ! -z "${fieldValue[$columnCounter]}" && "$bulkMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
                         if [[ ! -z "${fieldValue[$columnCounter]}" ]];
                         then
@@ -318,6 +345,19 @@ then
          <value>${fieldValue[$columnCounter]}</value>
       </field>" >> "$fileDestination"
                             fi
+                            columnCounter=$(($columnCounter + 1))
+                        else
+                            #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
+                            columnCounter=$(($columnCounter + 1))
+                        fi
+                    ;;
+
+                    "oly_licensor")
+                        #if [[ ! -z "${fieldValue[$columnCounter]}" && "$bulkMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
+                        if [[ ! -z "${fieldValue[$columnCounter]}" ]];
+                        then
+                            #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
+                            fieldValue[$columnCounter]=$(convertLicensorToCamelCase ${fieldValue[$columnCounter]})
                             columnCounter=$(($columnCounter + 1))
                         else
                             #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
