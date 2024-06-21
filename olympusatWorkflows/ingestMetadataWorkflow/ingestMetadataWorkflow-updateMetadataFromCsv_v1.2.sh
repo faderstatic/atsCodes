@@ -209,12 +209,12 @@ then
             if [[ $columnCounter -eq $columnCounts ]];
             then
                 updateInCantemoValue[$columnCounter]=$(echo $cleanLine | awk 'BEGIN { FPAT = "([^,]*)|(\"[^\"]+)|(\"[^\"]+\")" } {print $'$columnCounter'}' | sed -e 's/\"//g' | tr '[:upper:]' '[:lower:]')
-                echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - Check updateInCantemo column - Column - {$updateInCantemoValue[$columnCounter]} - Value - [${updateInCantemoValue[$columnCounter]}]" >> "$logfile"
+                echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - Check updateInCantemo column value - [${updateInCantemoValue[$columnCounter]}]" >> "$logfile"
             fi
             # --------------------------------------------------
         done
 
-        if [[ "${updateInCantemoValue[$columnCounter]}" == "y" || "${updateInCantemoValue[$columnCounter]}" == "yes" ]];
+        if [[ "${updateInCantemoValue[$columnCounter]}" == "yes" ]];
         then
             # --------------------------------------------------
             # Writing XML File
