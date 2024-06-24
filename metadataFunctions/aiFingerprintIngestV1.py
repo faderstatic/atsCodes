@@ -41,6 +41,7 @@ try:
   #------------------------------
   # Parsing JSON data for timebase
   responseJson = httpApiResponse.json() if httpApiResponse and httpApiResponse.status_code == 200 else None
+  print(responseJson)
   if responseJson and 'field' in responseJson:
     for fieldInformation in responseJson['field']:
       for keywordType in fieldInformation['key']:
