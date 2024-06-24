@@ -32,7 +32,7 @@ try:
     'Cookie': 'csrftoken=OtjDQ4lhFt2wJjGaJhq3xi05z3uA6D8F7wCWNVXxMuJ8A9jw7Ri7ReqSNGLS2VRR',
     'Accept': 'application/json'
   }
-  urlGetTimebaseInfo = f"https://10.1.1.34:8080/API/metadata-field/oly_keywordAnalysis/metadata"
+  urlGetTimebaseInfo = f"http://10.1.1.34:8080/API/metadata-field/oly_keywordAnalysis/metadata"
   payload = {}
   httpApiResponse = requests.request("GET", urlGetTimebaseInfo, headers=headers, data=payload)
   httpApiResponse.raise_for_status()
