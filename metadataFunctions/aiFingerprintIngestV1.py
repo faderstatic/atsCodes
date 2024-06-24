@@ -14,6 +14,7 @@ import datetime
 import time
 import subprocess
 import xml.dom.minidom
+import xml.etree.ElementTree as ET
 import requests
 import json
 from requests.exceptions import HTTPError
@@ -44,8 +45,19 @@ try:
   if responseJson and 'field' in responseJson:
     for fieldInformation in responseJson['field']:
       if fieldInformation['key'] == "__values":
-        keywordValueXML = fieldInformation['value']
-        print(keywordValueXML)
+        keywordValueXml = fieldInformation['value']
+        print(keywordValueXml)
+  #------------------------------
+  
+  #------------------------------
+  # Parsing XML data
+  ET.register_namespace('ns', 'http://xml.vidispine.com/schema/vidispine')
+  keywordXmlRoot = ET.fromstring(keywordValueXml)
+  metadataInformation = keywordXmlRoot.find('{http://xml.vidispine.com/schema/vidispine}SimpleMetadataDocument')
+  for fieldValue in metadataInformation.iter('field'):
+    keywordValue = fieldValue.get('key')
+    print(keywordValue)
+  #------------------------------
   
   #------------------------------
   # Making API call to Vionlabs to get fingerprints
