@@ -56,7 +56,7 @@ try:
   print(keywordXmlRoot)
   for fieldValue in keywordXmlRoot:
     keywordValue = fieldValue.find('key')
-    print(keywordValue)
+    print(keywordValue.text)
   #------------------------------
   
   #------------------------------
