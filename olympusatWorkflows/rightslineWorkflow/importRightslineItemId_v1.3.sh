@@ -217,6 +217,8 @@ then
 
             bash -c "sudo /opt/olympusat/scriptsActive/importRightslineLegacyInfo-media_v2.8.sh $cantemoItemId oly_rightslineItemId /opt/olympusat/resources/RIGHTSLINE_CATALOG-ITEM_DATABASE_2024-04-16_v2.1.csv > /dev/null 2>&1"
 
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (ingestRightslineItemId) - [$cantemoItemId] - Import Rightsline Item Id Job Completed" >> "$logfile"
+
         fi
     else
         echo "$(date +%Y/%m/%d_%H:%M:%S) - (ingestRightslineItemId) - [$cantemoItemId] - Item already has oly_rightslineItemId set in Cantemo - SKIPPING import/update" >> "$logfile"    
