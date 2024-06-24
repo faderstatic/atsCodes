@@ -57,8 +57,8 @@ try:
   # print(keywordXmlRoot.find('{http://xml.vidispine.com/schema/vidispine}field'))
   for fieldValue in keywordXmlRoot:
     keywordValue = fieldValue.find('{http://xml.vidispine.com/schema/vidispine}key')
-    keywordList += keywordValue.text
-    print(keywordList)
+    keywordList += keywordValue.text+','
+  print(keywordList)
   #------------------------------
   
   #------------------------------
