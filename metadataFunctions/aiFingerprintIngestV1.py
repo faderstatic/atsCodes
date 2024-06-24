@@ -55,7 +55,7 @@ try:
   keywordXmlRoot = ET.fromstring(keywordValueXml)
   metadataInformation = keywordXmlRoot.find('{http://xml.vidispine.com/schema/vidispine}SimpleMetadataDocument')
   print(metadataInformation.text)
-  or fieldValue in metadataInformation.iter('field'):
+  for fieldValue in metadataInformation.iter('field'):
     keywordValue = fieldValue.get('key')
     print(keywordValue)
   #------------------------------
