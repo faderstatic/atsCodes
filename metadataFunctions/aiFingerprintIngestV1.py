@@ -46,14 +46,14 @@ try:
     for fieldInformation in responseJson['field']:
       if fieldInformation['key'] == "__values":
         keywordValueXml = fieldInformation['value']
-        print(keywordValueXml)
+        # print(keywordValueXml)
   #------------------------------
   
   #------------------------------
   # Parsing XML data
   ET.register_namespace('ns', 'http://xml.vidispine.com/schema/vidispine')
   keywordXmlTree = ET.fromstring(keywordValueXml)
-  print(keywordXmlTree.text)
+  print(keywordXmlTree)
   keywordXmlRoot = keywordXmlTree.find('{http://xml.vidispine.com/schema/vidispine}SimpleMetadataDocument')
   # metadataInformation = keywordXmlRoot.find('SimpleMetadataDocument')
   print(keywordXmlRoot.text)
