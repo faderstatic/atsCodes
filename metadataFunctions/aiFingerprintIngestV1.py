@@ -43,11 +43,9 @@ try:
   responseJson = httpApiResponse.json() if httpApiResponse and httpApiResponse.status_code == 200 else None
   if responseJson and 'field' in responseJson:
     for fieldInformation in responseJson['field']:
-      for keywordType in fieldInformation['key']:
-        print(keywordType)
-        if keywordType == "__values":
-          keywordValueXML = fieldInformation['value']
-          print(keywordValueXML)
+      if fieldInformation['key'] == "__values":
+        keywordValueXML = fieldInformation['value']
+        print(keywordValueXML)
   
   #------------------------------
   # Making API call to Vionlabs to get fingerprints
