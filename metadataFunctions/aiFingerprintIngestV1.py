@@ -54,7 +54,7 @@ try:
   ET.register_namespace('ns', 'http://xml.vidispine.com/schema/vidispine')
   keywordXmlRoot = ET.fromstring(keywordValueXml)
   print(keywordXmlRoot)
-  for fieldValue in keywordXmlRoot.find('field'):
+  for fieldValue in keywordXmlRoot:
     keywordValue = fieldValue.find('key')
     print(keywordValue)
   #------------------------------
