@@ -55,7 +55,7 @@ try:
   keywordXmlRoot = ET.fromstring(keywordValueXml)
   print(keywordXmlRoot)
   for fieldValue in keywordXmlRoot:
-    print(fieldValue)
+    print(fieldValue.text)
     keywordValue = fieldValue.get('key')
     print(keywordValue)
   #------------------------------
