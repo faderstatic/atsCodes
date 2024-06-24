@@ -99,7 +99,7 @@ try:
   for individualKeyword in responseJson["keyword"]:
     keywordXML += f"<value>{individualKeyword}</value>"
     if individualKeyword in keywordList:
-      print('it is in here')
+      print(f"{individualKeyword} is in here")
   keywordXML += "</field></timespan></MetadataDocument>"
   parsedKeywordXML = xml.dom.minidom.parseString(keywordXML)
   keywordPayload = parsedKeywordXML.toprettyxml()
