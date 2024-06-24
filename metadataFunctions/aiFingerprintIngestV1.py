@@ -56,7 +56,7 @@ try:
   # print(keywordXmlRoot)
   for fieldValue in keywordXmlRoot:
     for fieldElement in fieldValue:
-      print(fieldElement.get('key'))
+      print(fieldValue.get('key'))
   #------------------------------
   
   #------------------------------
