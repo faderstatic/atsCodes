@@ -53,7 +53,7 @@ try:
   # Parsing XML data
   ET.register_namespace('ns', 'http://xml.vidispine.com/schema/vidispine')
   keywordXmlTree = ET.fromstring(keywordValueXml)
-  keywordXmlRoot = keywordXmlTree.get('SimpleMetadataDocument')
+  keywordXmlRoot = keywordXmlTree.get('{http://xml.vidispine.com/schema/vidispine}SimpleMetadataDocument')
   # metadataInformation = keywordXmlRoot.find('SimpleMetadataDocument')
   print(keywordXmlRoot)
   for fieldValue in keywordXmlRoot.find('field'):
