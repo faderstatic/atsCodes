@@ -77,80 +77,89 @@ then
 
     if [[ -z "$rightslineItemIdCheck" ]];
     then
-        partialRow="false"
-        lineReadComplete="false"
+        # --------------------------------------------------
+        # Check to make sure item is 'original raw master'
+        urlGetOriginalFileFlags="http://10.1.1.34:8080/API/item/$cantemoItemId/metadata?field=oly_contentFlags&terse=yes"
+        originalFileFlagsHttpResponse=$(curl --location --request GET $urlGetOriginalFileFlags --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=Tkb9vkSC8v4SceB8CHUyB3iaMPjvgoHrzhLrvo36agG3wqv0jHc7nsOtdTo9JEyM')
 
-        # --------------------------------------------------
-        # Read Header Row Values and Count Columns
-        headerRow=$(sed -n '1p' "$inputFile")
-        columnCounter=1
-        noMoreColumns="false"
-        while [ "$noMoreColumns" == "false" ];
-        do
-            if [[ $columnCounter -eq 1 ]];
-            then
-                fieldName[$columnCounter]=$(echo $headerRow | awk 'BEGIN { FPAT = "([^,]*)|(\"[^\"]+\")" } {print $'$columnCounter'}' | sed -e 's/\"//g') #| sed -e 's/^.//')
-            else
-                fieldName[$columnCounter]=$(echo $headerRow | awk 'BEGIN { FPAT = "([^,]*)|(\"[^\"]+\")" } {print $'$columnCounter'}' | sed -e 's/\"//g')
-            fi
-            if [[ "${fieldName[$columnCounter]}" == *"$columnHeader" ]];
-            then
-                rightslineIdColumn=$columnCounter
-            fi
-            if [[ "${fieldName[$columnCounter]}" = "" ]];
-            then
-                noMoreColumns="true"
-                columnCounts=$(($columnCounter -1))
-            else
-                columnCounter=$(($columnCounter + 1))
-            fi
-        done
-        for matchedRow in $(grep -n "$inputFile" -e "\<$rightslineItemId\>" | awk -F ',' '{print $'$rightslineIdColumn'}')
-        do
-            matchedValue=$(echo $matchedRow | awk -F ':' '{print $2}')
-            if [[ $matchedValue -eq $rightslineItemId ]];
-            then
-                matchedRowNumber=$(echo $matchedRow | awk -F ':' '{print $1}')
-            fi
-        done
-        # --------------------------------------------------
-
-        # --------------------------------------------------
-        # Read Specific Line
-        if [ ! -z "$matchedRowNumber" ];
+        if [[ "$originalFileFlagsHttpResponse" == *"originalrawmaster"* ]];
         then
+            # Item is 'original raw master' - continue with process
+        
+            partialRow="false"
+            lineReadComplete="false"
 
-            line=$(sed -n ''$matchedRowNumber'p' "$inputFile")
-            cleanLine=$(echo $line | sed -e 's/\"\"/-/g')
-            # columnsForThisRow=$(echo "$cleanLine" | awk 'BEGIN { FPAT = "([^,]*)|(\"[^\"]+)|(\"[^\"]+\")" } {print NF+1}' )
-            columnsForThisRow=$(countDaMuthaFukkingColumns "$cleanLine")
-            while [[ $columnsForThisRow -lt $columnCounts ]];
-            do
-                matchedRowNumber=$(($matchedRowNumber + 1))
-                nextLine=$(sed -n ''$matchedRowNumber'p' "$inputFile")
-                cleanNextLine=$(echo $nextLine | sed -e 's/\"\"/-/g')
-                cleanLine="$cleanLine $cleanNextLine"
-                columnsForThisRow=$(countDaMuthaFukkingColumns "$cleanLine")
-            done
-
+            # --------------------------------------------------
+            # Read Header Row Values and Count Columns
+            headerRow=$(sed -n '1p' "$inputFile")
             columnCounter=1
-            while [[ $columnCounter -le $columnCounts ]];
+            noMoreColumns="false"
+            while [ "$noMoreColumns" == "false" ];
             do
-                fieldValue[$columnCounter]=$(echo $cleanLine | awk 'BEGIN { FPAT = "([^,]*)|(\"[^\"]+)|(\"[^\"]+\")" } {print $'$columnCounter'}' | sed -e 's/\"//g')
-                columnCounter=$(($columnCounter + 1))
+                if [[ $columnCounter -eq 1 ]];
+                then
+                    fieldName[$columnCounter]=$(echo $headerRow | awk 'BEGIN { FPAT = "([^,]*)|(\"[^\"]+\")" } {print $'$columnCounter'}' | sed -e 's/\"//g') #| sed -e 's/^.//')
+                else
+                    fieldName[$columnCounter]=$(echo $headerRow | awk 'BEGIN { FPAT = "([^,]*)|(\"[^\"]+\")" } {print $'$columnCounter'}' | sed -e 's/\"//g')
+                fi
+                if [[ "${fieldName[$columnCounter]}" == *"$columnHeader" ]];
+                then
+                    rightslineIdColumn=$columnCounter
+                fi
+                if [[ "${fieldName[$columnCounter]}" = "" ]];
+                then
+                    noMoreColumns="true"
+                    columnCounts=$(($columnCounter -1))
+                else
+                    columnCounter=$(($columnCounter + 1))
+                fi
             done
-
+            for matchedRow in $(grep -n "$inputFile" -e "\<$rightslineItemId\>" | awk -F ',' '{print $'$rightslineIdColumn'}')
+            do
+                matchedValue=$(echo $matchedRow | awk -F ':' '{print $2}')
+                if [[ $matchedValue -eq $rightslineItemId ]];
+                then
+                    matchedRowNumber=$(echo $matchedRow | awk -F ':' '{print $1}')
+                fi
+            done
             # --------------------------------------------------
 
             # --------------------------------------------------
-            # Writing XML File
+            # Read Specific Line
+            if [ ! -z "$matchedRowNumber" ];
+            then
 
-            #fileDestination="/opt/olympusat/xmlsForMetadataImport/${fieldValue[3]}.xml"
-            fileDestination="/opt/olympusat/xmlsForMetadataImport/rightslineItemId_$cantemoItemId.xml"
+                line=$(sed -n ''$matchedRowNumber'p' "$inputFile")
+                cleanLine=$(echo $line | sed -e 's/\"\"/-/g')
+                # columnsForThisRow=$(echo "$cleanLine" | awk 'BEGIN { FPAT = "([^,]*)|(\"[^\"]+)|(\"[^\"]+\")" } {print NF+1}' )
+                columnsForThisRow=$(countDaMuthaFukkingColumns "$cleanLine")
+                while [[ $columnsForThisRow -lt $columnCounts ]];
+                do
+                    matchedRowNumber=$(($matchedRowNumber + 1))
+                    nextLine=$(sed -n ''$matchedRowNumber'p' "$inputFile")
+                    cleanNextLine=$(echo $nextLine | sed -e 's/\"\"/-/g')
+                    cleanLine="$cleanLine $cleanNextLine"
+                    columnsForThisRow=$(countDaMuthaFukkingColumns "$cleanLine")
+                done
 
-            # --------------------------------------------------
-            # Print XML header
-            echo "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>
+                columnCounter=1
+                while [[ $columnCounter -le $columnCounts ]];
+                do
+                    fieldValue[$columnCounter]=$(echo $cleanLine | awk 'BEGIN { FPAT = "([^,]*)|(\"[^\"]+)|(\"[^\"]+\")" } {print $'$columnCounter'}' | sed -e 's/\"//g')
+                    columnCounter=$(($columnCounter + 1))
+                done
+
+                # --------------------------------------------------
+
+                # --------------------------------------------------
+                # Writing XML File
+
+                #fileDestination="/opt/olympusat/xmlsForMetadataImport/${fieldValue[3]}.xml"
+                fileDestination="/opt/olympusat/xmlsForMetadataImport/rightslineItemId_$cantemoItemId.xml"
+
+                # --------------------------------------------------
+                # Print XML header
+                echo "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>
 <MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\">
   <group>Olympusat</group>
     <timespan end=\"+INF\" start=\"-INF\">
@@ -158,67 +167,70 @@ then
          <name>title</name>
          <value>$cantemoItemTitle</value>
       </field>" > "$fileDestination"
-            # --------------------------------------------------
+                # --------------------------------------------------
 
-            # --------------------------------------------------
-            # Choose what information from the CSV export file needed to be printed
-            columnCounter=1
-            while [ $columnCounter -le $columnCounts ];
-            do
-                case "${fieldName[$columnCounter]}" in
+                # --------------------------------------------------
+                # Choose what information from the CSV export file needed to be printed
+                columnCounter=1
+                while [ $columnCounter -le $columnCounts ];
+                do
+                    case "${fieldName[$columnCounter]}" in
 
-                    "getThisValue")
-                        echo "        <field>
+                        "getThisValue")
+                            echo "        <field>
           <name>oly_rightslineItemId</name>
           <value>${fieldValue[$columnCounter]}</value>
         </field>" >> "$fileDestination"
-                        columnCounter=$(($columnCounter + 1))
-                    ;;
+                            columnCounter=$(($columnCounter + 1))
+                        ;;
 
-                    *)
-                        columnCounter=$(($columnCounter + 1))
-                    ;;
+                        *)
+                            columnCounter=$(($columnCounter + 1))
+                        ;;
 
-                esac
-            done
+                    esac
+                done
 
-            # --------------------------------------------------
+                # --------------------------------------------------
 
-            # --------------------------------------------------
-            # Print XML footer
-            echo "    </timespan>
+                # --------------------------------------------------
+                # Print XML footer
+                echo "    </timespan>
 </MetadataDocument>" >> "$fileDestination"
 
-            echo "$(date +%Y/%m/%d_%H:%M:%S) - (ingestRightslineItemId) - [$cantemoItemId] - XML has been created {rightslineItemId_$cantemoItemId.xml}" >> "$logfile"
-            # --------------------------------------------------
+                echo "$(date +%Y/%m/%d_%H:%M:%S) - (ingestRightslineItemId) - [$cantemoItemId] - XML has been created {rightslineItemId_$cantemoItemId.xml}" >> "$logfile"
+                # --------------------------------------------------
 
-            sleep 5
+                sleep 5
 
-            # ----------------------------------------------------
-            # API Call to Update Metadata
+                # ----------------------------------------------------
+                # API Call to Update Metadata
 
-            echo "$(date +%Y/%m/%d_%H:%M:%S) - (ingestRightslineItemId) - [$cantemoItemId] - Triggering API Call to Import XML into Cantemo" >> "$logfile"
+                echo "$(date +%Y/%m/%d_%H:%M:%S) - (ingestRightslineItemId) - [$cantemoItemId] - Triggering API Call to Import XML into Cantemo" >> "$logfile"
 
-            url="http://10.1.1.34:8080/API/import/sidecar/$cantemoItemId?sidecar=/opt/olympusat/xmlsForMetadataImport/rightslineItemId_$cantemoItemId.xml"
+                url="http://10.1.1.34:8080/API/import/sidecar/$cantemoItemId?sidecar=/opt/olympusat/xmlsForMetadataImport/rightslineItemId_$cantemoItemId.xml"
 
-            curl --location --request POST $url --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0'
+                curl --location --request POST $url --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0'
 
-            sleep 2
+                sleep 2
 
-            echo "$(date +%Y/%m/%d_%H:%M:%S) - (ingestRightslineItemId) - [$cantemoItemId] - Moving XML to zCompleted Folder" >> "$logfile"
-            
-            sleep 2
+                echo "$(date +%Y/%m/%d_%H:%M:%S) - (ingestRightslineItemId) - [$cantemoItemId] - Moving XML to zCompleted Folder" >> "$logfile"
+                
+                sleep 2
 
-            mv "$fileDestination" "/opt/olympusat/xmlsForMetadataImport/zCompleted/"
+                mv "$fileDestination" "/opt/olympusat/xmlsForMetadataImport/zCompleted/"
 
-            echo "$(date +%Y/%m/%d_%H:%M:%S) - (ingestRightslineItemId) - [$cantemoItemId] - Triggering importRightslineLegacyInfo-media script with [$cantemoItemId]" >> "$logfile"
+                echo "$(date +%Y/%m/%d_%H:%M:%S) - (ingestRightslineItemId) - [$cantemoItemId] - Triggering importRightslineLegacyInfo-media script with [$cantemoItemId]" >> "$logfile"
 
-            sleep 5
+                sleep 5
 
-            bash -c "sudo /opt/olympusat/scriptsActive/importRightslineLegacyInfo-media_v2.8.sh $cantemoItemId oly_rightslineItemId /opt/olympusat/resources/RIGHTSLINE_CATALOG-ITEM_DATABASE_2024-04-16_v2.1.csv > /dev/null 2>&1"
+                bash -c "sudo /opt/olympusat/scriptsActive/importRightslineLegacyInfo-media_v2.8.sh $cantemoItemId oly_rightslineItemId /opt/olympusat/resources/RIGHTSLINE_CATALOG-ITEM_DATABASE_2024-04-16_v2.1.csv > /dev/null 2>&1"
 
-            echo "$(date +%Y/%m/%d_%H:%M:%S) - (ingestRightslineItemId) - [$cantemoItemId] - Import Rightsline Item Id Job Completed" >> "$logfile"
+                echo "$(date +%Y/%m/%d_%H:%M:%S) - (ingestRightslineItemId) - [$cantemoItemId] - Import Rightsline Item Id Job Completed" >> "$logfile"
 
+            fi
+        else
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (ingestRightslineItemId) - [$cantemoItemId] - Item is not flagged as 'Original Raw Master' - SKIPPING import/update" >> "$logfile"        
         fi
     else
         echo "$(date +%Y/%m/%d_%H:%M:%S) - (ingestRightslineItemId) - [$cantemoItemId] - Item already has oly_rightslineItemId set in Cantemo - SKIPPING import/update" >> "$logfile"    
