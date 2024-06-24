@@ -46,7 +46,7 @@ try:
     for fieldInformation in responseJson['field']:
       if fieldInformation['key'] == "__values":
         keywordValueXml = fieldInformation['value']
-        # print(keywordValueXml)
+        print(keywordValueXml)
   #------------------------------
   
   #------------------------------
