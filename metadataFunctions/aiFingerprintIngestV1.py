@@ -43,19 +43,10 @@ try:
   responseJson = httpApiResponse.json() if httpApiResponse and httpApiResponse.status_code == 200 else None
   if responseJson and 'field' in responseJson:
     for fieldInformation in responseJson['field']:
-      for keywordList in fieldInformation['key']:
-        keywordEntry = keywordList['__values']
-        if not isinstance (itemTimebase, int):
-          if itemTimebase == "NTSC30" or itemTimebase == "NTSC":
-            itemTimebase = "NTSC"
-            timebaseMultiplier = 30000 / 1001
-            timebaseNumerator = 30000
-            timebaseDenominator = 1001
-          if itemTimebase == "PAL25" or itemTimebase == "PAL":
-            itemTimebase = "PAL"
-            timebaseMultiplier = 25
-            timebaseNumerator = 25
-            timebaseDenominator = 1
+      for keywordType in fieldInformation['key']:
+        if keywordType == "__values":
+          keywordValueXML = fieldInformation['value']
+          print(keywordValueXML)
   
   #------------------------------
   # Making API call to Vionlabs to get fingerprints
@@ -106,11 +97,11 @@ try:
   }
   urlPutAnalysisInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata/"
   # genrePayload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_analysisReport</name><value>{errorReport}</value></field></timespan></MetadataDocument>"
-  httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=genrePayload)
-  time.sleep(5)
-  httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=moodPayload)
-  time.sleep(5)
-  httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=keywordPayload)
+  # httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=genrePayload)
+  # time.sleep(5)
+  # httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=moodPayload)
+  # time.sleep(5)
+  # httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=keywordPayload)
   #------------------------------
   #------------------------------
 
