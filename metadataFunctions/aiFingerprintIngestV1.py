@@ -57,7 +57,7 @@ try:
   # print(keywordXmlRoot.find('{http://xml.vidispine.com/schema/vidispine}field'))
   for fieldValue in keywordXmlRoot:
     keywordValue = fieldValue.find('{http://xml.vidispine.com/schema/vidispine}key')
-    keywordList += keywordValue.text+','
+    keywordList += keywordValue.text.lower()+','
   # print(keywordList)
   #------------------------------
   
@@ -98,7 +98,7 @@ try:
   moodPayload = parsedMoodXML.toprettyxml()
   for individualKeyword in responseJson["keyword"]:
     keywordXML += f"<value>{individualKeyword}</value>"
-    if individualKeyword in keywordList:
+    if individualKeyword.lower() in keywordList:
       print(f"{individualKeyword} is in here")
   keywordXML += "</field></timespan></MetadataDocument>"
   parsedKeywordXML = xml.dom.minidom.parseString(keywordXML)
