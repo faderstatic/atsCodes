@@ -52,6 +52,7 @@ export inputFolder="$4"
 export rightslineItemId="$1"
 export cantemoItemTitle=$(filterVidispineItemMetadata "$cantemoItemId" "metadata" "title")
 
+export mydate=$(date +%Y-%m-%d)
 logfile="/opt/olympusat/logs/initialIngestMetadataWorkflow-$mydate.log"
 
 # --------------------------------------------------
@@ -79,7 +80,7 @@ then
     then
         # --------------------------------------------------
         # Check to make sure item is 'original raw master'
-        urlGetOriginalFileFlags="http://10.1.1.34:8080/API/item/$cantemoItemId/metadata?field=oly_contentFlags&terse=yes"
+        urlGetOriginalFileFlags="http://10.1.1.34:8080/API/item/$cantemoItemId/metadata?field=oly_originalFileFlags&terse=yes"
         originalFileFlagsHttpResponse=$(curl --location --request GET $urlGetOriginalFileFlags --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=Tkb9vkSC8v4SceB8CHUyB3iaMPjvgoHrzhLrvo36agG3wqv0jHc7nsOtdTo9JEyM')
 
         if [[ "$originalFileFlagsHttpResponse" == *"originalrawmaster"* ]];
