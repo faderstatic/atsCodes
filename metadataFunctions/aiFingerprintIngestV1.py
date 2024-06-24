@@ -98,8 +98,8 @@ try:
   moodPayload = parsedMoodXML.toprettyxml()
   for individualKeyword in responseJson["keyword"]:
     keywordXML += f"<value>{individualKeyword}</value>"
-    if individualKeyword.lower() in keywordList:
-      print(f"{individualKeyword} is in here")
+    if individualKeyword.lower() != keywordList:
+      print(f"{individualKeyword} is not in here")
   keywordXML += "</field></timespan></MetadataDocument>"
   parsedKeywordXML = xml.dom.minidom.parseString(keywordXML)
   keywordPayload = parsedKeywordXML.toprettyxml()
