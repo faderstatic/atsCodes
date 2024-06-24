@@ -27,14 +27,9 @@ export itemId=$1
 itemContentType=$(filterVidispineItemMetadata $itemId "metadata" "oly_contentType")
 
 #Check Variable
-if [[ "$itemContentType" != "episode" ]];
+if [[ "$itemContentType" == "episode" || "$itemContentType" == "movie" ]];
 then
-    #contentType is NOT 'episode'-skip process
-
-    echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Content Type is NOT 'episode'" >> "$logfile"
-    echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Content Type is [$itemContentType] - Skipping Episode Workflow" >> "$logfile"
-else
-    #contentType IS episode-continue with process
+    #contentType IS episode or movie-continue with process
     #Variables to be passed from Cantemo to shell script
 
     echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Content Type is [$itemContentType]" >> "$logfile"
@@ -66,14 +61,25 @@ else
 
         echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Search Title - [$searchTitle]" >> "$logfile"
 
-        itemTitleEs=$(filterVidispineItemMetadata $itemId "metadata" "oly_titleEs")
-        itemTitleEn=$(filterVidispineItemMetadata $itemId "metadata" "oly_titleEn")
-        itemOriginalTitle=$(filterVidispineItemMetadata $itemId "metadata" "oly_originalTitle")
-        itemSeriesName=$(filterVidispineItemMetadata $itemId "metadata" "oly_seriesName")
-        itemSeasonNumber=$(filterVidispineItemMetadata $itemId "metadata" "oly_seasonNumber")
-        itemEpisodeNumber=$(filterVidispineItemMetadata $itemId "metadata" "oly_episodeNumber")
-        itemLicensor=$(filterVidispineItemMetadata $itemId "metadata" "oly_licensor")
-        itemOriginalLanguage=$(filterVidispineItemMetadata $itemId "metadata" "oly_originalLanguage")
+        case "$itemContentType" in
+            "episode")
+                itemTitleEs=$(filterVidispineItemMetadata $itemId "metadata" "oly_titleEs")
+                itemTitleEn=$(filterVidispineItemMetadata $itemId "metadata" "oly_titleEn")
+                itemOriginalTitle=$(filterVidispineItemMetadata $itemId "metadata" "oly_originalTitle")
+                itemSeriesName=$(filterVidispineItemMetadata $itemId "metadata" "oly_seriesName")
+                itemSeasonNumber=$(filterVidispineItemMetadata $itemId "metadata" "oly_seasonNumber")
+                itemEpisodeNumber=$(filterVidispineItemMetadata $itemId "metadata" "oly_episodeNumber")
+                itemLicensor=$(filterVidispineItemMetadata $itemId "metadata" "oly_licensor")
+                itemOriginalLanguage=$(filterVidispineItemMetadata $itemId "metadata" "oly_originalLanguage")
+            ;;
+            "movie")
+                itemTitleEs=$(filterVidispineItemMetadata $itemId "metadata" "oly_titleEs")
+                itemTitleEn=$(filterVidispineItemMetadata $itemId "metadata" "oly_titleEn")
+                itemOriginalTitle=$(filterVidispineItemMetadata $itemId "metadata" "oly_originalTitle")
+                itemLicensor=$(filterVidispineItemMetadata $itemId "metadata" "oly_licensor")
+                itemOriginalLanguage=$(filterVidispineItemMetadata $itemId "metadata" "oly_originalLanguage")
+            ;;
+        esac
         
         urlGetItemInfo="http://10.1.1.34:8080/API/item/$itemId/metadata?field=oly_contentFlags&terse=yes"
         httpResponse=$(curl --location --request GET $urlGetItemInfo --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=Tkb9vkSC8v4SceB8CHUyB3iaMPjvgoHrzhLrvo36agG3wqv0jHc7nsOtdTo9JEyM')
@@ -107,14 +113,27 @@ else
             #Updating metadata on Textless Master Item
             echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Updating Metadata on Textless Master Item - [$textlessItemId]" >> "$logfile"
 
-            updateVidispineMetadata $textlessItemId "oly_titleEs" "$itemTitleEs"
-            updateVidispineMetadata $textlessItemId "oly_titleEn" "$itemTitleEn"
-            updateVidispineMetadata $textlessItemId "oly_originalTitle" "$itemOriginalTitle"
-            updateVidispineMetadata $textlessItemId "oly_seriesName" "$itemSeriesName"
-            updateVidispineMetadata $textlessItemId "oly_seasonNumber" "$itemSeasonNumber"
-            updateVidispineMetadata $textlessItemId "oly_episodeNumber" "$itemEpisodeNumber"
-            updateVidispineMetadata $textlessItemId "oly_licensor" "$itemLicensor"
-            updateVidispineMetadata $textlessItemId "oly_originalLanguage" "$itemOriginalLanguage"
+            case "$itemContentType" in
+                "episode")
+                    updateVidispineMetadata $textlessItemId "oly_titleEs" "$itemTitleEs"
+                    updateVidispineMetadata $textlessItemId "oly_titleEn" "$itemTitleEn"
+                    updateVidispineMetadata $textlessItemId "oly_originalTitle" "$itemOriginalTitle"
+                    updateVidispineMetadata $textlessItemId "oly_seriesName" "$itemSeriesName"
+                    updateVidispineMetadata $textlessItemId "oly_seasonNumber" "$itemSeasonNumber"
+                    updateVidispineMetadata $textlessItemId "oly_episodeNumber" "$itemEpisodeNumber"
+                    updateVidispineMetadata $textlessItemId "oly_licensor" "$itemLicensor"
+                    updateVidispineMetadata $textlessItemId "oly_originalLanguage" "$itemOriginalLanguage"
+                ;;
+                "movie")
+                    updateVidispineMetadata $textlessItemId "oly_titleEs" "$itemTitleEs"
+                    updateVidispineMetadata $textlessItemId "oly_titleEn" "$itemTitleEn"
+                    updateVidispineMetadata $textlessItemId "oly_originalTitle" "$itemOriginalTitle"
+                    updateVidispineMetadata $textlessItemId "oly_licensor" "$itemLicensor"
+                    updateVidispineMetadata $textlessItemId "oly_originalLanguage" "$itemOriginalLanguage"
+                ;;
+            esac
+            
+            
            
         else
             #Textless Master does not exist - trying different search
@@ -140,14 +159,25 @@ else
                 #Updating metadata on Textless Master Item
                 echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Updating Metadata on Textless Master Item - [$textlessItemId]" >> "$logfile"
 
-                updateVidispineMetadata $textlessItemId "oly_titleEs" "$itemTitleEs"
-                updateVidispineMetadata $textlessItemId "oly_titleEn" "$itemTitleEn"
-                updateVidispineMetadata $textlessItemId "oly_originalTitle" "$itemOriginalTitle"
-                updateVidispineMetadata $textlessItemId "oly_seriesName" "$itemSeriesName"
-                updateVidispineMetadata $textlessItemId "oly_seasonNumber" "$itemSeasonNumber"
-                updateVidispineMetadata $textlessItemId "oly_episodeNumber" "$itemEpisodeNumber"
-                updateVidispineMetadata $textlessItemId "oly_licensor" "$itemLicensor"
-                updateVidispineMetadata $textlessItemId "oly_originalLanguage" "$itemOriginalLanguage"
+                case "$itemContentType" in
+                    "episode")
+                        updateVidispineMetadata $textlessItemId "oly_titleEs" "$itemTitleEs"
+                        updateVidispineMetadata $textlessItemId "oly_titleEn" "$itemTitleEn"
+                        updateVidispineMetadata $textlessItemId "oly_originalTitle" "$itemOriginalTitle"
+                        updateVidispineMetadata $textlessItemId "oly_seriesName" "$itemSeriesName"
+                        updateVidispineMetadata $textlessItemId "oly_seasonNumber" "$itemSeasonNumber"
+                        updateVidispineMetadata $textlessItemId "oly_episodeNumber" "$itemEpisodeNumber"
+                        updateVidispineMetadata $textlessItemId "oly_licensor" "$itemLicensor"
+                        updateVidispineMetadata $textlessItemId "oly_originalLanguage" "$itemOriginalLanguage"
+                    ;;
+                    "movie")
+                        updateVidispineMetadata $textlessItemId "oly_titleEs" "$itemTitleEs"
+                        updateVidispineMetadata $textlessItemId "oly_titleEn" "$itemTitleEn"
+                        updateVidispineMetadata $textlessItemId "oly_originalTitle" "$itemOriginalTitle"
+                        updateVidispineMetadata $textlessItemId "oly_licensor" "$itemLicensor"
+                        updateVidispineMetadata $textlessItemId "oly_originalLanguage" "$itemOriginalLanguage"
+                    ;;
+                esac
             
             else
                 #Textless Master does not exist
@@ -179,14 +209,25 @@ else
             #Updating metadata on Dubbed Master Item
             echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Updating Metadata on Dubbed Master Item - [$dubbedItemId]" >> "$logfile"
 
-            updateVidispineMetadata $dubbedItemId "oly_titleEs" "$itemTitleEs"
-            updateVidispineMetadata $dubbedItemId "oly_titleEn" "$itemTitleEn"
-            updateVidispineMetadata $dubbedItemId "oly_originalTitle" "$itemOriginalTitle"
-            updateVidispineMetadata $dubbedItemId "oly_seriesName" "$itemSeriesName"
-            updateVidispineMetadata $dubbedItemId "oly_seasonNumber" "$itemSeasonNumber"
-            updateVidispineMetadata $dubbedItemId "oly_episodeNumber" "$itemEpisodeNumber"
-            updateVidispineMetadata $dubbedItemId "oly_licensor" "$itemLicensor"
-            updateVidispineMetadata $dubbedItemId "oly_originalLanguage" "$itemOriginalLanguage"
+            case "$itemContentType" in
+                "episode")
+                    updateVidispineMetadata $dubbedItemId "oly_titleEs" "$itemTitleEs"
+                    updateVidispineMetadata $dubbedItemId "oly_titleEn" "$itemTitleEn"
+                    updateVidispineMetadata $dubbedItemId "oly_originalTitle" "$itemOriginalTitle"
+                    updateVidispineMetadata $dubbedItemId "oly_seriesName" "$itemSeriesName"
+                    updateVidispineMetadata $dubbedItemId "oly_seasonNumber" "$itemSeasonNumber"
+                    updateVidispineMetadata $dubbedItemId "oly_episodeNumber" "$itemEpisodeNumber"
+                    updateVidispineMetadata $dubbedItemId "oly_licensor" "$itemLicensor"
+                    updateVidispineMetadata $dubbedItemId "oly_originalLanguage" "$itemOriginalLanguage"
+                ;;
+                "movie")
+                    updateVidispineMetadata $dubbedItemId "oly_titleEs" "$itemTitleEs"
+                    updateVidispineMetadata $dubbedItemId "oly_titleEn" "$itemTitleEn"
+                    updateVidispineMetadata $dubbedItemId "oly_originalTitle" "$itemOriginalTitle"
+                    updateVidispineMetadata $dubbedItemId "oly_licensor" "$itemLicensor"
+                    updateVidispineMetadata $dubbedItemId "oly_originalLanguage" "$itemOriginalLanguage"
+                ;;
+            esac
 
         else
             #Dubbed Master does not exist - trying different search
@@ -212,14 +253,25 @@ else
                 #Updating metadata on Dubbed Master Item
                 echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Updating Metadata on Dubbed Master Item - [$dubbedItemId]" >> "$logfile"
 
-                updateVidispineMetadata $dubbedItemId "oly_titleEs" "$itemTitleEs"
-                updateVidispineMetadata $dubbedItemId "oly_titleEn" "$itemTitleEn"
-                updateVidispineMetadata $dubbedItemId "oly_originalTitle" "$itemOriginalTitle"
-                updateVidispineMetadata $dubbedItemId "oly_seriesName" "$itemSeriesName"
-                updateVidispineMetadata $dubbedItemId "oly_seasonNumber" "$itemSeasonNumber"
-                updateVidispineMetadata $dubbedItemId "oly_episodeNumber" "$itemEpisodeNumber"
-                updateVidispineMetadata $dubbedItemId "oly_licensor" "$itemLicensor"
-                updateVidispineMetadata $dubbedItemId "oly_originalLanguage" "$itemOriginalLanguage"
+                case "$itemContentType" in
+                    "episode")
+                        updateVidispineMetadata $dubbedItemId "oly_titleEs" "$itemTitleEs"
+                        updateVidispineMetadata $dubbedItemId "oly_titleEn" "$itemTitleEn"
+                        updateVidispineMetadata $dubbedItemId "oly_originalTitle" "$itemOriginalTitle"
+                        updateVidispineMetadata $dubbedItemId "oly_seriesName" "$itemSeriesName"
+                        updateVidispineMetadata $dubbedItemId "oly_seasonNumber" "$itemSeasonNumber"
+                        updateVidispineMetadata $dubbedItemId "oly_episodeNumber" "$itemEpisodeNumber"
+                        updateVidispineMetadata $dubbedItemId "oly_licensor" "$itemLicensor"
+                        updateVidispineMetadata $dubbedItemId "oly_originalLanguage" "$itemOriginalLanguage"
+                    ;;
+                    "movie")
+                        updateVidispineMetadata $dubbedItemId "oly_titleEs" "$itemTitleEs"
+                        updateVidispineMetadata $dubbedItemId "oly_titleEn" "$itemTitleEn"
+                        updateVidispineMetadata $dubbedItemId "oly_originalTitle" "$itemOriginalTitle"
+                        updateVidispineMetadata $dubbedItemId "oly_licensor" "$itemLicensor"
+                        updateVidispineMetadata $dubbedItemId "oly_originalLanguage" "$itemOriginalLanguage"
+                    ;;
+                esac
             
             else
                 #Dubbed Master does not exist
@@ -251,14 +303,25 @@ else
             #Updating metadata on Spanish Master Item
             echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Updating Metadata on Spanish Master Item - [$spanishItemId]" >> "$logfile"
 
-            updateVidispineMetadata $spanishItemId "oly_titleEs" "$itemTitleEs"
-            updateVidispineMetadata $spanishItemId "oly_titleEn" "$itemTitleEn"
-            updateVidispineMetadata $spanishItemId "oly_originalTitle" "$itemOriginalTitle"
-            updateVidispineMetadata $spanishItemId "oly_seriesName" "$itemSeriesName"
-            updateVidispineMetadata $spanishItemId "oly_seasonNumber" "$itemSeasonNumber"
-            updateVidispineMetadata $spanishItemId "oly_episodeNumber" "$itemEpisodeNumber"
-            updateVidispineMetadata $spanishItemId "oly_licensor" "$itemLicensor"
-            updateVidispineMetadata $spanishItemId "oly_originalLanguage" "$itemOriginalLanguage"
+            case "$itemContentType" in
+                "episode")
+                    updateVidispineMetadata $spanishItemId "oly_titleEs" "$itemTitleEs"
+                    updateVidispineMetadata $spanishItemId "oly_titleEn" "$itemTitleEn"
+                    updateVidispineMetadata $spanishItemId "oly_originalTitle" "$itemOriginalTitle"
+                    updateVidispineMetadata $spanishItemId "oly_seriesName" "$itemSeriesName"
+                    updateVidispineMetadata $spanishItemId "oly_seasonNumber" "$itemSeasonNumber"
+                    updateVidispineMetadata $spanishItemId "oly_episodeNumber" "$itemEpisodeNumber"
+                    updateVidispineMetadata $spanishItemId "oly_licensor" "$itemLicensor"
+                    updateVidispineMetadata $spanishItemId "oly_originalLanguage" "$itemOriginalLanguage"
+                ;;
+                "movie")
+                    updateVidispineMetadata $spanishItemId "oly_titleEs" "$itemTitleEs"
+                    updateVidispineMetadata $spanishItemId "oly_titleEn" "$itemTitleEn"
+                    updateVidispineMetadata $spanishItemId "oly_originalTitle" "$itemOriginalTitle"
+                    updateVidispineMetadata $spanishItemId "oly_licensor" "$itemLicensor"
+                    updateVidispineMetadata $spanishItemId "oly_originalLanguage" "$itemOriginalLanguage"
+                ;;
+            esac
 
         else
             #Spanish Master does not exist - trying different search
@@ -284,14 +347,25 @@ else
                 #Updating metadata on Spanish Master Item
                 echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Updating Metadata on Spanish Master Item - [$spanishItemId]" >> "$logfile"
 
-                updateVidispineMetadata $spanishItemId "oly_titleEs" "$itemTitleEs"
-                updateVidispineMetadata $spanishItemId "oly_titleEn" "$itemTitleEn"
-                updateVidispineMetadata $spanishItemId "oly_originalTitle" "$itemOriginalTitle"
-                updateVidispineMetadata $spanishItemId "oly_seriesName" "$itemSeriesName"
-                updateVidispineMetadata $spanishItemId "oly_seasonNumber" "$itemSeasonNumber"
-                updateVidispineMetadata $spanishItemId "oly_episodeNumber" "$itemEpisodeNumber"
-                updateVidispineMetadata $spanishItemId "oly_licensor" "$itemLicensor"
-                updateVidispineMetadata $spanishItemId "oly_originalLanguage" "$itemOriginalLanguage"
+                case "$itemContentType" in
+                    "episode")
+                        updateVidispineMetadata $spanishItemId "oly_titleEs" "$itemTitleEs"
+                        updateVidispineMetadata $spanishItemId "oly_titleEn" "$itemTitleEn"
+                        updateVidispineMetadata $spanishItemId "oly_originalTitle" "$itemOriginalTitle"
+                        updateVidispineMetadata $spanishItemId "oly_seriesName" "$itemSeriesName"
+                        updateVidispineMetadata $spanishItemId "oly_seasonNumber" "$itemSeasonNumber"
+                        updateVidispineMetadata $spanishItemId "oly_episodeNumber" "$itemEpisodeNumber"
+                        updateVidispineMetadata $spanishItemId "oly_licensor" "$itemLicensor"
+                        updateVidispineMetadata $spanishItemId "oly_originalLanguage" "$itemOriginalLanguage"
+                    ;;
+                    "movie")
+                        updateVidispineMetadata $spanishItemId "oly_titleEs" "$itemTitleEs"
+                        updateVidispineMetadata $spanishItemId "oly_titleEn" "$itemTitleEn"
+                        updateVidispineMetadata $spanishItemId "oly_originalTitle" "$itemOriginalTitle"
+                        updateVidispineMetadata $spanishItemId "oly_licensor" "$itemLicensor"
+                        updateVidispineMetadata $spanishItemId "oly_originalLanguage" "$itemOriginalLanguage"
+                    ;;
+                esac
             
             else
                 #Spanish Master does not exist
@@ -299,6 +373,11 @@ else
             fi
         fi
     fi
+else
+    #contentType is NOT 'episode' nor 'movie'-skip process
+
+    echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Content Type is NOT 'episode'" >> "$logfile"
+    echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Content Type is [$itemContentType] - Skipping Episode Workflow" >> "$logfile"
 fi
 
 IFS=$saveIFS
