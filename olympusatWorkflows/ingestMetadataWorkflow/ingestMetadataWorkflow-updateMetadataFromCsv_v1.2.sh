@@ -402,7 +402,7 @@ then
                         fi
                     ;;
 
-                    "oly_clipLink"|"oly_promoLink"|"oly_trailerLink")
+                    "oly_clipLink"|"oly_promoLink"|"oly_trailerLink"|"oly_screenerLink")
                         #if [[ ! -z "${fieldValue[$columnCounter]}" && "$extResourcesMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
                         if [[ ! -z "${fieldValue[$columnCounter]}" ]];
                         then
