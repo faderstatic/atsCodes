@@ -45,24 +45,25 @@ then
         echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Item is Not Original Master - Skipping Episode Workflow" >> "$logfile"
     else
         itemTitle=$(filterVidispineItemMetadata $itemId "metadata" "title")
-        #searchTitle=$(echo $itemTitle | awk -F_ '{NF-=1}1' OFS=_)
-        searchTitle1=$(echo $itemTitle | awk -F '_' '{print $1}')
-        numberOfUnderscores=$(echo $itemTitle | awk -F"_" '{print NF-1}')
-        echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Number of Underscores - [$numberOfUnderscores]" >> "$logfile"
         
-        if [[ $numberOfUnderscores == 5 ]];
-        then
-            searchTitle2=$(echo $itemTitle | awk -F '_' '{print $5}')
-        else
-            echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Number of Underscores NOT Supported - [$numberOfUnderscores]" >> "$logfile"    
-        fi
-
-        searchTitle="$searchTitle1 *$searchTitle2*"
-
-        echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Search Title - [$searchTitle]" >> "$logfile"
-
         case "$itemContentType" in
             "episode")
+                #searchTitle=$(echo $itemTitle | awk -F_ '{NF-=1}1' OFS=_)
+                searchTitle1=$(echo $itemTitle | awk -F '_' '{print $1}')
+                numberOfUnderscores=$(echo $itemTitle | awk -F"_" '{print NF-1}')
+                echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Number of Underscores - [$numberOfUnderscores]" >> "$logfile"
+                
+                if [[ $numberOfUnderscores == 5 ]];
+                then
+                    searchTitle2=$(echo $itemTitle | awk -F '_' '{print $5}')
+                else
+                    echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Number of Underscores NOT Supported - [$numberOfUnderscores]" >> "$logfile"    
+                fi
+
+                searchTitle="$searchTitle1 *$searchTitle2*"
+
+                echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Search Title - [$searchTitle]" >> "$logfile"
+                
                 itemTitleEs=$(filterVidispineItemMetadata $itemId "metadata" "oly_titleEs")
                 itemTitleEn=$(filterVidispineItemMetadata $itemId "metadata" "oly_titleEn")
                 itemOriginalTitle=$(filterVidispineItemMetadata $itemId "metadata" "oly_originalTitle")
@@ -73,6 +74,9 @@ then
                 itemOriginalLanguage=$(filterVidispineItemMetadata $itemId "metadata" "oly_originalLanguage")
             ;;
             "movie")
+                searchTitle=$(echo $itemTitle | awk -F '_' '{print $1}')
+                echo "$datetime - (copyMetadataToOtherMasters) - [$itemId] - Search Title - [$searchTitle]" >> "$logfile"
+
                 itemTitleEs=$(filterVidispineItemMetadata $itemId "metadata" "oly_titleEs")
                 itemTitleEn=$(filterVidispineItemMetadata $itemId "metadata" "oly_titleEn")
                 itemOriginalTitle=$(filterVidispineItemMetadata $itemId "metadata" "oly_originalTitle")
@@ -131,9 +135,7 @@ then
                     updateVidispineMetadata $textlessItemId "oly_licensor" "$itemLicensor"
                     updateVidispineMetadata $textlessItemId "oly_originalLanguage" "$itemOriginalLanguage"
                 ;;
-            esac
-            
-            
+            esac         
            
         else
             #Textless Master does not exist - trying different search
