@@ -6,7 +6,7 @@
     </manifest:Compatibility>
     <manifest:Inventory>
         <!--  Main audio file for movie  -->
-        <manifest:Audio AudioTrackID="md:audtrackid:org:olympusat:OLY_4541-M:feature.audio.en">
+        <manifest:Audio AudioTrackID="md:audtrackid:org:olympusat:OLY_4541-M:feature.audio.es">
             <md:Type>primary</md:Type>
             <md:Language>es-MX</md:Language>
             <manifest:ContainerReference>
@@ -130,7 +130,7 @@
                     <manifest:VideoTrackID>md:vidtrackid:org:olympusat:OLY_4541-M:feature.video</manifest:VideoTrackID>
                 </manifest:VideoTrackReference>
                 <manifest:AudioTrackReference>
-                    <manifest:AudioTrackID>md:audtrackid:org:olympusat:OLY_4541-M:feature.audio.en</manifest:AudioTrackID>
+                    <manifest:AudioTrackID>md:audtrackid:org:olympusat:OLY_4541-M:feature.audio.es</manifest:AudioTrackID>
                 </manifest:AudioTrackReference>
                 <!-- manifest:SubtitleTrackReference>
                 <manifest:SubtitleTrackID>md:subtrackid:org:olympusat:OLY_4541:feature.caption.en</manifest:SubtitleTrackID>
