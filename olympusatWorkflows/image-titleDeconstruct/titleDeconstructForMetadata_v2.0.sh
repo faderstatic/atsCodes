@@ -56,18 +56,35 @@ if [[ $numberOfUnderscores == 4 ]];
                 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumber - $seasonNumberCheck" >> "$logfile"
                 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumber - $episodeNumberCheck" >> "$logfile"
             else
-                titleCode=$(echo $title | awk -F "_" '{print $1}')
-                imageType=$(echo $title | awk -F "_" '{print $2}')
-                titleByLanguage=$(echo $title | awk -F "_" '{print $3}')
-                titleByLanguage=$(echo $titleByLanguage | sed -r -e "s/([^A-Z])([A-Z])/\1 \2/g" -e "s/([A-Z]+)([A-Z])/\1 \2/g")
-                language=$(echo $title | awk -F "_" '{print $4}')
-                imageSize=$(echo $title | awk -F "_" '{print $5}')
+                namingConventionCheck=$(echo $title | awk -F "_" '{print $2}' | tr '[:upper:]' '[:lower:]')
+                if [[ ("$namingConventionCheck" == "cover") || ("$namingConventionCheck" == "feature") || ("$namingConventionCheck" == "keyart") || ("$namingConventionCheck" == "still") || ("$namingConventionCheck" == "blank") ]];
+                then
+                    titleCode=$(echo $title | awk -F "_" '{print $1}')
+                    imageType=$(echo $title | awk -F "_" '{print $2}' | tr '[:upper:]' '[:lower:]')
+                    titleByLanguage=$(echo $title | awk -F "_" '{print $3}')
+                    titleByLanguage=$(echo $titleByLanguage | sed -r -e "s/([^A-Z])([A-Z])/\1 \2/g" -e "s/([A-Z]+)([A-Z])/\1 \2/g")
+                    language=$(echo $title | awk -F "_" '{print $4}')
+                    imageSize=$(echo $title | awk -F "_" '{print $5}')
 
-                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleCode - $titleCode" >> "$logfile"
-                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageType - $imageType" >> "$logfile"
-                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
-                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - language - $language" >> "$logfile"
-                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageSize - $imageSize" >> "$logfile"
+                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleCode - $titleCode" >> "$logfile"
+                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageType - $imageType" >> "$logfile"
+                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
+                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - language - $language" >> "$logfile"
+                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageSize - $imageSize" >> "$logfile"
+                else
+                    titleCode=$(echo $title | awk -F "_" '{print $1}')
+                    imageType=$(echo $title | awk -F "_" '{print $2}' | tr '[:upper:]' '[:lower:]')
+                    titleByLanguage=$(echo $title | awk -F "_" '{print $3}')
+                    titleByLanguage=$(echo $titleByLanguage | sed -r -e "s/([^A-Z])([A-Z])/\1 \2/g" -e "s/([A-Z]+)([A-Z])/\1 \2/g")
+                    language=$(echo $title | awk -F "_" '{print $4}')
+                    imageSize=$(echo $title | awk -F "_" '{print $5}')
+
+                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleCode - $titleCode" >> "$logfile"
+                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageType - $imageType" >> "$logfile"
+                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
+                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - language - $language" >> "$logfile"
+                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageSize - $imageSize" >> "$logfile"
+                fi
         fi
     else
         if [[ $numberOfUnderscores == 3 ]];
@@ -91,16 +108,31 @@ if [[ $numberOfUnderscores == 4 ]];
                         echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumber - $seasonNumberCheck" >> "$logfile"
                         echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumber - $episodeNumberCheck" >> "$logfile"
                     else
-                        titleCode=$(echo $title | awk -F "_" '{print $1}')
-                        imageType=$(echo $title | awk -F "_" '{print $2}')
-                        titleByLanguage=$(echo $title | awk -F "_" '{print $3}')
-                        titleByLanguage=$(echo $titleByLanguage | sed -r -e "s/([^A-Z])([A-Z])/\1 \2/g" -e "s/([A-Z]+)([A-Z])/\1 \2/g")
-                        imageSize=$(echo $title | awk -F "_" '{print $4}')
+                        namingConventionCheck=$(echo $title | awk -F "_" '{print $2}' | tr '[:upper:]' '[:lower:]')
+                        if [[ ("$namingConventionCheck" == "cover") || ("$namingConventionCheck" == "feature") || ("$namingConventionCheck" == "keyart") || ("$namingConventionCheck" == "still") || ("$namingConventionCheck" == "blank") ]];
+                        then
+                            titleCode=$(echo $title | awk -F "_" '{print $1}')
+                            imageType=$(echo $title | awk -F "_" '{print $2}')
+                            titleByLanguage=$(echo $title | awk -F "_" '{print $3}')
+                            titleByLanguage=$(echo $titleByLanguage | sed -r -e "s/([^A-Z])([A-Z])/\1 \2/g" -e "s/([A-Z]+)([A-Z])/\1 \2/g")
+                            imageSize=$(echo $title | awk -F "_" '{print $4}')
 
-                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleCode - $titleCode" >> "$logfile"
-                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageType - $imageType" >> "$logfile"
-                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
-                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageSize - $imageSize" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleCode - $titleCode" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageType - $imageType" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageSize - $imageSize" >> "$logfile"
+                        else
+                            titleCode=$(echo $title | awk -F "_" '{print $1}')
+                            imageType=$(echo $title | awk -F "_" '{print $2}')
+                            titleByLanguage=$(echo $title | awk -F "_" '{print $3}')
+                            titleByLanguage=$(echo $titleByLanguage | sed -r -e "s/([^A-Z])([A-Z])/\1 \2/g" -e "s/([A-Z]+)([A-Z])/\1 \2/g")
+                            imageSize=$(echo $title | awk -F "_" '{print $4}')
+
+                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleCode - $titleCode" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageType - $imageType" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageSize - $imageSize" >> "$logfile"
+                        fi
                     fi
             else
                 if [[ $numberOfUnderscores == 2 ]];
