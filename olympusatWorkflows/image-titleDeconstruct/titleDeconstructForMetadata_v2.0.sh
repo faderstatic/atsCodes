@@ -456,6 +456,9 @@ case $imageType in
     *"keyart"*)
         graphicsType="keyart"
     ;;
+    *"Still"*)
+        graphicsType="still"
+    ;;
     *"still"*)
         graphicsType="still"
     ;;
