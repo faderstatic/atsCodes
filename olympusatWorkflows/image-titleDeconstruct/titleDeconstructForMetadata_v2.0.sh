@@ -26,12 +26,12 @@ export url="http://10.1.1.34:8080/API/item/$itemId/metadata/"
 
 logfile="/opt/olympusat/logs/titleDeconstruct-$mydate.log"
 
-echo "$datetime - ($itemId) - Deconstructing Title - $title" >> "$logfile"
+echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Deconstructing Title - $title" >> "$logfile"
 
 numberOfUnderscores=$(echo $title | awk -F"_" '{print NF-1}')
 
 echo $numberOfUnderscores
-echo "$datetime - ($itemId) - Number of Underscores - $numberOfUnderscores" >> "$logfile"
+echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Number of Underscores - $numberOfUnderscores" >> "$logfile"
 
 if [[ $numberOfUnderscores == 4 ]];
     then
@@ -48,13 +48,13 @@ if [[ $numberOfUnderscores == 4 ]];
                 seasonNumberCheck=$(echo $imageType | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
                 episodeNumberCheck=$(echo $imageType | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
 
-                echo "$datetime - ($itemId) - titleCode - $titleCode" >> "$logfile"
-                echo "$datetime - ($itemId) - imageType - $imageType" >> "$logfile"
-                echo "$datetime - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
-                echo "$datetime - ($itemId) - language - $language" >> "$logfile"
-                echo "$datetime - ($itemId) - imageSize - $imageSize" >> "$logfile"
-                echo "$datetime - ($itemId) - seasonNumber - $seasonNumberCheck" >> "$logfile"
-                echo "$datetime - ($itemId) - episodeNumber - $episodeNumberCheck" >> "$logfile"
+                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleCode - $titleCode" >> "$logfile"
+                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageType - $imageType" >> "$logfile"
+                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
+                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - language - $language" >> "$logfile"
+                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageSize - $imageSize" >> "$logfile"
+                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumber - $seasonNumberCheck" >> "$logfile"
+                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumber - $episodeNumberCheck" >> "$logfile"
             else
                 titleCode=$(echo $title | awk -F "_" '{print $1}')
                 imageType=$(echo $title | awk -F "_" '{print $2}')
@@ -63,11 +63,11 @@ if [[ $numberOfUnderscores == 4 ]];
                 language=$(echo $title | awk -F "_" '{print $4}')
                 imageSize=$(echo $title | awk -F "_" '{print $5}')
 
-                echo "$datetime - ($itemId) - titleCode - $titleCode" >> "$logfile"
-                echo "$datetime - ($itemId) - imageType - $imageType" >> "$logfile"
-                echo "$datetime - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
-                echo "$datetime - ($itemId) - language - $language" >> "$logfile"
-                echo "$datetime - ($itemId) - imageSize - $imageSize" >> "$logfile"
+                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleCode - $titleCode" >> "$logfile"
+                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageType - $imageType" >> "$logfile"
+                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
+                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - language - $language" >> "$logfile"
+                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageSize - $imageSize" >> "$logfile"
         fi
     else
         if [[ $numberOfUnderscores == 3 ]];
@@ -84,12 +84,12 @@ if [[ $numberOfUnderscores == 4 ]];
                         seasonNumberCheck=$(echo $imageType | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
                         episodeNumberCheck=$(echo $imageType | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
 
-                        echo "$datetime - ($itemId) - titleCode - $titleCode" >> "$logfile"
-                        echo "$datetime - ($itemId) - imageType - $imageType" >> "$logfile"
-                        echo "$datetime - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
-                        echo "$datetime - ($itemId) - language - $language" >> "$logfile"
-                        echo "$datetime - ($itemId) - seasonNumber - $seasonNumberCheck" >> "$logfile"
-                        echo "$datetime - ($itemId) - episodeNumber - $episodeNumberCheck" >> "$logfile"
+                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleCode - $titleCode" >> "$logfile"
+                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageType - $imageType" >> "$logfile"
+                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
+                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - language - $language" >> "$logfile"
+                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumber - $seasonNumberCheck" >> "$logfile"
+                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumber - $episodeNumberCheck" >> "$logfile"
                     else
                         titleCode=$(echo $title | awk -F "_" '{print $1}')
                         imageType=$(echo $title | awk -F "_" '{print $2}')
@@ -97,10 +97,10 @@ if [[ $numberOfUnderscores == 4 ]];
                         titleByLanguage=$(echo $titleByLanguage | sed -r -e "s/([^A-Z])([A-Z])/\1 \2/g" -e "s/([A-Z]+)([A-Z])/\1 \2/g")
                         imageSize=$(echo $title | awk -F "_" '{print $4}')
 
-                        echo "$datetime - ($itemId) - titleCode - $titleCode" >> "$logfile"
-                        echo "$datetime - ($itemId) - imageType - $imageType" >> "$logfile"
-                        echo "$datetime - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
-                        echo "$datetime - ($itemId) - imageSize - $imageSize" >> "$logfile"
+                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleCode - $titleCode" >> "$logfile"
+                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageType - $imageType" >> "$logfile"
+                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
+                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageSize - $imageSize" >> "$logfile"
                     fi
             else
                 if [[ $numberOfUnderscores == 2 ]];
@@ -117,21 +117,21 @@ if [[ $numberOfUnderscores == 4 ]];
                                 seasonNumberCheck=$(echo $imageType | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
                                 episodeNumberCheck=$(echo $imageType | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
 
-                                echo "$datetime - ($itemId) - titleCode - $titleCode" >> "$logfile"
-                                echo "$datetime - ($itemId) - imageType - $imageType" >> "$logfile"
-                                echo "$datetime - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
-                                echo "$datetime - ($itemId) - language - $language" >> "$logfile"
-                                echo "$datetime - ($itemId) - seasonNumber - $seasonNumberCheck" >> "$logfile"
-                                echo "$datetime - ($itemId) - episodeNumber - $episodeNumberCheck" >> "$logfile"
+                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleCode - $titleCode" >> "$logfile"
+                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageType - $imageType" >> "$logfile"
+                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
+                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - language - $language" >> "$logfile"
+                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumber - $seasonNumberCheck" >> "$logfile"
+                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumber - $episodeNumberCheck" >> "$logfile"
                             else
                                 titleCode=$(echo $title | awk -F "_" '{print $1}')
                                 imageType=$(echo $title | awk -F "_" '{print $2}')
                                 titleByLanguage=$(echo $title | awk -F "_" '{print $3}')
                                 titleByLanguage=$(echo $titleByLanguage | sed -r -e "s/([^A-Z])([A-Z])/\1 \2/g" -e "s/([A-Z]+)([A-Z])/\1 \2/g")
 
-                                echo "$datetime - ($itemId) - titleCode - $titleCode" >> "$logfile"
-                                echo "$datetime - ($itemId) - imageType - $imageType" >> "$logfile"
-                                echo "$datetime - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
+                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleCode - $titleCode" >> "$logfile"
+                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageType - $imageType" >> "$logfile"
+                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
                             fi
                     else
                         if [[ $numberOfUnderscores == 5 ]];
@@ -150,14 +150,14 @@ if [[ $numberOfUnderscores == 4 ]];
                                         seasonNumberCheck=$(echo $imageType | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
                                         episodeNumberCheck=$(echo $imageType | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
 
-                                        echo "$datetime - ($itemId) - titleCode - $titleCode" >> "$logfile"
-                                        echo "$datetime - ($itemId) - imageType - $imageType" >> "$logfile"
-                                        echo "$datetime - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
-                                        echo "$datetime - ($itemId) - language - $language" >> "$logfile"
-                                        echo "$datetime - ($itemId) - cast - $cast" >> "$logfile"
-                                        echo "$datetime - ($itemId) - imageSize - $imageSize" >> "$logfile"
-                                        echo "$datetime - ($itemId) - seasonNumber - $seasonNumberCheck" >> "$logfile"
-                                        echo "$datetime - ($itemId) - episodeNumber - $episodeNumberCheck" >> "$logfile"
+                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleCode - $titleCode" >> "$logfile"
+                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageType - $imageType" >> "$logfile"
+                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
+                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - language - $language" >> "$logfile"
+                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - cast - $cast" >> "$logfile"
+                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageSize - $imageSize" >> "$logfile"
+                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumber - $seasonNumberCheck" >> "$logfile"
+                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumber - $episodeNumberCheck" >> "$logfile"
                                     else
                                         titleCode=$(echo $title | awk -F "_" '{print $1}')
                                         imageType=$(echo $title | awk -F "_" '{print $2}')
@@ -167,12 +167,12 @@ if [[ $numberOfUnderscores == 4 ]];
                                         episodeNumber=$(echo $title | awk -F "_" '{print $5}')
                                         imageSize=$(echo $title | awk -F "_" '{print $6}')
 
-                                        echo "$datetime - ($itemId) - titleCode - $titleCode" >> "$logfile"
-                                        echo "$datetime - ($itemId) - imageType - $imageType" >> "$logfile"
-                                        echo "$datetime - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
-                                        echo "$datetime - ($itemId) - seasonNumber - $seasonNumber" >> "$logfile"
-                                        echo "$datetime - ($itemId) - episodeNumber - $episodeNumber" >> "$logfile"
-                                        echo "$datetime - ($itemId) - imageSize - $imageSize" >> "$logfile"
+                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleCode - $titleCode" >> "$logfile"
+                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageType - $imageType" >> "$logfile"
+                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
+                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumber - $seasonNumber" >> "$logfile"
+                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumber - $episodeNumber" >> "$logfile"
+                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageSize - $imageSize" >> "$logfile"
                                 fi
                             else
                                 if [[ $numberOfUnderscores == 6 ]];
@@ -192,15 +192,15 @@ if [[ $numberOfUnderscores == 4 ]];
                                                 seasonNumberCheck=$(echo $imageType | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
                                                 episodeNumberCheck=$(echo $imageType | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
 
-                                                echo "$datetime - ($itemId) - titleCode - $titleCode" >> "$logfile"
-                                                echo "$datetime - ($itemId) - imageType - $imageType" >> "$logfile"
-                                                echo "$datetime - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
-                                                echo "$datetime - ($itemId) - language - $language" >> "$logfile"
-                                                echo "$datetime - ($itemId) - imageSize - $imageSize" >> "$logfile"
-                                                echo "$datetime - ($itemId) - imageNumber - $imageNumber" >> "$logfile"
-                                                echo "$datetime - ($itemId) - desc - $desc" >> "$logfile"
-                                                echo "$datetime - ($itemId) - seasonNumber - $seasonNumberCheck" >> "$logfile"
-                                                echo "$datetime - ($itemId) - episodeNumber - $episodeNumberCheck" >> "$logfile"
+                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleCode - $titleCode" >> "$logfile"
+                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageType - $imageType" >> "$logfile"
+                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
+                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - language - $language" >> "$logfile"
+                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageSize - $imageSize" >> "$logfile"
+                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageNumber - $imageNumber" >> "$logfile"
+                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - desc - $desc" >> "$logfile"
+                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumber - $seasonNumberCheck" >> "$logfile"
+                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumber - $episodeNumberCheck" >> "$logfile"
                                             else
                                                 titleCode=$(echo $title | awk -F "_" '{print $1}')
                                                 imageType=$(echo $title | awk -F "_" '{print $2}')
@@ -210,12 +210,12 @@ if [[ $numberOfUnderscores == 4 ]];
                                                 episodeNumber=$(echo $title | awk -F "_" '{print $5}')
                                                 imageSize=$(echo $title | awk -F "_" '{print $6}')
 
-                                                echo "$datetime - ($itemId) - titleCode - $titleCode" >> "$logfile"
-                                                echo "$datetime - ($itemId) - imageType - $imageType" >> "$logfile"
-                                                echo "$datetime - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
-                                                echo "$datetime - ($itemId) - seasonNumber - $seasonNumber" >> "$logfile"
-                                                echo "$datetime - ($itemId) - episodeNumber - $episodeNumber" >> "$logfile"
-                                                echo "$datetime - ($itemId) - imageSize - $imageSize" >> "$logfile"
+                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleCode - $titleCode" >> "$logfile"
+                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageType - $imageType" >> "$logfile"
+                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
+                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumber - $seasonNumber" >> "$logfile"
+                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumber - $episodeNumber" >> "$logfile"
+                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageSize - $imageSize" >> "$logfile"
                                         fi
                                     else
                                         if [[ $numberOfUnderscores == 7 ]];
@@ -236,15 +236,15 @@ if [[ $numberOfUnderscores == 4 ]];
                                                         seasonNumberCheck=$(echo $imageType | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
                                                         episodeNumberCheck=$(echo $imageType | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
 
-                                                        echo "$datetime - ($itemId) - titleCode - $titleCode" >> "$logfile"
-                                                        echo "$datetime - ($itemId) - imageType - $imageType" >> "$logfile"
-                                                        echo "$datetime - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
-                                                        echo "$datetime - ($itemId) - language - $language" >> "$logfile"
-                                                        echo "$datetime - ($itemId) - imageSize - $imageSize" >> "$logfile"
-                                                        echo "$datetime - ($itemId) - imageNumber - $imageNumber" >> "$logfile"
-                                                        echo "$datetime - ($itemId) - desc - $desc" >> "$logfile"
-                                                        echo "$datetime - ($itemId) - seasonNumber - $seasonNumberCheck" >> "$logfile"
-                                                        echo "$datetime - ($itemId) - episodeNumber - $episodeNumberCheck" >> "$logfile"
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleCode - $titleCode" >> "$logfile"
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageType - $imageType" >> "$logfile"
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - language - $language" >> "$logfile"
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageSize - $imageSize" >> "$logfile"
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageNumber - $imageNumber" >> "$logfile"
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - desc - $desc" >> "$logfile"
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumber - $seasonNumberCheck" >> "$logfile"
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumber - $episodeNumberCheck" >> "$logfile"
                                                     else
                                                         titleCode=$(echo $title | awk -F "_" '{print $1}')
                                                         imageType=$(echo $title | awk -F "_" '{print $2}')
@@ -254,15 +254,15 @@ if [[ $numberOfUnderscores == 4 ]];
                                                         episodeNumber=$(echo $title | awk -F "_" '{print $5}')
                                                         imageSize=$(echo $title | awk -F "_" '{print $6}')
 
-                                                        echo "$datetime - ($itemId) - titleCode - $titleCode" >> "$logfile"
-                                                        echo "$datetime - ($itemId) - imageType - $imageType" >> "$logfile"
-                                                        echo "$datetime - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
-                                                        echo "$datetime - ($itemId) - seasonNumber - $seasonNumber" >> "$logfile"
-                                                        echo "$datetime - ($itemId) - episodeNumber - $episodeNumber" >> "$logfile"
-                                                        echo "$datetime - ($itemId) - imageSize - $imageSize" >> "$logfile"
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleCode - $titleCode" >> "$logfile"
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageType - $imageType" >> "$logfile"
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumber - $seasonNumber" >> "$logfile"
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumber - $episodeNumber" >> "$logfile"
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageSize - $imageSize" >> "$logfile"
                                                 fi
                                             else
-                                                echo "$datetime - ($itemId) - Does NOT Have Supported Number of Underscores - $numberOfUnderscores" >> "$logfile"
+                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Does NOT Have Supported Number of Underscores - $numberOfUnderscores" >> "$logfile"
                                         fi
                                 fi
                         fi
@@ -411,9 +411,9 @@ if [[ $numberOfUnderscores == 4 ]];
                                             else
                                                 if [[ $numberOfUnderscores -lt 1 || $numberOfUnderscores -gt 8 ]];
                                                     then
-                                                        echo "$datetime - ($itemId) - Does NOT Have Supported Number of Underscores - $numberOfUnderscores" >> "$logfile"
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Does NOT Have Supported Number of Underscores - $numberOfUnderscores" >> "$logfile"
                                                     else
-                                                        echo "$datetime - ($itemId) - End of the IF Statements - Last Else" >> "$logfile"
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - End of the IF Statements - Last Else" >> "$logfile"
                                                 fi
                                         fi
                                 fi
@@ -424,36 +424,64 @@ fi
 
 case $language in
     "es")
-        primaryMetadataLanguage="spanish"
+        graphicsLanguage="spanish"
     ;;
     "en")
-        primaryMetadataLanguage="english"
+        graphicsLanguage="english"
     ;;
     "ES")
-        primaryMetadataLanguage="spanish"
+        graphicsLanguage="spanish"
     ;;
     "EN")
-        primaryMetadataLanguage="english"
+        graphicsLanguage="english"
     ;;
     "FR")
-        primaryMetadataLanguage=""
+        graphicsLanguage=""
     ;;
     "OG")
-        primaryMetadataLanguage=""
+        graphicsLanguage=""
+    ;;
+    *)
+        graphicsLanguage=""
     ;;
 esac
 
-echo "$datetime - ($itemId) - Primary Metadata Language - $primaryMetadataLanguage" >> "$logfile"
-echo "$datetime - ($itemId) - Graphics Tags - $graphicsTags" >> "$logfile"
+case $imageType in
+    *"cover"*)
+        graphicsType="cover"
+    ;;
+    *"feature"*)
+        graphicsType="feature"
+    ;;
+    *"keyart"*)
+        graphicsType="keyart"
+    ;;
+    *"still"*)
+        graphicsType="still"
+    ;;
+    *)
+        graphicsType=""
+    ;;
+esac
 
-bodyData=$(echo "<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\">$graphicsTags<field><name>oly_titleCode</name><value>$titleCode</value></field><field><name>oly_primaryMetadataLanguage</name><value>$primaryMetadataLanguage</value></field><field><name>$fieldName</name><value>$titleByLanguage</value></field></timespan></MetadataDocument>")
+if [[ "$imageSize" =~ ^[0-9]/x[0-9] ]];
+then
+    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Check Image Size PASSED - $imageSize" >> "$logfile"
+else
+    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Check Image Size FAILED - $imageSize" >> "$logfile"
+fi
 
-echo "$datetime - ($itemId) - Body Data - $bodyData" >> "$logfile"
+echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Graphics Language - $graphicsLanguage" >> "$logfile"
+echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Graphics Tags - $graphicsTags" >> "$logfile"
 
-curl -s -o /dev/null --location --request PUT $url --header 'Content-Type: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=xZqBrKBPBOUANsWFnMC3aF90S52Ip3tgXdUHwWZvhNnu9aLl9j4rdrxRhV9nSQx9' --data $bodyData
+#bodyData=$(echo "<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\">$graphicsTags<field><name>oly_titleCode</name><value>$titleCode</value></field><field><name>oly_primaryMetadataLanguage</name><value>$graphicsLanguage</value></field><field><name>oly_graphicsLanguage</name><value>$graphicsLanguage</value></field><field><name>$fieldName</name><value>$titleByLanguage</value></field><field><name>oly_graphicsType</name><value>$graphicsType</value></field></timespan></MetadataDocument>")
+
+echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Body Data - $bodyData" >> "$logfile"
+
+#curl -s -o /dev/null --location --request PUT $url --header 'Content-Type: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=xZqBrKBPBOUANsWFnMC3aF90S52Ip3tgXdUHwWZvhNnu9aLl9j4rdrxRhV9nSQx9' --data $bodyData
 
 sleep 5
 
-echo "$datetime - ($itemId) - Metadata Update Completed" >> "$logfile"
+echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Metadata Update Completed" >> "$logfile"
 
 IFS=$saveIFS
