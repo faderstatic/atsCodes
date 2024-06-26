@@ -474,6 +474,7 @@ else
     echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Check Image Size FAILED - $imageSize" >> "$logfile"
 fi
 
+echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Graphics Type - $graphicsType" >> "$logfile"
 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Graphics Language - $graphicsLanguage" >> "$logfile"
 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Graphics Tags - $graphicsTags" >> "$logfile"
 
