@@ -469,9 +469,9 @@ esac
 
 if [[ "$imageSize" =~ ^[0-9]/x[0-9] ]];
 then
-    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Check Image Size PASSED - $imageSize" >> "$logfile"
+    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Check Graphics Resolution -  PASSED - {$imageSize}" >> "$logfile"
 else
-    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Check Image Size FAILED - $imageSize" >> "$logfile"
+    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Check Graphics Resolution - FAILED - {$imageSize}" >> "$logfile"
 fi
 
 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Graphics Type - $graphicsType" >> "$logfile"
