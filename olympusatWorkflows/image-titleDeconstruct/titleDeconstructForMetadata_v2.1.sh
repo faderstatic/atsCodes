@@ -42,6 +42,174 @@ echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Number of Underscores - $numberOfUnd
 
 if [[ $numberOfUnderscores == 4 ]];
     then
+        blockOne=$(echo $title | awk -F "_" '{print $1}')
+        blockTwo=$(echo $title | awk -F "_" '{print $2}')
+        blockThree=$(echo $title | awk -F "_" '{print $3}')
+        blockFour=$(echo $title | awk -F "_" '{print $4}')
+        blockFive=$(echo $title | awk -F "_" '{print $5}')
+
+        blockOneCharCount=$(echo -n $blockOne | wc -c)
+        blockTwoCharCount=$(echo -n $blockTwo | wc -c)
+        blockThreeCharCount=$(echo -n $blockThree | wc -c)
+        blockFourCharCount=$(echo -n $blockFour | wc -c)
+        blockFiveCharCount=$(echo -n $blockFive | wc -c)
+
+        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Check Block One for Info - {$blockOne} - {$blockOneCharCount}" >> "$logfile"
+        if [[ "$blockOne" =~ ^(M|S).*[0-9]$ ]];
+        then
+            case $blockOneCharCount in
+                "7")
+                    titleCode=$(echo $blockOne)
+                ;;
+                "9")
+                    titleCode=$(echo $blockOne)
+                ;;
+                "10")
+                    titleCode=$(echo $blockOne)
+                ;;
+                "11")
+                    titleCode=$(echo $blockOne)
+                ;;
+                "12")
+                    titleCode=$(echo $blockOne)
+                ;;
+                "13")
+                    titleCode=$(echo $blockOne)
+                ;;
+                *)
+                    titleByLanguage=$(echo $blockOne)
+                ;;
+            esac
+        else
+            titleByLanguage=$(echo $blockOne)
+        fi
+
+        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Title Code - {$titleCode}" >> "$logfile"
+        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Title By Language - {$titleByLanguage}" >> "$logfile"
+
+        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Check Block Two for Info - {$blockTwo} - {$blockTwoCharCount}" >> "$logfile"
+        if [[ ("$blockTwo" == "EN") || ("$blockTwo" == "ES") || ("$blockTwo" == "FR") || ("$blockTwo" == "OG") ]];
+        then
+            language=$(echo $blockTwo)
+        else
+            blockTwo=$(echo $blockTwo | tr '[:upper:]' '[:lower:]')
+            if [[ ("$blockTwo" == "cover") || ("$blockTwo" == "feature") || ("$blockTwo" == "keyart") || ("$blockTwo" == "still") || ("$blockTwo" == "blank") ]];
+            then
+                imageType=$(echo $blockTwo)
+            fi
+        fi
+
+        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Language - {$language}" >> "$logfile"
+        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Image Type - {$imageType}" >> "$logfile"
+
+        if [[ "$blockThree" =~ ^(M|S).*[0-9]$ ]];
+        then
+            case $blockThreeCharCount in
+                "7")
+                    titleCode=$(echo $blockThree)
+                ;;
+                "9")
+                    titleCode=$(echo $blockThree)
+                ;;
+                "10")
+                    titleCode=$(echo $blockThree)
+                ;;
+                "11")
+                    titleCode=$(echo $blockThree)
+                ;;
+                "12")
+                    titleCode=$(echo $blockThree)
+                ;;
+                "13")
+                    titleCode=$(echo $blockThree)
+                ;;
+                *)
+                    imageMisc=$(echo $blockThree)
+                ;;
+            esac
+        else
+            if [[ "$blockThree" =~ ^[0-9][0-9][0-9][0-9]x[0-9][0-9][0-9][0-9] || "$blockThree" =~ ^[0-9][0-9][0-9][0-9]x[0-9][0-9][0-9] || "$blockThree" =~ ^[0-9][0-9][0-9]x[0-9][0-9][0-9][0-9] || "$blockThree" =~ ^[0-9][0-9][0-9]x[0-9][0-9][0-9] ]];
+            then
+                imageSize=$(echo $blockThree)
+            else
+                if [[ "$blockThree" == *" "* ]];
+                then
+                    titleByLanguage=$(echo $blockThree)
+                else
+                    titleByLanguage=$(echo $blockThree | sed -r -e "s/([^A-Z])([A-Z])/\1 \2/g" -e "s/([A-Z]+)([A-Z])/\1 \2/g")
+                fi
+            fi
+        fi
+        
+        if [[ "$blockFour" =~ ^[0-9][0-9][0-9][0-9]x[0-9][0-9][0-9][0-9] || "$blockFour" =~ ^[0-9][0-9][0-9][0-9]x[0-9][0-9][0-9] || "$blockFour" =~ ^[0-9][0-9][0-9]x[0-9][0-9][0-9][0-9] || "$blockFour" =~ ^[0-9][0-9][0-9]x[0-9][0-9][0-9] ]];
+        then
+            imageSize=$(echo $blockFour)
+        else
+            if [[ "$blockFour" =~ ^(M|S).*[0-9]$ || "$blockFour" =~ ^(M|S)[0-9].*E[0-9]$ || "$blockFour" =~ ^(M|S)[0-9].*E[0-9][0-9]$ || "$blockFour" =~ ^(M|S)[0-9][0-9].*E[0-9]$ || "$blockFour" =~ ^(M|S)[0-9][0-9].*E[0-9][0-9]$ ]];
+            then
+                seasonNumberCheck=$(echo $blockFour | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
+                episodeNumberCheck=$(echo $blockFour | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
+                imageDesc=$(echo $blockFour)
+            else
+                blockFour=$(echo $blockFour | tr '[:upper:]' '[:lower:]')
+                if [[ ("$blockFour" == "cover") || ("$blockFour" == "feature") || ("$blockFour" == "keyart") || ("$blockFour" == *"still"*) || ("$blockFour" == "blank") ]];
+                then
+                    imageType=$(echo $blockFour)
+                else
+                    if [[ "$blockFour" == *" "* ]];
+                    then
+                        imageDesc=$(echo $blockFour)
+                    else
+                        imageDesc=$(echo $blockFour | sed -r -e "s/([^A-Z])([A-Z])/\1 \2/g" -e "s/([A-Z]+)([A-Z])/\1 \2/g")
+                    fi
+                fi
+            fi
+        fi
+
+        if [[ "$blockFive" =~ ^[0-9][0-9][0-9][0-9]x[0-9][0-9][0-9][0-9] || "$blockFive" =~ ^[0-9][0-9][0-9][0-9]x[0-9][0-9][0-9] || "$blockFive" =~ ^[0-9][0-9][0-9]x[0-9][0-9][0-9][0-9] || "$blockFive" =~ ^[0-9][0-9][0-9]x[0-9][0-9][0-9] ]];
+        then
+            imageSize=$(echo $blockFive)
+        else
+            if [[ "$blockFive" =~ ^(M|S).*[0-9]$ || "$blockFive" =~ ^(M|S)[0-9].*E[0-9]$ || "$blockFive" =~ ^(M|S)[0-9].*E[0-9][0-9]$ || "$blockFive" =~ ^(M|S)[0-9][0-9].*E[0-9]$ || "$blockFive" =~ ^(M|S)[0-9][0-9].*E[0-9][0-9]$ ]];
+            then
+                seasonNumberCheck=$(echo $blockFive | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
+                episodeNumberCheck=$(echo $blockFive | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
+                imageDesc=$(echo $blockFive)
+            else
+                blockFive=$(echo $blockFive | tr '[:upper:]' '[:lower:]')
+                if [[ ("$blockFive" == "cover") || ("$blockFive" == "feature") || ("$blockFive" == "keyart") || ("$blockFive" == *"still"*) || ("$blockFive" == "blank") ]];
+                then
+                    imageType=$(echo $blockFive)
+                else
+                    if [[ "$blockFive" == *" "* ]];
+                    then
+                        imageDesc=$(echo $blockFive)
+                    else
+                        imageDesc=$(echo $blockFive | sed -r -e "s/([^A-Z])([A-Z])/\1 \2/g" -e "s/([A-Z]+)([A-Z])/\1 \2/g")
+                    fi
+                fi
+            fi
+        fi
+
+        if [[ $titleCode == "S"* ]];
+        then 
+            graphicsTags="<field><name>oly_graphicsTags</name><value>$blockOne</value><value>$blockTwo</value><value>$blockThree</value><value>$blockFour</value></field><field><name>oly_seasonNumber</name><value>$seasonNumberCheck</value></field><field><name>oly_episodeNumber</name><value>$episodeNumberCheck</value></field>"
+        else
+            graphicsTags="<field><name>oly_graphicsTags</name><value>$blockOne</value><value>$blockTwo</value><value>$blockThree</value><value>$blockFour</value></field>"
+        fi
+        
+        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - +++++++++++++++++++++++++++++++++" >> "$logfile"
+        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleCode - $titleCode" >> "$logfile"
+        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageType - $imageType" >> "$logfile"
+        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
+        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - language - $language" >> "$logfile"
+        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageSize - $imageSize" >> "$logfile"
+        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageDesc - $imageDesc" >> "$logfile"
+        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumber - $seasonNumberCheck" >> "$logfile"
+        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumber - $episodeNumberCheck" >> "$logfile"
+        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - graphicsTags - $graphicsTags" >> "$logfile"
+        
+        : '
         namingConventionCheck=$(echo $title | awk -F "_" '{print $2}')
         if [[ ("$namingConventionCheck" == "EN") || ("$namingConventionCheck" == "ES") || ("$namingConventionCheck" == "FR") || ("$namingConventionCheck" == "OG") ]];
             then
@@ -221,6 +389,7 @@ if [[ $numberOfUnderscores == 4 ]];
                     echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageSize - $imageSize" >> "$logfile"
                 fi
         fi
+        '
     else
         if [[ $numberOfUnderscores == 3 ]];
             then
@@ -282,43 +451,87 @@ if [[ $numberOfUnderscores == 4 ]];
                 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Language - {$language}" >> "$logfile"
                 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Image Type - {$imageType}" >> "$logfile"
 
-                if [[ "$blockThree" =~ ^[0-9][0-9][0-9][0-9]x[0-9][0-9][0-9][0-9] || "$blockThree" =~ ^[0-9][0-9][0-9][0-9]x[0-9][0-9][0-9] || "$blockThree" =~ ^[0-9][0-9][0-9]x[0-9][0-9][0-9][0-9] || "$blockThree" =~ ^[0-9][0-9][0-9]x[0-9][0-9][0-9] ]];
+                if [[ "$blockThree" =~ ^(M|S).*[0-9]$ ]];
                 then
-                    imageSize=$(echo $blockThree)
+                    case $blockThreeCharCount in
+                        "7")
+                            titleCode=$(echo $blockThree)
+                        ;;
+                        "9")
+                            titleCode=$(echo $blockThree)
+                        ;;
+                        "10")
+                            titleCode=$(echo $blockThree)
+                        ;;
+                        "11")
+                            titleCode=$(echo $blockThree)
+                        ;;
+                        "12")
+                            titleCode=$(echo $blockThree)
+                        ;;
+                        "13")
+                            titleCode=$(echo $blockThree)
+                        ;;
+                        *)
+                            imageMisc=$(echo $blockThree)
+                        ;;
+                    esac
                 else
-                    if [[ "$blockThree" == *" "* ]];
+                    if [[ "$blockThree" =~ ^[0-9][0-9][0-9][0-9]x[0-9][0-9][0-9][0-9] || "$blockThree" =~ ^[0-9][0-9][0-9][0-9]x[0-9][0-9][0-9] || "$blockThree" =~ ^[0-9][0-9][0-9]x[0-9][0-9][0-9][0-9] || "$blockThree" =~ ^[0-9][0-9][0-9]x[0-9][0-9][0-9] ]];
                     then
-                        titleByLanguage=$(echo $blockThree)
+                        imageSize=$(echo $blockThree)
                     else
-                        titleByLanguage=$(echo $blockThree | sed -r -e "s/([^A-Z])([A-Z])/\1 \2/g" -e "s/([A-Z]+)([A-Z])/\1 \2/g")
+                        if [[ "$blockThree" == *" "* ]];
+                        then
+                            titleByLanguage=$(echo $blockThree)
+                        else
+                            titleByLanguage=$(echo $blockThree | sed -r -e "s/([^A-Z])([A-Z])/\1 \2/g" -e "s/([A-Z]+)([A-Z])/\1 \2/g")
+                        fi
                     fi
                 fi
-
+                
                 if [[ "$blockFour" =~ ^[0-9][0-9][0-9][0-9]x[0-9][0-9][0-9][0-9] || "$blockFour" =~ ^[0-9][0-9][0-9][0-9]x[0-9][0-9][0-9] || "$blockFour" =~ ^[0-9][0-9][0-9]x[0-9][0-9][0-9][0-9] || "$blockFour" =~ ^[0-9][0-9][0-9]x[0-9][0-9][0-9] ]];
                 then
                     imageSize=$(echo $blockFour)
                 else
-                    blockFour=$(echo $blockFour | tr '[:upper:]' '[:lower:]')
-                    if [[ ("$blockFour" == "cover") || ("$blockFour" == "feature") || ("$blockFour" == "keyart") || ("$blockFour" == "still") || ("$blockFour" == "blank") ]];
+                    if [[ "$blockFour" =~ ^(M|S).*[0-9]$ || "$blockFour" =~ ^(M|S)[0-9].*E[0-9]$ || "$blockFour" =~ ^(M|S)[0-9].*E[0-9][0-9]$ || "$blockFour" =~ ^(M|S)[0-9][0-9].*E[0-9]$ || "$blockFour" =~ ^(M|S)[0-9][0-9].*E[0-9][0-9]$ ]];
                     then
-                        imageType=$(echo $blockFour)
+                        seasonNumberCheck=$(echo $blockFour | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
+                        episodeNumberCheck=$(echo $blockFour | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
+                        imageDesc=$(echo $blockFour)
                     else
-                        if [[ "$blockFour" == *" "* ]];
+                        blockFour=$(echo $blockFour | tr '[:upper:]' '[:lower:]')
+                        if [[ ("$blockFour" == "cover") || ("$blockFour" == "feature") || ("$blockFour" == "keyart") || ("$blockFour" == *"still"*) || ("$blockFour" == "blank") ]];
                         then
-                            imageDesc=$(echo $blockFour)
+                            imageType=$(echo $blockFour)
                         else
-                            imageDesc=$(echo $blockFour | sed -r -e "s/([^A-Z])([A-Z])/\1 \2/g" -e "s/([A-Z]+)([A-Z])/\1 \2/g")
+                            if [[ "$blockFour" == *" "* ]];
+                            then
+                                imageDesc=$(echo $blockFour)
+                            else
+                                imageDesc=$(echo $blockFour | sed -r -e "s/([^A-Z])([A-Z])/\1 \2/g" -e "s/([A-Z]+)([A-Z])/\1 \2/g")
+                            fi
                         fi
                     fi
                 fi
 
+                if [[ $titleCode == "S"* ]];
+                then 
+                    graphicsTags="<field><name>oly_graphicsTags</name><value>$blockOne</value><value>$blockTwo</value><value>$blockThree</value><value>$blockFour</value></field><field><name>oly_seasonNumber</name><value>$seasonNumberCheck</value></field><field><name>oly_episodeNumber</name><value>$episodeNumberCheck</value></field>"
+                else
+                    graphicsTags="<field><name>oly_graphicsTags</name><value>$blockOne</value><value>$blockTwo</value><value>$blockThree</value><value>$blockFour</value></field>"
+                fi
+                
                 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - +++++++++++++++++++++++++++++++++" >> "$logfile"
                 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleCode - $titleCode" >> "$logfile"
                 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageType - $imageType" >> "$logfile"
                 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
                 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - language - $language" >> "$logfile"
                 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageSize - $imageSize" >> "$logfile"
-                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageSize - $imageDesc" >> "$logfile"
+                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageDesc - $imageDesc" >> "$logfile"
+                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumber - $seasonNumberCheck" >> "$logfile"
+                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumber - $episodeNumberCheck" >> "$logfile"
+                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - graphicsTags - $graphicsTags" >> "$logfile"
                 
                 : '
                 namingConventionCheck=$(echo $title | awk -F "_" '{print $2}')
@@ -365,7 +578,8 @@ if [[ $numberOfUnderscores == 4 ]];
                             echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
                             echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageSize - $imageSize" >> "$logfile"
                         fi
-                    fi'
+                    fi
+                    '
             else
                 if [[ $numberOfUnderscores == 2 ]];
                     then
@@ -535,155 +749,171 @@ if [[ $numberOfUnderscores == 4 ]];
 fi
 
 if [[ $titleCode == "M"* ]];
+then
+    if [[ $language == "es" || $language == "ES" ]];
     then
-        if [[ $language == "es" || $language == "ES" ]];
-            then
-                fieldName="oly_titleEs"
-            else
-                fieldName="oly_titleEn"
-        fi
+        fieldName="oly_titleEs"
     else
-        fieldName="oly_seriesName"
+        fieldName="oly_titleEn"
+    fi
+else
+    fieldName="oly_seriesName"
 fi
 
 if [[ $numberOfUnderscores == 4 ]];
+then
+    if [[ $titleCode == "S"* ]];
+    then 
+        graphicsTags="<field><name>oly_graphicsTags</name><value>$blockOne</value><value>$blockTwo</value><value>$blockThree</value><value>$blockFour</value><value>$blockFive</value></field><field><name>oly_seasonNumber</name><value>$seasonNumberCheck</value></field><field><name>oly_episodeNumber</name><value>$episodeNumberCheck</value></field>"
+    else
+        graphicsTags="<field><name>oly_graphicsTags</name><value>$blockOne</value><value>$blockTwo</value><value>$blockThree</value><value>$blockFour</value><value>$blockFive</value></field>"
+    fi
+    : '
+    if [[ $language == "es" || $language == "en" || $language == "ES" || $language == "EN" || $language == "FR" ]];
     then
-        if [[ $language == "es" || $language == "en" || $language == "ES" || $language == "EN" || $language == "FR" ]];
+        if [[ $titleCode == "S"* ]];
+        then 
+            graphicsTags="<field><name>oly_graphicsTags</name><value>$blockThree</value><value>$blockFour</value><value>$titleByLanguage</value><value>$language</value><value>$blockFive</value></field><field><name>oly_seasonNumber</name><value>$seasonNumberCheck</value></field><field><name>oly_episodeNumber</name><value>$episodeNumberCheck</value></field>"
+        else
+            graphicsTags="<field><name>oly_graphicsTags</name><value>$blockThree</value><value>$blockFour</value><value>$titleByLanguage</value><value>$language</value><value>$blockFive</value></field>"
+        fi
+    else
+        if [[ $language == "OG" ]];
+        then
+            if [[ $titleCode == "S"* ]];
+            then 
+                graphicsTags="<field><name>oly_graphicsTags</name><value>$blockThree</value><value>$blockFour</value><value>$titleByLanguage</value><value>$blockFive</value></field><field><name>oly_seasonNumber</name><value>$seasonNumberCheck</value></field><field><name>oly_episodeNumber</name><value>$episodeNumberCheck</value></field>"
+            else
+                graphicsTags="<field><name>oly_graphicsTags</name><value>$blockThree</value><value>$blockFour</value><value>$titleByLanguage</value><value>$blockFive</value></field>"
+            fi
+        else
+            graphicsTags="<field><name>oly_graphicsTags</name><value>$blockThree</value><value>$blockFour</value><value>$titleByLanguage</value><value>$blockFive</value></field>"
+        fi
+    fi
+    '
+else
+    if [[ $numberOfUnderscores == 3 ]];
+    then
+        if [[ $titleCode == "S"* ]];
+        then 
+            graphicsTags="<field><name>oly_graphicsTags</name><value>$blockOne</value><value>$blockTwo</value><value>$blockThree</value><value>$blockFour</value></field><field><name>oly_seasonNumber</name><value>$seasonNumberCheck</value></field><field><name>oly_episodeNumber</name><value>$episodeNumberCheck</value></field>"
+        else
+            graphicsTags="<field><name>oly_graphicsTags</name><value>$blockOne</value><value>$blockTwo</value><value>$blockThree</value><value>$blockFour</value></field>"
+        fi
+        : '
+        if [[ $language == "es" || $language == "en" || $language == "ES" || $language == "EN" || $language == "FR" || $language == "OG" ]];
             then
                 if [[ $titleCode == "S"* ]];
                     then 
-                        graphicsTags="<field><name>oly_graphicsTags</name><value>$blockThree</value><value>$blockFour</value><value>$titleByLanguage</value><value>$language</value><value>$blockFive</value></field><field><name>oly_seasonNumber</name><value>$seasonNumberCheck</value></field><field><name>oly_episodeNumber</name><value>$episodeNumberCheck</value></field>"
+                        graphicsTags="<field><name>oly_graphicsTags</name><value>$blockOne</value><value>$blockTwo</value><value>$blockThree</value><value>$blockFour</value></field><field><name>oly_seasonNumber</name><value>$seasonNumberCheck</value></field><field><name>oly_episodeNumber</name><value>$episodeNumberCheck</value></field>"
                     else
-                        graphicsTags="<field><name>oly_graphicsTags</name><value>$blockThree</value><value>$blockFour</value><value>$titleByLanguage</value><value>$language</value><value>$blockFive</value></field>"
+                        graphicsTags="<field><name>oly_graphicsTags</name><value>$blockOne</value><value>$blockTwo</value><value>$blockThree</value><value>$blockFour</value></field>"
                 fi
             else
                 if [[ $language == "OG" ]];
                     then
                         if [[ $titleCode == "S"* ]];
                             then 
-                                graphicsTags="<field><name>oly_graphicsTags</name><value>$blockThree</value><value>$blockFour</value><value>$titleByLanguage</value><value>$blockFive</value></field><field><name>oly_seasonNumber</name><value>$seasonNumberCheck</value></field><field><name>oly_episodeNumber</name><value>$episodeNumberCheck</value></field>"
+                                graphicsTags="<field><name>oly_graphicsTags</name><value>$blockOne</value><value>$blockTwo</value><value>$blockThree</value><value>$blockFour</value></field><field><name>oly_seasonNumber</name><value>$seasonNumberCheck</value></field><field><name>oly_episodeNumber</name><value>$episodeNumberCheck</value></field>"
                             else
-                                graphicsTags="<field><name>oly_graphicsTags</name><value>$blockThree</value><value>$blockFour</value><value>$titleByLanguage</value><value>$blockFive</value></field>"
+                                graphicsTags="<field><name>oly_graphicsTags</name><value>$blockOne</value><value>$blockTwo</value><value>$blockThree</value><value>$blockFour</value></field>"
                         fi
                     else
-                        graphicsTags="<field><name>oly_graphicsTags</name><value>$blockThree</value><value>$blockFour</value><value>$titleByLanguage</value><value>$blockFive</value></field>"
+                        graphicsTags="<field><name>oly_graphicsTags</name><value>$blockOne</value><value>$blockTwo</value><value>$blockThree</value><value>$blockFour</value></field>"
+                fi
         fi
-        fi
+        '
     else
-        if [[ $numberOfUnderscores == 3 ]];
+        if [[ $numberOfUnderscores == 2 ]];
+        then
+            graphicsTags="<field><name>oly_graphicsTags</name><value>$titleCode</value><value>$imageType</value><value>$titleByLanguage</value></field>"
+        else
+            if [[ $numberOfUnderscores == 5 ]];
             then
                 if [[ $language == "es" || $language == "en" || $language == "ES" || $language == "EN" || $language == "FR" ]];
+                then
+                    if [[ $titleCode == "S"* ]];
+                    then 
+                        graphicsTags="<field><name>oly_graphicsTags</name><value>$titleCode</value><value>$imageType</value><value>$titleByLanguage</value><value>$language</value><value>$cast</value><value>$imageSize</value></field><field><name>oly_seasonNumber</name><value>$seasonNumberCheck</value></field><field><name>oly_episodeNumber</name><value>$episodeNumberCheck</value></field>"
+                    else
+                        graphicsTags="<field><name>oly_graphicsTags</name><value>$titleCode</value><value>$imageType</value><value>$titleByLanguage</value><value>$language</value><value>$cast</value><value>$imageSize</value></field>"
+                    fi
+                else
+                    if [[ $language == "OG" ]];
+                    then
+                        if [[ $titleCode == "S"* ]];
+                        then 
+                            graphicsTags="<field><name>oly_graphicsTags</name><value>$titleCode</value><value>$imageType</value><value>$titleByLanguage</value><value>$cast</value><value>$imageSize</value></field><field><name>oly_seasonNumber</name><value>$seasonNumberCheck</value></field><field><name>oly_episodeNumber</name><value>$episodeNumberCheck</value></field>"
+                        else
+                            graphicsTags="<field><name>oly_graphicsTags</name><value>$titleCode</value><value>$imageType</value><value>$titleByLanguage</value><value>$cast</value><value>$imageSize</value></field>"
+                        fi
+                    else
+                        graphicsTags="<field><name>oly_graphicsTags</name><value>$titleCode</value><value>$imageType</value><value>$titleByLanguage</value><value>$seasonNumber</value><value>$episodeNumber</value><value>$imageSize</value></field><field><name>oly_seasonNumber</name><value>$seasonNumberCleaned</value></field><field><name>oly_episodeNumber</name><value>$episodeNumberCleaned</value></field>"
+                        #graphicsTags="<field><name>oly_graphicsTags</name><value>$titleCode</value><value>$imageType</value><value>$titleByLanguage</value><value>$imageSize</value></field>"
+                    fi
+                fi
+            else
+                if [[ $numberOfUnderscores == 6 ]];
+                then
+                    if [[ $language == "es" || $language == "en" || $language == "ES" || $language == "EN" || $language == "FR" ]];
                     then
                         if [[ $titleCode == "S"* ]];
                             then 
-                                graphicsTags="<field><name>oly_graphicsTags</name><value>$titleCode</value><value>$imageType</value><value>$titleByLanguage</value><value>$language</value></field><field><name>oly_seasonNumber</name><value>$seasonNumberCheck</value></field><field><name>oly_episodeNumber</name><value>$episodeNumberCheck</value></field>"
+                                graphicsTags="<field><name>oly_graphicsTags</name><value>$titleCode</value><value>$imageType</value><value>$titleByLanguage</value><value>$language</value><value>$imageNumber</value><value>$desc</value><value>$imageSize</value></field><field><name>oly_seasonNumber</name><value>$seasonNumberCheck</value></field><field><name>oly_episodeNumber</name><value>$episodeNumberCheck</value></field>"
                             else
-                                graphicsTags="<field><name>oly_graphicsTags</name><value>$titleCode</value><value>$imageType</value><value>$titleByLanguage</value><value>$language</value></field>"
+                                graphicsTags="<field><name>oly_graphicsTags</name><value>$titleCode</value><value>$imageType</value><value>$titleByLanguage</value><value>$language</value><value>$imageNumber</value><value>$desc</value><value>$imageSize</value></field>"
                         fi
                     else
                         if [[ $language == "OG" ]];
+                        then
+                            if [[ $titleCode == "S"* ]];
+                            then 
+                                graphicsTags="<field><name>oly_graphicsTags</name><value>$titleCode</value><value>$imageType</value><value>$titleByLanguage</value><value>$imageNumber</value><value>$desc</value><value>$imageSize</value></field><field><name>oly_seasonNumber</name><value>$seasonNumberCheck</value></field><field><name>oly_episodeNumber</name><value>$episodeNumberCheck</value></field>"
+                            else
+                                graphicsTags="<field><name>oly_graphicsTags</name><value>$titleCode</value><value>$imageType</value><value>$titleByLanguage</value><value>$imageNumber</value><value>$desc</value><value>$imageSize</value></field>"
+                            fi
+                        else
+                            graphicsTags="<field><name>oly_graphicsTags</name><value>$titleCode</value><value>$imageType</value><value>$titleByLanguage</value><value>$seasonNumber</value><value>$episodeNumber</value><value>$imageSize</value></field><field><name>oly_seasonNumber</name><value>$seasonNumberCleaned</value></field><field><name>oly_episodeNumber</name><value>$episodeNumberCleaned</value></field>"
+                            #graphicsTags="<field><name>oly_graphicsTags</name><value>$titleCode</value><value>$imageType</value><value>$titleByLanguage</value><value>$imageSize</value></field>"
+                        fi
+                    fi
+                else
+                    if [[ $numberOfUnderscores == 7 ]];
+                    then
+                        if [[ $language == "es" || $language == "en" || $language == "ES" || $language == "EN" || $language == "FR" ]];
+                        then
+                            if [[ $titleCode == "S"* ]];
+                                then 
+                                    graphicsTags="<field><name>oly_graphicsTags</name><value>$titleCode</value><value>$imageType</value><value>$titleByLanguage</value><value>$language</value><value>$imageNumber</value><value>$desc</value><value>$desc2</value><value>$imageSize</value></field><field><name>oly_seasonNumber</name><value>$seasonNumberCheck</value></field><field><name>oly_episodeNumber</name><value>$episodeNumberCheck</value></field>"
+                                else
+                                    graphicsTags="<field><name>oly_graphicsTags</name><value>$titleCode</value><value>$imageType</value><value>$titleByLanguage</value><value>$language</value><value>$imageNumber</value><value>$desc</value><value>$desc2</value><value>$imageSize</value></field>"
+                            fi
+                        else
+                            if [[ $language == "OG" ]];
                             then
                                 if [[ $titleCode == "S"* ]];
-                                    then 
-                                        graphicsTags="<field><name>oly_graphicsTags</name><value>$titleCode</value><value>$imageType</value><value>$titleByLanguage</value><value>$language</value></field><field><name>oly_seasonNumber</name><value>$seasonNumberCheck</value></field><field><name>oly_episodeNumber</name><value>$episodeNumberCheck</value></field>"
-                                    else
-                                        graphicsTags="<field><name>oly_graphicsTags</name><value>$titleCode</value><value>$imageType</value><value>$titleByLanguage</value><value>$language</value></field>"
+                                then 
+                                    graphicsTags="<field><name>oly_graphicsTags</name><value>$titleCode</value><value>$imageType</value><value>$titleByLanguage</value><value>$imageNumber</value><value>$desc</value><value>$desc2</value><value>$imageSize</value></field><field><name>oly_seasonNumber</name><value>$seasonNumberCheck</value></field><field><name>oly_episodeNumber</name><value>$episodeNumberCheck</value></field>"
+                                else
+                                    graphicsTags="<field><name>oly_graphicsTags</name><value>$titleCode</value><value>$imageType</value><value>$titleByLanguage</value><value>$imageNumber</value><value>$desc</value><value>$desc2</value><value>$imageSize</value></field>"
                                 fi
                             else
-                                graphicsTags="<field><name>oly_graphicsTags</name><value>$titleCode</value><value>$imageType</value><value>$titleByLanguage</value><value>$imageSize</value></field>"
+                                graphicsTags="<field><name>oly_graphicsTags</name><value>$titleCode</value><value>$imageType</value><value>$titleByLanguage</value><value>$seasonNumber</value><value>$episodeNumber</value><value>$imageSize</value></field><field><name>oly_seasonNumber</name><value>$seasonNumberCleaned</value></field><field><name>oly_episodeNumber</name><value>$episodeNumberCleaned</value></field>"
+                                #graphicsTags="<field><name>oly_graphicsTags</name><value>$titleCode</value><value>$imageType</value><value>$titleByLanguage</value><value>$imageSize</value></field>"
+                            fi
                         fi
-                fi
-            else
-                if [[ $numberOfUnderscores == 2 ]];
-                    then
-                        graphicsTags="<field><name>oly_graphicsTags</name><value>$titleCode</value><value>$imageType</value><value>$titleByLanguage</value></field>"
                     else
-                        if [[ $numberOfUnderscores == 5 ]];
-                            then
-                                if [[ $language == "es" || $language == "en" || $language == "ES" || $language == "EN" || $language == "FR" ]];
-                                    then
-                                        if [[ $titleCode == "S"* ]];
-                                            then 
-                                                graphicsTags="<field><name>oly_graphicsTags</name><value>$titleCode</value><value>$imageType</value><value>$titleByLanguage</value><value>$language</value><value>$cast</value><value>$imageSize</value></field><field><name>oly_seasonNumber</name><value>$seasonNumberCheck</value></field><field><name>oly_episodeNumber</name><value>$episodeNumberCheck</value></field>"
-                                            else
-                                                graphicsTags="<field><name>oly_graphicsTags</name><value>$titleCode</value><value>$imageType</value><value>$titleByLanguage</value><value>$language</value><value>$cast</value><value>$imageSize</value></field>"
-                                        fi
-                                    else
-                                        if [[ $language == "OG" ]];
-                                            then
-                                                if [[ $titleCode == "S"* ]];
-                                                    then 
-                                                        graphicsTags="<field><name>oly_graphicsTags</name><value>$titleCode</value><value>$imageType</value><value>$titleByLanguage</value><value>$cast</value><value>$imageSize</value></field><field><name>oly_seasonNumber</name><value>$seasonNumberCheck</value></field><field><name>oly_episodeNumber</name><value>$episodeNumberCheck</value></field>"
-                                                    else
-                                                        graphicsTags="<field><name>oly_graphicsTags</name><value>$titleCode</value><value>$imageType</value><value>$titleByLanguage</value><value>$cast</value><value>$imageSize</value></field>"
-                                                fi
-                                            else
-                                                graphicsTags="<field><name>oly_graphicsTags</name><value>$titleCode</value><value>$imageType</value><value>$titleByLanguage</value><value>$seasonNumber</value><value>$episodeNumber</value><value>$imageSize</value></field><field><name>oly_seasonNumber</name><value>$seasonNumberCleaned</value></field><field><name>oly_episodeNumber</name><value>$episodeNumberCleaned</value></field>"
-                                                #graphicsTags="<field><name>oly_graphicsTags</name><value>$titleCode</value><value>$imageType</value><value>$titleByLanguage</value><value>$imageSize</value></field>"
-                                        fi
-                                fi
-                            else
-                                if [[ $numberOfUnderscores == 6 ]];
-                                    then
-                                        if [[ $language == "es" || $language == "en" || $language == "ES" || $language == "EN" || $language == "FR" ]];
-                                            then
-                                                if [[ $titleCode == "S"* ]];
-                                                    then 
-                                                        graphicsTags="<field><name>oly_graphicsTags</name><value>$titleCode</value><value>$imageType</value><value>$titleByLanguage</value><value>$language</value><value>$imageNumber</value><value>$desc</value><value>$imageSize</value></field><field><name>oly_seasonNumber</name><value>$seasonNumberCheck</value></field><field><name>oly_episodeNumber</name><value>$episodeNumberCheck</value></field>"
-                                                    else
-                                                        graphicsTags="<field><name>oly_graphicsTags</name><value>$titleCode</value><value>$imageType</value><value>$titleByLanguage</value><value>$language</value><value>$imageNumber</value><value>$desc</value><value>$imageSize</value></field>"
-                                                fi
-                                            else
-                                                if [[ $language == "OG" ]];
-                                                    then
-                                                        if [[ $titleCode == "S"* ]];
-                                                            then 
-                                                                graphicsTags="<field><name>oly_graphicsTags</name><value>$titleCode</value><value>$imageType</value><value>$titleByLanguage</value><value>$imageNumber</value><value>$desc</value><value>$imageSize</value></field><field><name>oly_seasonNumber</name><value>$seasonNumberCheck</value></field><field><name>oly_episodeNumber</name><value>$episodeNumberCheck</value></field>"
-                                                            else
-                                                                graphicsTags="<field><name>oly_graphicsTags</name><value>$titleCode</value><value>$imageType</value><value>$titleByLanguage</value><value>$imageNumber</value><value>$desc</value><value>$imageSize</value></field>"
-                                                        fi
-                                                    else
-                                                        graphicsTags="<field><name>oly_graphicsTags</name><value>$titleCode</value><value>$imageType</value><value>$titleByLanguage</value><value>$seasonNumber</value><value>$episodeNumber</value><value>$imageSize</value></field><field><name>oly_seasonNumber</name><value>$seasonNumberCleaned</value></field><field><name>oly_episodeNumber</name><value>$episodeNumberCleaned</value></field>"
-                                                        #graphicsTags="<field><name>oly_graphicsTags</name><value>$titleCode</value><value>$imageType</value><value>$titleByLanguage</value><value>$imageSize</value></field>"
-                                        fi
-                                        fi
-                                    else
-                                        if [[ $numberOfUnderscores == 7 ]];
-                                            then
-                                                if [[ $language == "es" || $language == "en" || $language == "ES" || $language == "EN" || $language == "FR" ]];
-                                                    then
-                                                        if [[ $titleCode == "S"* ]];
-                                                            then 
-                                                                graphicsTags="<field><name>oly_graphicsTags</name><value>$titleCode</value><value>$imageType</value><value>$titleByLanguage</value><value>$language</value><value>$imageNumber</value><value>$desc</value><value>$desc2</value><value>$imageSize</value></field><field><name>oly_seasonNumber</name><value>$seasonNumberCheck</value></field><field><name>oly_episodeNumber</name><value>$episodeNumberCheck</value></field>"
-                                                            else
-                                                                graphicsTags="<field><name>oly_graphicsTags</name><value>$titleCode</value><value>$imageType</value><value>$titleByLanguage</value><value>$language</value><value>$imageNumber</value><value>$desc</value><value>$desc2</value><value>$imageSize</value></field>"
-                                                        fi
-                                                    else
-                                                        if [[ $language == "OG" ]];
-                                                            then
-                                                                if [[ $titleCode == "S"* ]];
-                                                                    then 
-                                                                        graphicsTags="<field><name>oly_graphicsTags</name><value>$titleCode</value><value>$imageType</value><value>$titleByLanguage</value><value>$imageNumber</value><value>$desc</value><value>$desc2</value><value>$imageSize</value></field><field><name>oly_seasonNumber</name><value>$seasonNumberCheck</value></field><field><name>oly_episodeNumber</name><value>$episodeNumberCheck</value></field>"
-                                                                    else
-                                                                        graphicsTags="<field><name>oly_graphicsTags</name><value>$titleCode</value><value>$imageType</value><value>$titleByLanguage</value><value>$imageNumber</value><value>$desc</value><value>$desc2</value><value>$imageSize</value></field>"
-                                                                fi
-                                                            else
-                                                                graphicsTags="<field><name>oly_graphicsTags</name><value>$titleCode</value><value>$imageType</value><value>$titleByLanguage</value><value>$seasonNumber</value><value>$episodeNumber</value><value>$imageSize</value></field><field><name>oly_seasonNumber</name><value>$seasonNumberCleaned</value></field><field><name>oly_episodeNumber</name><value>$episodeNumberCleaned</value></field>"
-                                                                #graphicsTags="<field><name>oly_graphicsTags</name><value>$titleCode</value><value>$imageType</value><value>$titleByLanguage</value><value>$imageSize</value></field>"
-                                                fi
-                                                fi
-                                            else
-                                                if [[ $numberOfUnderscores -lt 1 || $numberOfUnderscores -gt 8 ]];
-                                                    then
-                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Does NOT Have Supported Number of Underscores - $numberOfUnderscores" >> "$logfile"
-                                                    else
-                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - End of the IF Statements - Last Else" >> "$logfile"
-                                                fi
-                                        fi
-                                fi
+                        if [[ $numberOfUnderscores -lt 1 || $numberOfUnderscores -gt 8 ]];
+                        then
+                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Does NOT Have Supported Number of Underscores - $numberOfUnderscores" >> "$logfile"
+                        else
+                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - End of the IF Statements - Last Else" >> "$logfile"
                         fi
+                    fi
                 fi
+            fi
         fi
+    fi
 fi
 
 case $language in
@@ -726,6 +956,9 @@ case $imageTypeCheck in
     ;;
     *"poster"*)
         graphicsType="poster"
+    ;;
+    *"blank"*)
+        graphicsType="blank"
     ;;
     *)
         graphicsType=""
