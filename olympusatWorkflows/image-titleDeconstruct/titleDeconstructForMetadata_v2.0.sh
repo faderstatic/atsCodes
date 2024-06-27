@@ -48,7 +48,7 @@ if [[ $numberOfUnderscores == 4 ]];
                 #imageType=$(echo $title | awk -F "_" '{print $4}')
                 #imageSize=$(echo $title | awk -F "_" '{print $5}')
 
-                if [[ "$blockThree" =~ ^(M|S) ]];
+                if [[ "$blockThree" =~ ^(M|S) && "$blockThree" =~ ^.[0-9]$ ]];
                 then
                     echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Check Block Three for Title Code PASSED - {$blockThree}" >> "$logfile"
                 else
