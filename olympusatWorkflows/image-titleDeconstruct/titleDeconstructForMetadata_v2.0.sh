@@ -48,21 +48,25 @@ if [[ $numberOfUnderscores == 4 ]];
                 #imageType=$(echo $title | awk -F "_" '{print $4}')
                 #imageSize=$(echo $title | awk -F "_" '{print $5}')
 
-                if [[ "$blockThree" == ^M[0-9]$ ]];
+                if [[ "$blockThree" =~ ^M[0-9]$ ]];
                 then
                     echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Check Block Three for Title Code PASSED - {$blockThree}" >> "$logfile"
                 else
                     echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Check Block Three for Title Code FAILED - {$blockThree}" >> "$logfile"
                 fi
 
-                if [[ "$blockFour" ==  ]];
+                if [[ "$blockFour" =~ ^M[0-9]$ ]];
                 then
-
+                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Check Block Four for Title Code PASSED - {$blockThree}" >> "$logfile"
+                else
+                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Check Block Four for Title Code FAILED - {$blockThree}" >> "$logfile"
                 fi
 
-                if [[ "$blockFive" ==  ]];
+                if [[ "$blockFive" =~ ^M[0-9]$ ]];
                 then
-
+                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Check Block Five for Title Code PASSED - {$blockThree}" >> "$logfile"
+                else
+                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Check Block Five for Title Code FAILED - {$blockThree}" >> "$logfile"
                 fi
 
                 #seasonNumberCheck=$(echo $imageType | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
