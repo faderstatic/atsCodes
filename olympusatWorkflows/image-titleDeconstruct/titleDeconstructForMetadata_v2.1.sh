@@ -62,18 +62,59 @@ if [[ $numberOfUnderscores == 4 ]];
                 ;;
                 "9")
                     titleCode=$(echo $blockOne)
+                    seasonCheck=$(echo $blockOne | sed -E 's/.*(..)/\1/')
+                    if [[ "$seasonCheck" =~ ^S[0-9] ]];
+                    then
+                        seasonNumberCheck=$(echo $seasonCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
+                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                    fi
                 ;;
                 "10")
                     titleCode=$(echo $blockOne)
+                    seasonCheck=$(echo $blockOne | sed -E 's/.*(...)/\1/')
+                    if [[ "$seasonCheck" =~ ^S[0-9][0-9] ]];
+                    then
+                        seasonNumberCheck=$(echo $seasonCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
+                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                    fi
                 ;;
                 "11")
                     titleCode=$(echo $blockOne)
+                    seasonEpisodeCheck=$(echo $blockOne | sed -E 's/.*(....)/\1/')
+                    if [[ "$seasonEpisodeCheck" =~ ^S[0-9]E[0-9] ]];
+                    then
+                        seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                        episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
+                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                    fi
                 ;;
                 "12")
                     titleCode=$(echo $blockOne)
+                    seasonEpisodeCheck=$(echo $blockOne | sed -E 's/.*(.....)/\1/')
+                    if [[ "$seasonEpisodeCheck" =~ ^S[0-9][0-9]E[0-9] || "$seasonEpisodeCheck" =~ ^S[0-9]E[0-9][0-9] ]];
+                    then
+                        seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                        episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
+                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                    fi
                 ;;
                 "13")
                     titleCode=$(echo $blockOne)
+                    seasonEpisodeCheck=$(echo $blockOne | sed -E 's/.*(......)/\1/')
+                    if [[ "$seasonEpisodeCheck" =~ ^S[0-9][0-9]E[0-9][0-9] ]];
+                    then
+                        seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                        episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
+                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                    fi
                 ;;
                 *)
                     titleByLanguage=$(echo $blockOne)
@@ -102,21 +143,62 @@ if [[ $numberOfUnderscores == 4 ]];
                 ;;
                 "9")
                     titleCode=$(echo $blockThree)
+                    seasonCheck=$(echo $blockThree | sed -E 's/.*(..)/\1/')
+                    if [[ "$seasonCheck" =~ ^S[0-9] ]];
+                    then
+                        seasonNumberCheck=$(echo $seasonCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
+                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                    fi
                 ;;
                 "10")
                     titleCode=$(echo $blockThree)
+                    seasonCheck=$(echo $blockThree | sed -E 's/.*(...)/\1/')
+                    if [[ "$seasonCheck" =~ ^S[0-9][0-9] ]];
+                    then
+                        seasonNumberCheck=$(echo $seasonCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
+                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                    fi
                 ;;
                 "11")
                     titleCode=$(echo $blockThree)
+                    seasonEpisodeCheck=$(echo $blockThree | sed -E 's/.*(....)/\1/')
+                    if [[ "$seasonEpisodeCheck" =~ ^S[0-9]E[0-9] ]];
+                    then
+                        seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                        episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
+                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                    fi
                 ;;
                 "12")
                     titleCode=$(echo $blockThree)
+                    seasonEpisodeCheck=$(echo $blockThree | sed -E 's/.*(.....)/\1/')
+                    if [[ "$seasonEpisodeCheck" =~ ^S[0-9][0-9]E[0-9] || "$seasonEpisodeCheck" =~ ^S[0-9]E[0-9][0-9] ]];
+                    then
+                        seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                        episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
+                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                    fi
                 ;;
                 "13")
                     titleCode=$(echo $blockThree)
+                    seasonEpisodeCheck=$(echo $blockThree | sed -E 's/.*(......)/\1/')
+                    if [[ "$seasonEpisodeCheck" =~ ^S[0-9][0-9]E[0-9][0-9] ]];
+                    then
+                        seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                        episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
+                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                    fi
                 ;;
                 *)
-                    imageMisc=$(echo $blockThree)
+                    titleByLanguage=$(echo $blockThree)
                 ;;
             esac
         else
@@ -137,16 +219,22 @@ if [[ $numberOfUnderscores == 4 ]];
         then
             imageSize=$(echo $blockFour)
         else
-            if [[ "$blockFour" =~ ^(M|S).*[0-9]$ || "$blockFour" =~ ^(M|S)[0-9].*E[0-9]$ || "$blockFour" =~ ^(M|S)[0-9].*E[0-9][0-9]$ || "$blockFour" =~ ^(M|S)[0-9][0-9].*E[0-9]$ || "$blockFour" =~ ^(M|S)[0-9][0-9].*E[0-9][0-9]$ ]];
+            blockFour=$(echo $blockFour | tr '[:upper:]' '[:lower:]')
+            if [[ ("$blockFour" == "cover") || ("$blockFour" == "feature") || ("$blockFour" == "keyart") || ("$blockFour" == *"still"*) || ("$blockFour" == "blank") ]];
             then
-                seasonNumberCheck=$(echo $blockFour | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
-                episodeNumberCheck=$(echo $blockFour | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
-                imageDesc=$(echo $blockFour)
+                imageType=$(echo $blockFour)
             else
-                blockFour=$(echo $blockFour | tr '[:upper:]' '[:lower:]')
-                if [[ ("$blockFour" == "cover") || ("$blockFour" == "feature") || ("$blockFour" == "keyart") || ("$blockFour" == *"still"*) || ("$blockFour" == "blank") ]];
+                if [[ "$blockFour" =~ ^(M|S).*[0-9]$ || "$blockFour" =~ ^(M|S)[0-9].*E[0-9]$ || "$blockFour" =~ ^(M|S)[0-9].*E[0-9][0-9]$ || "$blockFour" =~ ^(M|S)[0-9][0-9].*E[0-9]$ || "$blockFour" =~ ^(M|S)[0-9][0-9].*E[0-9][0-9]$ ]];
                 then
-                    imageType=$(echo $blockFour)
+                    if [[ "$blockFour" == *"still"* || "$blockFour" == *"Still"* ]];
+                    then
+                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockFour} - DOES contain Still - Not extracting Season & Episode Number" >> "$logfile"
+                    else
+                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockFour} - Does NOT contain Still" >> "$logfile"
+                        seasonNumberCheck=$(echo $blockFour | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
+                        episodeNumberCheck=$(echo $blockFour | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
+                        imageDesc=$(echo $blockFour)
+                    fi
                 else
                     if [[ "$blockFour" == *" "* ]];
                     then
@@ -162,16 +250,22 @@ if [[ $numberOfUnderscores == 4 ]];
         then
             imageSize=$(echo $blockFive)
         else
-            if [[ "$blockFive" =~ ^(M|S).*[0-9]$ || "$blockFive" =~ ^(M|S)[0-9].*E[0-9]$ || "$blockFive" =~ ^(M|S)[0-9].*E[0-9][0-9]$ || "$blockFive" =~ ^(M|S)[0-9][0-9].*E[0-9]$ || "$blockFive" =~ ^(M|S)[0-9][0-9].*E[0-9][0-9]$ ]];
+            blockFive=$(echo $blockFive | tr '[:upper:]' '[:lower:]')
+            if [[ ("$blockFive" == "cover") || ("$blockFive" == "feature") || ("$blockFive" == "keyart") || ("$blockFive" == *"still"*) || ("$blockFive" == "blank") ]];
             then
-                seasonNumberCheck=$(echo $blockFive | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
-                episodeNumberCheck=$(echo $blockFive | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
-                imageDesc=$(echo $blockFive)
+                imageType=$(echo $blockFive)
             else
-                blockFive=$(echo $blockFive | tr '[:upper:]' '[:lower:]')
-                if [[ ("$blockFive" == "cover") || ("$blockFive" == "feature") || ("$blockFive" == "keyart") || ("$blockFive" == *"still"*) || ("$blockFive" == "blank") ]];
+                if [[ "$blockFive" =~ ^(M|S).*[0-9]$ || "$blockFive" =~ ^(M|S)[0-9].*E[0-9]$ || "$blockFive" =~ ^(M|S)[0-9].*E[0-9][0-9]$ || "$blockFive" =~ ^(M|S)[0-9][0-9].*E[0-9]$ || "$blockFive" =~ ^(M|S)[0-9][0-9].*E[0-9][0-9]$ ]];
                 then
-                    imageType=$(echo $blockFive)
+                    if [[ "$blockFive" == *"still"* || "$blockFive" == *"Still"* ]];
+                    then
+                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockFive} - DOES contain Still - Not extracting Season & Episode Number" >> "$logfile"
+                    else
+                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockFive} - Does NOT contain Still" >> "$logfile"
+                        seasonNumberCheck=$(echo $blockFive | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
+                        episodeNumberCheck=$(echo $blockFive | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
+                        imageDesc=$(echo $blockFive)
+                    fi
                 else
                     if [[ "$blockFive" == *" "* ]];
                     then
@@ -222,18 +316,59 @@ if [[ $numberOfUnderscores == 4 ]];
                         ;;
                         "9")
                             titleCode=$(echo $blockOne)
+                            seasonCheck=$(echo $blockOne | sed -E 's/.*(..)/\1/')
+                            if [[ "$seasonCheck" =~ ^S[0-9] ]];
+                            then
+                                seasonNumberCheck=$(echo $seasonCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
+                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                            fi
                         ;;
                         "10")
                             titleCode=$(echo $blockOne)
+                            seasonCheck=$(echo $blockOne | sed -E 's/.*(...)/\1/')
+                            if [[ "$seasonCheck" =~ ^S[0-9][0-9] ]];
+                            then
+                                seasonNumberCheck=$(echo $seasonCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
+                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                            fi
                         ;;
                         "11")
                             titleCode=$(echo $blockOne)
+                            seasonEpisodeCheck=$(echo $blockOne | sed -E 's/.*(....)/\1/')
+                            if [[ "$seasonEpisodeCheck" =~ ^S[0-9]E[0-9] ]];
+                            then
+                                seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                                episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
+                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                            fi
                         ;;
                         "12")
                             titleCode=$(echo $blockOne)
+                            seasonEpisodeCheck=$(echo $blockOne | sed -E 's/.*(.....)/\1/')
+                            if [[ "$seasonEpisodeCheck" =~ ^S[0-9][0-9]E[0-9] || "$seasonEpisodeCheck" =~ ^S[0-9]E[0-9][0-9] ]];
+                            then
+                                seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                                episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
+                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                            fi
                         ;;
                         "13")
                             titleCode=$(echo $blockOne)
+                            seasonEpisodeCheck=$(echo $blockOne | sed -E 's/.*(......)/\1/')
+                            if [[ "$seasonEpisodeCheck" =~ ^S[0-9][0-9]E[0-9][0-9] ]];
+                            then
+                                seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                                episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
+                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                            fi
                         ;;
                         *)
                             titleByLanguage=$(echo $blockOne)
@@ -262,21 +397,62 @@ if [[ $numberOfUnderscores == 4 ]];
                         ;;
                         "9")
                             titleCode=$(echo $blockThree)
+                            seasonCheck=$(echo $blockThree | sed -E 's/.*(..)/\1/')
+                            if [[ "$seasonCheck" =~ ^S[0-9] ]];
+                            then
+                                seasonNumberCheck=$(echo $seasonCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
+                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                            fi
                         ;;
                         "10")
                             titleCode=$(echo $blockThree)
+                            seasonCheck=$(echo $blockThree | sed -E 's/.*(...)/\1/')
+                            if [[ "$seasonCheck" =~ ^S[0-9][0-9] ]];
+                            then
+                                seasonNumberCheck=$(echo $seasonCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
+                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                            fi
                         ;;
                         "11")
                             titleCode=$(echo $blockThree)
+                            seasonEpisodeCheck=$(echo $blockThree | sed -E 's/.*(....)/\1/')
+                            if [[ "$seasonEpisodeCheck" =~ ^S[0-9]E[0-9] ]];
+                            then
+                                seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                                episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
+                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                            fi
                         ;;
                         "12")
                             titleCode=$(echo $blockThree)
+                            seasonEpisodeCheck=$(echo $blockThree | sed -E 's/.*(.....)/\1/')
+                            if [[ "$seasonEpisodeCheck" =~ ^S[0-9][0-9]E[0-9] || "$seasonEpisodeCheck" =~ ^S[0-9]E[0-9][0-9] ]];
+                            then
+                                seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                                episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
+                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                            fi
                         ;;
                         "13")
                             titleCode=$(echo $blockThree)
+                            seasonEpisodeCheck=$(echo $blockThree | sed -E 's/.*(......)/\1/')
+                            if [[ "$seasonEpisodeCheck" =~ ^S[0-9][0-9]E[0-9][0-9] ]];
+                            then
+                                seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                                episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
+                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                            fi
                         ;;
                         *)
-                            imageMisc=$(echo $blockThree)
+                            titleByLanguage=$(echo $blockThree)
                         ;;
                     esac
                 else
@@ -297,16 +473,22 @@ if [[ $numberOfUnderscores == 4 ]];
                 then
                     imageSize=$(echo $blockFour)
                 else
-                    if [[ "$blockFour" =~ ^(M|S).*[0-9]$ || "$blockFour" =~ ^(M|S)[0-9].*E[0-9]$ || "$blockFour" =~ ^(M|S)[0-9].*E[0-9][0-9]$ || "$blockFour" =~ ^(M|S)[0-9][0-9].*E[0-9]$ || "$blockFour" =~ ^(M|S)[0-9][0-9].*E[0-9][0-9]$ ]];
+                    blockFour=$(echo $blockFour | tr '[:upper:]' '[:lower:]')
+                    if [[ ("$blockFour" == "cover") || ("$blockFour" == "feature") || ("$blockFour" == "keyart") || ("$blockFour" == *"still"*) || ("$blockFour" == "blank") ]];
                     then
-                        seasonNumberCheck=$(echo $blockFour | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
-                        episodeNumberCheck=$(echo $blockFour | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
-                        imageDesc=$(echo $blockFour)
+                        imageType=$(echo $blockFour)
                     else
-                        blockFour=$(echo $blockFour | tr '[:upper:]' '[:lower:]')
-                        if [[ ("$blockFour" == "cover") || ("$blockFour" == "feature") || ("$blockFour" == "keyart") || ("$blockFour" == *"still"*) || ("$blockFour" == "blank") ]];
+                        if [[ "$blockFour" =~ ^(M|S).*[0-9]$ || "$blockFour" =~ ^(M|S)[0-9].*E[0-9]$ || "$blockFour" =~ ^(M|S)[0-9].*E[0-9][0-9]$ || "$blockFour" =~ ^(M|S)[0-9][0-9].*E[0-9]$ || "$blockFour" =~ ^(M|S)[0-9][0-9].*E[0-9][0-9]$ ]];
                         then
-                            imageType=$(echo $blockFour)
+                            if [[ "$blockFour" == *"still"* || "$blockFour" == *"Still"* ]];
+                            then
+                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockFour} - DOES contain Still - Not extracting Season & Episode Number" >> "$logfile"
+                            else
+                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockFour} - Does NOT contain Still" >> "$logfile"
+                                seasonNumberCheck=$(echo $blockFour | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
+                                episodeNumberCheck=$(echo $blockFour | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
+                                imageDesc=$(echo $blockFour)
+                            fi
                         else
                             if [[ "$blockFour" == *" "* ]];
                             then
@@ -392,18 +574,59 @@ if [[ $numberOfUnderscores == 4 ]];
                                         ;;
                                         "9")
                                             titleCode=$(echo $blockOne)
+                                            seasonCheck=$(echo $blockOne | sed -E 's/.*(..)/\1/')
+                                            if [[ "$seasonCheck" =~ ^S[0-9] ]];
+                                            then
+                                                seasonNumberCheck=$(echo $seasonCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
+                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                            fi
                                         ;;
                                         "10")
                                             titleCode=$(echo $blockOne)
+                                            seasonCheck=$(echo $blockOne | sed -E 's/.*(...)/\1/')
+                                            if [[ "$seasonCheck" =~ ^S[0-9][0-9] ]];
+                                            then
+                                                seasonNumberCheck=$(echo $seasonCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
+                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                            fi
                                         ;;
                                         "11")
                                             titleCode=$(echo $blockOne)
+                                            seasonEpisodeCheck=$(echo $blockOne | sed -E 's/.*(....)/\1/')
+                                            if [[ "$seasonEpisodeCheck" =~ ^S[0-9]E[0-9] ]];
+                                            then
+                                                seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                                                episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
+                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                                            fi
                                         ;;
                                         "12")
                                             titleCode=$(echo $blockOne)
+                                            seasonEpisodeCheck=$(echo $blockOne | sed -E 's/.*(.....)/\1/')
+                                            if [[ "$seasonEpisodeCheck" =~ ^S[0-9][0-9]E[0-9] || "$seasonEpisodeCheck" =~ ^S[0-9]E[0-9][0-9] ]];
+                                            then
+                                                seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                                                episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
+                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                                            fi
                                         ;;
                                         "13")
                                             titleCode=$(echo $blockOne)
+                                            seasonEpisodeCheck=$(echo $blockOne | sed -E 's/.*(......)/\1/')
+                                            if [[ "$seasonEpisodeCheck" =~ ^S[0-9][0-9]E[0-9][0-9] ]];
+                                            then
+                                                seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                                                episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
+                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                                            fi
                                         ;;
                                         *)
                                             titleByLanguage=$(echo $blockOne)
@@ -432,21 +655,62 @@ if [[ $numberOfUnderscores == 4 ]];
                                         ;;
                                         "9")
                                             titleCode=$(echo $blockThree)
+                                            seasonCheck=$(echo $blockThree | sed -E 's/.*(..)/\1/')
+                                            if [[ "$seasonCheck" =~ ^S[0-9] ]];
+                                            then
+                                                seasonNumberCheck=$(echo $seasonCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
+                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                            fi
                                         ;;
                                         "10")
                                             titleCode=$(echo $blockThree)
+                                            seasonCheck=$(echo $blockThree | sed -E 's/.*(...)/\1/')
+                                            if [[ "$seasonCheck" =~ ^S[0-9][0-9] ]];
+                                            then
+                                                seasonNumberCheck=$(echo $seasonCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
+                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                            fi
                                         ;;
                                         "11")
                                             titleCode=$(echo $blockThree)
+                                            seasonEpisodeCheck=$(echo $blockThree | sed -E 's/.*(....)/\1/')
+                                            if [[ "$seasonEpisodeCheck" =~ ^S[0-9]E[0-9] ]];
+                                            then
+                                                seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                                                episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
+                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                                            fi
                                         ;;
                                         "12")
                                             titleCode=$(echo $blockThree)
+                                            seasonEpisodeCheck=$(echo $blockThree | sed -E 's/.*(.....)/\1/')
+                                            if [[ "$seasonEpisodeCheck" =~ ^S[0-9][0-9]E[0-9] || "$seasonEpisodeCheck" =~ ^S[0-9]E[0-9][0-9] ]];
+                                            then
+                                                seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                                                episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
+                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                                            fi
                                         ;;
                                         "13")
                                             titleCode=$(echo $blockThree)
+                                            seasonEpisodeCheck=$(echo $blockThree | sed -E 's/.*(......)/\1/')
+                                            if [[ "$seasonEpisodeCheck" =~ ^S[0-9][0-9]E[0-9][0-9] ]];
+                                            then
+                                                seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                                                episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
+                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                                            fi
                                         ;;
                                         *)
-                                            imageMisc=$(echo $blockThree)
+                                            titleByLanguage=$(echo $blockThree)
                                         ;;
                                     esac
                                 else
@@ -467,16 +731,22 @@ if [[ $numberOfUnderscores == 4 ]];
                                 then
                                     imageSize=$(echo $blockFour)
                                 else
-                                    if [[ "$blockFour" =~ ^(M|S).*[0-9]$ || "$blockFour" =~ ^(M|S)[0-9].*E[0-9]$ || "$blockFour" =~ ^(M|S)[0-9].*E[0-9][0-9]$ || "$blockFour" =~ ^(M|S)[0-9][0-9].*E[0-9]$ || "$blockFour" =~ ^(M|S)[0-9][0-9].*E[0-9][0-9]$ ]];
+                                    blockFour=$(echo $blockFour | tr '[:upper:]' '[:lower:]')
+                                    if [[ ("$blockFour" == "cover") || ("$blockFour" == "feature") || ("$blockFour" == "keyart") || ("$blockFour" == *"still"*) || ("$blockFour" == "blank") ]];
                                     then
-                                        seasonNumberCheck=$(echo $blockFour | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
-                                        episodeNumberCheck=$(echo $blockFour | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
-                                        imageDesc=$(echo $blockFour)
+                                        imageType=$(echo $blockFour)
                                     else
-                                        blockFour=$(echo $blockFour | tr '[:upper:]' '[:lower:]')
-                                        if [[ ("$blockFour" == "cover") || ("$blockFour" == "feature") || ("$blockFour" == "keyart") || ("$blockFour" == *"still"*) || ("$blockFour" == "blank") ]];
+                                        if [[ "$blockFour" =~ ^(M|S).*[0-9]$ || "$blockFour" =~ ^(M|S)[0-9].*E[0-9]$ || "$blockFour" =~ ^(M|S)[0-9].*E[0-9][0-9]$ || "$blockFour" =~ ^(M|S)[0-9][0-9].*E[0-9]$ || "$blockFour" =~ ^(M|S)[0-9][0-9].*E[0-9][0-9]$ ]];
                                         then
-                                            imageType=$(echo $blockFour)
+                                            if [[ "$blockFour" == *"still"* || "$blockFour" == *"Still"* ]];
+                                            then
+                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockFour} - DOES contain Still - Not extracting Season & Episode Number" >> "$logfile"
+                                            else
+                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockFour} - Does NOT contain Still" >> "$logfile"
+                                                seasonNumberCheck=$(echo $blockFour | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
+                                                episodeNumberCheck=$(echo $blockFour | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
+                                                imageDesc=$(echo $blockFour)
+                                            fi
                                         else
                                             if [[ "$blockFour" == *" "* ]];
                                             then
@@ -492,16 +762,22 @@ if [[ $numberOfUnderscores == 4 ]];
                                 then
                                     imageSize=$(echo $blockFive)
                                 else
-                                    if [[ "$blockFive" =~ ^(M|S).*[0-9]$ || "$blockFive" =~ ^(M|S)[0-9].*E[0-9]$ || "$blockFive" =~ ^(M|S)[0-9].*E[0-9][0-9]$ || "$blockFive" =~ ^(M|S)[0-9][0-9].*E[0-9]$ || "$blockFive" =~ ^(M|S)[0-9][0-9].*E[0-9][0-9]$ ]];
+                                    blockFive=$(echo $blockFive | tr '[:upper:]' '[:lower:]')
+                                    if [[ ("$blockFive" == "cover") || ("$blockFive" == "feature") || ("$blockFive" == "keyart") || ("$blockFive" == *"still"*) || ("$blockFive" == "blank") ]];
                                     then
-                                        seasonNumberCheck=$(echo $blockFive | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
-                                        episodeNumberCheck=$(echo $blockFive | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
-                                        imageDesc=$(echo $blockFive)
+                                        imageType=$(echo $blockFive)
                                     else
-                                        blockFive=$(echo $blockFive | tr '[:upper:]' '[:lower:]')
-                                        if [[ ("$blockFive" == "cover") || ("$blockFive" == "feature") || ("$blockFive" == "keyart") || ("$blockFive" == *"still"*) || ("$blockFive" == "blank") ]];
+                                        if [[ "$blockFive" =~ ^(M|S).*[0-9]$ || "$blockFive" =~ ^(M|S)[0-9].*E[0-9]$ || "$blockFive" =~ ^(M|S)[0-9].*E[0-9][0-9]$ || "$blockFive" =~ ^(M|S)[0-9][0-9].*E[0-9]$ || "$blockFive" =~ ^(M|S)[0-9][0-9].*E[0-9][0-9]$ ]];
                                         then
-                                            imageType=$(echo $blockFive)
+                                            if [[ "$blockFive" == *"still"* || "$blockFive" == *"Still"* ]];
+                                            then
+                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockFive} - DOES contain Still - Not extracting Season & Episode Number" >> "$logfile"
+                                            else
+                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockFive} - Does NOT contain Still" >> "$logfile"
+                                                seasonNumberCheck=$(echo $blockFive | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
+                                                episodeNumberCheck=$(echo $blockFive | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
+                                                imageDesc=$(echo $blockFive)
+                                            fi
                                         else
                                             if [[ "$blockFive" == *" "* ]];
                                             then
@@ -517,16 +793,22 @@ if [[ $numberOfUnderscores == 4 ]];
                                 then
                                     imageSize=$(echo $blockSix)
                                 else
-                                    if [[ "$blockSix" =~ ^(M|S).*[0-9]$ || "$blockSix" =~ ^(M|S)[0-9].*E[0-9]$ || "$blockSix" =~ ^(M|S)[0-9].*E[0-9][0-9]$ || "$blockSix" =~ ^(M|S)[0-9][0-9].*E[0-9]$ || "$blockSix" =~ ^(M|S)[0-9][0-9].*E[0-9][0-9]$ ]];
+                                    blockSix=$(echo $blockSix | tr '[:upper:]' '[:lower:]')
+                                    if [[ ("$blockSix" == "cover") || ("$blockSix" == "feature") || ("$blockSix" == "keyart") || ("$blockSix" == *"still"*) || ("$blockSix" == "blank") ]];
                                     then
-                                        seasonNumberCheck=$(echo $blockSix | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
-                                        episodeNumberCheck=$(echo $blockSix | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
-                                        imageDesc=$(echo $blockSix)
+                                        imageType=$(echo $blockSix)
                                     else
-                                        blockSix=$(echo $blockSix | tr '[:upper:]' '[:lower:]')
-                                        if [[ ("$blockSix" == "cover") || ("$blockSix" == "feature") || ("$blockSix" == "keyart") || ("$blockSix" == *"still"*) || ("$blockSix" == "blank") ]];
+                                        if [[ "$blockSix" =~ ^(M|S).*[0-9]$ || "$blockSix" =~ ^(M|S)[0-9].*E[0-9]$ || "$blockSix" =~ ^(M|S)[0-9].*E[0-9][0-9]$ || "$blockSix" =~ ^(M|S)[0-9][0-9].*E[0-9]$ || "$blockSix" =~ ^(M|S)[0-9][0-9].*E[0-9][0-9]$ ]];
                                         then
-                                            imageType=$(echo $blockSix)
+                                            if [[ "$blockSix" == *"still"* || "$blockSix" == *"Still"* ]];
+                                            then
+                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockSix} - DOES contain Still - Not extracting Season & Episode Number" >> "$logfile"
+                                            else
+                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockSix} - Does NOT contain Still" >> "$logfile"
+                                                seasonNumberCheck=$(echo $blockSix | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
+                                                episodeNumberCheck=$(echo $blockSix | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
+                                                imageDesc=$(echo $blockSix)
+                                            fi
                                         else
                                             if [[ "$blockSix" == *" "* ]];
                                             then
@@ -582,18 +864,59 @@ if [[ $numberOfUnderscores == 4 ]];
                                                 ;;
                                                 "9")
                                                     titleCode=$(echo $blockOne)
+                                                    seasonCheck=$(echo $blockOne | sed -E 's/.*(..)/\1/')
+                                                    if [[ "$seasonCheck" =~ ^S[0-9] ]];
+                                                    then
+                                                        seasonNumberCheck=$(echo $seasonCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                    fi
                                                 ;;
                                                 "10")
                                                     titleCode=$(echo $blockOne)
+                                                    seasonCheck=$(echo $blockOne | sed -E 's/.*(...)/\1/')
+                                                    if [[ "$seasonCheck" =~ ^S[0-9][0-9] ]];
+                                                    then
+                                                        seasonNumberCheck=$(echo $seasonCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                    fi
                                                 ;;
                                                 "11")
                                                     titleCode=$(echo $blockOne)
+                                                    seasonEpisodeCheck=$(echo $blockOne | sed -E 's/.*(....)/\1/')
+                                                    if [[ "$seasonEpisodeCheck" =~ ^S[0-9]E[0-9] ]];
+                                                    then
+                                                        seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                                                        episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                                                    fi
                                                 ;;
                                                 "12")
                                                     titleCode=$(echo $blockOne)
+                                                    seasonEpisodeCheck=$(echo $blockOne | sed -E 's/.*(.....)/\1/')
+                                                    if [[ "$seasonEpisodeCheck" =~ ^S[0-9][0-9]E[0-9] || "$seasonEpisodeCheck" =~ ^S[0-9]E[0-9][0-9] ]];
+                                                    then
+                                                        seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                                                        episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                                                    fi
                                                 ;;
                                                 "13")
                                                     titleCode=$(echo $blockOne)
+                                                    seasonEpisodeCheck=$(echo $blockOne | sed -E 's/.*(......)/\1/')
+                                                    if [[ "$seasonEpisodeCheck" =~ ^S[0-9][0-9]E[0-9][0-9] ]];
+                                                    then
+                                                        seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                                                        episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                                                    fi
                                                 ;;
                                                 *)
                                                     titleByLanguage=$(echo $blockOne)
@@ -622,21 +945,62 @@ if [[ $numberOfUnderscores == 4 ]];
                                                 ;;
                                                 "9")
                                                     titleCode=$(echo $blockThree)
+                                                    seasonCheck=$(echo $blockThree | sed -E 's/.*(..)/\1/')
+                                                    if [[ "$seasonCheck" =~ ^S[0-9] ]];
+                                                    then
+                                                        seasonNumberCheck=$(echo $seasonCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                    fi
                                                 ;;
                                                 "10")
                                                     titleCode=$(echo $blockThree)
+                                                    seasonCheck=$(echo $blockThree | sed -E 's/.*(...)/\1/')
+                                                    if [[ "$seasonCheck" =~ ^S[0-9][0-9] ]];
+                                                    then
+                                                        seasonNumberCheck=$(echo $seasonCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                    fi
                                                 ;;
                                                 "11")
                                                     titleCode=$(echo $blockThree)
+                                                    seasonEpisodeCheck=$(echo $blockThree | sed -E 's/.*(....)/\1/')
+                                                    if [[ "$seasonEpisodeCheck" =~ ^S[0-9]E[0-9] ]];
+                                                    then
+                                                        seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                                                        episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                                                    fi
                                                 ;;
                                                 "12")
                                                     titleCode=$(echo $blockThree)
+                                                    seasonEpisodeCheck=$(echo $blockThree | sed -E 's/.*(.....)/\1/')
+                                                    if [[ "$seasonEpisodeCheck" =~ ^S[0-9][0-9]E[0-9] || "$seasonEpisodeCheck" =~ ^S[0-9]E[0-9][0-9] ]];
+                                                    then
+                                                        seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                                                        episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                                                    fi
                                                 ;;
                                                 "13")
                                                     titleCode=$(echo $blockThree)
+                                                    seasonEpisodeCheck=$(echo $blockThree | sed -E 's/.*(......)/\1/')
+                                                    if [[ "$seasonEpisodeCheck" =~ ^S[0-9][0-9]E[0-9][0-9] ]];
+                                                    then
+                                                        seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                                                        episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                                                    fi
                                                 ;;
                                                 *)
-                                                    imageMisc=$(echo $blockThree)
+                                                    titleByLanguage=$(echo $blockThree)
                                                 ;;
                                             esac
                                         else
@@ -657,16 +1021,22 @@ if [[ $numberOfUnderscores == 4 ]];
                                         then
                                             imageSize=$(echo $blockFour)
                                         else
-                                            if [[ "$blockFour" =~ ^(M|S).*[0-9]$ || "$blockFour" =~ ^(M|S)[0-9].*E[0-9]$ || "$blockFour" =~ ^(M|S)[0-9].*E[0-9][0-9]$ || "$blockFour" =~ ^(M|S)[0-9][0-9].*E[0-9]$ || "$blockFour" =~ ^(M|S)[0-9][0-9].*E[0-9][0-9]$ ]];
+                                            blockFour=$(echo $blockFour | tr '[:upper:]' '[:lower:]')
+                                            if [[ ("$blockFour" == "cover") || ("$blockFour" == "feature") || ("$blockFour" == "keyart") || ("$blockFour" == *"still"*) || ("$blockFour" == "blank") ]];
                                             then
-                                                seasonNumberCheck=$(echo $blockFour | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
-                                                episodeNumberCheck=$(echo $blockFour | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
-                                                imageDesc=$(echo $blockFour)
+                                                imageType=$(echo $blockFour)
                                             else
-                                                blockFour=$(echo $blockFour | tr '[:upper:]' '[:lower:]')
-                                                if [[ ("$blockFour" == "cover") || ("$blockFour" == "feature") || ("$blockFour" == "keyart") || ("$blockFour" == *"still"*) || ("$blockFour" == "blank") ]];
+                                                if [[ "$blockFour" =~ ^(M|S).*[0-9]$ || "$blockFour" =~ ^(M|S)[0-9].*E[0-9]$ || "$blockFour" =~ ^(M|S)[0-9].*E[0-9][0-9]$ || "$blockFour" =~ ^(M|S)[0-9][0-9].*E[0-9]$ || "$blockFour" =~ ^(M|S)[0-9][0-9].*E[0-9][0-9]$ ]];
                                                 then
-                                                    imageType=$(echo $blockFour)
+                                                    if [[ "$blockFour" == *"still"* || "$blockFour" == *"Still"* ]];
+                                                    then
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockFour} - DOES contain Still - Not extracting Season & Episode Number" >> "$logfile"
+                                                    else
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockFour} - Does NOT contain Still" >> "$logfile"
+                                                        seasonNumberCheck=$(echo $blockFour | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
+                                                        episodeNumberCheck=$(echo $blockFour | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
+                                                        imageDesc=$(echo $blockFour)
+                                                    fi
                                                 else
                                                     if [[ "$blockFour" == *" "* ]];
                                                     then
@@ -682,16 +1052,22 @@ if [[ $numberOfUnderscores == 4 ]];
                                         then
                                             imageSize=$(echo $blockFive)
                                         else
-                                            if [[ "$blockFive" =~ ^(M|S).*[0-9]$ || "$blockFive" =~ ^(M|S)[0-9].*E[0-9]$ || "$blockFive" =~ ^(M|S)[0-9].*E[0-9][0-9]$ || "$blockFive" =~ ^(M|S)[0-9][0-9].*E[0-9]$ || "$blockFive" =~ ^(M|S)[0-9][0-9].*E[0-9][0-9]$ ]];
+                                            blockFive=$(echo $blockFive | tr '[:upper:]' '[:lower:]')
+                                            if [[ ("$blockFive" == "cover") || ("$blockFive" == "feature") || ("$blockFive" == "keyart") || ("$blockFive" == *"still"*) || ("$blockFive" == "blank") ]];
                                             then
-                                                seasonNumberCheck=$(echo $blockFive | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
-                                                episodeNumberCheck=$(echo $blockFive | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
-                                                imageDesc=$(echo $blockFive)
+                                                imageType=$(echo $blockFive)
                                             else
-                                                blockFive=$(echo $blockFive | tr '[:upper:]' '[:lower:]')
-                                                if [[ ("$blockFive" == "cover") || ("$blockFive" == "feature") || ("$blockFive" == "keyart") || ("$blockFive" == *"still"*) || ("$blockFive" == "blank") ]];
+                                                if [[ "$blockFive" =~ ^(M|S).*[0-9]$ || "$blockFive" =~ ^(M|S)[0-9].*E[0-9]$ || "$blockFive" =~ ^(M|S)[0-9].*E[0-9][0-9]$ || "$blockFive" =~ ^(M|S)[0-9][0-9].*E[0-9]$ || "$blockFive" =~ ^(M|S)[0-9][0-9].*E[0-9][0-9]$ ]];
                                                 then
-                                                    imageType=$(echo $blockFive)
+                                                    if [[ "$blockFive" == *"still"* || "$blockFive" == *"Still"* ]];
+                                                    then
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockFive} - DOES contain Still - Not extracting Season & Episode Number" >> "$logfile"
+                                                    else
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockFive} - Does NOT contain Still" >> "$logfile"
+                                                        seasonNumberCheck=$(echo $blockFive | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
+                                                        episodeNumberCheck=$(echo $blockFive | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
+                                                        imageDesc=$(echo $blockFive)
+                                                    fi
                                                 else
                                                     if [[ "$blockFive" == *" "* ]];
                                                     then
@@ -707,16 +1083,22 @@ if [[ $numberOfUnderscores == 4 ]];
                                         then
                                             imageSize=$(echo $blockSix)
                                         else
-                                            if [[ "$blockSix" =~ ^(M|S).*[0-9]$ || "$blockSix" =~ ^(M|S)[0-9].*E[0-9]$ || "$blockSix" =~ ^(M|S)[0-9].*E[0-9][0-9]$ || "$blockSix" =~ ^(M|S)[0-9][0-9].*E[0-9]$ || "$blockSix" =~ ^(M|S)[0-9][0-9].*E[0-9][0-9]$ ]];
+                                            blockSix=$(echo $blockSix | tr '[:upper:]' '[:lower:]')
+                                            if [[ ("$blockSix" == "cover") || ("$blockSix" == "feature") || ("$blockSix" == "keyart") || ("$blockSix" == *"still"*) || ("$blockSix" == "blank") ]];
                                             then
-                                                seasonNumberCheck=$(echo $blockSix | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
-                                                episodeNumberCheck=$(echo $blockSix | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
-                                                imageDesc=$(echo $blockSix)
+                                                imageType=$(echo $blockSix)
                                             else
-                                                blockSix=$(echo $blockSix | tr '[:upper:]' '[:lower:]')
-                                                if [[ ("$blockSix" == "cover") || ("$blockSix" == "feature") || ("$blockSix" == "keyart") || ("$blockSix" == *"still"*) || ("$blockSix" == "blank") ]];
+                                                if [[ "$blockSix" =~ ^(M|S).*[0-9]$ || "$blockSix" =~ ^(M|S)[0-9].*E[0-9]$ || "$blockSix" =~ ^(M|S)[0-9].*E[0-9][0-9]$ || "$blockSix" =~ ^(M|S)[0-9][0-9].*E[0-9]$ || "$blockSix" =~ ^(M|S)[0-9][0-9].*E[0-9][0-9]$ ]];
                                                 then
-                                                    imageType=$(echo $blockSix)
+                                                    if [[ "$blockSix" == *"still"* || "$blockSix" == *"Still"* ]];
+                                                    then
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockSix} - DOES contain Still - Not extracting Season & Episode Number" >> "$logfile"
+                                                    else
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockSix} - Does NOT contain Still" >> "$logfile"
+                                                        seasonNumberCheck=$(echo $blockSix | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
+                                                        episodeNumberCheck=$(echo $blockSix | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
+                                                        imageDesc=$(echo $blockSix)
+                                                    fi
                                                 else
                                                     if [[ "$blockSix" == *" "* ]];
                                                     then
@@ -732,16 +1114,22 @@ if [[ $numberOfUnderscores == 4 ]];
                                         then
                                             imageSize=$(echo $blockSeven)
                                         else
-                                            if [[ "$blockSeven" =~ ^(M|S).*[0-9]$ || "$blockSeven" =~ ^(M|S)[0-9].*E[0-9]$ || "$blockSeven" =~ ^(M|S)[0-9].*E[0-9][0-9]$ || "$blockSeven" =~ ^(M|S)[0-9][0-9].*E[0-9]$ || "$blockSeven" =~ ^(M|S)[0-9][0-9].*E[0-9][0-9]$ ]];
+                                            blockSeven=$(echo $blockSeven | tr '[:upper:]' '[:lower:]')
+                                            if [[ ("$blockSeven" == "cover") || ("$blockSeven" == "feature") || ("$blockSeven" == "keyart") || ("$blockSeven" == *"still"*) || ("$blockSeven" == "blank") ]];
                                             then
-                                                seasonNumberCheck=$(echo $blockSeven | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
-                                                episodeNumberCheck=$(echo $blockSeven | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
-                                                imageDesc=$(echo $blockSeven)
+                                                imageType=$(echo $blockSeven)
                                             else
-                                                blockSeven=$(echo $blockSeven | tr '[:upper:]' '[:lower:]')
-                                                if [[ ("$blockSeven" == "cover") || ("$blockSeven" == "feature") || ("$blockSeven" == "keyart") || ("$blockSeven" == *"still"*) || ("$blockSeven" == "blank") ]];
+                                                if [[ "$blockSeven" =~ ^(M|S).*[0-9]$ || "$blockSeven" =~ ^(M|S)[0-9].*E[0-9]$ || "$blockSeven" =~ ^(M|S)[0-9].*E[0-9][0-9]$ || "$blockSeven" =~ ^(M|S)[0-9][0-9].*E[0-9]$ || "$blockSeven" =~ ^(M|S)[0-9][0-9].*E[0-9][0-9]$ ]];
                                                 then
-                                                    imageType=$(echo $blockSeven)
+                                                    if [[ "$blockSeven" == *"still"* || "$blockSeven" == *"Still"* ]];
+                                                    then
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockSeven} - DOES contain Still - Not extracting Season & Episode Number" >> "$logfile"
+                                                    else
+                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockSeven} - Does NOT contain Still" >> "$logfile"
+                                                        seasonNumberCheck=$(echo $blockSeven | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
+                                                        episodeNumberCheck=$(echo $blockSeven | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
+                                                        imageDesc=$(echo $blockSeven)
+                                                    fi
                                                 else
                                                     if [[ "$blockSeven" == *" "* ]];
                                                     then
@@ -799,18 +1187,59 @@ if [[ $numberOfUnderscores == 4 ]];
                                                         ;;
                                                         "9")
                                                             titleCode=$(echo $blockOne)
+                                                            seasonCheck=$(echo $blockOne | sed -E 's/.*(..)/\1/')
+                                                            if [[ "$seasonCheck" =~ ^S[0-9] ]];
+                                                            then
+                                                                seasonNumberCheck=$(echo $seasonCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
+                                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                            fi
                                                         ;;
                                                         "10")
                                                             titleCode=$(echo $blockOne)
+                                                            seasonCheck=$(echo $blockOne | sed -E 's/.*(...)/\1/')
+                                                            if [[ "$seasonCheck" =~ ^S[0-9][0-9] ]];
+                                                            then
+                                                                seasonNumberCheck=$(echo $seasonCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
+                                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                            fi
                                                         ;;
                                                         "11")
                                                             titleCode=$(echo $blockOne)
+                                                            seasonEpisodeCheck=$(echo $blockOne | sed -E 's/.*(....)/\1/')
+                                                            if [[ "$seasonEpisodeCheck" =~ ^S[0-9]E[0-9] ]];
+                                                            then
+                                                                seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                                                                episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
+                                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                                                            fi
                                                         ;;
                                                         "12")
                                                             titleCode=$(echo $blockOne)
+                                                            seasonEpisodeCheck=$(echo $blockOne | sed -E 's/.*(.....)/\1/')
+                                                            if [[ "$seasonEpisodeCheck" =~ ^S[0-9][0-9]E[0-9] || "$seasonEpisodeCheck" =~ ^S[0-9]E[0-9][0-9] ]];
+                                                            then
+                                                                seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                                                                episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
+                                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                                                            fi
                                                         ;;
                                                         "13")
                                                             titleCode=$(echo $blockOne)
+                                                            seasonEpisodeCheck=$(echo $blockOne | sed -E 's/.*(......)/\1/')
+                                                            if [[ "$seasonEpisodeCheck" =~ ^S[0-9][0-9]E[0-9][0-9] ]];
+                                                            then
+                                                                seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                                                                episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
+                                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                                                            fi
                                                         ;;
                                                         *)
                                                             titleByLanguage=$(echo $blockOne)
@@ -835,26 +1264,67 @@ if [[ $numberOfUnderscores == 4 ]];
                                                 then
                                                     case $blockThreeCharCount in
                                                         "7")
-                                                            titleCode=$(echo $blockThree)
-                                                        ;;
-                                                        "9")
-                                                            titleCode=$(echo $blockThree)
-                                                        ;;
-                                                        "10")
-                                                            titleCode=$(echo $blockThree)
-                                                        ;;
-                                                        "11")
-                                                            titleCode=$(echo $blockThree)
-                                                        ;;
-                                                        "12")
-                                                            titleCode=$(echo $blockThree)
-                                                        ;;
-                                                        "13")
-                                                            titleCode=$(echo $blockThree)
-                                                        ;;
-                                                        *)
-                                                            imageMisc=$(echo $blockThree)
-                                                        ;;
+                                                                titleCode=$(echo $blockThree)
+                                                            ;;
+                                                            "9")
+                                                                titleCode=$(echo $blockThree)
+                                                                seasonCheck=$(echo $blockThree | sed -E 's/.*(..)/\1/')
+                                                                if [[ "$seasonCheck" =~ ^S[0-9] ]];
+                                                                then
+                                                                    seasonNumberCheck=$(echo $seasonCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
+                                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                                fi
+                                                            ;;
+                                                            "10")
+                                                                titleCode=$(echo $blockThree)
+                                                                seasonCheck=$(echo $blockThree | sed -E 's/.*(...)/\1/')
+                                                                if [[ "$seasonCheck" =~ ^S[0-9][0-9] ]];
+                                                                then
+                                                                    seasonNumberCheck=$(echo $seasonCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
+                                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                                fi
+                                                            ;;
+                                                            "11")
+                                                                titleCode=$(echo $blockThree)
+                                                                seasonEpisodeCheck=$(echo $blockThree | sed -E 's/.*(....)/\1/')
+                                                                if [[ "$seasonEpisodeCheck" =~ ^S[0-9]E[0-9] ]];
+                                                                then
+                                                                    seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                                                                    episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
+                                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                                                                fi
+                                                            ;;
+                                                            "12")
+                                                                titleCode=$(echo $blockThree)
+                                                                seasonEpisodeCheck=$(echo $blockThree | sed -E 's/.*(.....)/\1/')
+                                                                if [[ "$seasonEpisodeCheck" =~ ^S[0-9][0-9]E[0-9] || "$seasonEpisodeCheck" =~ ^S[0-9]E[0-9][0-9] ]];
+                                                                then
+                                                                    seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                                                                    episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
+                                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                                                                fi
+                                                            ;;
+                                                            "13")
+                                                                titleCode=$(echo $blockThree)
+                                                                seasonEpisodeCheck=$(echo $blockThree | sed -E 's/.*(......)/\1/')
+                                                                if [[ "$seasonEpisodeCheck" =~ ^S[0-9][0-9]E[0-9][0-9] ]];
+                                                                then
+                                                                    seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                                                                    episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
+                                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                                                                fi
+                                                            ;;
+                                                            *)
+                                                                titleByLanguage=$(echo $blockThree)
+                                                            ;;
                                                     esac
                                                 else
                                                     if [[ "$blockThree" =~ ^[0-9][0-9][0-9][0-9]x[0-9][0-9][0-9][0-9] || "$blockThree" =~ ^[0-9][0-9][0-9][0-9]x[0-9][0-9][0-9] || "$blockThree" =~ ^[0-9][0-9][0-9]x[0-9][0-9][0-9][0-9] || "$blockThree" =~ ^[0-9][0-9][0-9]x[0-9][0-9][0-9] ]];
@@ -874,16 +1344,22 @@ if [[ $numberOfUnderscores == 4 ]];
                                                 then
                                                     imageSize=$(echo $blockFour)
                                                 else
-                                                    if [[ "$blockFour" =~ ^(M|S).*[0-9]$ || "$blockFour" =~ ^(M|S)[0-9].*E[0-9]$ || "$blockFour" =~ ^(M|S)[0-9].*E[0-9][0-9]$ || "$blockFour" =~ ^(M|S)[0-9][0-9].*E[0-9]$ || "$blockFour" =~ ^(M|S)[0-9][0-9].*E[0-9][0-9]$ ]];
+                                                    blockFour=$(echo $blockFour | tr '[:upper:]' '[:lower:]')
+                                                    if [[ ("$blockFour" == "cover") || ("$blockFour" == "feature") || ("$blockFour" == "keyart") || ("$blockFour" == *"still"*) || ("$blockFour" == "blank") ]];
                                                     then
-                                                        seasonNumberCheck=$(echo $blockFour | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
-                                                        episodeNumberCheck=$(echo $blockFour | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
-                                                        imageDesc=$(echo $blockFour)
+                                                        imageType=$(echo $blockFour)
                                                     else
-                                                        blockFour=$(echo $blockFour | tr '[:upper:]' '[:lower:]')
-                                                        if [[ ("$blockFour" == "cover") || ("$blockFour" == "feature") || ("$blockFour" == "keyart") || ("$blockFour" == *"still"*) || ("$blockFour" == "blank") ]];
+                                                        if [[ "$blockFour" =~ ^(M|S).*[0-9]$ || "$blockFour" =~ ^(M|S)[0-9].*E[0-9]$ || "$blockFour" =~ ^(M|S)[0-9].*E[0-9][0-9]$ || "$blockFour" =~ ^(M|S)[0-9][0-9].*E[0-9]$ || "$blockFour" =~ ^(M|S)[0-9][0-9].*E[0-9][0-9]$ ]];
                                                         then
-                                                            imageType=$(echo $blockFour)
+                                                            if [[ "$blockFour" == *"still"* || "$blockFour" == *"Still"* ]];
+                                                            then
+                                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockFour} - DOES contain Still - Not extracting Season & Episode Number" >> "$logfile"
+                                                            else
+                                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockFour} - Does NOT contain Still" >> "$logfile"
+                                                                seasonNumberCheck=$(echo $blockFour | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
+                                                                episodeNumberCheck=$(echo $blockFour | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
+                                                                imageDesc=$(echo $blockFour)
+                                                            fi
                                                         else
                                                             if [[ "$blockFour" == *" "* ]];
                                                             then
@@ -899,16 +1375,22 @@ if [[ $numberOfUnderscores == 4 ]];
                                                 then
                                                     imageSize=$(echo $blockFive)
                                                 else
-                                                    if [[ "$blockFive" =~ ^(M|S).*[0-9]$ || "$blockFive" =~ ^(M|S)[0-9].*E[0-9]$ || "$blockFive" =~ ^(M|S)[0-9].*E[0-9][0-9]$ || "$blockFive" =~ ^(M|S)[0-9][0-9].*E[0-9]$ || "$blockFive" =~ ^(M|S)[0-9][0-9].*E[0-9][0-9]$ ]];
+                                                    blockFive=$(echo $blockFive | tr '[:upper:]' '[:lower:]')
+                                                    if [[ ("$blockFive" == "cover") || ("$blockFive" == "feature") || ("$blockFive" == "keyart") || ("$blockFive" == *"still"*) || ("$blockFive" == "blank") ]];
                                                     then
-                                                        seasonNumberCheck=$(echo $blockFive | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
-                                                        episodeNumberCheck=$(echo $blockFive | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
-                                                        imageDesc=$(echo $blockFive)
+                                                        imageType=$(echo $blockFive)
                                                     else
-                                                        blockFive=$(echo $blockFive | tr '[:upper:]' '[:lower:]')
-                                                        if [[ ("$blockFive" == "cover") || ("$blockFive" == "feature") || ("$blockFive" == "keyart") || ("$blockFive" == *"still"*) || ("$blockFive" == "blank") ]];
+                                                        if [[ "$blockFive" =~ ^(M|S).*[0-9]$ || "$blockFive" =~ ^(M|S)[0-9].*E[0-9]$ || "$blockFive" =~ ^(M|S)[0-9].*E[0-9][0-9]$ || "$blockFive" =~ ^(M|S)[0-9][0-9].*E[0-9]$ || "$blockFive" =~ ^(M|S)[0-9][0-9].*E[0-9][0-9]$ ]];
                                                         then
-                                                            imageType=$(echo $blockFive)
+                                                            if [[ "$blockFive" == *"still"* || "$blockFive" == *"Still"* ]];
+                                                            then
+                                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockFive} - DOES contain Still - Not extracting Season & Episode Number" >> "$logfile"
+                                                            else
+                                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockFive} - Does NOT contain Still" >> "$logfile"
+                                                                seasonNumberCheck=$(echo $blockFive | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
+                                                                episodeNumberCheck=$(echo $blockFive | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
+                                                                imageDesc=$(echo $blockFive)
+                                                            fi
                                                         else
                                                             if [[ "$blockFive" == *" "* ]];
                                                             then
@@ -924,16 +1406,22 @@ if [[ $numberOfUnderscores == 4 ]];
                                                 then
                                                     imageSize=$(echo $blockSix)
                                                 else
-                                                    if [[ "$blockSix" =~ ^(M|S).*[0-9]$ || "$blockSix" =~ ^(M|S)[0-9].*E[0-9]$ || "$blockSix" =~ ^(M|S)[0-9].*E[0-9][0-9]$ || "$blockSix" =~ ^(M|S)[0-9][0-9].*E[0-9]$ || "$blockSix" =~ ^(M|S)[0-9][0-9].*E[0-9][0-9]$ ]];
+                                                    blockSix=$(echo $blockSix | tr '[:upper:]' '[:lower:]')
+                                                    if [[ ("$blockSix" == "cover") || ("$blockSix" == "feature") || ("$blockSix" == "keyart") || ("$blockSix" == *"still"*) || ("$blockSix" == "blank") ]];
                                                     then
-                                                        seasonNumberCheck=$(echo $blockSix | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
-                                                        episodeNumberCheck=$(echo $blockSix | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
-                                                        imageDesc=$(echo $blockSix)
+                                                        imageType=$(echo $blockSix)
                                                     else
-                                                        blockSix=$(echo $blockSix | tr '[:upper:]' '[:lower:]')
-                                                        if [[ ("$blockSix" == "cover") || ("$blockSix" == "feature") || ("$blockSix" == "keyart") || ("$blockSix" == *"still"*) || ("$blockSix" == "blank") ]];
+                                                        if [[ "$blockSix" =~ ^(M|S).*[0-9]$ || "$blockSix" =~ ^(M|S)[0-9].*E[0-9]$ || "$blockSix" =~ ^(M|S)[0-9].*E[0-9][0-9]$ || "$blockSix" =~ ^(M|S)[0-9][0-9].*E[0-9]$ || "$blockSix" =~ ^(M|S)[0-9][0-9].*E[0-9][0-9]$ ]];
                                                         then
-                                                            imageType=$(echo $blockSix)
+                                                            if [[ "$blockSix" == *"still"* || "$blockSix" == *"Still"* ]];
+                                                            then
+                                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockSix} - DOES contain Still - Not extracting Season & Episode Number" >> "$logfile"
+                                                            else
+                                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockSix} - Does NOT contain Still" >> "$logfile"
+                                                                seasonNumberCheck=$(echo $blockSix | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
+                                                                episodeNumberCheck=$(echo $blockSix | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
+                                                                imageDesc=$(echo $blockSix)
+                                                            fi
                                                         else
                                                             if [[ "$blockSix" == *" "* ]];
                                                             then
@@ -949,16 +1437,22 @@ if [[ $numberOfUnderscores == 4 ]];
                                                 then
                                                     imageSize=$(echo $blockSeven)
                                                 else
-                                                    if [[ "$blockSeven" =~ ^(M|S).*[0-9]$ || "$blockSeven" =~ ^(M|S)[0-9].*E[0-9]$ || "$blockSeven" =~ ^(M|S)[0-9].*E[0-9][0-9]$ || "$blockSeven" =~ ^(M|S)[0-9][0-9].*E[0-9]$ || "$blockSeven" =~ ^(M|S)[0-9][0-9].*E[0-9][0-9]$ ]];
+                                                    blockSeven=$(echo $blockSeven | tr '[:upper:]' '[:lower:]')
+                                                    if [[ ("$blockSeven" == "cover") || ("$blockSeven" == "feature") || ("$blockSeven" == "keyart") || ("$blockSeven" == *"still"*) || ("$blockSeven" == "blank") ]];
                                                     then
-                                                        seasonNumberCheck=$(echo $blockSeven | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
-                                                        episodeNumberCheck=$(echo $blockSeven | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
-                                                        imageDesc=$(echo $blockSeven)
+                                                        imageType=$(echo $blockSeven)
                                                     else
-                                                        blockSeven=$(echo $blockSeven | tr '[:upper:]' '[:lower:]')
-                                                        if [[ ("$blockSeven" == "cover") || ("$blockSeven" == "feature") || ("$blockSeven" == "keyart") || ("$blockSeven" == *"still"*) || ("$blockSeven" == "blank") ]];
+                                                        if [[ "$blockSeven" =~ ^(M|S).*[0-9]$ || "$blockSeven" =~ ^(M|S)[0-9].*E[0-9]$ || "$blockSeven" =~ ^(M|S)[0-9].*E[0-9][0-9]$ || "$blockSeven" =~ ^(M|S)[0-9][0-9].*E[0-9]$ || "$blockSeven" =~ ^(M|S)[0-9][0-9].*E[0-9][0-9]$ ]];
                                                         then
-                                                            imageType=$(echo $blockSeven)
+                                                            if [[ "$blockSeven" == *"still"* || "$blockSeven" == *"Still"* ]];
+                                                            then
+                                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockSeven} - DOES contain Still - Not extracting Season & Episode Number" >> "$logfile"
+                                                            else
+                                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockSeven} - Does NOT contain Still" >> "$logfile"
+                                                                seasonNumberCheck=$(echo $blockSeven | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
+                                                                episodeNumberCheck=$(echo $blockSeven | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
+                                                                imageDesc=$(echo $blockSeven)
+                                                            fi
                                                         else
                                                             if [[ "$blockSeven" == *" "* ]];
                                                             then
@@ -974,16 +1468,22 @@ if [[ $numberOfUnderscores == 4 ]];
                                                 then
                                                     imageSize=$(echo $blockEight)
                                                 else
-                                                    if [[ "$blockEight" =~ ^(M|S).*[0-9]$ || "$blockEight" =~ ^(M|S)[0-9].*E[0-9]$ || "$blockEight" =~ ^(M|S)[0-9].*E[0-9][0-9]$ || "$blockEight" =~ ^(M|S)[0-9][0-9].*E[0-9]$ || "$blockEight" =~ ^(M|S)[0-9][0-9].*E[0-9][0-9]$ ]];
+                                                    blockEight=$(echo $blockEight | tr '[:upper:]' '[:lower:]')
+                                                    if [[ ("$blockEight" == "cover") || ("$blockEight" == "feature") || ("$blockEight" == "keyart") || ("$blockEight" == *"still"*) || ("$blockEight" == "blank") ]];
                                                     then
-                                                        seasonNumberCheck=$(echo $blockEight | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
-                                                        episodeNumberCheck=$(echo $blockEight | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
-                                                        imageDesc=$(echo $blockEight)
+                                                        imageType=$(echo $blockEight)
                                                     else
-                                                        blockEight=$(echo $blockEight | tr '[:upper:]' '[:lower:]')
-                                                        if [[ ("$blockEight" == "cover") || ("$blockEight" == "feature") || ("$blockEight" == "keyart") || ("$blockEight" == *"still"*) || ("$blockEight" == "blank") ]];
+                                                        if [[ "$blockEight" =~ ^(M|S).*[0-9]$ || "$blockEight" =~ ^(M|S)[0-9].*E[0-9]$ || "$blockEight" =~ ^(M|S)[0-9].*E[0-9][0-9]$ || "$blockEight" =~ ^(M|S)[0-9][0-9].*E[0-9]$ || "$blockEight" =~ ^(M|S)[0-9][0-9].*E[0-9][0-9]$ ]];
                                                         then
-                                                            imageType=$(echo $blockEight)
+                                                            if [[ "$blockEight" == *"still"* || "$blockEight" == *"Still"* ]];
+                                                            then
+                                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockEight} - DOES contain Still - Not extracting Season & Episode Number" >> "$logfile"
+                                                            else
+                                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockEight} - Does NOT contain Still" >> "$logfile"
+                                                                seasonNumberCheck=$(echo $blockEight | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
+                                                                episodeNumberCheck=$(echo $blockEight | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
+                                                                imageDesc=$(echo $blockEight)
+                                                            fi
                                                         else
                                                             if [[ "$blockEight" == *" "* ]];
                                                             then
