@@ -199,7 +199,6 @@ if [[ $numberOfUnderscores == 4 ]];
                     language=$(echo $title | awk -F "_" '{print $4}')
                     imageSize=$(echo $title | awk -F "_" '{print $5}')
 
-                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - +++++++++++++++++++++++++++++++++" >> "$logfile"
                     echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleCode - $titleCode" >> "$logfile"
                     echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageType - $imageType" >> "$logfile"
                     echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
@@ -213,7 +212,6 @@ if [[ $numberOfUnderscores == 4 ]];
                     language=$(echo $title | awk -F "_" '{print $4}')
                     imageSize=$(echo $title | awk -F "_" '{print $5}')
 
-                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - +++++++++++++++++++++++++++++++++" >> "$logfile"
                     echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleCode - $titleCode" >> "$logfile"
                     echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageType - $imageType" >> "$logfile"
                     echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
@@ -224,103 +222,6 @@ if [[ $numberOfUnderscores == 4 ]];
     else
         if [[ $numberOfUnderscores == 3 ]];
             then
-                blockOne=$(echo $title | awk -F "_" '{print $1}')
-                blockTwo=$(echo $title | awk -F "_" '{print $2}')
-                blockThree=$(echo $title | awk -F "_" '{print $3}')
-                blockFour=$(echo $title | awk -F "_" '{print $4}')
-
-                blockOneCharCount=$(echo -n $blockOne | wc -c)
-                blockTwoCharCount=$(echo -n $blockTwo | wc -c)
-                blockThreeCharCount=$(echo -n $blockThree | wc -c)
-                blockFourCharCount=$(echo -n $blockFour | wc -c)
-
-                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Check Block One for Info - {$blockOne} - {$blockOneCharCount}" >> "$logfile"
-                if [[ "$blockOne" =~ ^(M|S).*[0-9]$ ]];
-                then
-                    case $blockOneCharCount in
-                        "7")
-                            titleCode=$(echo $blockOne)
-                        ;;
-                        "9")
-                            titleCode=$(echo $blockOne)
-                        ;;
-                        "10")
-                            titleCode=$(echo $blockOne)
-                        ;;
-                        "11")
-                            titleCode=$(echo $blockOne)
-                        ;;
-                        "12")
-                            titleCode=$(echo $blockOne)
-                        ;;
-                        "13")
-                            titleCode=$(echo $blockOne)
-                        ;;
-                        *)
-                            titleByLanguage=$(echo $blockOne)
-                        ;;
-                    esac
-                else
-                    titleByLanguage=$(echo $blockOne)
-                fi
-
-                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Title Code - {$titleCode}" >> "$logfile"
-                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Title By Language - {$titleByLanguage}" >> "$logfile"
-
-                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Check Block Two for Info - {$blockTwo} - {$blockTwoCharCount}" >> "$logfile"
-                if [[ ("$blockTwo" == "EN") || ("$blockTwo" == "ES") || ("$blockTwo" == "FR") || ("$blockTwo" == "OG") ]];
-                then
-                    language=$(echo $blockTwo)
-                else
-                    blockTwo=$(echo $blockTwo | tr '[:upper:]' '[:lower:]')
-                    if [[ ("$blockTwo" == "cover") || ("$blockTwo" == "feature") || ("$blockTwo" == "keyart") || ("$blockTwo" == "still") || ("$blockTwo" == "blank") ]];
-                    then
-                        imageType=$(echo $blockTwo)
-                    fi
-                fi
-
-                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Language - {$language}" >> "$logfile"
-                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Image Type - {$imageType}" >> "$logfile"
-
-                if [[ "$blockThree" =~ ^[0-9][0-9][0-9][0-9]x[0-9][0-9][0-9][0-9] || "$blockThree" =~ ^[0-9][0-9][0-9][0-9]x[0-9][0-9][0-9] || "$blockThree" =~ ^[0-9][0-9][0-9]x[0-9][0-9][0-9][0-9] || "$blockThree" =~ ^[0-9][0-9][0-9]x[0-9][0-9][0-9] ]];
-                then
-                    imageSize=$(echo $blockThree)
-                else
-                    if [[ "$blockThree" == *" "* ]];
-                    then
-                        titleByLanguage=$(echo $blockThree)
-                    else
-                        titleByLanguage=$(echo $blockThree | sed -r -e "s/([^A-Z])([A-Z])/\1 \2/g" -e "s/([A-Z]+)([A-Z])/\1 \2/g")
-                    fi
-                fi
-
-                if [[ "$blockFour" =~ ^[0-9][0-9][0-9][0-9]x[0-9][0-9][0-9][0-9] || "$blockFour" =~ ^[0-9][0-9][0-9][0-9]x[0-9][0-9][0-9] || "$blockFour" =~ ^[0-9][0-9][0-9]x[0-9][0-9][0-9][0-9] || "$blockFour" =~ ^[0-9][0-9][0-9]x[0-9][0-9][0-9] ]];
-                then
-                    imageSize=$(echo $blockFour)
-                else
-                    blockFour=$(echo $blockFour | tr '[:upper:]' '[:lower:]')
-                    if [[ ("$blockFour" == "cover") || ("$blockFour" == "feature") || ("$blockFour" == "keyart") || ("$blockFour" == "still") || ("$blockFour" == "blank") ]];
-                    then
-                        imageType=$(echo $blockFour)
-                    else
-                        if [[ "$blockFour" == *" "* ]];
-                        then
-                            imageDesc=$(echo $blockFour)
-                        else
-                            imageDesc=$(echo $blockFour | sed -r -e "s/([^A-Z])([A-Z])/\1 \2/g" -e "s/([A-Z]+)([A-Z])/\1 \2/g")
-                        fi
-                    fi
-                fi
-
-                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - +++++++++++++++++++++++++++++++++" >> "$logfile"
-                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleCode - $titleCode" >> "$logfile"
-                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageType - $imageType" >> "$logfile"
-                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
-                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - language - $language" >> "$logfile"
-                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageSize - $imageSize" >> "$logfile"
-                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageSize - $imageDesc" >> "$logfile"
-                
-                : '
                 namingConventionCheck=$(echo $title | awk -F "_" '{print $2}')
                 if [[ ("$namingConventionCheck" == "EN") || ("$namingConventionCheck" == "ES") || ("$namingConventionCheck" == "FR") || ("$namingConventionCheck" == "OG") ]];
                     then
@@ -365,7 +266,7 @@ if [[ $numberOfUnderscores == 4 ]];
                             echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
                             echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageSize - $imageSize" >> "$logfile"
                         fi
-                    fi'
+                    fi
             else
                 if [[ $numberOfUnderscores == 2 ]];
                     then
