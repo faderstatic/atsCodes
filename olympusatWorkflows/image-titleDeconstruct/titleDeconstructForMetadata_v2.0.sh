@@ -41,12 +41,32 @@ if [[ $numberOfUnderscores == 4 ]];
                 titleByLanguage=$(echo $title | awk -F "_" '{print $1}')
                 #titleByLanguage=$(echo $titleByLanguage | sed -r -e "s/([^A-Z])([A-Z])/\1 \2/g" -e "s/([A-Z]+)([A-Z])/\1 \2/g")
                 language=$(echo $title | awk -F "_" '{print $2}')
-                titleCode=$(echo $title | awk -F "_" '{print $3}')
-                imageType=$(echo $title | awk -F "_" '{print $4}')
-                imageSize=$(echo $title | awk -F "_" '{print $5}')
+                blockThree=$(echo $title | awk -F "_" '{print $3}')
+                blockFour=$(echo $title | awk -F "_" '{print $4}')
+                blockFive=$(echo $title | awk -F "_" '{print $5}')
+                #titleCode=$(echo $title | awk -F "_" '{print $3}')
+                #imageType=$(echo $title | awk -F "_" '{print $4}')
+                #imageSize=$(echo $title | awk -F "_" '{print $5}')
 
-                seasonNumberCheck=$(echo $imageType | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
-                episodeNumberCheck=$(echo $imageType | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
+                if [[ "$blockThree" == ^M[0-9]$ ]];
+                then
+                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Check Block Three for Title Code PASSED - {$blockThree}" >> "$logfile"
+                else
+                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Check Block Three for Title Code FAILED - {$blockThree}" >> "$logfile"
+                fi
+
+                if [[ "$blockFour" ==  ]];
+                then
+
+                fi
+
+                if [[ "$blockFive" ==  ]];
+                then
+
+                fi
+
+                #seasonNumberCheck=$(echo $imageType | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
+                #episodeNumberCheck=$(echo $imageType | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
 
                 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleCode - $titleCode" >> "$logfile"
                 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageType - $imageType" >> "$logfile"
