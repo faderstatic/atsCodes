@@ -84,7 +84,7 @@ if [[ $numberOfUnderscores == 4 ]];
                     esac
                 else
                     imageMisc=$(echo $blockThree)
-                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Title Code Check FAILED - Setting as imageMisc {$blockThree} - {$blockThreeCharCount}" >> "$logfile"
+                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Check Block Three for Title Code Check FAILED - Setting as imageMisc {$blockThree} - {$blockThreeCharCount}" >> "$logfile"
                 fi
 
                 if [[ "$blockFour" =~ ^(M|S).*[0-9]$ ]];
@@ -129,7 +129,7 @@ if [[ $numberOfUnderscores == 4 ]];
                     fi
                 else
                     imageDesc=$(echo $blockFour)
-                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Setting as imageDesc {$blockFour}" >> "$logfile"
+                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Check Block Four - Setting as imageDesc {$blockFour}" >> "$logfile"
                 fi
 
                 if [[ "$blockFive" =~ ^(M|S).*[0-9]$ ]];
@@ -167,13 +167,14 @@ if [[ $numberOfUnderscores == 4 ]];
                     esac
                 else
                     imageType=$(echo $blockFive)
-                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Setting as imageType {$blockFive}" >> "$logfile"
+                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Check Block Five - Setting as imageType {$blockFive}" >> "$logfile"
                 fi
 
+                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - +++++++++++++++++++++++++++++++++" >> "$logfile"
                 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleCode - $titleCode" >> "$logfile"
-                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageType - $imageType" >> "$logfile"
                 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
                 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - language - $language" >> "$logfile"
+                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageType - $imageType" >> "$logfile"
                 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageSize - $imageSize" >> "$logfile"
                 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageDesc - $imageDesc" >> "$logfile"
                 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageMisc - $imageMisc" >> "$logfile"
