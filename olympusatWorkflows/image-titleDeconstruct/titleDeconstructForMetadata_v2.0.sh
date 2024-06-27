@@ -49,35 +49,134 @@ if [[ $numberOfUnderscores == 4 ]];
                 #imageType=$(echo $title | awk -F "_" '{print $4}')
                 #imageSize=$(echo $title | awk -F "_" '{print $5}')
 
-                if [[ "$blockThree" =~ ^(M|S).*[0-9]$ && "$blockThreeCharCount" == 7 ]];
+                if [[ "$blockThree" =~ ^(M|S).*[0-9]$ ]];
                 then
                     echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Check Block Three for Title Code PASSED - {$blockThree} - {$blockThreeCharCount}" >> "$logfile"
+                    case $blockThreeCharCount in
+                        "7")
+                            titleCode=$(echo $blockThree)
+                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Title Code is {$titleCode} - {7}" >> "$logfile"
+                        ;;
+                        "9")
+                            titleCode=$(echo $blockThree)
+                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Title Code is {$titleCode} - {9}" >> "$logfile"
+                        ;;
+                        "10")
+                            titleCode=$(echo $blockThree)
+                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Title Code is {$titleCode} - {10}" >> "$logfile"
+                        ;;
+                        "11")
+                            titleCode=$(echo $blockThree)
+                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Title Code is {$titleCode} - {11}" >> "$logfile"
+                        ;;
+                        "12")
+                            titleCode=$(echo $blockThree)
+                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Title Code is {$titleCode} - {12}" >> "$logfile"
+                        ;;
+                        "13")
+                            titleCode=$(echo $blockThree)
+                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Title Code is {$titleCode} - {13}" >> "$logfile"
+                        ;;
+                        *)
+                            imageMisc=$(echo $blockThree)
+                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Title Code Check FAILED - Setting as imageMisc {$blockThree} - {$blockThreeCharCount}" >> "$logfile"
+                        ;;
+                    esac
                 else
-                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Check Block Three for Title Code FAILED - {$blockThree} - {$blockThreeCharCount}" >> "$logfile"
+                    imageMisc=$(echo $blockThree)
+                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Title Code Check FAILED - Setting as imageMisc {$blockThree} - {$blockThreeCharCount}" >> "$logfile"
                 fi
 
-                if [[ "$blockFour" =~ ^(M|S) ]];
+                if [[ "$blockFour" =~ ^(M|S).*[0-9]$ ]];
                 then
-                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Check Block Four for Title Code PASSED - {$blockFour} - {$blockFourCharCount}" >> "$logfile"
+                    if [[ "$blockFour" =~ ^(M|S)[0-9].*E[0-9]$ || "$blockFour" =~ ^(M|S)[0-9].*E[0-9][0-9]$ || "$blockFour" =~ ^(M|S)[0-9][0-9].*E[0-9]$ || "$blockFour" =~ ^(M|S)[0-9][0-9].*E[0-9][0-9]$ ]];
+                    then
+                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Check Block Four for Season-Episode PASSED - {$blockFour}" >> "$logfile"
+                        seasonNumberCheck=$(echo $blockFour | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
+                        episodeNumberCheck=$(echo $blockFour | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
+                    else
+                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Check Block Four for Title Code PASSED - {$blockFour} - {$blockFourCharCount}" >> "$logfile"
+                        case $blockFourCharCount in
+                            "7")
+                                titleCode=$(echo $blockFour)
+                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Title Code is {$titleCode} - {7}" >> "$logfile"
+                            ;;
+                            "9")
+                                titleCode=$(echo $blockFour)
+                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Title Code is {$titleCode} - {9}" >> "$logfile"
+                            ;;
+                            "10")
+                                titleCode=$(echo $blockFour)
+                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Title Code is {$titleCode} - {10}" >> "$logfile"
+                            ;;
+                            "11")
+                                titleCode=$(echo $blockFour)
+                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Title Code is {$titleCode} - {11}" >> "$logfile"
+                            ;;
+                            "12")
+                                titleCode=$(echo $blockFour)
+                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Title Code is {$titleCode} - {12}" >> "$logfile"
+                            ;;
+                            "13")
+                                titleCode=$(echo $blockFour)
+                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Title Code is {$titleCode} - {13}" >> "$logfile"
+                            ;;
+                            *)
+                                imageDesc=$(echo $blockFour)
+                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Title Code Check FAILED - Setting as imageDesc {$blockFour} - {$blockFourCharCount}" >> "$logfile"
+                            ;;
+                        esac
+                    fi
                 else
-                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Check Block Four for Title Code FAILED - {$blockFour} - {$blockFourCharCount}" >> "$logfile"
+                    imageDesc=$(echo $blockFour)
+                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Setting as imageDesc {$blockFour}" >> "$logfile"
                 fi
 
-                if [[ "$blockFive" =~ ^(M|S) ]];
+                if [[ "$blockFive" =~ ^(M|S).*[0-9]$ ]];
                 then
                     echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Check Block Five for Title Code PASSED - {$blockFive} - {$blockFiveCharCount}" >> "$logfile"
+                    case $blockFiveCharCount in
+                        "7")
+                            titleCode=$(echo $blockFive)
+                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Title Code is {$titleCode} - 7" >> "$logfile"
+                        ;;
+                        "9")
+                            titleCode=$(echo $blockFive)
+                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Title Code is {$titleCode} - 9" >> "$logfile"
+                        ;;
+                        "10")
+                            titleCode=$(echo $blockFive)
+                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Title Code is {$titleCode} - 10" >> "$logfile"
+                        ;;
+                        "11")
+                            titleCode=$(echo $blockFive)
+                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Title Code is {$titleCode} - 11" >> "$logfile"
+                        ;;
+                        "12")
+                            titleCode=$(echo $blockFive)
+                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Title Code is {$titleCode} - 12" >> "$logfile"
+                        ;;
+                        "13")
+                            titleCode=$(echo $blockFive)
+                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Title Code is {$titleCode} - 13" >> "$logfile"
+                        ;;
+                        *)
+                            imageType=$(echo $blockFive)
+                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Title Code Check FAILED - Setting as imageType {$blockFive} - {$blockFiveCharCount}" >> "$logfile"
+                        ;;
+                    esac
                 else
-                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Check Block Five for Title Code FAILED - {$blockFive} - {$blockFiveCharCount}" >> "$logfile"
+                    imageType=$(echo $blockFive)
+                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Setting as imageType {$blockFive}" >> "$logfile"
                 fi
-
-                #seasonNumberCheck=$(echo $imageType | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
-                #episodeNumberCheck=$(echo $imageType | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
 
                 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleCode - $titleCode" >> "$logfile"
                 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageType - $imageType" >> "$logfile"
                 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
                 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - language - $language" >> "$logfile"
                 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageSize - $imageSize" >> "$logfile"
+                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageDesc - $imageDesc" >> "$logfile"
+                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageMisc - $imageMisc" >> "$logfile"
                 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumber - $seasonNumberCheck" >> "$logfile"
                 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumber - $episodeNumberCheck" >> "$logfile"
             else
