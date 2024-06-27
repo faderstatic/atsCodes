@@ -54,7 +54,6 @@ if [[ $numberOfUnderscores == 4 ]];
         blockFourCharCount=$(echo -n $blockFour | wc -c)
         blockFiveCharCount=$(echo -n $blockFive | wc -c)
 
-        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Check Block One for Info - {$blockOne} - {$blockOneCharCount}" >> "$logfile"
         if [[ "$blockOne" =~ ^(M|S).*[0-9]$ ]];
         then
             case $blockOneCharCount in
@@ -84,10 +83,6 @@ if [[ $numberOfUnderscores == 4 ]];
             titleByLanguage=$(echo $blockOne)
         fi
 
-        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Title Code - {$titleCode}" >> "$logfile"
-        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Title By Language - {$titleByLanguage}" >> "$logfile"
-
-        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Check Block Two for Info - {$blockTwo} - {$blockTwoCharCount}" >> "$logfile"
         if [[ ("$blockTwo" == "EN") || ("$blockTwo" == "ES") || ("$blockTwo" == "FR") || ("$blockTwo" == "OG") ]];
         then
             language=$(echo $blockTwo)
@@ -98,9 +93,6 @@ if [[ $numberOfUnderscores == 4 ]];
                 imageType=$(echo $blockTwo)
             fi
         fi
-
-        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Language - {$language}" >> "$logfile"
-        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Image Type - {$imageType}" >> "$logfile"
 
         if [[ "$blockThree" =~ ^(M|S).*[0-9]$ ]];
         then
@@ -208,7 +200,6 @@ if [[ $numberOfUnderscores == 4 ]];
         echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageMisc - $imageMisc" >> "$logfile"
         echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumber - $seasonNumberCheck" >> "$logfile"
         echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumber - $episodeNumberCheck" >> "$logfile"
-        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - graphicsTags - $graphicsTags" >> "$logfile"
         
     else
         if [[ $numberOfUnderscores == 3 ]];
@@ -223,7 +214,6 @@ if [[ $numberOfUnderscores == 4 ]];
                 blockThreeCharCount=$(echo -n $blockThree | wc -c)
                 blockFourCharCount=$(echo -n $blockFour | wc -c)
 
-                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Check Block One for Info - {$blockOne} - {$blockOneCharCount}" >> "$logfile"
                 if [[ "$blockOne" =~ ^(M|S).*[0-9]$ ]];
                 then
                     case $blockOneCharCount in
@@ -253,10 +243,6 @@ if [[ $numberOfUnderscores == 4 ]];
                     titleByLanguage=$(echo $blockOne)
                 fi
 
-                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Title Code - {$titleCode}" >> "$logfile"
-                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Title By Language - {$titleByLanguage}" >> "$logfile"
-
-                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Check Block Two for Info - {$blockTwo} - {$blockTwoCharCount}" >> "$logfile"
                 if [[ ("$blockTwo" == "EN") || ("$blockTwo" == "ES") || ("$blockTwo" == "FR") || ("$blockTwo" == "OG") ]];
                 then
                     language=$(echo $blockTwo)
@@ -267,9 +253,6 @@ if [[ $numberOfUnderscores == 4 ]];
                         imageType=$(echo $blockTwo)
                     fi
                 fi
-
-                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Language - {$language}" >> "$logfile"
-                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Image Type - {$imageType}" >> "$logfile"
 
                 if [[ "$blockThree" =~ ^(M|S).*[0-9]$ ]];
                 then
@@ -352,7 +335,6 @@ if [[ $numberOfUnderscores == 4 ]];
                 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageMisc - $imageMisc" >> "$logfile"
                 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumber - $seasonNumberCheck" >> "$logfile"
                 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumber - $episodeNumberCheck" >> "$logfile"
-                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - graphicsTags - $graphicsTags" >> "$logfile"
                 
             else
                 if [[ $numberOfUnderscores == 2 ]];
@@ -402,7 +384,6 @@ if [[ $numberOfUnderscores == 4 ]];
                                 blockFiveCharCount=$(echo -n $blockFive | wc -c)
                                 blockSixCharCount=$(echo -n $blockSix | wc -c)
 
-                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Check Block One for Info - {$blockOne} - {$blockOneCharCount}" >> "$logfile"
                                 if [[ "$blockOne" =~ ^(M|S).*[0-9]$ ]];
                                 then
                                     case $blockOneCharCount in
@@ -432,10 +413,6 @@ if [[ $numberOfUnderscores == 4 ]];
                                     titleByLanguage=$(echo $blockOne)
                                 fi
 
-                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Title Code - {$titleCode}" >> "$logfile"
-                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Title By Language - {$titleByLanguage}" >> "$logfile"
-
-                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Check Block Two for Info - {$blockTwo} - {$blockTwoCharCount}" >> "$logfile"
                                 if [[ ("$blockTwo" == "EN") || ("$blockTwo" == "ES") || ("$blockTwo" == "FR") || ("$blockTwo" == "OG") ]];
                                 then
                                     language=$(echo $blockTwo)
@@ -446,9 +423,6 @@ if [[ $numberOfUnderscores == 4 ]];
                                         imageType=$(echo $blockTwo)
                                     fi
                                 fi
-
-                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Language - {$language}" >> "$logfile"
-                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Image Type - {$imageType}" >> "$logfile"
 
                                 if [[ "$blockThree" =~ ^(M|S).*[0-9]$ ]];
                                 then
@@ -581,7 +555,6 @@ if [[ $numberOfUnderscores == 4 ]];
                                 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageMisc - $imageMisc" >> "$logfile"
                                 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumber - $seasonNumberCheck" >> "$logfile"
                                 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumber - $episodeNumberCheck" >> "$logfile"
-                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - graphicsTags - $graphicsTags" >> "$logfile"
                             else
                                 if [[ $numberOfUnderscores == 6 ]];
                                     then
@@ -601,7 +574,6 @@ if [[ $numberOfUnderscores == 4 ]];
                                         blockSixCharCount=$(echo -n $blockSix | wc -c)
                                         blockSevenCharCount=$(echo -n $blockSeven | wc -c)
 
-                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Check Block One for Info - {$blockOne} - {$blockOneCharCount}" >> "$logfile"
                                         if [[ "$blockOne" =~ ^(M|S).*[0-9]$ ]];
                                         then
                                             case $blockOneCharCount in
@@ -631,10 +603,6 @@ if [[ $numberOfUnderscores == 4 ]];
                                             titleByLanguage=$(echo $blockOne)
                                         fi
 
-                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Title Code - {$titleCode}" >> "$logfile"
-                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Title By Language - {$titleByLanguage}" >> "$logfile"
-
-                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Check Block Two for Info - {$blockTwo} - {$blockTwoCharCount}" >> "$logfile"
                                         if [[ ("$blockTwo" == "EN") || ("$blockTwo" == "ES") || ("$blockTwo" == "FR") || ("$blockTwo" == "OG") ]];
                                         then
                                             language=$(echo $blockTwo)
@@ -645,9 +613,6 @@ if [[ $numberOfUnderscores == 4 ]];
                                                 imageType=$(echo $blockTwo)
                                             fi
                                         fi
-
-                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Language - {$language}" >> "$logfile"
-                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Image Type - {$imageType}" >> "$logfile"
 
                                         if [[ "$blockThree" =~ ^(M|S).*[0-9]$ ]];
                                         then
@@ -805,7 +770,6 @@ if [[ $numberOfUnderscores == 4 ]];
                                         echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageMisc - $imageMisc" >> "$logfile"
                                         echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumber - $seasonNumberCheck" >> "$logfile"
                                         echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumber - $episodeNumberCheck" >> "$logfile"
-                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - graphicsTags - $graphicsTags" >> "$logfile"
                                     else
                                         if [[ $numberOfUnderscores == 7 ]];
                                             then
@@ -827,7 +791,6 @@ if [[ $numberOfUnderscores == 4 ]];
                                                 blockSevenCharCount=$(echo -n $blockSeven | wc -c)
                                                 blockEightCharCount=$(echo -n $blockEight | wc -c)
 
-                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Check Block One for Info - {$blockOne} - {$blockOneCharCount}" >> "$logfile"
                                                 if [[ "$blockOne" =~ ^(M|S).*[0-9]$ ]];
                                                 then
                                                     case $blockOneCharCount in
@@ -857,10 +820,6 @@ if [[ $numberOfUnderscores == 4 ]];
                                                     titleByLanguage=$(echo $blockOne)
                                                 fi
 
-                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Title Code - {$titleCode}" >> "$logfile"
-                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Title By Language - {$titleByLanguage}" >> "$logfile"
-
-                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Check Block Two for Info - {$blockTwo} - {$blockTwoCharCount}" >> "$logfile"
                                                 if [[ ("$blockTwo" == "EN") || ("$blockTwo" == "ES") || ("$blockTwo" == "FR") || ("$blockTwo" == "OG") ]];
                                                 then
                                                     language=$(echo $blockTwo)
@@ -871,9 +830,6 @@ if [[ $numberOfUnderscores == 4 ]];
                                                         imageType=$(echo $blockTwo)
                                                     fi
                                                 fi
-
-                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Language - {$language}" >> "$logfile"
-                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Image Type - {$imageType}" >> "$logfile"
 
                                                 if [[ "$blockThree" =~ ^(M|S).*[0-9]$ ]];
                                                 then
@@ -1056,7 +1012,6 @@ if [[ $numberOfUnderscores == 4 ]];
                                                 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageMisc - $imageMisc" >> "$logfile"
                                                 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumber - $seasonNumberCheck" >> "$logfile"
                                                 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumber - $episodeNumberCheck" >> "$logfile"
-                                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - graphicsTags - $graphicsTags" >> "$logfile"
                                         fi
                                 fi
                         fi
