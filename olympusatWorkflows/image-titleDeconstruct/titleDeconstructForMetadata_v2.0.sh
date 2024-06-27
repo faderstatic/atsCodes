@@ -626,12 +626,14 @@ esac
 
 if [[ "$imageSize" =~ ^[0-9]/x[0-9] ]];
 then
+    graphicsResolution=$(echo $imageSize)
     echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Check Graphics Resolution -  PASSED - {$imageSize}" >> "$logfile"
 else
     echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Check Graphics Resolution - FAILED - {$imageSize}" >> "$logfile"
 fi
 
 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Graphics Type - $graphicsType" >> "$logfile"
+echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Graphics Resolution - $graphicsResolution" >> "$logfile"
 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Graphics Language - $graphicsLanguage" >> "$logfile"
 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Graphics Tags - $graphicsTags" >> "$logfile"
 
