@@ -26,8 +26,8 @@ export itemId=$1
 export userName=$2
 export metadataStatus=$3
 
-echo "$(date +%Y/%m/%d_%H:%M) - (metadataWorkflow) - ($itemId) - User [$userName] triggered workflow to set item as [$metadataStatus]" >> "$logfile"
-echo "$(date +%Y/%m/%d_%H:%M) - (metadataWorkflow) - ($itemId) - Checking current oly_metadataStatus" >> "$logfile"
+echo "$(date +%Y/%m/%d_%H:%M:%S) - (metadataWorkflow) - ($itemId) - User [$userName] triggered workflow to set item as [$metadataStatus]" >> "$logfile"
+echo "$(date +%Y/%m/%d_%H:%M:%S) - (metadataWorkflow) - ($itemId) - Checking current oly_metadataStatus" >> "$logfile"
 itemMetadataStatus=$(filterVidispineItemMetadata $itemId "metadata" "oly_metadataStatus")
 
 #Check Variable
@@ -36,11 +36,11 @@ then
     # oly_metadataStatus is already 'completed'-skip process
     itemMetadataBy=$(filterVidispineItemMetadata $itemId "metadata" "oly_metadataBy")
     itemMetadataDate=$(filterVidispineItemMetadata $itemId "metadata" "oly_metadataDate")
-    echo "$(date +%Y/%m/%d_%H:%M) - (metadataWorkflow) - ($itemId) - Item is ALREADY marked as Completed - skipping process" >> "$logfile"
-    echo "$(date +%Y/%m/%d_%H:%M) - (metadataWorkflow) - ($itemId) - Marked as Completed by {$itemMetadataBy} on {$itemMetadataDate}" >> "$logfile"
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (metadataWorkflow) - ($itemId) - Item is ALREADY marked as Completed - skipping process" >> "$logfile"
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (metadataWorkflow) - ($itemId) - Marked as Completed by {$itemMetadataBy} on {$itemMetadataDate}" >> "$logfile"
 else
     # oly_metadataStatus is NOT completed-continue with process
-    echo "$(date +%Y/%m/%d_%H:%M) - (metadataWorkflow) - ($itemId) - Setting variables with appropriate metadata" >> "$logfile"
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (metadataWorkflow) - ($itemId) - Setting variables with appropriate metadata" >> "$logfile"
     export metadataBy=$userName
     export metadataDate=$(date "+%Y-%m-%dT%H:%M:%S")
 
@@ -53,15 +53,15 @@ else
         ;;
     esac
 
-    echo "$(date +%Y/%m/%d_%H:%M) - (metadataWorkflow) - ($itemId) - Sending API Command to Update Metadata" >> "$logfile"
-    echo "$(date +%Y/%m/%d_%H:%M) - (metadataWorkflow) - ($itemId) - Mark as {$metadataStatus}, by {$metadataBy}, on {$metadataDate}" >> "$logfile"
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (metadataWorkflow) - ($itemId) - Sending API Command to Update Metadata" >> "$logfile"
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (metadataWorkflow) - ($itemId) - Mark as {$metadataStatus}, by {$metadataBy}, on {$metadataDate}" >> "$logfile"
 
     export url="http://10.1.1.34:8080/API/item/$itemId/metadata/"
     curl -s -o /dev/null --location --request PUT $url --header 'Content-Type: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=xZqBrKBPBOUANsWFnMC3aF90S52Ip3tgXdUHwWZvhNnu9aLl9j4rdrxRhV9nSQx9' --data $bodyData
 
     sleep 5
 
-    echo "$(date +%Y/%m/%d_%H:%M) - (metadataWorkflow) - ($itemId) - Update Metadata Completed" >> "$logfile"
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (metadataWorkflow) - ($itemId) - Update Metadata Completed" >> "$logfile"
 fi
 
 IFS=$saveIFS
