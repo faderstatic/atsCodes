@@ -1508,12 +1508,27 @@ if [[ $titleCode == "M"* ]];
 then
     if [[ $language == "es" || $language == "ES" ]];
     then
-        fieldName="oly_titleEs"
+        fieldNameValue="<field><name>oly_titleEs</name><value>$titleByLanguage</value></field>"
     else
-        fieldName="oly_titleEn"
+        if [[ $language == "en" || $language == "EN" ]];
+        then
+            fieldNameValue="<field><name>oly_titleEn</name><value>$titleByLanguage</value></field>"
+        else
+            fieldNameValue="<field><name>oly_originalTitle</name><value>$titleByLanguage</value></field>"
+        fi
     fi
 else
-    fieldName="oly_seriesName"
+    if [[ $language == "es" || $language == "ES" ]];
+    then
+        fieldNameValue="<field><name>oly_titleEs</name><value>$titleByLanguage</value></field><field><name>oly_seriesName</name><value>$titleByLanguage</value></field>"
+    else
+        if [[ $language == "en" || $language == "EN" ]];
+        then
+            fieldNameValue="<field><name>oly_titleEn</name><value>$titleByLanguage</value></field><field><name>oly_seriesName</name><value>$titleByLanguage</value></field>"
+        else
+            fieldNameValue="<field><name>oly_originalTitle</name><value>$titleByLanguage</value></field><field><name>oly_seriesName</name><value>$titleByLanguage</value></field>"
+        fi
+    fi
 fi
 
 case $language in
@@ -1575,7 +1590,7 @@ echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Graphics Resolution - $graphicsResol
 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Graphics Language - $graphicsLanguage" >> "$logfile"
 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Graphics Tags - $graphicsTags" >> "$logfile"
 
-bodyData=$(echo "<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\">$graphicsTags<field><name>oly_titleCode</name><value>$titleCode</value></field><field><name>oly_primaryMetadataLanguage</name><value>$graphicsLanguage</value></field><field><name>oly_graphicsLanguage</name><value>$graphicsLanguage</value></field><field><name>oly_graphicsResolution</name><value>$graphicsResolution</value></field><field><name>$fieldName</name><value>$titleByLanguage</value></field><field><name>oly_graphicsType</name><value>$graphicsType</value></field></timespan></MetadataDocument>")
+bodyData=$(echo "<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\">$graphicsTags<field><name>oly_titleCode</name><value>$titleCode</value></field><field><name>oly_primaryMetadataLanguage</name><value>$graphicsLanguage</value></field><field><name>oly_graphicsLanguage</name><value>$graphicsLanguage</value></field><field><name>oly_graphicsResolution</name><value>$graphicsResolution</value></field>$fieldNameValue<field><name>oly_graphicsType</name><value>$graphicsType</value></field></timespan></MetadataDocument>")
 
 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Body Data - $bodyData" >> "$logfile"
 
