@@ -46,7 +46,7 @@ else
 
     case $metadataStatus in
         "inProgress")
-            bodyData=$(echo "<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_metadataStatus</name><value>$metadataStatus</value></field><field><name>oly_metadataBy</name><value>$metadataBy</value></field><field><name>oly_metadataDate</name><value>$metadataDate</value></field></timespan></MetadataDocument>")
+            bodyData=$(echo "<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_metadataStatus</name><value>$metadataStatus</value></field><field><name>oly_metadataBy</name><value>$metadataBy</value></field></timespan></MetadataDocument>")
         ;;
         "completed")
             bodyData=$(echo "<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_metadataStatus</name><value>$metadataStatus</value></field><field><name>oly_metadataBy</name><value>$metadataBy</value></field><field><name>oly_metadataDate</name><value>$metadataDate</value></field></timespan></MetadataDocument>")
