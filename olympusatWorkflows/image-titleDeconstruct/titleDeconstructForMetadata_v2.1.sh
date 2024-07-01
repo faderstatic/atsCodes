@@ -129,7 +129,7 @@ if [[ $numberOfUnderscores == 4 ]];
             language=$(echo $blockTwo)
         else
             blockTwo=$(echo $blockTwo | tr '[:upper:]' '[:lower:]')
-            if [[ ("$blockTwo" == "cover") || ("$blockTwo" == "feature") || ("$blockTwo" == "keyart") || ("$blockTwo" == "still") || ("$blockTwo" == "blank") ]];
+            if [[ ("$blockTwo" == "cover") || ("$blockTwo" == "feature") || ("$blockTwo" == "keyart") || ("$blockTwo" == "still") || ("$blockTwo" == "blank") || ("$blockTwo" == "poster") ]];
             then
                 imageType=$(echo $blockTwo)
             fi
@@ -219,12 +219,12 @@ if [[ $numberOfUnderscores == 4 ]];
         then
             imageSize=$(echo $blockFour)
         else
-            blockFour=$(echo $blockFour | tr '[:upper:]' '[:lower:]')
-            if [[ ("$blockFour" == "cover") || ("$blockFour" == "feature") || ("$blockFour" == "keyart") || ("$blockFour" == *"still"*) || ("$blockFour" == "blank") ]];
+            blockFourTypeCheck=$(echo $blockFour | tr '[:upper:]' '[:lower:]')
+            if [[ ("$blockFourTypeCheck" == "cover") || ("$blockFourTypeCheck" == "feature") || ("$blockFourTypeCheck" == "keyart") || ("$blockFourTypeCheck" == *"still"*) || ("$blockFourTypeCheck" == "blank") || ("$blockFourTypeCheck" == "poster") ]];
             then
-                imageType=$(echo $blockFour)
+                imageType=$(echo $blockFourTypeCheck)
             else
-                if [[ "$blockFour" =~ ^(M|S).*[0-9]$ || "$blockFour" =~ ^(M|S)[0-9].*E[0-9]$ || "$blockFour" =~ ^(M|S)[0-9].*E[0-9][0-9]$ || "$blockFour" =~ ^(M|S)[0-9][0-9].*E[0-9]$ || "$blockFour" =~ ^(M|S)[0-9][0-9].*E[0-9][0-9]$ ]];
+                if [[ (-z "$seasonNumberCheck" || -z "$episodeNumberCheck") && ("$blockFour" =~ ^(S|s).*[0-9]$ || "$blockFour" =~ ^(S|s)[0-9].*(E|e)[0-9]$ || "$blockFour" =~ ^(S|s)[0-9].*(E|e)[0-9][0-9]$ || "$blockFour" =~ ^(S|s)[0-9][0-9].*(E|e)[0-9]$ || "$blockFour" =~ ^(S|s)[0-9][0-9].*(E|e)[0-9][0-9]$) ]];
                 then
                     if [[ "$blockFour" == *"still"* || "$blockFour" == *"Still"* ]];
                     then
@@ -233,14 +233,13 @@ if [[ $numberOfUnderscores == 4 ]];
                         echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockFour} - Does NOT contain Still" >> "$logfile"
                         seasonNumberCheck=$(echo $blockFour | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
                         episodeNumberCheck=$(echo $blockFour | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
-                        imageDesc=$(echo $blockFour)
                     fi
                 else
-                    if [[ "$blockFour" == *" "* ]];
+                    if [[ ("$blockFour" == "EN") || ("$blockFour" == "en") || ("$blockFour" == "ES") || ("$blockFour" == "es") || ("$blockFour" == "FR") || ("$blockFour" == "fr") || ("$blockFour" == "OG") || ("$blockFour" == "og") ]];
                     then
-                        imageDesc=$(echo $blockFour)
+                        language=$(echo $blockFour)
                     else
-                        imageDesc=$(echo $blockFour | sed -r -e "s/([^A-Z])([A-Z])/\1 \2/g" -e "s/([A-Z]+)([A-Z])/\1 \2/g")
+                        imageDesc=$(echo $blockFour)
                     fi
                 fi
             fi
@@ -250,12 +249,12 @@ if [[ $numberOfUnderscores == 4 ]];
         then
             imageSize=$(echo $blockFive)
         else
-            blockFive=$(echo $blockFive | tr '[:upper:]' '[:lower:]')
-            if [[ ("$blockFive" == "cover") || ("$blockFive" == "feature") || ("$blockFive" == "keyart") || ("$blockFive" == *"still"*) || ("$blockFive" == "blank") ]];
+            blockFiveTypeCheck=$(echo $blockFive | tr '[:upper:]' '[:lower:]')
+            if [[ ("$blockFiveTypeCheck" == "cover") || ("$blockFiveTypeCheck" == "feature") || ("$blockFiveTypeCheck" == "keyart") || ("$blockFiveTypeCheck" == *"still"*) || ("$blockFiveTypeCheck" == "blank") || ("$blockFiveTypeCheck" == "poster") ]];
             then
-                imageType=$(echo $blockFive)
+                imageType=$(echo $blockFiveTypeCheck)
             else
-                if [[ "$blockFive" =~ ^(M|S).*[0-9]$ || "$blockFive" =~ ^(M|S)[0-9].*E[0-9]$ || "$blockFive" =~ ^(M|S)[0-9].*E[0-9][0-9]$ || "$blockFive" =~ ^(M|S)[0-9][0-9].*E[0-9]$ || "$blockFive" =~ ^(M|S)[0-9][0-9].*E[0-9][0-9]$ ]];
+                if [[ (-z "$seasonNumberCheck" || -z "$episodeNumberCheck") && ("$blockFive" =~ ^(S|s).*[0-9]$ || "$blockFive" =~ ^(S|s)[0-9].*(E|e)[0-9]$ || "$blockFive" =~ ^(S|s)[0-9].*(E|e)[0-9][0-9]$ || "$blockFive" =~ ^(S|s)[0-9][0-9].*(E|e)[0-9]$ || "$blockFive" =~ ^(S|s)[0-9][0-9].*(E|e)[0-9][0-9]$) ]];
                 then
                     if [[ "$blockFive" == *"still"* || "$blockFive" == *"Still"* ]];
                     then
@@ -264,14 +263,13 @@ if [[ $numberOfUnderscores == 4 ]];
                         echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockFive} - Does NOT contain Still" >> "$logfile"
                         seasonNumberCheck=$(echo $blockFive | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
                         episodeNumberCheck=$(echo $blockFive | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
-                        imageDesc=$(echo $blockFive)
                     fi
                 else
-                    if [[ "$blockFive" == *" "* ]];
+                    if [[ ("$blockFive" == "EN") || ("$blockFive" == "en") || ("$blockFive" == "ES") || ("$blockFive" == "es") || ("$blockFive" == "FR") || ("$blockFive" == "fr") || ("$blockFive" == "OG") || ("$blockFive" == "og") ]];
                     then
-                        imageDesc=$(echo $blockFive)
+                        language=$(echo $blockFive)
                     else
-                        imageDesc=$(echo $blockFive | sed -r -e "s/([^A-Z])([A-Z])/\1 \2/g" -e "s/([A-Z]+)([A-Z])/\1 \2/g")
+                        imageDesc=$(echo $blockFive)
                     fi
                 fi
             fi
@@ -383,7 +381,7 @@ if [[ $numberOfUnderscores == 4 ]];
                     language=$(echo $blockTwo)
                 else
                     blockTwo=$(echo $blockTwo | tr '[:upper:]' '[:lower:]')
-                    if [[ ("$blockTwo" == "cover") || ("$blockTwo" == "feature") || ("$blockTwo" == "keyart") || ("$blockTwo" == "still") || ("$blockTwo" == "blank") ]];
+                    if [[ ("$blockTwo" == "cover") || ("$blockTwo" == "feature") || ("$blockTwo" == "keyart") || ("$blockTwo" == "still") || ("$blockTwo" == "blank") || ("$blockTwo" == "poster") ]];
                     then
                         imageType=$(echo $blockTwo)
                     fi
@@ -473,12 +471,12 @@ if [[ $numberOfUnderscores == 4 ]];
                 then
                     imageSize=$(echo $blockFour)
                 else
-                    blockFour=$(echo $blockFour | tr '[:upper:]' '[:lower:]')
-                    if [[ ("$blockFour" == "cover") || ("$blockFour" == "feature") || ("$blockFour" == "keyart") || ("$blockFour" == *"still"*) || ("$blockFour" == "blank") ]];
+                    blockFourTypeCheck=$(echo $blockFour | tr '[:upper:]' '[:lower:]')
+                    if [[ ("$blockFourTypeCheck" == "cover") || ("$blockFourTypeCheck" == "feature") || ("$blockFourTypeCheck" == "keyart") || ("$blockFourTypeCheck" == *"still"*) || ("$blockFourTypeCheck" == "blank") || ("$blockFourTypeCheck" == "poster") ]];
                     then
-                        imageType=$(echo $blockFour)
+                        imageType=$(echo $blockFourTypeCheck)
                     else
-                        if [[ "$blockFour" =~ ^(M|S).*[0-9]$ || "$blockFour" =~ ^(M|S)[0-9].*E[0-9]$ || "$blockFour" =~ ^(M|S)[0-9].*E[0-9][0-9]$ || "$blockFour" =~ ^(M|S)[0-9][0-9].*E[0-9]$ || "$blockFour" =~ ^(M|S)[0-9][0-9].*E[0-9][0-9]$ ]];
+                        if [[ (-z "$seasonNumberCheck" || -z "$episodeNumberCheck") && ("$blockFour" =~ ^(S|s).*[0-9]$ || "$blockFour" =~ ^(S|s)[0-9].*(E|e)[0-9]$ || "$blockFour" =~ ^(S|s)[0-9].*(E|e)[0-9][0-9]$ || "$blockFour" =~ ^(S|s)[0-9][0-9].*(E|e)[0-9]$ || "$blockFour" =~ ^(S|s)[0-9][0-9].*(E|e)[0-9][0-9]$) ]];
                         then
                             if [[ "$blockFour" == *"still"* || "$blockFour" == *"Still"* ]];
                             then
@@ -487,14 +485,13 @@ if [[ $numberOfUnderscores == 4 ]];
                                 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockFour} - Does NOT contain Still" >> "$logfile"
                                 seasonNumberCheck=$(echo $blockFour | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
                                 episodeNumberCheck=$(echo $blockFour | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
-                                imageDesc=$(echo $blockFour)
                             fi
                         else
-                            if [[ "$blockFour" == *" "* ]];
+                            if [[ ("$blockFour" == "EN") || ("$blockFour" == "en") || ("$blockFour" == "ES") || ("$blockFour" == "es") || ("$blockFour" == "FR") || ("$blockFour" == "fr") || ("$blockFour" == "OG") || ("$blockFour" == "og") ]];
                             then
-                                imageDesc=$(echo $blockFour)
+                                language=$(echo $blockFour)
                             else
-                                imageDesc=$(echo $blockFour | sed -r -e "s/([^A-Z])([A-Z])/\1 \2/g" -e "s/([A-Z]+)([A-Z])/\1 \2/g")
+                                imageDesc=$(echo $blockFour)
                             fi
                         fi
                     fi
@@ -641,7 +638,7 @@ if [[ $numberOfUnderscores == 4 ]];
                                     language=$(echo $blockTwo)
                                 else
                                     blockTwo=$(echo $blockTwo | tr '[:upper:]' '[:lower:]')
-                                    if [[ ("$blockTwo" == "cover") || ("$blockTwo" == "feature") || ("$blockTwo" == "keyart") || ("$blockTwo" == "still") || ("$blockTwo" == "blank") ]];
+                                    if [[ ("$blockTwo" == "cover") || ("$blockTwo" == "feature") || ("$blockTwo" == "keyart") || ("$blockTwo" == "still") || ("$blockTwo" == "blank") || ("$blockTwo" == "poster") ]];
                                     then
                                         imageType=$(echo $blockTwo)
                                     fi
@@ -731,12 +728,12 @@ if [[ $numberOfUnderscores == 4 ]];
                                 then
                                     imageSize=$(echo $blockFour)
                                 else
-                                    blockFour=$(echo $blockFour | tr '[:upper:]' '[:lower:]')
-                                    if [[ ("$blockFour" == "cover") || ("$blockFour" == "feature") || ("$blockFour" == "keyart") || ("$blockFour" == *"still"*) || ("$blockFour" == "blank") ]];
+                                    blockFourTypeCheck=$(echo $blockFour | tr '[:upper:]' '[:lower:]')
+                                    if [[ ("$blockFourTypeCheck" == "cover") || ("$blockFourTypeCheck" == "feature") || ("$blockFourTypeCheck" == "keyart") || ("$blockFourTypeCheck" == *"still"*) || ("$blockFourTypeCheck" == "blank") || ("$blockFourTypeCheck" == "poster") ]];
                                     then
-                                        imageType=$(echo $blockFour)
+                                        imageType=$(echo $blockFourTypeCheck)
                                     else
-                                        if [[ "$blockFour" =~ ^(M|S).*[0-9]$ || "$blockFour" =~ ^(M|S)[0-9].*E[0-9]$ || "$blockFour" =~ ^(M|S)[0-9].*E[0-9][0-9]$ || "$blockFour" =~ ^(M|S)[0-9][0-9].*E[0-9]$ || "$blockFour" =~ ^(M|S)[0-9][0-9].*E[0-9][0-9]$ ]];
+                                        if [[ (-z "$seasonNumberCheck" || -z "$episodeNumberCheck") && ("$blockFour" =~ ^(S|s).*[0-9]$ || "$blockFour" =~ ^(S|s)[0-9].*(E|e)[0-9]$ || "$blockFour" =~ ^(S|s)[0-9].*(E|e)[0-9][0-9]$ || "$blockFour" =~ ^(S|s)[0-9][0-9].*(E|e)[0-9]$ || "$blockFour" =~ ^(S|s)[0-9][0-9].*(E|e)[0-9][0-9]$) ]];
                                         then
                                             if [[ "$blockFour" == *"still"* || "$blockFour" == *"Still"* ]];
                                             then
@@ -745,14 +742,13 @@ if [[ $numberOfUnderscores == 4 ]];
                                                 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockFour} - Does NOT contain Still" >> "$logfile"
                                                 seasonNumberCheck=$(echo $blockFour | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
                                                 episodeNumberCheck=$(echo $blockFour | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
-                                                imageDesc=$(echo $blockFour)
                                             fi
                                         else
-                                            if [[ "$blockFour" == *" "* ]];
+                                            if [[ ("$blockFour" == "EN") || ("$blockFour" == "en") || ("$blockFour" == "ES") || ("$blockFour" == "es") || ("$blockFour" == "FR") || ("$blockFour" == "fr") || ("$blockFour" == "OG") || ("$blockFour" == "og") ]];
                                             then
-                                                imageDesc=$(echo $blockFour)
+                                                language=$(echo $blockFour)
                                             else
-                                                imageDesc=$(echo $blockFour | sed -r -e "s/([^A-Z])([A-Z])/\1 \2/g" -e "s/([A-Z]+)([A-Z])/\1 \2/g")
+                                                imageDesc=$(echo $blockFour)
                                             fi
                                         fi
                                     fi
@@ -762,12 +758,12 @@ if [[ $numberOfUnderscores == 4 ]];
                                 then
                                     imageSize=$(echo $blockFive)
                                 else
-                                    blockFive=$(echo $blockFive | tr '[:upper:]' '[:lower:]')
-                                    if [[ ("$blockFive" == "cover") || ("$blockFive" == "feature") || ("$blockFive" == "keyart") || ("$blockFive" == *"still"*) || ("$blockFive" == "blank") ]];
+                                    blockFiveTypeCheck=$(echo $blockFive | tr '[:upper:]' '[:lower:]')
+                                    if [[ ("$blockFiveTypeCheck" == "cover") || ("$blockFiveTypeCheck" == "feature") || ("$blockFiveTypeCheck" == "keyart") || ("$blockFiveTypeCheck" == *"still"*) || ("$blockFiveTypeCheck" == "blank") || ("$blockFiveTypeCheck" == "poster") ]];
                                     then
-                                        imageType=$(echo $blockFive)
+                                        imageType=$(echo $blockFiveTypeCheck)
                                     else
-                                        if [[ "$blockFive" =~ ^(M|S).*[0-9]$ || "$blockFive" =~ ^(M|S)[0-9].*E[0-9]$ || "$blockFive" =~ ^(M|S)[0-9].*E[0-9][0-9]$ || "$blockFive" =~ ^(M|S)[0-9][0-9].*E[0-9]$ || "$blockFive" =~ ^(M|S)[0-9][0-9].*E[0-9][0-9]$ ]];
+                                        if [[ (-z "$seasonNumberCheck" || -z "$episodeNumberCheck") && ("$blockFive" =~ ^(S|s).*[0-9]$ || "$blockFive" =~ ^(S|s)[0-9].*(E|e)[0-9]$ || "$blockFive" =~ ^(S|s)[0-9].*(E|e)[0-9][0-9]$ || "$blockFive" =~ ^(S|s)[0-9][0-9].*(E|e)[0-9]$ || "$blockFive" =~ ^(S|s)[0-9][0-9].*(E|e)[0-9][0-9]$) ]];
                                         then
                                             if [[ "$blockFive" == *"still"* || "$blockFive" == *"Still"* ]];
                                             then
@@ -776,14 +772,13 @@ if [[ $numberOfUnderscores == 4 ]];
                                                 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockFive} - Does NOT contain Still" >> "$logfile"
                                                 seasonNumberCheck=$(echo $blockFive | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
                                                 episodeNumberCheck=$(echo $blockFive | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
-                                                imageDesc=$(echo $blockFive)
                                             fi
                                         else
-                                            if [[ "$blockFive" == *" "* ]];
+                                            if [[ ("$blockFive" == "EN") || ("$blockFive" == "en") || ("$blockFive" == "ES") || ("$blockFive" == "es") || ("$blockFive" == "FR") || ("$blockFive" == "fr") || ("$blockFive" == "OG") || ("$blockFive" == "og") ]];
                                             then
-                                                imageDesc=$(echo $blockFive)
+                                                language=$(echo $blockFive)
                                             else
-                                                imageDesc=$(echo $blockFive | sed -r -e "s/([^A-Z])([A-Z])/\1 \2/g" -e "s/([A-Z]+)([A-Z])/\1 \2/g")
+                                                imageDesc=$(echo $blockFive)
                                             fi
                                         fi
                                     fi
@@ -793,12 +788,12 @@ if [[ $numberOfUnderscores == 4 ]];
                                 then
                                     imageSize=$(echo $blockSix)
                                 else
-                                    blockSix=$(echo $blockSix | tr '[:upper:]' '[:lower:]')
-                                    if [[ ("$blockSix" == "cover") || ("$blockSix" == "feature") || ("$blockSix" == "keyart") || ("$blockSix" == *"still"*) || ("$blockSix" == "blank") ]];
+                                    blockSixTypeCheck=$(echo $blockSix | tr '[:upper:]' '[:lower:]')
+                                    if [[ ("$blockSixTypeCheck" == "cover") || ("$blockSixTypeCheck" == "feature") || ("$blockSixTypeCheck" == "keyart") || ("$blockSixTypeCheck" == *"still"*) || ("$blockSixTypeCheck" == "blank") || ("$blockSixTypeCheck" == "poster") ]];
                                     then
-                                        imageType=$(echo $blockSix)
+                                        imageType=$(echo $blockSixTypeCheck)
                                     else
-                                        if [[ "$blockSix" =~ ^(M|S).*[0-9]$ || "$blockSix" =~ ^(M|S)[0-9].*E[0-9]$ || "$blockSix" =~ ^(M|S)[0-9].*E[0-9][0-9]$ || "$blockSix" =~ ^(M|S)[0-9][0-9].*E[0-9]$ || "$blockSix" =~ ^(M|S)[0-9][0-9].*E[0-9][0-9]$ ]];
+                                        if [[ (-z "$seasonNumberCheck" || -z "$episodeNumberCheck") && ("$blockSix" =~ ^(S|s).*[0-9]$ || "$blockSix" =~ ^(S|s)[0-9].*(E|e)[0-9]$ || "$blockSix" =~ ^(S|s)[0-9].*(E|e)[0-9][0-9]$ || "$blockSix" =~ ^(S|s)[0-9][0-9].*(E|e)[0-9]$ || "$blockSix" =~ ^(S|s)[0-9][0-9].*(E|e)[0-9][0-9]$) ]];
                                         then
                                             if [[ "$blockSix" == *"still"* || "$blockSix" == *"Still"* ]];
                                             then
@@ -807,14 +802,13 @@ if [[ $numberOfUnderscores == 4 ]];
                                                 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockSix} - Does NOT contain Still" >> "$logfile"
                                                 seasonNumberCheck=$(echo $blockSix | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
                                                 episodeNumberCheck=$(echo $blockSix | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
-                                                imageDesc=$(echo $blockSix)
                                             fi
                                         else
-                                            if [[ "$blockSix" == *" "* ]];
+                                            if [[ ("$blockSix" == "EN") || ("$blockSix" == "en") || ("$blockSix" == "ES") || ("$blockSix" == "es") || ("$blockSix" == "FR") || ("$blockSix" == "fr") || ("$blockSix" == "OG") || ("$blockSix" == "og") ]];
                                             then
-                                                imageDesc=$(echo $blockSix)
+                                                language=$(echo $blockSix)
                                             else
-                                                imageDesc=$(echo $blockSix | sed -r -e "s/([^A-Z])([A-Z])/\1 \2/g" -e "s/([A-Z]+)([A-Z])/\1 \2/g")
+                                                imageDesc=$(echo $blockSix)
                                             fi
                                         fi
                                     fi
@@ -931,7 +925,7 @@ if [[ $numberOfUnderscores == 4 ]];
                                             language=$(echo $blockTwo)
                                         else
                                             blockTwo=$(echo $blockTwo | tr '[:upper:]' '[:lower:]')
-                                            if [[ ("$blockTwo" == "cover") || ("$blockTwo" == "feature") || ("$blockTwo" == "keyart") || ("$blockTwo" == "still") || ("$blockTwo" == "blank") ]];
+                                            if [[ ("$blockTwo" == "cover") || ("$blockTwo" == "feature") || ("$blockTwo" == "keyart") || ("$blockTwo" == "still") || ("$blockTwo" == "blank") || ("$blockTwo" == "poster") ]];
                                             then
                                                 imageType=$(echo $blockTwo)
                                             fi
@@ -1021,12 +1015,12 @@ if [[ $numberOfUnderscores == 4 ]];
                                         then
                                             imageSize=$(echo $blockFour)
                                         else
-                                            blockFour=$(echo $blockFour | tr '[:upper:]' '[:lower:]')
-                                            if [[ ("$blockFour" == "cover") || ("$blockFour" == "feature") || ("$blockFour" == "keyart") || ("$blockFour" == *"still"*) || ("$blockFour" == "blank") ]];
+                                            blockFourTypeCheck=$(echo $blockFour | tr '[:upper:]' '[:lower:]')
+                                            if [[ ("$blockFourTypeCheck" == "cover") || ("$blockFourTypeCheck" == "feature") || ("$blockFourTypeCheck" == "keyart") || ("$blockFourTypeCheck" == *"still"*) || ("$blockFourTypeCheck" == "blank") || ("$blockFourTypeCheck" == "poster") ]];
                                             then
-                                                imageType=$(echo $blockFour)
+                                                imageType=$(echo $blockFourTypeCheck)
                                             else
-                                                if [[ "$blockFour" =~ ^(M|S).*[0-9]$ || "$blockFour" =~ ^(M|S)[0-9].*E[0-9]$ || "$blockFour" =~ ^(M|S)[0-9].*E[0-9][0-9]$ || "$blockFour" =~ ^(M|S)[0-9][0-9].*E[0-9]$ || "$blockFour" =~ ^(M|S)[0-9][0-9].*E[0-9][0-9]$ ]];
+                                                if [[ (-z "$seasonNumberCheck" || -z "$episodeNumberCheck") && ("$blockFour" =~ ^(S|s).*[0-9]$ || "$blockFour" =~ ^(S|s)[0-9].*(E|e)[0-9]$ || "$blockFour" =~ ^(S|s)[0-9].*(E|e)[0-9][0-9]$ || "$blockFour" =~ ^(S|s)[0-9][0-9].*(E|e)[0-9]$ || "$blockFour" =~ ^(S|s)[0-9][0-9].*(E|e)[0-9][0-9]$) ]];
                                                 then
                                                     if [[ "$blockFour" == *"still"* || "$blockFour" == *"Still"* ]];
                                                     then
@@ -1035,14 +1029,13 @@ if [[ $numberOfUnderscores == 4 ]];
                                                         echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockFour} - Does NOT contain Still" >> "$logfile"
                                                         seasonNumberCheck=$(echo $blockFour | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
                                                         episodeNumberCheck=$(echo $blockFour | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
-                                                        imageDesc=$(echo $blockFour)
                                                     fi
                                                 else
-                                                    if [[ "$blockFour" == *" "* ]];
+                                                    if [[ ("$blockFour" == "EN") || ("$blockFour" == "en") || ("$blockFour" == "ES") || ("$blockFour" == "es") || ("$blockFour" == "FR") || ("$blockFour" == "fr") || ("$blockFour" == "OG") || ("$blockFour" == "og") ]];
                                                     then
-                                                        imageDesc=$(echo $blockFour)
+                                                        language=$(echo $blockFour)
                                                     else
-                                                        imageDesc=$(echo $blockFour | sed -r -e "s/([^A-Z])([A-Z])/\1 \2/g" -e "s/([A-Z]+)([A-Z])/\1 \2/g")
+                                                        imageDesc=$(echo $blockFour)
                                                     fi
                                                 fi
                                             fi
@@ -1052,12 +1045,12 @@ if [[ $numberOfUnderscores == 4 ]];
                                         then
                                             imageSize=$(echo $blockFive)
                                         else
-                                            blockFive=$(echo $blockFive | tr '[:upper:]' '[:lower:]')
-                                            if [[ ("$blockFive" == "cover") || ("$blockFive" == "feature") || ("$blockFive" == "keyart") || ("$blockFive" == *"still"*) || ("$blockFive" == "blank") ]];
+                                            blockFiveTypeCheck=$(echo $blockFive | tr '[:upper:]' '[:lower:]')
+                                            if [[ ("$blockFiveTypeCheck" == "cover") || ("$blockFiveTypeCheck" == "feature") || ("$blockFiveTypeCheck" == "keyart") || ("$blockFiveTypeCheck" == *"still"*) || ("$blockFiveTypeCheck" == "blank") || ("$blockFiveTypeCheck" == "poster") ]];
                                             then
-                                                imageType=$(echo $blockFive)
+                                                imageType=$(echo $blockFiveTypeCheck)
                                             else
-                                                if [[ "$blockFive" =~ ^(M|S).*[0-9]$ || "$blockFive" =~ ^(M|S)[0-9].*E[0-9]$ || "$blockFive" =~ ^(M|S)[0-9].*E[0-9][0-9]$ || "$blockFive" =~ ^(M|S)[0-9][0-9].*E[0-9]$ || "$blockFive" =~ ^(M|S)[0-9][0-9].*E[0-9][0-9]$ ]];
+                                                if [[ (-z "$seasonNumberCheck" || -z "$episodeNumberCheck") && ("$blockFive" =~ ^(S|s).*[0-9]$ || "$blockFive" =~ ^(S|s)[0-9].*(E|e)[0-9]$ || "$blockFive" =~ ^(S|s)[0-9].*(E|e)[0-9][0-9]$ || "$blockFive" =~ ^(S|s)[0-9][0-9].*(E|e)[0-9]$ || "$blockFive" =~ ^(S|s)[0-9][0-9].*(E|e)[0-9][0-9]$) ]];
                                                 then
                                                     if [[ "$blockFive" == *"still"* || "$blockFive" == *"Still"* ]];
                                                     then
@@ -1066,14 +1059,13 @@ if [[ $numberOfUnderscores == 4 ]];
                                                         echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockFive} - Does NOT contain Still" >> "$logfile"
                                                         seasonNumberCheck=$(echo $blockFive | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
                                                         episodeNumberCheck=$(echo $blockFive | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
-                                                        imageDesc=$(echo $blockFive)
                                                     fi
                                                 else
-                                                    if [[ "$blockFive" == *" "* ]];
+                                                    if [[ ("$blockFive" == "EN") || ("$blockFive" == "en") || ("$blockFive" == "ES") || ("$blockFive" == "es") || ("$blockFive" == "FR") || ("$blockFive" == "fr") || ("$blockFive" == "OG") || ("$blockFive" == "og") ]];
                                                     then
-                                                        imageDesc=$(echo $blockFive)
+                                                        language=$(echo $blockFive)
                                                     else
-                                                        imageDesc=$(echo $blockFive | sed -r -e "s/([^A-Z])([A-Z])/\1 \2/g" -e "s/([A-Z]+)([A-Z])/\1 \2/g")
+                                                        imageDesc=$(echo $blockFive)
                                                     fi
                                                 fi
                                             fi
@@ -1083,12 +1075,12 @@ if [[ $numberOfUnderscores == 4 ]];
                                         then
                                             imageSize=$(echo $blockSix)
                                         else
-                                            blockSix=$(echo $blockSix | tr '[:upper:]' '[:lower:]')
-                                            if [[ ("$blockSix" == "cover") || ("$blockSix" == "feature") || ("$blockSix" == "keyart") || ("$blockSix" == *"still"*) || ("$blockSix" == "blank") ]];
+                                            blockSixTypeCheck=$(echo $blockSix | tr '[:upper:]' '[:lower:]')
+                                            if [[ ("$blockSixTypeCheck" == "cover") || ("$blockSixTypeCheck" == "feature") || ("$blockSixTypeCheck" == "keyart") || ("$blockSixTypeCheck" == *"still"*) || ("$blockSixTypeCheck" == "blank") || ("$blockSixTypeCheck" == "poster") ]];
                                             then
-                                                imageType=$(echo $blockSix)
+                                                imageType=$(echo $blockSixTypeCheck)
                                             else
-                                                if [[ "$blockSix" =~ ^(M|S).*[0-9]$ || "$blockSix" =~ ^(M|S)[0-9].*E[0-9]$ || "$blockSix" =~ ^(M|S)[0-9].*E[0-9][0-9]$ || "$blockSix" =~ ^(M|S)[0-9][0-9].*E[0-9]$ || "$blockSix" =~ ^(M|S)[0-9][0-9].*E[0-9][0-9]$ ]];
+                                                if [[ (-z "$seasonNumberCheck" || -z "$episodeNumberCheck") && ("$blockSix" =~ ^(S|s).*[0-9]$ || "$blockSix" =~ ^(S|s)[0-9].*(E|e)[0-9]$ || "$blockSix" =~ ^(S|s)[0-9].*(E|e)[0-9][0-9]$ || "$blockSix" =~ ^(S|s)[0-9][0-9].*(E|e)[0-9]$ || "$blockSix" =~ ^(S|s)[0-9][0-9].*(E|e)[0-9][0-9]$) ]];
                                                 then
                                                     if [[ "$blockSix" == *"still"* || "$blockSix" == *"Still"* ]];
                                                     then
@@ -1097,14 +1089,13 @@ if [[ $numberOfUnderscores == 4 ]];
                                                         echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockSix} - Does NOT contain Still" >> "$logfile"
                                                         seasonNumberCheck=$(echo $blockSix | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
                                                         episodeNumberCheck=$(echo $blockSix | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
-                                                        imageDesc=$(echo $blockSix)
                                                     fi
                                                 else
-                                                    if [[ "$blockSix" == *" "* ]];
+                                                    if [[ ("$blockSix" == "EN") || ("$blockSix" == "en") || ("$blockSix" == "ES") || ("$blockSix" == "es") || ("$blockSix" == "FR") || ("$blockSix" == "fr") || ("$blockSix" == "OG") || ("$blockSix" == "og") ]];
                                                     then
-                                                        imageDesc=$(echo $blockSix)
+                                                        language=$(echo $blockSix)
                                                     else
-                                                        imageDesc=$(echo $blockSix | sed -r -e "s/([^A-Z])([A-Z])/\1 \2/g" -e "s/([A-Z]+)([A-Z])/\1 \2/g")
+                                                        imageDesc=$(echo $blockSix)
                                                     fi
                                                 fi
                                             fi
@@ -1114,12 +1105,12 @@ if [[ $numberOfUnderscores == 4 ]];
                                         then
                                             imageSize=$(echo $blockSeven)
                                         else
-                                            blockSeven=$(echo $blockSeven | tr '[:upper:]' '[:lower:]')
-                                            if [[ ("$blockSeven" == "cover") || ("$blockSeven" == "feature") || ("$blockSeven" == "keyart") || ("$blockSeven" == *"still"*) || ("$blockSeven" == "blank") ]];
+                                            blockSevenTypeCheck=$(echo $blockSeven | tr '[:upper:]' '[:lower:]')
+                                            if [[ ("$blockSevenTypeCheck" == "cover") || ("$blockSevenTypeCheck" == "feature") || ("$blockSevenTypeCheck" == "keyart") || ("$blockSevenTypeCheck" == *"still"*) || ("$blockSevenTypeCheck" == "blank") || ("$blockSevenTypeCheck" == "poster") ]];
                                             then
-                                                imageType=$(echo $blockSeven)
+                                                imageType=$(echo $blockSevenTypeCheck)
                                             else
-                                                if [[ "$blockSeven" =~ ^(M|S).*[0-9]$ || "$blockSeven" =~ ^(M|S)[0-9].*E[0-9]$ || "$blockSeven" =~ ^(M|S)[0-9].*E[0-9][0-9]$ || "$blockSeven" =~ ^(M|S)[0-9][0-9].*E[0-9]$ || "$blockSeven" =~ ^(M|S)[0-9][0-9].*E[0-9][0-9]$ ]];
+                                                if [[ (-z "$seasonNumberCheck" || -z "$episodeNumberCheck") && ("$blockSeven" =~ ^(S|s).*[0-9]$ || "$blockSeven" =~ ^(S|s)[0-9].*(E|e)[0-9]$ || "$blockSeven" =~ ^(S|s)[0-9].*(E|e)[0-9][0-9]$ || "$blockSeven" =~ ^(S|s)[0-9][0-9].*(E|e)[0-9]$ || "$blockSeven" =~ ^(S|s)[0-9][0-9].*(E|e)[0-9][0-9]$) ]];
                                                 then
                                                     if [[ "$blockSeven" == *"still"* || "$blockSeven" == *"Still"* ]];
                                                     then
@@ -1128,14 +1119,13 @@ if [[ $numberOfUnderscores == 4 ]];
                                                         echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockSeven} - Does NOT contain Still" >> "$logfile"
                                                         seasonNumberCheck=$(echo $blockSeven | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
                                                         episodeNumberCheck=$(echo $blockSeven | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
-                                                        imageDesc=$(echo $blockSeven)
                                                     fi
                                                 else
-                                                    if [[ "$blockSeven" == *" "* ]];
+                                                    if [[ ("$blockSeven" == "EN") || ("$blockSeven" == "en") || ("$blockSeven" == "ES") || ("$blockSeven" == "es") || ("$blockSeven" == "FR") || ("$blockSeven" == "fr") || ("$blockSeven" == "OG") || ("$blockSeven" == "og") ]];
                                                     then
-                                                        imageDesc=$(echo $blockSeven)
+                                                        language=$(echo $blockSeven)
                                                     else
-                                                        imageDesc=$(echo $blockSeven | sed -r -e "s/([^A-Z])([A-Z])/\1 \2/g" -e "s/([A-Z]+)([A-Z])/\1 \2/g")
+                                                        imageDesc=$(echo $blockSeven)
                                                     fi
                                                 fi
                                             fi
@@ -1254,7 +1244,7 @@ if [[ $numberOfUnderscores == 4 ]];
                                                     language=$(echo $blockTwo)
                                                 else
                                                     blockTwo=$(echo $blockTwo | tr '[:upper:]' '[:lower:]')
-                                                    if [[ ("$blockTwo" == "cover") || ("$blockTwo" == "feature") || ("$blockTwo" == "keyart") || ("$blockTwo" == "still") || ("$blockTwo" == "blank") ]];
+                                                    if [[ ("$blockTwo" == "cover") || ("$blockTwo" == "feature") || ("$blockTwo" == "keyart") || ("$blockTwo" == "still") || ("$blockTwo" == "blank") || ("$blockTwo" == "poster") ]];
                                                     then
                                                         imageType=$(echo $blockTwo)
                                                     fi
@@ -1344,12 +1334,12 @@ if [[ $numberOfUnderscores == 4 ]];
                                                 then
                                                     imageSize=$(echo $blockFour)
                                                 else
-                                                    blockFour=$(echo $blockFour | tr '[:upper:]' '[:lower:]')
-                                                    if [[ ("$blockFour" == "cover") || ("$blockFour" == "feature") || ("$blockFour" == "keyart") || ("$blockFour" == *"still"*) || ("$blockFour" == "blank") ]];
+                                                    blockFourTypeCheck=$(echo $blockFour | tr '[:upper:]' '[:lower:]')
+                                                    if [[ ("$blockFourTypeCheck" == "cover") || ("$blockFourTypeCheck" == "feature") || ("$blockFourTypeCheck" == "keyart") || ("$blockFourTypeCheck" == *"still"*) || ("$blockFourTypeCheck" == "blank") || ("$blockFourTypeCheck" == "poster") ]];
                                                     then
-                                                        imageType=$(echo $blockFour)
+                                                        imageType=$(echo $blockFourTypeCheck)
                                                     else
-                                                        if [[ "$blockFour" =~ ^(M|S).*[0-9]$ || "$blockFour" =~ ^(M|S)[0-9].*E[0-9]$ || "$blockFour" =~ ^(M|S)[0-9].*E[0-9][0-9]$ || "$blockFour" =~ ^(M|S)[0-9][0-9].*E[0-9]$ || "$blockFour" =~ ^(M|S)[0-9][0-9].*E[0-9][0-9]$ ]];
+                                                        if [[ (-z "$seasonNumberCheck" || -z "$episodeNumberCheck") && ("$blockFour" =~ ^(S|s).*[0-9]$ || "$blockFour" =~ ^(S|s)[0-9].*(E|e)[0-9]$ || "$blockFour" =~ ^(S|s)[0-9].*(E|e)[0-9][0-9]$ || "$blockFour" =~ ^(S|s)[0-9][0-9].*(E|e)[0-9]$ || "$blockFour" =~ ^(S|s)[0-9][0-9].*(E|e)[0-9][0-9]$) ]];
                                                         then
                                                             if [[ "$blockFour" == *"still"* || "$blockFour" == *"Still"* ]];
                                                             then
@@ -1358,14 +1348,13 @@ if [[ $numberOfUnderscores == 4 ]];
                                                                 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockFour} - Does NOT contain Still" >> "$logfile"
                                                                 seasonNumberCheck=$(echo $blockFour | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
                                                                 episodeNumberCheck=$(echo $blockFour | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
-                                                                imageDesc=$(echo $blockFour)
                                                             fi
                                                         else
-                                                            if [[ "$blockFour" == *" "* ]];
+                                                            if [[ ("$blockFour" == "EN") || ("$blockFour" == "en") || ("$blockFour" == "ES") || ("$blockFour" == "es") || ("$blockFour" == "FR") || ("$blockFour" == "fr") || ("$blockFour" == "OG") || ("$blockFour" == "og") ]];
                                                             then
-                                                                imageDesc=$(echo $blockFour)
+                                                                language=$(echo $blockFour)
                                                             else
-                                                                imageDesc=$(echo $blockFour | sed -r -e "s/([^A-Z])([A-Z])/\1 \2/g" -e "s/([A-Z]+)([A-Z])/\1 \2/g")
+                                                                imageDesc=$(echo $blockFour)
                                                             fi
                                                         fi
                                                     fi
@@ -1375,12 +1364,12 @@ if [[ $numberOfUnderscores == 4 ]];
                                                 then
                                                     imageSize=$(echo $blockFive)
                                                 else
-                                                    blockFive=$(echo $blockFive | tr '[:upper:]' '[:lower:]')
-                                                    if [[ ("$blockFive" == "cover") || ("$blockFive" == "feature") || ("$blockFive" == "keyart") || ("$blockFive" == *"still"*) || ("$blockFive" == "blank") ]];
+                                                    blockFiveTypeCheck=$(echo $blockFive | tr '[:upper:]' '[:lower:]')
+                                                    if [[ ("$blockFiveTypeCheck" == "cover") || ("$blockFiveTypeCheck" == "feature") || ("$blockFiveTypeCheck" == "keyart") || ("$blockFiveTypeCheck" == *"still"*) || ("$blockFiveTypeCheck" == "blank") || ("$blockFiveTypeCheck" == "poster") ]];
                                                     then
-                                                        imageType=$(echo $blockFive)
+                                                        imageType=$(echo $blockFiveTypeCheck)
                                                     else
-                                                        if [[ "$blockFive" =~ ^(M|S).*[0-9]$ || "$blockFive" =~ ^(M|S)[0-9].*E[0-9]$ || "$blockFive" =~ ^(M|S)[0-9].*E[0-9][0-9]$ || "$blockFive" =~ ^(M|S)[0-9][0-9].*E[0-9]$ || "$blockFive" =~ ^(M|S)[0-9][0-9].*E[0-9][0-9]$ ]];
+                                                        if [[ (-z "$seasonNumberCheck" || -z "$episodeNumberCheck") && ("$blockFive" =~ ^(S|s).*[0-9]$ || "$blockFive" =~ ^(S|s)[0-9].*(E|e)[0-9]$ || "$blockFive" =~ ^(S|s)[0-9].*(E|e)[0-9][0-9]$ || "$blockFive" =~ ^(S|s)[0-9][0-9].*(E|e)[0-9]$ || "$blockFive" =~ ^(S|s)[0-9][0-9].*(E|e)[0-9][0-9]$) ]];
                                                         then
                                                             if [[ "$blockFive" == *"still"* || "$blockFive" == *"Still"* ]];
                                                             then
@@ -1389,14 +1378,13 @@ if [[ $numberOfUnderscores == 4 ]];
                                                                 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockFive} - Does NOT contain Still" >> "$logfile"
                                                                 seasonNumberCheck=$(echo $blockFive | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
                                                                 episodeNumberCheck=$(echo $blockFive | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
-                                                                imageDesc=$(echo $blockFive)
                                                             fi
                                                         else
-                                                            if [[ "$blockFive" == *" "* ]];
+                                                            if [[ ("$blockFive" == "EN") || ("$blockFive" == "en") || ("$blockFive" == "ES") || ("$blockFive" == "es") || ("$blockFive" == "FR") || ("$blockFive" == "fr") || ("$blockFive" == "OG") || ("$blockFive" == "og") ]];
                                                             then
-                                                                imageDesc=$(echo $blockFive)
+                                                                language=$(echo $blockFive)
                                                             else
-                                                                imageDesc=$(echo $blockFive | sed -r -e "s/([^A-Z])([A-Z])/\1 \2/g" -e "s/([A-Z]+)([A-Z])/\1 \2/g")
+                                                                imageDesc=$(echo $blockFive)
                                                             fi
                                                         fi
                                                     fi
@@ -1406,12 +1394,12 @@ if [[ $numberOfUnderscores == 4 ]];
                                                 then
                                                     imageSize=$(echo $blockSix)
                                                 else
-                                                    blockSix=$(echo $blockSix | tr '[:upper:]' '[:lower:]')
-                                                    if [[ ("$blockSix" == "cover") || ("$blockSix" == "feature") || ("$blockSix" == "keyart") || ("$blockSix" == *"still"*) || ("$blockSix" == "blank") ]];
+                                                    blockSixTypeCheck=$(echo $blockSix | tr '[:upper:]' '[:lower:]')
+                                                    if [[ ("$blockSixTypeCheck" == "cover") || ("$blockSixTypeCheck" == "feature") || ("$blockSixTypeCheck" == "keyart") || ("$blockSixTypeCheck" == *"still"*) || ("$blockSixTypeCheck" == "blank") || ("$blockSixTypeCheck" == "poster") ]];
                                                     then
-                                                        imageType=$(echo $blockSix)
+                                                        imageType=$(echo $blockSixTypeCheck)
                                                     else
-                                                        if [[ "$blockSix" =~ ^(M|S).*[0-9]$ || "$blockSix" =~ ^(M|S)[0-9].*E[0-9]$ || "$blockSix" =~ ^(M|S)[0-9].*E[0-9][0-9]$ || "$blockSix" =~ ^(M|S)[0-9][0-9].*E[0-9]$ || "$blockSix" =~ ^(M|S)[0-9][0-9].*E[0-9][0-9]$ ]];
+                                                        if [[ (-z "$seasonNumberCheck" || -z "$episodeNumberCheck") && ("$blockSix" =~ ^(S|s).*[0-9]$ || "$blockSix" =~ ^(S|s)[0-9].*(E|e)[0-9]$ || "$blockSix" =~ ^(S|s)[0-9].*(E|e)[0-9][0-9]$ || "$blockSix" =~ ^(S|s)[0-9][0-9].*(E|e)[0-9]$ || "$blockSix" =~ ^(S|s)[0-9][0-9].*(E|e)[0-9][0-9]$) ]];
                                                         then
                                                             if [[ "$blockSix" == *"still"* || "$blockSix" == *"Still"* ]];
                                                             then
@@ -1420,14 +1408,13 @@ if [[ $numberOfUnderscores == 4 ]];
                                                                 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockSix} - Does NOT contain Still" >> "$logfile"
                                                                 seasonNumberCheck=$(echo $blockSix | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
                                                                 episodeNumberCheck=$(echo $blockSix | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
-                                                                imageDesc=$(echo $blockSix)
                                                             fi
                                                         else
-                                                            if [[ "$blockSix" == *" "* ]];
+                                                            if [[ ("$blockSix" == "EN") || ("$blockSix" == "en") || ("$blockSix" == "ES") || ("$blockSix" == "es") || ("$blockSix" == "FR") || ("$blockSix" == "fr") || ("$blockSix" == "OG") || ("$blockSix" == "og") ]];
                                                             then
-                                                                imageDesc=$(echo $blockSix)
+                                                                language=$(echo $blockSix)
                                                             else
-                                                                imageDesc=$(echo $blockSix | sed -r -e "s/([^A-Z])([A-Z])/\1 \2/g" -e "s/([A-Z]+)([A-Z])/\1 \2/g")
+                                                                imageDesc=$(echo $blockSix)
                                                             fi
                                                         fi
                                                     fi
@@ -1437,12 +1424,12 @@ if [[ $numberOfUnderscores == 4 ]];
                                                 then
                                                     imageSize=$(echo $blockSeven)
                                                 else
-                                                    blockSeven=$(echo $blockSeven | tr '[:upper:]' '[:lower:]')
-                                                    if [[ ("$blockSeven" == "cover") || ("$blockSeven" == "feature") || ("$blockSeven" == "keyart") || ("$blockSeven" == *"still"*) || ("$blockSeven" == "blank") ]];
+                                                    blockSevenTypeCheck=$(echo $blockSeven | tr '[:upper:]' '[:lower:]')
+                                                    if [[ ("$blockSevenTypeCheck" == "cover") || ("$blockSevenTypeCheck" == "feature") || ("$blockSevenTypeCheck" == "keyart") || ("$blockSevenTypeCheck" == *"still"*) || ("$blockSevenTypeCheck" == "blank") || ("$blockSevenTypeCheck" == "poster") ]];
                                                     then
-                                                        imageType=$(echo $blockSeven)
+                                                        imageType=$(echo $blockSevenTypeCheck)
                                                     else
-                                                        if [[ "$blockSeven" =~ ^(M|S).*[0-9]$ || "$blockSeven" =~ ^(M|S)[0-9].*E[0-9]$ || "$blockSeven" =~ ^(M|S)[0-9].*E[0-9][0-9]$ || "$blockSeven" =~ ^(M|S)[0-9][0-9].*E[0-9]$ || "$blockSeven" =~ ^(M|S)[0-9][0-9].*E[0-9][0-9]$ ]];
+                                                        if [[ (-z "$seasonNumberCheck" || -z "$episodeNumberCheck") && ("$blockSeven" =~ ^(S|s).*[0-9]$ || "$blockSeven" =~ ^(S|s)[0-9].*(E|e)[0-9]$ || "$blockSeven" =~ ^(S|s)[0-9].*(E|e)[0-9][0-9]$ || "$blockSeven" =~ ^(S|s)[0-9][0-9].*(E|e)[0-9]$ || "$blockSeven" =~ ^(S|s)[0-9][0-9].*(E|e)[0-9][0-9]$) ]];
                                                         then
                                                             if [[ "$blockSeven" == *"still"* || "$blockSeven" == *"Still"* ]];
                                                             then
@@ -1451,14 +1438,13 @@ if [[ $numberOfUnderscores == 4 ]];
                                                                 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockSeven} - Does NOT contain Still" >> "$logfile"
                                                                 seasonNumberCheck=$(echo $blockSeven | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
                                                                 episodeNumberCheck=$(echo $blockSeven | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
-                                                                imageDesc=$(echo $blockSeven)
                                                             fi
                                                         else
-                                                            if [[ "$blockSeven" == *" "* ]];
+                                                            if [[ ("$blockSeven" == "EN") || ("$blockSeven" == "en") || ("$blockSeven" == "ES") || ("$blockSeven" == "es") || ("$blockSeven" == "FR") || ("$blockSeven" == "fr") || ("$blockSeven" == "OG") || ("$blockSeven" == "og") ]];
                                                             then
-                                                                imageDesc=$(echo $blockSeven)
+                                                                language=$(echo $blockSeven)
                                                             else
-                                                                imageDesc=$(echo $blockSeven | sed -r -e "s/([^A-Z])([A-Z])/\1 \2/g" -e "s/([A-Z]+)([A-Z])/\1 \2/g")
+                                                                imageDesc=$(echo $blockSeven)
                                                             fi
                                                         fi
                                                     fi
@@ -1468,12 +1454,12 @@ if [[ $numberOfUnderscores == 4 ]];
                                                 then
                                                     imageSize=$(echo $blockEight)
                                                 else
-                                                    blockEight=$(echo $blockEight | tr '[:upper:]' '[:lower:]')
-                                                    if [[ ("$blockEight" == "cover") || ("$blockEight" == "feature") || ("$blockEight" == "keyart") || ("$blockEight" == *"still"*) || ("$blockEight" == "blank") ]];
+                                                    blockEightTypeCheck=$(echo $blockEight | tr '[:upper:]' '[:lower:]')
+                                                    if [[ ("$blockEightTypeCheck" == "cover") || ("$blockEightTypeCheck" == "feature") || ("$blockEightTypeCheck" == "keyart") || ("$blockEightTypeCheck" == *"still"*) || ("$blockEightTypeCheck" == "blank") || ("$blockEightTypeCheck" == "poster") ]];
                                                     then
-                                                        imageType=$(echo $blockEight)
+                                                        imageType=$(echo $blockEightTypeCheck)
                                                     else
-                                                        if [[ "$blockEight" =~ ^(M|S).*[0-9]$ || "$blockEight" =~ ^(M|S)[0-9].*E[0-9]$ || "$blockEight" =~ ^(M|S)[0-9].*E[0-9][0-9]$ || "$blockEight" =~ ^(M|S)[0-9][0-9].*E[0-9]$ || "$blockEight" =~ ^(M|S)[0-9][0-9].*E[0-9][0-9]$ ]];
+                                                        if [[ (-z "$seasonNumberCheck" || -z "$episodeNumberCheck") && ("$blockEight" =~ ^(S|s).*[0-9]$ || "$blockEight" =~ ^(S|s)[0-9].*(E|e)[0-9]$ || "$blockEight" =~ ^(S|s)[0-9].*(E|e)[0-9][0-9]$ || "$blockEight" =~ ^(S|s)[0-9][0-9].*(E|e)[0-9]$ || "$blockEight" =~ ^(S|s)[0-9][0-9].*(E|e)[0-9][0-9]$) ]];
                                                         then
                                                             if [[ "$blockEight" == *"still"* || "$blockEight" == *"Still"* ]];
                                                             then
@@ -1482,14 +1468,13 @@ if [[ $numberOfUnderscores == 4 ]];
                                                                 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockEight} - Does NOT contain Still" >> "$logfile"
                                                                 seasonNumberCheck=$(echo $blockEight | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
                                                                 episodeNumberCheck=$(echo $blockEight | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
-                                                                imageDesc=$(echo $blockEight)
                                                             fi
                                                         else
-                                                            if [[ "$blockEight" == *" "* ]];
+                                                            if [[ ("$blockEight" == "EN") || ("$blockEight" == "en") || ("$blockEight" == "ES") || ("$blockEight" == "es") || ("$blockEight" == "FR") || ("$blockEight" == "fr") || ("$blockEight" == "OG") || ("$blockEight" == "og") ]];
                                                             then
-                                                                imageDesc=$(echo $blockEight)
+                                                                language=$(echo $blockEight)
                                                             else
-                                                                imageDesc=$(echo $blockEight | sed -r -e "s/([^A-Z])([A-Z])/\1 \2/g" -e "s/([A-Z]+)([A-Z])/\1 \2/g")
+                                                                imageDesc=$(echo $blockEight)
                                                             fi
                                                         fi
                                                     fi
@@ -1594,7 +1579,7 @@ bodyData=$(echo "<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidis
 
 echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Body Data - $bodyData" >> "$logfile"
 
-#curl -s -o /dev/null --location --request PUT $url --header 'Content-Type: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=xZqBrKBPBOUANsWFnMC3aF90S52Ip3tgXdUHwWZvhNnu9aLl9j4rdrxRhV9nSQx9' --data $bodyData
+curl -s -o /dev/null --location --request PUT $url --header 'Content-Type: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=xZqBrKBPBOUANsWFnMC3aF90S52Ip3tgXdUHwWZvhNnu9aLl9j4rdrxRhV9nSQx9' --data $bodyData
 
 sleep 5
 
