@@ -203,6 +203,7 @@ then
             columnCounter=$(($columnCounter + 1))
         fi
     done
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - columnCounts - {$columnCounts}" >> "$logfile"
     for matchedRow in $(grep -n "$inputFile" -e "\<$cantemoItemId\>" | awk -F ',' '{print $'$itemIdColumn'}')
     do
         echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - for do loop" >> "$logfile"
@@ -229,6 +230,7 @@ then
         cleanLine=$(echo $line | sed -e 's/\"\"/-/g')
         # columnsForThisRow=$(echo "$cleanLine" | awk 'BEGIN { FPAT = "([^,]*)|(\"[^\"]+)|(\"[^\"]+\")" } {print NF+1}' )
         columnsForThisRow=$(countDaMuthaFukkingColumns "$cleanLine")
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - columnsForThisRow - {$columnsForThisRow}" >> "$logfile"
         while [[ $columnsForThisRow -lt $columnCounts ]];
         do
             matchedRowNumber=$(($matchedRowNumber + 1))
@@ -501,7 +503,7 @@ then
             echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - Triggering API Call to Import XML into Cantemo" >> "$logfile"
 
             url="http://10.1.1.34:8080/API/import/sidecar/$cantemoItemId?sidecar=/opt/olympusat/xmlsForMetadataImport/$cantemoItemId.xml"
-            importXmlHttpResponse=$(curl --location --request POST $url --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0')
+            #importXmlHttpResponse=$(curl --location --request POST $url --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0')
 
             sleep 2
             
