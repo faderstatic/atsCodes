@@ -124,7 +124,12 @@ countDaMuthaFukkingColumns ()
         currentReadValue=$(echo "$countingString" | awk -F "," '{print $'$m'}')
         if [[ "$currentReadValue" == "\""* ]];
         then
-            holdFurtherCount="true"
+            if [[ "$currentReadValue" == *"\"" ]];
+            then
+                holdFurtherCount="false"
+            else
+                holdFurtherCount="true"
+            fi
         elif [[ "$currentReadValue" == *"\"" ]];
         then
             holdFurtherCount="false"
