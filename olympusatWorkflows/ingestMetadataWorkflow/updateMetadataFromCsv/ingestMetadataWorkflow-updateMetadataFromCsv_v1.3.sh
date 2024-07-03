@@ -229,8 +229,8 @@ then
         line=$(sed -n ''$matchedRowNumber'p' "$inputFile")
         cleanLine=$(echo $line | sed -e 's/\"\"/-/g')
         echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - cleanLine - {$cleanLine}" >> "$logfile"
-        columnsForThisRow=$(echo "$cleanLine" | awk 'BEGIN { FPAT = "([^,]*)|(\"[^\"]+)|(\"[^\"]+\")" } {print NF+1}' )
-        # columnsForThisRow=$(countDaMuthaFukkingColumns "$cleanLine")
+        # columnsForThisRow=$(echo "$cleanLine" | awk 'BEGIN { FPAT = "([^,]*)|(\"[^\"]+)|(\"[^\"]+\")" } {print NF+1}' )
+        columnsForThisRow=$(countDaMuthaFukkingColumns "$cleanLine")
         echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - columnsForThisRow - {$columnsForThisRow}" >> "$logfile"
         while [[ $columnsForThisRow -lt $columnCounts ]];
         do
