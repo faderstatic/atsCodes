@@ -228,8 +228,10 @@ then
 
         line=$(sed -n ''$matchedRowNumber'p' "$inputFile")
         cleanLine=$(echo $line | sed -e 's/\"\"/-/g')
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - cleanLine - {$cleanLine}" >> "$logfile"
         # columnsForThisRow=$(echo "$cleanLine" | awk 'BEGIN { FPAT = "([^,]*)|(\"[^\"]+)|(\"[^\"]+\")" } {print NF+1}' )
-        columnsForThisRow=$(countDaMuthaFukkingColumns "$cleanLine")
+        # columnsForThisRow=$(countDaMuthaFukkingColumns "$cleanLine")
+        columnsForThisRow=$(echo "$cleanline" | awk 'BEGIN { FPAT = "([^,]*)|(\"[^\"]+)|(\"[^\"]+\")" } {print NF}')
         echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - columnsForThisRow - {$columnsForThisRow}" >> "$logfile"
         while [[ $columnsForThisRow -lt $columnCounts ]];
         do
@@ -244,7 +246,9 @@ then
         while [[ $columnCounter -le $columnCounts ]];
         do
             fieldValue[$columnCounter]=$(echo $cleanLine | awk 'BEGIN { FPAT = "([^,]*)|(\"[^\"]+)|(\"[^\"]+\")" } {print $'$columnCounter'}' | sed -e 's/\"//g')
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - fieldValue - $fieldValue[$columnCounter]" >> "$logfile"
             columnCounter=$(($columnCounter + 1))
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - columnCounter - $columnCounter" >> "$logfile"
 
             # --------------------------------------------------
             # Checking last column (updateInCantemo) for y or yes
