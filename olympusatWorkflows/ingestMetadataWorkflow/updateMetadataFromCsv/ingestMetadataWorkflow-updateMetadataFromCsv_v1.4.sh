@@ -492,7 +492,7 @@ then
 
             echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - Triggering API Call to Import XML into Cantemo" >> "$logfile"
 
-            url="http://10.1.1.34:8080/API/import/sidecar/$userName-$cantemoItemId?sidecar=/opt/olympusat/xmlsForMetadataImport/$cantemoItemId.xml"
+            url="http://10.1.1.34:8080/API/import/sidecar/$cantemoItemId?sidecar=/opt/olympusat/xmlsForMetadataImport/$userName-$cantemoItemId.xml"
             importXmlHttpResponse=$(curl --location --request POST $url --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0')
 
             sleep 2
