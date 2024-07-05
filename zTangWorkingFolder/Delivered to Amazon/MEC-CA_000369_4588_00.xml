@@ -13,9 +13,9 @@
             <!-- TitleSort is required by the MEC XSD, but is not used by Amazon. Blank fields such as below are acceptable. -->
             <md:TitleSort></md:TitleSort>
 
-            <md:ArtReference resolution="1600x1200" purpose="boxart">CA_000369_4588_00-box-4x3.jpg</md:ArtReference>
+            <!-- md:ArtReference resolution="1600x1200" purpose="boxart">CA_000369_4588_00-box-4x3.jpg</md:ArtReference>
             <md:ArtReference resolution="2560x1440" purpose="cover">CA_000369_4588_00-cover-16x9.jpg</md:ArtReference>
-            <md:ArtReference resolution="1200x1600" purpose="hero">CA_000369_4588_00-hero-16x9.jpg</md:ArtReference>
+            <md:ArtReference resolution="1200x1600" purpose="hero">CA_000369_4588_00-hero-16x9.jpg</md:ArtReference -->
 
             <!-- Summary190 is required by the MEC XSD, but is not required by Amazon. Blank fields such as below are acceptable. -->
             <md:Summary190></md:Summary190>
