@@ -253,7 +253,7 @@ then
             
             #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - Creating XML File with Information" >> "$logfile"
 
-            fileDestination="/opt/olympusat/xmlsForMetadataImport/userUpdate-$cantemoItemId.xml"
+            fileDestination="/opt/olympusat/xmlsForMetadataImport/$userName-$cantemoItemId.xml"
             fileDestinationSpanish=$(echo "/opt/olympusat/xmlsForMetadataImport/"$cantemoItemId"_ES.xml")
             fileDestinationEnglish=$(echo "/opt/olympusat/xmlsForMetadataImport/"$cantemoItemId"_EN.xml")
             fileDestinationExternal=$(echo "/opt/olympusat/xmlsForMetadataImport/"$cantemoItemId"_External.xml")
@@ -492,7 +492,7 @@ then
 
             echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - Triggering API Call to Import XML into Cantemo" >> "$logfile"
 
-            url="http://10.1.1.34:8080/API/import/sidecar/userUpdate-$cantemoItemId?sidecar=/opt/olympusat/xmlsForMetadataImport/$cantemoItemId.xml"
+            url="http://10.1.1.34:8080/API/import/sidecar/$userName-$cantemoItemId?sidecar=/opt/olympusat/xmlsForMetadataImport/$cantemoItemId.xml"
             #importXmlHttpResponse=$(curl --location --request POST $url --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0')
 
             sleep 2
