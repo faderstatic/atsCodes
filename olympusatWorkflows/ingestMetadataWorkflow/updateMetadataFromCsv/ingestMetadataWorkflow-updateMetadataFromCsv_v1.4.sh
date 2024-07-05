@@ -493,7 +493,7 @@ then
             echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - Triggering API Call to Import XML into Cantemo" >> "$logfile"
 
             url="http://10.1.1.34:8080/API/import/sidecar/$userName-$cantemoItemId?sidecar=/opt/olympusat/xmlsForMetadataImport/$cantemoItemId.xml"
-            #importXmlHttpResponse=$(curl --location --request POST $url --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0')
+            importXmlHttpResponse=$(curl --location --request POST $url --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0')
 
             sleep 2
             
@@ -501,7 +501,7 @@ then
 
             sleep 2
 
-            #mv "$fileDestination" "/opt/olympusat/xmlsForMetadataImport/zCompleted/"
+            mv "$fileDestination" "/opt/olympusat/xmlsForMetadataImport/zCompleted/"
 
             echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - Import Metadata Job Completed" >> "$logfile"
 
