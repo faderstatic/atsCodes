@@ -39,7 +39,7 @@ then
 
         sleep 2
 
-        echo "ItemId,Title,ContentType,VersionType" >> "$newItemFileDestination"
+        echo "ItemId,Title,ContentType,VersionType,FileExtension" >> "$newItemFileDestination"
 
         echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - ($itemId) - New File created - [$newItemFileDestination]" >> "$logfile"
         
@@ -50,12 +50,14 @@ then
     itemTitle=$(filterVidispineItemMetadata $itemId "metadata" "title")
     itemContentType=$(filterVidispineItemMetadata $itemId "metadata" "oly_contentType")
     itemVersionType=$(filterVidispineItemMetadata $itemId "metadata" "oly_versionType")
+    itemOriginalFilename=$(filterVidispineItemMetadata $itemId "metadata" "originalFilename")
+    itemOriginalExtension=$(echo "$itemOriginalFilename" | awk -F "." '{print $2}')
 
     sleep 2
 
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - ($itemId) - Adding item metadata to newItemWorkflow csv" >> "$logfile"
 
-    echo "$itemId,$itemTitle,$itemContentType,$itemVersionType" >> "$newItemFileDestination"
+    echo "$itemId,$itemTitle,$itemContentType,$itemVersionType,$itemOriginalExtension" >> "$newItemFileDestination"
 
     sleep 2
 
