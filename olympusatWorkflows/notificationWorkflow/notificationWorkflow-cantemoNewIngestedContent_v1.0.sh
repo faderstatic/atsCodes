@@ -1,10 +1,10 @@
 #!/bin/bash
 
 #::***************************************************************************************************************************
-#::This shell script will trigger API call to Cantemo to mark metadataStatus as completed
+#::This shell script is the initial trigger to create list of items to send email notification
 #::Engineers: Ryan Sims & Tang Kanjanapitak
 #::Client: Olympusat
-#::Updated: 07/01/2024
+#::Updated: 07/08/2024
 #::Rev A: 
 #::System requirements: This script will run in LINUX & MacOS
 #::***************************************************************************************************************************
@@ -21,47 +21,49 @@ export mydate=$(date +%Y-%m-%d)
 export datetime=$(date +%Y/%m/%d_%H:%M)
 logfile="/opt/olympusat/logs/olympusatWorkflow-$mydate.log"
 
-#Set Variable to check before continuing with script
+# Set Variables to check before continuing with script
 export itemId=$1
-export userName=$2
-export metadataStatus=$3
+export emailWorkflow=$2
 
-echo "$(date +%Y/%m/%d_%H:%M:%S) - (metadataWorkflow) - ($itemId) - User [$userName] triggered workflow to set item as [$metadataStatus]" >> "$logfile"
-echo "$(date +%Y/%m/%d_%H:%M:%S) - (metadataWorkflow) - ($itemId) - Checking current oly_metadataStatus" >> "$logfile"
-itemMetadataStatus=$(filterVidispineItemMetadata $itemId "metadata" "oly_metadataStatus")
+echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailWorkflow) - ($itemId) - Email Workflow - [$emailWorkflow]" >> "$logfile"
 
-#Check Variable
-if [[ "$itemMetadataStatus" == *"completed"* ]];
+# Check Variable
+if [[ "$emailWorkflow" == *"newItem"* ]];
 then
-    # oly_metadataStatus is already 'completed'-skip process
-    itemMetadataBy=$(filterVidispineItemMetadata $itemId "metadata" "oly_metadataBy")
-    itemMetadataDate=$(filterVidispineItemMetadata $itemId "metadata" "oly_metadataDate")
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (metadataWorkflow) - ($itemId) - Item is ALREADY marked as Completed - skipping process" >> "$logfile"
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (metadataWorkflow) - ($itemId) - Marked as Completed by {$itemMetadataBy} on {$itemMetadataDate}" >> "$logfile"
+    # emailWorkflow varialbe is set to newItem
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailWorkflow) - ($itemId) - Checking for newItemFileDestination file" >> "$logfile"
+    newItemFileDestination="/opt/olympusat/resources/emailNotificationWorkflow/newItem/newItemWorkflow-$mydate.csv"
+    if [[ ! -e "$newItemFileDestination" ]];
+    then
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailWorkflow) - ($itemId) - newItemFileDestination file NOT FOUND - creating new file with headers" >> "$logfile"
+
+        sleep 2
+
+        echo "ItemId,ContentType,VersionType" >> "$newItemFileDestination"
+
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailWorkflow) - ($itemId) - New File created - [$newItemFileDestination]" >> "$logfile"
+        
+        sleep 5
+    fi 
+
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailWorkflow) - ($itemId) - Gathering item metadata from Cantemo" >> "$logfile"
+    itemTitle=$(filterVidispineItemMetadata $itemId "metadata" "title")
+    itemContentType=$(filterVidispineItemMetadata $itemId "metadata" "oly_contentType")
+    itemVersionType=$(filterVidispineItemMetadata $itemId "metadata" "oly_versionType")
+
+    sleep 2
+
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailWorkflow) - ($itemId) - Adding item metadata to newItemWorkflow csv" >> "$logfile"
+
+    echo "$itemId,$itemContentType,$itemVersionType" >> "$newItemFileDestination"
+
+    sleep 2
+
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailWorkflow) - ($itemId) - Process completed" >> "$logfile"
+
 else
-    # oly_metadataStatus is NOT completed-continue with process
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (metadataWorkflow) - ($itemId) - Setting variables with appropriate metadata" >> "$logfile"
-    export metadataBy=$userName
-    export metadataDate=$(date "+%Y-%m-%dT%H:%M:%S")
-
-    case $metadataStatus in
-        "inProgress")
-            bodyData=$(echo "<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_metadataStatus</name><value>$metadataStatus</value></field><field><name>oly_metadataBy</name><value>$metadataBy</value></field></timespan></MetadataDocument>")
-        ;;
-        "completed")
-            bodyData=$(echo "<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_metadataStatus</name><value>$metadataStatus</value></field><field><name>oly_metadataBy</name><value>$metadataBy</value></field><field><name>oly_metadataDate</name><value>$metadataDate</value></field></timespan></MetadataDocument>")
-        ;;
-    esac
-
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (metadataWorkflow) - ($itemId) - Sending API Command to Update Metadata" >> "$logfile"
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (metadataWorkflow) - ($itemId) - Mark as {$metadataStatus}, by {$metadataBy}, on {$metadataDate}" >> "$logfile"
-
-    export url="http://10.1.1.34:8080/API/item/$itemId/metadata/"
-    curl -s -o /dev/null --location --request PUT $url --header 'Content-Type: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=xZqBrKBPBOUANsWFnMC3aF90S52Ip3tgXdUHwWZvhNnu9aLl9j4rdrxRhV9nSQx9' --data $bodyData
-
-    sleep 5
-
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (metadataWorkflow) - ($itemId) - Update Metadata Completed" >> "$logfile"
+    # emailWorkflow variable is not supported
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailWorkflow) - ($itemId) - emailWorkflow variable is not supported" >> "$logfile"
 fi
 
 IFS=$saveIFS
