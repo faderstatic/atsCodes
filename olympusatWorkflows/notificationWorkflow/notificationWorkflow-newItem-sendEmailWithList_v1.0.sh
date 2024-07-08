@@ -39,8 +39,8 @@ then
     export recipient1=rsims@olympusat.com
     export recipient2=kkanjanapitak@olympusat.com
     export recipient3=mamAdmin@olympusat.com
-    export recipient4=amorales@olympusat.com
-    export recipient5=srusso@olympusat.com
+    #export recipient4=amorales@olympusat.com
+    #export recipient5=srusso@olympusat.com
 
     # Sending email address
     export emailFrom=notify@olympusat.com
@@ -76,8 +76,8 @@ then
     #curl --url 'smtp://smtp-mail.outlook.com:587' \
     #--ssl-reqd \
     #--mail-from $emailFrom \
-    #--mail-rcpt $recipient3 --mail-rcpt $recipient4 \
-    #--user 'notify@olympusat.com:560Village' \
+    #--mail-rcpt $recipient1 --mail-rcpt $recipient2 \
+    #--user 'notify@olympusat.com:6bOblVsLg9bPQ8WG7JC7f8Zump' \
     #--tlsv1.2 \
     #-T <(echo -e "$message")
 
