@@ -46,7 +46,9 @@ then
     export emailFrom=notify@olympusat.com
 
     # List of Items
-    listOfItems=cat $newItemFileDestination
+    #listOfItems=$(cat $newItemFileDestination)
+    ATTACHMENT_FILE='/opt/olympusat/resources/emailNotificationWorkflow/newItem/newItemWorkflow-$mydate.csv'
+    ATTACHMENT_TYPE="$(file --mime-type '$ATTACHMENT_FILE' | sed 's/.*: //')"
 
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - List of Items {$listOfItems}" >> "$logfile"
 
@@ -54,15 +56,13 @@ then
     subject="MAM - New Items Ingested - $mydate"
     body="Hi,
 
-    The following list of items have been ingested into Cantemo today.
+The following attached list of items have been ingested into Cantemo today.
 
-    $listOfItems
+Please login to the system and view these items.
 
-    Please login to the system and view these items.
+Thanks
 
-    Thanks
-
-    MAM Notify"
+MAM Notify"
 
     # Email Message
     message="Subject: $subject\n\n$body"
@@ -73,13 +73,14 @@ then
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - Subject - $subject" >> "$logfile"
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - Body - [$body]" >> "$logfile"
 
-    #curl --url 'smtp://smtp-mail.outlook.com:587' \
-    #--ssl-reqd \
-    #--mail-from $emailFrom \
-    #--mail-rcpt $recipient1 --mail-rcpt $recipient2 \
-    #--user 'notify@olympusat.com:6bOblVsLg9bPQ8WG7JC7f8Zump' \
-    #--tlsv1.2 \
-    #-T <(echo -e "$message")
+    curl --url 'smtp://smtp-mail.outlook.com:587' \
+    --ssl-reqd \
+    --mail-from $emailFrom \
+    --mail-rcpt $recipient1 --mail-rcpt $recipient2 \
+    --user 'notify@olympusat.com:6bOblVsLg9bPQ8WG7JC7f8Zump' \
+    --form "file=@$ATTACHMENT_FILE;type=$ATTACHMENT_TYPE;encoder=base64" --form '=)'
+    --tlsv1.2 \
+    -T <(echo -e "$message")
 
 else
     # newItemFileDestination file DOES NOT exist - continuing with script/workflow
