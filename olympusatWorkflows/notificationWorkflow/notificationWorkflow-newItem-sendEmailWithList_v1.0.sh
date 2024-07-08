@@ -78,7 +78,7 @@ MAM Notify"
     --mail-from $emailFrom \
     --mail-rcpt $recipient1 --mail-rcpt $recipient2 \
     --user 'notify@olympusat.com:6bOblVsLg9bPQ8WG7JC7f8Zump' \
-    --form "file=@$ATTACHMENT_FILE;type=$ATTACHMENT_TYPE;encoder=base64" --form '=)'
+    --form "file=@$ATTACHMENT_FILE;type=$ATTACHMENT_TYPE;encoder=base64" --form '=)' \
     --tlsv1.2 \
     -T <(echo -e "$message")
 
