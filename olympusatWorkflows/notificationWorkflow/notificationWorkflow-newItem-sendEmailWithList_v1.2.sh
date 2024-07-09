@@ -57,7 +57,7 @@ then
     
 The following attached list of items have been ingested into Cantemo today.
     
-Please login to the system and view these items.
+Please login to the system and review these items.
     
 Thanks
     
@@ -75,7 +75,7 @@ MAM Notify"
         sesFile=$(echo $newItemFileDestination)
         sesMIMEType=`file --mime-type "$sesFile" | sed 's/.*: //'`
 
-        curl -v --url 'smtp://smtp-mail.outlook.com:587' \
+        curl --url 'smtp://smtp-mail.outlook.com:587' \
         --ssl-reqd  \
         --mail-from $emailFrom \
         --mail-rcpt $recipient1 --mail-rcpt $recipient2 \
@@ -85,6 +85,18 @@ MAM Notify"
         -F "file=@$sesFile;type=$sesMIMEType;encoder=base64" \
         -F '=)' \
         -H "Subject: $sesSubject"
+
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - Email Sent Successfully" >> "$logfile"
+
+        sleep 2
+
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - Moving newItem csv to zCompleted folder" >> "$logfile"
+
+        mv "$newItemFileDestination" "/opt/olympusat/resources/emailNotificationWorkflow/zCompleted/"
+
+        sleep 2
+
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - New Item Email Notification Process Completed" >> "$logfile"
 
     else
         # newItemFileDestination file DOES NOT exist - continuing with script/workflow
