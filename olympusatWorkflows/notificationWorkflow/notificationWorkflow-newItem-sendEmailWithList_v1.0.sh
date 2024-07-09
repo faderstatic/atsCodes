@@ -36,8 +36,11 @@ then
     #export user=notify@olympusat.com:560Village
 
     # Recipient email addresses
+    export recipient1name="Ryan Sims"
     export recipient1=rsims@olympusat.com
+    export recipient2name="Tang Kanjanapitak"
     export recipient2=kkanjanapitak@olympusat.com
+    export recipient3name="MAM Admin"
     export recipient3=mamAdmin@olympusat.com
     #export recipient4=amorales@olympusat.com
     #export recipient5=srusso@olympusat.com
@@ -72,19 +75,26 @@ MAM Notify"
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - Subject - $subject" >> "$logfile"
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - Body - [$body]" >> "$logfile"
 
-    curl -v --url 'smtp://smtp-mail.outlook.com:587' \
-    --ssl-reqd \
-    --mail-from $emailFrom \
-    --mail-rcpt $recipient1 --mail-rcpt $recipient2 \
-    --user 'notify@olympusat.com:6bOblVsLg9bPQ8WG7JC7f8Zump' \
-    --tlsv1.2 \
-    -F '=(;type=multipart/mixed' \
-    -F "=$message;type=text/plain" \
-    -F "file=@$attachmentFile;type=$attachmentType;encoder=base64" \
-    -F '=)' \
-    -H "Subject: $subject" \
-    -H "From: $emailFromName <$emailFromAddress>" \
-    -H "To: <$recipient1>"
+    # Setup to send email with just text-no attachment
+    #curl --url 'smtp://smtp-mail.outlook.com:587' \
+    #--ssl-reqd \
+    #--user 'notify@olympusat.com:6bOblVsLg9bPQ8WG7JC7f8Zump' \
+    #--mail-from $emailFromAddress \
+    #--mail-rcpt $recipient1 \
+    #--tlsv1.2 \
+    #-T <(echo -e "$message")
+
+    # Setup to send email with attachment
+    sesFromName=$(echo $emailFromName) 
+    sesFromAddress=$(echo $emailFromAddress) 
+    sesToName=$(echo $recipient2name)
+    sesToAddress=$(echo $recipient2) 
+    sesSubject=$(echo $subject) 
+    sesMessage=$(echo $body) 
+    sesFile=$(echo $newItemFileDestination)
+    sesMIMEType=`file --mime-type "$sesFile" | sed 's/.*: //'`
+
+    curl -v --url 'smtp://smtp-mail.outlook.com:587' --ssl-reqd  --mail-from $sesFromAddress --mail-rcpt $sesToAddress --mail-rcpt $recipient1  --user 'notify@olympusat.com:6bOblVsLg9bPQ8WG7JC7f8Zump' -F '=(;type=multipart/mixed' -F "=$sesMessage;type=text/plain" -F "file=@$sesFile;type=$sesMIMEType;encoder=base64" -F '=)' -H "Subject: $sesSubject" -H "From: $sesFromName <$sesFromAddress>" -H "To: $sesToName <$sesToAddress>"
 
 else
     # newItemFileDestination file DOES NOT exist - continuing with script/workflow
