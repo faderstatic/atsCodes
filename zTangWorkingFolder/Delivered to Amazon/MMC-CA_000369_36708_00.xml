@@ -8,7 +8,7 @@
         <!--  Main audio file for movie  -->
         <manifest:Audio AudioTrackID="md:audtrackid:org:olympusat:OLY_4543-M:feature.audio.en">
             <md:Type>primary</md:Type>
-            <md:Language>en</md:Language>
+            <md:Language>en-US</md:Language>
             <manifest:ContainerReference>
                 <manifest:ContainerLocation>CA_000369_36708_00.mp4</manifest:ContainerLocation>
             </manifest:ContainerReference>
@@ -16,7 +16,7 @@
         <!--   Trailer   -->
         <!-- manifest:Audio AudioTrackID="md:audtrackid:org:olympusat:OLY_4543-M:trailer.1.audio.en">
             <md:Type>primary</md:Type>
-            <md:Language>en</md:Language>
+            <md:Language>en-US</md:Language>
             <manifest:ContainerReference>
                 <manifest:ContainerLocation>CA_000369_36708_00.mp4</manifest:ContainerLocation>
             </manifest:ContainerReference>
@@ -40,7 +40,7 @@
         <!--   subtitle and caption components for the feature   -->
         <!-- manifest:Subtitle SubtitleTrackID="md:subtrackid:org:olympusat:OLY_4543-M:feature.caption.en">
             <md:Type>SDH</md:Type>
-            <md:Language>en</md:Language>
+            <md:Language>en-US</md:Language>
             <manifest:ContainerReference>
                 <manifest:ContainerLocation>CA_000369_36708_00_ENG.scc</manifest:ContainerLocation>
             </manifest:ContainerReference>
@@ -50,7 +50,7 @@
             <md:Width>1200</md:Width>
             <md:Height>1600</md:Height>
             <md:Encoding>jpg</md:Encoding>
-            <md:Language>en</md:Language>
+            <md:Language>en-US</md:Language>
             <manifest:ContainerReference>
                 <manifest:ContainerLocation>CA_000369_4588_00-3x4.jpg</manifest:ContainerLocation>
             </manifest:ContainerReference>
