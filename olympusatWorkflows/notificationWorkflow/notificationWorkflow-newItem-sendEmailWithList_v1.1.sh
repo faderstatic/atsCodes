@@ -56,7 +56,15 @@ then
 
     # Email Body
     subject="MAM - New Items Ingested - $mydate"
-    body="Hi,\n\nThe following attached list of items have been ingested into Cantemo today.\\n\\nPlease login to the system and view these items.\\n\\nThanks\\n\\nMAM Notify"
+    body="Hi,
+    
+    The following attached list of items have been ingested into Cantemo today.
+    
+    Please login to the system and view these items.
+    
+    Thanks
+    
+    MAM Notify"
 
     # Email Message
     message="Subject: $subject\n\n$body"
@@ -82,7 +90,7 @@ then
     sesToName=$(echo $recipient2name)
     sesToAddress=$(echo $recipient2) 
     sesSubject=$(echo $subject) 
-    sesMessage=$(echo $body) 
+    sesMessage=$body
     sesFile=$(echo $newItemFileDestination)
     sesMIMEType=`file --mime-type "$sesFile" | sed 's/.*: //'`
 
