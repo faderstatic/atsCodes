@@ -21,7 +21,7 @@ logfile="/opt/olympusat/logs/notificationWorkflow-$mydate.log"
 #--------------------------------------------------
 
 # Get the current hour in 24-hour format
-currentHour=$(date +H%)
+currentHour=$(date +%H)
 
 echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflowManager) - Script Triggered - Checking Current Hour [$currentHour]" >> "$logfile"
 
