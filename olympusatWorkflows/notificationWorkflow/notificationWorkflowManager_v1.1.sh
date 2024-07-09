@@ -18,7 +18,7 @@ export checkInterval=3600
 export myDate=$(date "+%Y-%m-%d")
 #--------------------------------------------------
 noProcessExit="false"
-logFile="/opt/olympusat/logs/notificationWorkflow-$myDate.log"
+logfile="/opt/olympusat/logs/notificationWorkflow-$myDate.log"
 #--------------------------------------------------
 
 while [ "$noProcessExit" == "false" ]
@@ -28,7 +28,7 @@ do
 	newDate=$(date "+%Y-%m-%d")
 	if [ "$myDate" != "$newDate" ];
 	then
-		logFile="/opt/olympusat/logs/glacier-$newDate.log"
+		logfile="/opt/olympusat/logs/notificationWorkflow-$newDate.log"
 	fi
 	#--------------------------------------------------
 	
