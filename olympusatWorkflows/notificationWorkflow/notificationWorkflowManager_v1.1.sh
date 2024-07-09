@@ -36,12 +36,14 @@ do
 	# Get the current hour in 24-hour format
 	currentHour=$(date +%H)
 
+	echo "Script Triggered - Checking Current Hour [$currentHour]"
 	echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflowManager) - Script Triggered - Checking Current Hour [$currentHour]" >> "$logfile"
 
 	# Check if the current hour is between 23 (11pm) and 23 (11:59pm)
 	if [ "$currentHour" -ge 23 ] && [ "$currentHour" -lt 24 ];
 	then
 		# Current hour is between 23 & 24 - trigger script to send email(s)
+		echo "Current Hour IS between 23 (11pm) & 24 (11:59pm) - Trigger Send Email Script"
 		echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflowManager) - Current Hour IS between 23 (11pm) & 24 (11:59pm) - Trigger Send Email Script" >> "$logfile"
 
 		bash -c "sudo /opt/olympusat/scriptsActive/notificationWorkflow-newItem-sendEmailWithReport_v1.2.sh newItem > /dev/null 2>&1 &"
@@ -49,6 +51,7 @@ do
 		sleep $checkInterval
 	else
 		# Current hour is NOT between 23 & 24 - sleep 1 hr & trigger script again
+		echo "Current Hour is NOT between 23 (11pm) & 24 (11:59pm) - Sleep 1 hour and trigger script again"
 		echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflowManager) - Current Hour is NOT between 23 (11pm) & 24 (11:59pm) - Sleep 1 hour and trigger script again" >> "$logfile"
 
 		sleep $checkInterval
