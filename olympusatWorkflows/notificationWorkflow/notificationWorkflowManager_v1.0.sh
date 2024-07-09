@@ -26,7 +26,7 @@ currentHour=$(date +H%)
 echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflowManager) - Script Triggered - Checking Current Hour [$currentHour]" >> "$logfile"
 
 # Check if the current hour is between 23 (11pm) and 23 (11:59pm)
-if [[ "$currentHour" -ge 23 && "$currentHour" -lt 24 ]];
+if [ "$currentHour" -ge 23 ] && [ "$currentHour" -lt 24 ];
 then
 	# Current hour is between 23 & 24 - trigger script to send email(s)
 	echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflowManager) - Current Hour IS between 23 (11pm) & 24 (11:59pm) - Trigger Send Email Script" >> "$logfile"
