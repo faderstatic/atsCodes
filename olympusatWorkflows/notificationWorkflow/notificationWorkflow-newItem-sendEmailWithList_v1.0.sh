@@ -43,14 +43,13 @@ then
     #export recipient5=srusso@olympusat.com
 
     # Sending email address
-    export emailFrom=notify@olympusat.com
+    export emailFromName=Notify
+    export emailFromAddress=notify@olympusat.com
 
     # List of Items
     #listOfItems=$(cat $newItemFileDestination)
-    ATTACHMENT_FILE='/opt/olympusat/resources/emailNotificationWorkflow/newItem/newItemWorkflow-$mydate.csv'
-    ATTACHMENT_TYPE="$(file --mime-type '$ATTACHMENT_FILE' | sed 's/.*: //')"
-
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - List of Items {$listOfItems}" >> "$logfile"
+    attachmentFile="/opt/olympusat/resources/emailNotificationWorkflow/newItem/newItemWorkflow-$mydate.csv"
+    attachmentType=`file --mime-type "$attachmentFile" | sed 's/.*: //'`
 
     # Email Body
     subject="MAM - New Items Ingested - $mydate"
@@ -73,14 +72,19 @@ MAM Notify"
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - Subject - $subject" >> "$logfile"
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - Body - [$body]" >> "$logfile"
 
-    curl --url 'smtp://smtp-mail.outlook.com:587' \
+    curl -v --url 'smtp://smtp-mail.outlook.com:587' \
     --ssl-reqd \
     --mail-from $emailFrom \
     --mail-rcpt $recipient1 --mail-rcpt $recipient2 \
     --user 'notify@olympusat.com:6bOblVsLg9bPQ8WG7JC7f8Zump' \
-    --form "file=@$ATTACHMENT_FILE;type=$ATTACHMENT_TYPE;encoder=base64" --form '=)' \
     --tlsv1.2 \
-    -T <(echo -e "$message")
+    -F '=(;type=multipart/mixed' \
+    -F "=$message;type=text/plain" \
+    -F "file=@$attachmentFile;type=$attachmentType;encoder=base64" \
+    -F '=)' \
+    -H "Subject: $subject" \
+    -H "From: $emailFromName <$emailFromAddress>" \
+    -H "To: <$recipient1>"
 
 else
     # newItemFileDestination file DOES NOT exist - continuing with script/workflow
