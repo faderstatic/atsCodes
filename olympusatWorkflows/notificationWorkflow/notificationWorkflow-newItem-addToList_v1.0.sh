@@ -28,7 +28,7 @@ export emailNotificationWorkflow=$2
 echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - ($itemId) - Email Workflow - [$emailNotificationWorkflow]" >> "$logfile"
 
 # Check Variable
-if [[ "$emailNotificationWorkflow" == *"newItem"* ]];
+if [[ "$emailNotificationWorkflow" == "newItem" ]];
 then
     # emailNotificationWorkflow varialbe is set to newItem
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - ($itemId) - Checking for newItemFileDestination file" >> "$logfile"
