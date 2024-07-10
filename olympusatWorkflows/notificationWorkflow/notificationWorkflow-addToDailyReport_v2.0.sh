@@ -39,7 +39,7 @@ then
 
         sleep 2
 
-        echo "ItemId,Title,ContentType,VersionType,FileExtension" >> "$newItemFileDestination"
+        echo "ItemId,Title,ContentType,VersionType,FileExtension,ContentFlags" >> "$newItemFileDestination"
 
         echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - ($itemId) - New File created - [$newItemFileDestination]" >> "$logfile"
         
@@ -53,31 +53,41 @@ then
     itemOriginalFilename=$(filterVidispineItemMetadata $itemId "metadata" "originalFilename")
     itemOriginalExtension=$(echo "$itemOriginalFilename" | awk -F "." '{print $2}')
 
+    urlGetItemInfo="http://10.1.1.34:8080/API/item/$itemId/metadata?field=oly_contentFlags&terse=yes"
+    httpResponse=$(curl --location --request GET $urlGetItemInfo --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=Tkb9vkSC8v4SceB8CHUyB3iaMPjvgoHrzhLrvo36agG3wqv0jHc7nsOtdTo9JEyM')
+
+    if [[ "$httpResponse" == *"legacycontent"* ]];
+    then
+        itemContentFlags="legacyContent"
+    else
+        itemContentFlags=""
+    fi
+
     sleep 2
 
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - ($itemId) - Adding item metadata to newItemWorkflow csv" >> "$logfile"
 
-    echo "$itemId,$itemTitle,$itemContentType,$itemVersionType,$itemOriginalExtension" >> "$newItemFileDestination"
+    echo "$itemId,$itemTitle,$itemContentType,$itemVersionType,$itemOriginalExtension,$itemContentFlags" >> "$newItemFileDestination"
 
     sleep 2
 
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - ($itemId) - Process completed" >> "$logfile"
 
 else
-    if [[ "$emailNotificationWorkflow" == "originalContentQcPending" ]];
+    if [[ "$emailNotificationWorkflow" == "originalContentQCPending" ]];
     then
-        # emailNotificationWorkflow varialbe is set to originalContentQcPending
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - ($itemId) - Checking for originalContentQcPendingFileDestination file" >> "$logfile"
-        originalContentQcPendingFileDestination="/opt/olympusat/resources/emailNotificationWorkflow/originalContentQcPending/originalContentQcPending-$mydate.csv"
-        if [[ ! -e "$originalContentQcPendingFileDestination" ]];
+        # emailNotificationWorkflow varialbe is set to originalContentQCPending
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - ($itemId) - Checking for originalContentQCPendingFileDestination file" >> "$logfile"
+        originalContentQCPendingFileDestination="/opt/olympusat/resources/emailNotificationWorkflow/originalContentQCPending/originalContentQCPending-$mydate.csv"
+        if [[ ! -e "$originalContentQCPendingFileDestination" ]];
         then
-            echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - ($itemId) - originalContentQcPendingFileDestination file NOT FOUND - creating new file with headers" >> "$logfile"
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - ($itemId) - originalContentQCPendingFileDestination file NOT FOUND - creating new file with headers" >> "$logfile"
 
             sleep 2
 
-            echo "ItemId,Title,Licensor,ContentType,VersionType,FileExtension,ContentFlags,OriginalQCStatus" >> "$originalContentQcPendingFileDestination"
+            echo "ItemId,Title,Licensor,ContentType,VersionType,FileExtension,ContentFlags,OriginalQCStatus" >> "$originalContentQCPendingFileDestination"
 
-            echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - ($itemId) - New File created - [$originalContentQcPendingFileDestination]" >> "$logfile"
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - ($itemId) - New File created - [$originalContentQCPendingFileDestination]" >> "$logfile"
             
             sleep 5
         fi 
@@ -112,20 +122,20 @@ else
         echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - ($itemId) - Process completed" >> "$logfile"
 
     else
-        if [[ "$emailNotificationWorkflow" == "finalQcPending" ]];
+        if [[ "$emailNotificationWorkflow" == "finalQCPending" ]];
         then
-            # emailNotificationWorkflow varialbe is set to finalQcPending
-            echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - ($itemId) - Checking for finalQcPendingFileDestination file" >> "$logfile"
-            finalQcPendingFileDestination="/opt/olympusat/resources/emailNotificationWorkflow/finalQcPending/finalQcPending-$mydate.csv"
-            if [[ ! -e "$finalQcPendingFileDestination" ]];
+            # emailNotificationWorkflow varialbe is set to finalQCPending
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - ($itemId) - Checking for finalQCPendingFileDestination file" >> "$logfile"
+            finalQCPendingFileDestination="/opt/olympusat/resources/emailNotificationWorkflow/finalQCPending/finalQCPending-$mydate.csv"
+            if [[ ! -e "$finalQCPendingFileDestination" ]];
             then
-                echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - ($itemId) - finalQcPendingFileDestination file NOT FOUND - creating new file with headers" >> "$logfile"
+                echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - ($itemId) - finalQCPendingFileDestination file NOT FOUND - creating new file with headers" >> "$logfile"
 
                 sleep 2
 
-                echo "ItemId,Title,Licensor,ContentType,VersionType,FileExtension,ContentFlags,FinalQCStatus" >> "$finalQcPendingFileDestination"
+                echo "ItemId,Title,Licensor,ContentType,VersionType,FileExtension,ContentFlags,FinalQCStatus" >> "$finalQCPendingFileDestination"
 
-                echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - ($itemId) - New File created - [$finalQcPendingFileDestination]" >> "$logfile"
+                echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - ($itemId) - New File created - [$finalQCPendingFileDestination]" >> "$logfile"
                 
                 sleep 5
             fi 
