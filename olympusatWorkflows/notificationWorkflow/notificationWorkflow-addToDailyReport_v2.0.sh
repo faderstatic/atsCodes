@@ -25,28 +25,28 @@ logfile="/opt/olympusat/logs/notificationWorkflow-$mydate.log"
 export itemId=$1
 export emailNotificationWorkflow=$2
 
-echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - ($itemId) - Email Workflow - [$emailNotificationWorkflow]" >> "$logfile"
+echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow) - ($itemId) - Email Workflow - [$emailNotificationWorkflow]" >> "$logfile"
 
 # Check Variable
 if [[ "$emailNotificationWorkflow" == "newItem" ]];
 then
     # emailNotificationWorkflow varialbe is set to newItem
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - ($itemId) - Checking for newItemFileDestination file" >> "$logfile"
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-newItem) - ($itemId) - Checking for newItemFileDestination file" >> "$logfile"
     newItemFileDestination="/opt/olympusat/resources/emailNotificationWorkflow/newItem/newItemWorkflow-$mydate.csv"
     if [[ ! -e "$newItemFileDestination" ]];
     then
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - ($itemId) - newItemFileDestination file NOT FOUND - creating new file with headers" >> "$logfile"
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-newItem) - ($itemId) - newItemFileDestination file NOT FOUND - creating new file with headers" >> "$logfile"
 
         sleep 2
 
         echo "ItemId,Title,ContentType,VersionType,FileExtension,ContentFlags" >> "$newItemFileDestination"
 
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - ($itemId) - New File created - [$newItemFileDestination]" >> "$logfile"
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-newItem) - ($itemId) - New File created - [$newItemFileDestination]" >> "$logfile"
         
         sleep 5
     fi 
 
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - ($itemId) - Gathering item metadata from Cantemo" >> "$logfile"
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-newItem) - ($itemId) - Gathering item metadata from Cantemo" >> "$logfile"
     itemTitle=$(filterVidispineItemMetadata $itemId "metadata" "title")
     itemContentType=$(filterVidispineItemMetadata $itemId "metadata" "oly_contentType")
     itemVersionType=$(filterVidispineItemMetadata $itemId "metadata" "oly_versionType")
@@ -65,34 +65,34 @@ then
 
     sleep 2
 
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - ($itemId) - Adding item metadata to newItemWorkflow csv" >> "$logfile"
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-newItem) - ($itemId) - Adding item metadata to newItemWorkflow csv" >> "$logfile"
 
     echo "$itemId,$itemTitle,$itemContentType,$itemVersionType,$itemOriginalExtension,$itemContentFlags" >> "$newItemFileDestination"
 
     sleep 2
 
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - ($itemId) - Process completed" >> "$logfile"
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-newItem) - ($itemId) - Process completed" >> "$logfile"
 
 else
     if [[ "$emailNotificationWorkflow" == "originalContentQCPending" ]];
     then
         # emailNotificationWorkflow varialbe is set to originalContentQCPending
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - ($itemId) - Checking for originalContentQCPendingFileDestination file" >> "$logfile"
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-originalContentQCPending) - ($itemId) - Checking for originalContentQCPendingFileDestination file" >> "$logfile"
         originalContentQCPendingFileDestination="/opt/olympusat/resources/emailNotificationWorkflow/originalContentQCPending/originalContentQCPending-$mydate.csv"
         if [[ ! -e "$originalContentQCPendingFileDestination" ]];
         then
-            echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - ($itemId) - originalContentQCPendingFileDestination file NOT FOUND - creating new file with headers" >> "$logfile"
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-originalContentQCPending) - ($itemId) - originalContentQCPendingFileDestination file NOT FOUND - creating new file with headers" >> "$logfile"
 
             sleep 2
 
             echo "ItemId,Title,Licensor,ContentType,VersionType,FileExtension,ContentFlags,OriginalQCStatus" >> "$originalContentQCPendingFileDestination"
 
-            echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - ($itemId) - New File created - [$originalContentQCPendingFileDestination]" >> "$logfile"
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-originalContentQCPending) - ($itemId) - New File created - [$originalContentQCPendingFileDestination]" >> "$logfile"
             
             sleep 5
         fi 
 
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - ($itemId) - Gathering item metadata from Cantemo" >> "$logfile"
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-originalContentQCPending) - ($itemId) - Gathering item metadata from Cantemo" >> "$logfile"
         itemTitle=$(filterVidispineItemMetadata $itemId "metadata" "title")
         itemLicensor=$(filterVidispineItemMetadata $itemId "metadata" "oly_licensor")
         itemContentType=$(filterVidispineItemMetadata $itemId "metadata" "oly_contentType")
@@ -113,34 +113,34 @@ else
 
         sleep 2
 
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - ($itemId) - Adding item metadata to newItemWorkflow csv" >> "$logfile"
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-originalContentQCPending) - ($itemId) - Adding item metadata to newItemWorkflow csv" >> "$logfile"
 
-        echo "$itemId,$itemTitle,$itemLicensor,$itemContentType,$itemVersionType,$itemOriginalExtension,$itemContentFlags,$itemOriginalContentQCStatus" >> "$newItemFileDestination"
+        echo "$itemId,$itemTitle,$itemLicensor,$itemContentType,$itemVersionType,$itemOriginalExtension,$itemContentFlags,$itemOriginalContentQCStatus" >> "$originalContentQCPendingFileDestination"
 
         sleep 2
 
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - ($itemId) - Process completed" >> "$logfile"
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-originalContentQCPending) - ($itemId) - Process completed" >> "$logfile"
 
     else
         if [[ "$emailNotificationWorkflow" == "finalQCPending" ]];
         then
             # emailNotificationWorkflow varialbe is set to finalQCPending
-            echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - ($itemId) - Checking for finalQCPendingFileDestination file" >> "$logfile"
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-finalQCPending) - ($itemId) - Checking for finalQCPendingFileDestination file" >> "$logfile"
             finalQCPendingFileDestination="/opt/olympusat/resources/emailNotificationWorkflow/finalQCPending/finalQCPending-$mydate.csv"
             if [[ ! -e "$finalQCPendingFileDestination" ]];
             then
-                echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - ($itemId) - finalQCPendingFileDestination file NOT FOUND - creating new file with headers" >> "$logfile"
+                echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-finalQCPending) - ($itemId) - finalQCPendingFileDestination file NOT FOUND - creating new file with headers" >> "$logfile"
 
                 sleep 2
 
                 echo "ItemId,Title,Licensor,ContentType,VersionType,FileExtension,ContentFlags,FinalQCStatus" >> "$finalQCPendingFileDestination"
 
-                echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - ($itemId) - New File created - [$finalQCPendingFileDestination]" >> "$logfile"
+                echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-finalQCPending) - ($itemId) - New File created - [$finalQCPendingFileDestination]" >> "$logfile"
                 
                 sleep 5
             fi 
 
-            echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - ($itemId) - Gathering item metadata from Cantemo" >> "$logfile"
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-finalQCPending) - ($itemId) - Gathering item metadata from Cantemo" >> "$logfile"
             itemTitle=$(filterVidispineItemMetadata $itemId "metadata" "title")
             itemLicensor=$(filterVidispineItemMetadata $itemId "metadata" "oly_licensor")
             itemContentType=$(filterVidispineItemMetadata $itemId "metadata" "oly_contentType")
@@ -161,17 +161,17 @@ else
 
             sleep 2
 
-            echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - ($itemId) - Adding item metadata to newItemWorkflow csv" >> "$logfile"
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-finalQCPending) - ($itemId) - Adding item metadata to newItemWorkflow csv" >> "$logfile"
 
-            echo "$itemId,$itemTitle,$itemLicensor,$itemContentType,$itemVersionType,$itemOriginalExtension,$itemContentFlags,$itemFinalQCStatus" >> "$newItemFileDestination"
+            echo "$itemId,$itemTitle,$itemLicensor,$itemContentType,$itemVersionType,$itemOriginalExtension,$itemContentFlags,$itemFinalQCStatus" >> "$finalQCPendingFileDestination"
 
             sleep 2
 
-            echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - ($itemId) - Process completed" >> "$logfile"
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-finalQCPending) - ($itemId) - Process completed" >> "$logfile"
 
         else
             # emailNotificationWorkflow variable is not supported
-            echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - ($itemId) - emailNotificationWorkflow variable is not supported" >> "$logfile"
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow) - ($itemId) - emailNotificationWorkflow variable is not supported" >> "$logfile"
         fi
     fi
 fi
