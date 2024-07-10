@@ -19,7 +19,7 @@ IFS=$(echo -e "\n\b")
 
 export mydate=$(date +%Y-%m-%d)
 export datetime=$(date +%Y/%m/%d_%H:%M)
-logfile="/opt/olympusat/logs/olympusatWorkflow-$mydate.log"
+logfile="/opt/olympusat/logs/notificationWorkflow-$mydate.log"
 notificationType="$1"
 
 echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - Workflow Triggered - Check Notification Type {$notificationType}" >> "$logfile"
@@ -39,14 +39,11 @@ then
         echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - newItemFileDestination file exists - continuing with script/workflow" >> "$logfile"
 
         # Recipient email addresses
-        export recipient1name="Ryan Sims"
-        export recipient1=rsims@olympusat.com
-        export recipient2name="Tang Kanjanapitak"
-        export recipient2=kkanjanapitak@olympusat.com
-        export recipient3name="MAM Admin"
-        export recipient3=mamAdmin@olympusat.com
-        #export recipient4=amorales@olympusat.com
-        #export recipient5=srusso@olympusat.com
+        export recipient1=mamAdmin@olympusat.com
+        export recipient2=amorales@olympusat.com
+        export recipient3=srusso@olympusat.com
+        #export recipient4=rsims@olympusat.com
+        #export recipient5=kkanjanapitak@olympusat.com
 
         # Sending email address
         export emailFrom=notify@olympusat.com
@@ -78,7 +75,7 @@ MAM Notify"
         curl --url 'smtp://smtp-mail.outlook.com:587' \
         --ssl-reqd  \
         --mail-from $emailFrom \
-        --mail-rcpt $recipient1 --mail-rcpt $recipient2 \
+        --mail-rcpt $recipient1 --mail-rcpt $recipient2 --mail-rcpt $recipient3 \
         --user 'notify@olympusat.com:6bOblVsLg9bPQ8WG7JC7f8Zump' \
         -F '=(;type=multipart/mixed' \
         -F "=$sesMessage;type=text/plain" \

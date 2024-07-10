@@ -19,7 +19,7 @@ IFS=$(echo -e "\n\b")
 
 export mydate=$(date +%Y-%m-%d)
 export datetime=$(date +%Y/%m/%d_%H:%M)
-logfile="/opt/olympusat/logs/olympusatWorkflow-$mydate.log"
+logfile="/opt/olympusat/logs/notificationWorkflow-$mydate.log"
 
 # Set Variables to check before continuing with script
 export itemId=$1
