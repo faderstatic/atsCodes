@@ -113,7 +113,7 @@ else
 
         sleep 2
 
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-originalContentQCPending) - ($itemId) - Adding item metadata to newItemWorkflow csv" >> "$logfile"
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-originalContentQCPending) - ($itemId) - Adding item metadata to originalContentQCPending csv" >> "$logfile"
 
         echo "$itemId,$itemTitle,$itemLicensor,$itemContentType,$itemVersionType,$itemOriginalExtension,$itemContentFlags,$itemOriginalContentQCStatus" >> "$originalContentQCPendingFileDestination"
 
@@ -161,7 +161,7 @@ else
 
             sleep 2
 
-            echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-finalQCPending) - ($itemId) - Adding item metadata to newItemWorkflow csv" >> "$logfile"
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-finalQCPending) - ($itemId) - Adding item metadata to finalQCPending csv" >> "$logfile"
 
             echo "$itemId,$itemTitle,$itemLicensor,$itemContentType,$itemVersionType,$itemOriginalExtension,$itemContentFlags,$itemFinalQCStatus" >> "$finalQCPendingFileDestination"
 
