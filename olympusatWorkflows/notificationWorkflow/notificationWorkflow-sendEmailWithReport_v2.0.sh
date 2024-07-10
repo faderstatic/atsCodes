@@ -194,7 +194,7 @@ MAM Notify"
 
             sleep 2
 
-            echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-originalContentQCPending) - New Item Email Notification Process Completed" >> "$logfile"
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-originalContentQCPending) - Original Content QC Pending Email Notification Process Completed" >> "$logfile"
 
         else
             # originalContentQCPendingFileDestination file DOES NOT exist-exiting script/workflow
@@ -276,7 +276,7 @@ MAM Notify"
 
                 sleep 2
 
-                echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-finalQCPending) - New Item Email Notification Process Completed" >> "$logfile"
+                echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-finalQCPending) - Final QC Pending Email Notification Process Completed" >> "$logfile"
 
             else
                 # finalQCPendingFileDestination file DOES NOT exist-exiting script/workflow
