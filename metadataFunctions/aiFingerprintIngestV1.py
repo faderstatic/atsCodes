@@ -98,7 +98,7 @@ try:
   # Parsing JSON and POST XML data
   responseJson = httpApiResponse.json()
 
-  genreList = readCantimoLookup(oly_genreAnalysis)
+  genreList = readCantimoLookup("oly_genreAnalysis")
   for individualGenre in responseJson["genre"]:
     # print(individualGenre)
     genreXML += f"<value>{individualGenre}</value>"
@@ -109,7 +109,7 @@ try:
   genrePayload = parsedGenreXML.toprettyxml()
   # print(genrePayload)
 
-  moodList = readCantimoLookup(oly_moodAnalysis)
+  moodList = readCantimoLookup("oly_moodAnalysis")
   for individualMood in responseJson["mood_tag"]:
     moodXML += f"<value>{individualMood}</value>"
     if individualKeyword.lower() != moodList:
@@ -118,7 +118,7 @@ try:
   parsedMoodXML = xml.dom.minidom.parseString(moodXML)
   moodPayload = parsedMoodXML.toprettyxml()
 
-  keywordList = readCantimoLookup(oly_keywordAnalysis)
+  keywordList = readCantimoLookup("oly_keywordAnalysis")
   for individualKeyword in responseJson["keyword"]:
     keywordXML += f"<value>{individualKeyword}</value>"
     if individualKeyword.lower() != keywordList:
