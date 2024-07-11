@@ -20,46 +20,59 @@ import json
 from requests.exceptions import HTTPError
 #------------------------------
 
+#------------------------------
+# Internal Functions
+
+def readCantimoLookup(rclFieldName):
+  #------------------------------
+  # Making API to Cantemo to get lookup values
+  headers = {
+    'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
+    'Cookie': 'csrftoken=OtjDQ4lhFt2wJjGaJhq3xi05z3uA6D8F7wCWNVXxMuJ8A9jw7Ri7ReqSNGLS2VRR',
+    'Accept': 'application/json'
+  }
+  urlGetLookup = f"http://10.1.1.34:8080/API/metadata-field/{rclFieldName}/metadata"
+  payload = {}
+  httpApiResponse = requests.request("GET", urlGetLookup, headers=headers, data=payload)
+  httpApiResponse.raise_for_status()
+  #------------------------------
+
+  #------------------------------
+  # Parsing JSON data for lookup values
+  responseJson = httpApiResponse.json() if httpApiResponse and httpApiResponse.status_code == 200 else None
+  if responseJson and 'field' in responseJson:
+    for fieldInformation in responseJson['field']:
+      if fieldInformation['key'] == "__values":
+        lookupValueXml = fieldInformation['value']
+        # print(lookupValueXml)
+  #------------------------------
+
+  #------------------------------
+  # Parsing XML data
+  ET.register_namespace('ns', 'http://xml.vidispine.com/schema/vidispine')
+  lookupXmlRoot = ET.fromstring(lookupValueXml)
+  lookupList = ''
+  # print(lookupXmlRoot.find('{http://xml.vidispine.com/schema/vidispine}field'))
+  for fieldValue in lookupXmlRoot:
+    lookupValue = fieldValue.find('{http://xml.vidispine.com/schema/vidispine}key')
+    lookupList += lookupValue.text.lower()+','
+  # print(lookupList)
+  #------------------------------
+  return lookupList
+
+def createCantimoLookup(cckFieldName, cckLookup):
+  print(f"{cckLookup} is not in here")
+  pass
+
+#------------------------------
+
 try:
   cantemoItemId = sys.argv[1]
   # cantemoItemId = os.environ.get("portal_itemId")
   errorReport = ''
   outputFPFile = f"/Users/kkanjanapitak/Desktop/{cantemoItemId}_FP.json"
   
-  #------------------------------
-  # Making API to Cantemo to get keywords
-  headers = {
-    'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
-    'Cookie': 'csrftoken=OtjDQ4lhFt2wJjGaJhq3xi05z3uA6D8F7wCWNVXxMuJ8A9jw7Ri7ReqSNGLS2VRR',
-    'Accept': 'application/json'
-  }
-  urlGetTimebaseInfo = f"http://10.1.1.34:8080/API/metadata-field/oly_keywordAnalysis/metadata"
-  payload = {}
-  httpApiResponse = requests.request("GET", urlGetTimebaseInfo, headers=headers, data=payload)
-  httpApiResponse.raise_for_status()
-  #------------------------------
 
-  #------------------------------
-  # Parsing JSON data for timebase
-  responseJson = httpApiResponse.json() if httpApiResponse and httpApiResponse.status_code == 200 else None
-  if responseJson and 'field' in responseJson:
-    for fieldInformation in responseJson['field']:
-      if fieldInformation['key'] == "__values":
-        keywordValueXml = fieldInformation['value']
-        # print(keywordValueXml)
-  #------------------------------
-  
-  #------------------------------
-  # Parsing XML data
-  ET.register_namespace('ns', 'http://xml.vidispine.com/schema/vidispine')
-  keywordXmlRoot = ET.fromstring(keywordValueXml)
-  keywordList = ''
-  # print(keywordXmlRoot.find('{http://xml.vidispine.com/schema/vidispine}field'))
-  for fieldValue in keywordXmlRoot:
-    keywordValue = fieldValue.find('{http://xml.vidispine.com/schema/vidispine}key')
-    keywordList += keywordValue.text.lower()+','
-  # print(keywordList)
-  #------------------------------
   
   #------------------------------
   # Making API call to Vionlabs to get fingerprints
@@ -84,22 +97,32 @@ try:
   #------------------------------
   # Parsing JSON and POST XML data
   responseJson = httpApiResponse.json()
+
+  genreList = readCantimoLookup(oly_genreAnalysis)
   for individualGenre in responseJson["genre"]:
     # print(individualGenre)
     genreXML += f"<value>{individualGenre}</value>"
+    if individualKeyword.lower() != keywordList:
+      createCantimoLookup(oly_genreAnalysis, individualKeyword)
   genreXML += "</field></timespan></MetadataDocument>"
   parsedGenreXML = xml.dom.minidom.parseString(genreXML)
   genrePayload = parsedGenreXML.toprettyxml()
   # print(genrePayload)
+
+  moodList = readCantimoLookup(oly_moodAnalysis)
   for individualMood in responseJson["mood_tag"]:
     moodXML += f"<value>{individualMood}</value>"
+    if individualKeyword.lower() != moodList:
+      createCantimoLookup(oly_moodAnalysis, individualKeyword)
   moodXML += "</field></timespan></MetadataDocument>"
   parsedMoodXML = xml.dom.minidom.parseString(moodXML)
   moodPayload = parsedMoodXML.toprettyxml()
+
+  keywordList = readCantimoLookup(oly_keywordAnalysis)
   for individualKeyword in responseJson["keyword"]:
     keywordXML += f"<value>{individualKeyword}</value>"
     if individualKeyword.lower() != keywordList:
-      print(f"{individualKeyword} is not in here")
+      createCantimoLookup(oly_keywordAnalysis, individualKeyword)
   keywordXML += "</field></timespan></MetadataDocument>"
   parsedKeywordXML = xml.dom.minidom.parseString(keywordXML)
   keywordPayload = parsedKeywordXML.toprettyxml()
