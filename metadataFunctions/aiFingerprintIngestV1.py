@@ -115,7 +115,7 @@ try:
     genreXML += f"<value>{individualGenre}</value>"
     if individualGenre.lower() not in genreList:
       addingGenreLookup = "true"
-      genreLookupXML += f"<field><key>{individualGenre}</key><value>{individualGenre}</value></field>"
+    genreLookupXML += f"<field><key>{individualGenre}</key><value>{individualGenre}</value></field>"
   genreLookupXML += "</SimpleMetadataDocument>"
   if addingGenreLookup == 'true':
     parsedGenreLookupXML = xml.dom.minidom.parseString(genreLookupXML)
@@ -130,7 +130,7 @@ try:
     moodXML += f"<value>{individualMood}</value>"
     if individualMood.lower() not in moodList:
       addingMoodLookup = "true"
-      moodLookupXML += f"<field><key>{individualMood}</key><value>{individualMood}</value></field>"
+    moodLookupXML += f"<field><key>{individualMood}</key><value>{individualMood}</value></field>"
   moodLookupXML += "</SimpleMetadataDocument>"
   if addingMoodLookup == 'true':
     parsedMoodLookupXML = xml.dom.minidom.parseString(moodLookupXML)
@@ -146,7 +146,7 @@ try:
     keywordXML += f"<value>{individualKeyword}</value>"
     if individualKeyword.lower() not in keywordList:
       addingKeywordLookup = "true"
-      keywordLookupXML += f"<field><key>{individualKeyword}</key><value>{individualKeyword}</value></field>"
+    keywordLookupXML += f"<field><key>{individualKeyword}</key><value>{individualKeyword}</value></field>"
   keywordLookupXML += "</SimpleMetadataDocument>"
   if addingKeywordLookup == 'true':
     parsedKeywordLookupXML = xml.dom.minidom.parseString(keywordLookupXML)
