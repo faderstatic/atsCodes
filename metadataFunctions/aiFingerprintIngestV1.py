@@ -112,7 +112,7 @@ try:
       genreLookupXML += f"<key>{individualGenre}</key><value>{individualGenre}</value>"
   genreLookupXML += "</field></SimpleMetadataDocument>"
   if addingGenreLookup == 'true':
-    pasedGenreLookupXML = xml.dom.minidom.parseString(genreLookupXML)
+    parsedGenreLookupXML = xml.dom.minidom.parseString(genreLookupXML)
     genreLookupPayload = parsedGenreLookupXML.toprettyxml()
     createCantimoLookup("oly_genreAnalysis", genreLookupPayload)
   genreXML += "</field></timespan></MetadataDocument>"
@@ -127,7 +127,7 @@ try:
       moodLookupXML += f"<key>{individualMood}</key><value>{individualMood}</value>"
   moodLookupXML += "</field></SimpleMetadataDocument>"
   if addingMoodLookup == 'true':
-    pasedMoodLookupXML = xml.dom.minidom.parseString(moodLookupXML)
+    parsedMoodLookupXML = xml.dom.minidom.parseString(moodLookupXML)
     moodLookupPayload = parsedMoodLookupXML.toprettyxml()
     createCantimoLookup("oly_moodAnalysis", moodLookupPayload)
   moodXML += "</field></timespan></MetadataDocument>"
@@ -142,7 +142,7 @@ try:
       keywordLookupXML += f"<key>{individualKeyword}</key><value>{individualKeyword}</value>"
   keywordLookupXML += "</field></timespan></MetadataDocument>"
   if addingKeywordLookup == 'true':
-    pasedKeywordLookupXML = xml.dom.minidom.parseString(KeywordLookupXML)
+    parsedKeywordLookupXML = xml.dom.minidom.parseString(KeywordLookupXML)
     keywordLookupPayload = parsedKeywordLookupXML.toprettyxml()
     createCantimoLookup("oly_keywordAnalysis", keywordLookupPayload)
   keywordXML += "</field></timespan></MetadataDocument>"
