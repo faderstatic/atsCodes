@@ -139,13 +139,13 @@ try:
   if addingMoodLookup == 'true':
     parsedMoodLookupXML = xml.dom.minidom.parseString(moodLookupXML)
     moodLookupPayload = parsedMoodLookupXML.toprettyxml()
-    # createCantimoLookup("oly_moodAnalysis", moodLookupPayload)
+    print(moodLookupPayload)
+    createCantimoLookup("oly_moodAnalysis", moodLookupPayload)
   moodXML += "</field></timespan></MetadataDocument>"
   parsedMoodXML = xml.dom.minidom.parseString(moodXML)
   moodPayload = parsedMoodXML.toprettyxml()
 
   keywordList = readCantimoLookup("oly_keywordAnalysis")
-  # print({keywordList})
   for individualKeyword in responseJson["keyword"]:
     keywordXML += f"<value>{individualKeyword}</value>"
     if individualKeyword.lower() not in keywordList:
@@ -155,7 +155,8 @@ try:
   if addingKeywordLookup == 'true':
     parsedKeywordLookupXML = xml.dom.minidom.parseString(keywordLookupXML)
     keywordLookupPayload = parsedKeywordLookupXML.toprettyxml()
-    # createCantimoLookup("oly_keywordAnalysis", keywordLookupPayload)
+    print(keywordLookupPayload)
+    createCantimoLookup("oly_keywordAnalysis", keywordLookupPayload)
   keywordXML += "</field></timespan></MetadataDocument>"
   parsedKeywordXML = xml.dom.minidom.parseString(keywordXML)
   keywordPayload = parsedKeywordXML.toprettyxml()
