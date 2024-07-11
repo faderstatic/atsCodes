@@ -135,7 +135,7 @@ try:
   moodPayload = parsedMoodXML.toprettyxml()
 
   keywordList = readCantimoLookup("oly_keywordAnalysis")
-  print{keywordList}
+  print({keywordList})
   for individualKeyword in responseJson["keyword"]:
     keywordXML += f"<value>{individualKeyword}</value>"
     if individualKeyword.lower() != keywordList:
