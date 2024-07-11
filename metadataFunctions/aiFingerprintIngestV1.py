@@ -120,12 +120,11 @@ try:
       addingGenreLookup = "true"
     genreLookupXML += f"<field><key>{individualGenre}</key><value>{individualGenre}</value></field>"
   genreLookupXML += "</SimpleMetadataDocument>"
-  print(genreLookupXML)
   if addingGenreLookup == 'true':
     parsedGenreLookupXML = xml.dom.minidom.parseString(genreLookupXML)
     genreLookupPayload = parsedGenreLookupXML.toprettyxml()
     print(genreLookupPayload)
-    # createCantimoLookup("oly_genreAnalysis", genreLookupPayload)
+    createCantimoLookup("oly_genreAnalysis", genreLookupPayload)
   genreXML += "</field></timespan></MetadataDocument>"
   parsedGenreXML = xml.dom.minidom.parseString(genreXML)
   genrePayload = parsedGenreXML.toprettyxml()
