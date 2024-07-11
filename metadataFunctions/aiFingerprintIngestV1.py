@@ -111,6 +111,9 @@ try:
   responseJson = httpApiResponse.json()
 
   genreList = readCantimoLookup("oly_genreAnalysis")
+  for individualGenre in genreList:
+    genreLookupXML += f"<field><key>{individualGenre}</key><value>{individualGenre}</value></field>"
+    print(f"{genreLookupXML}")
   for individualGenre in responseJson["genre"]:
     genreXML += f"<value>{individualGenre}</value>"
     if individualGenre.lower() not in genreList:
@@ -135,7 +138,7 @@ try:
   if addingMoodLookup == 'true':
     parsedMoodLookupXML = xml.dom.minidom.parseString(moodLookupXML)
     moodLookupPayload = parsedMoodLookupXML.toprettyxml()
-    createCantimoLookup("oly_moodAnalysis", moodLookupPayload)
+    # createCantimoLookup("oly_moodAnalysis", moodLookupPayload)
   moodXML += "</field></timespan></MetadataDocument>"
   parsedMoodXML = xml.dom.minidom.parseString(moodXML)
   moodPayload = parsedMoodXML.toprettyxml()
@@ -151,7 +154,7 @@ try:
   if addingKeywordLookup == 'true':
     parsedKeywordLookupXML = xml.dom.minidom.parseString(keywordLookupXML)
     keywordLookupPayload = parsedKeywordLookupXML.toprettyxml()
-    createCantimoLookup("oly_keywordAnalysis", keywordLookupPayload)
+    # createCantimoLookup("oly_keywordAnalysis", keywordLookupPayload)
   keywordXML += "</field></timespan></MetadataDocument>"
   parsedKeywordXML = xml.dom.minidom.parseString(keywordXML)
   keywordPayload = parsedKeywordXML.toprettyxml()
