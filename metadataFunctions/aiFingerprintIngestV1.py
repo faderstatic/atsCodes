@@ -103,7 +103,7 @@ try:
     # print(individualGenre)
     genreXML += f"<value>{individualGenre}</value>"
     if individualKeyword.lower() != keywordList:
-      createCantimoLookup(oly_genreAnalysis, individualKeyword)
+      createCantimoLookup("oly_genreAnalysis", individualKeyword)
   genreXML += "</field></timespan></MetadataDocument>"
   parsedGenreXML = xml.dom.minidom.parseString(genreXML)
   genrePayload = parsedGenreXML.toprettyxml()
@@ -113,7 +113,7 @@ try:
   for individualMood in responseJson["mood_tag"]:
     moodXML += f"<value>{individualMood}</value>"
     if individualKeyword.lower() != moodList:
-      createCantimoLookup(oly_moodAnalysis, individualKeyword)
+      createCantimoLookup("oly_moodAnalysis", individualKeyword)
   moodXML += "</field></timespan></MetadataDocument>"
   parsedMoodXML = xml.dom.minidom.parseString(moodXML)
   moodPayload = parsedMoodXML.toprettyxml()
@@ -122,7 +122,7 @@ try:
   for individualKeyword in responseJson["keyword"]:
     keywordXML += f"<value>{individualKeyword}</value>"
     if individualKeyword.lower() != keywordList:
-      createCantimoLookup(oly_keywordAnalysis, individualKeyword)
+      createCantimoLookup("oly_keywordAnalysis", individualKeyword)
   keywordXML += "</field></timespan></MetadataDocument>"
   parsedKeywordXML = xml.dom.minidom.parseString(keywordXML)
   keywordPayload = parsedKeywordXML.toprettyxml()
