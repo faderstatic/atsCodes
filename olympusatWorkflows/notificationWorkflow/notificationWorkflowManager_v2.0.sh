@@ -54,6 +54,15 @@ do
 
 		# Trigger Send Email for finalQCPending Workflow
 		bash -c "sudo /opt/olympusat/scriptsActive/notificationWorkflow-sendEmailWithReport_v2.0.sh finalQCPending > /dev/null 2>&1 &"
+		
+		currentDay=$(date +'%A')
+
+		if [[ "$currentDay" == "Friday" ]];
+		then
+			echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflowManager) - Current Day is Friday - continue with triggering Weekly Report Email" >> "$logfile"
+		else
+			echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflowManager) - Current Day is NOT Friday - do nothing" >> "$logfile"
+		fi
 
 		sleep $checkInterval
 	else
