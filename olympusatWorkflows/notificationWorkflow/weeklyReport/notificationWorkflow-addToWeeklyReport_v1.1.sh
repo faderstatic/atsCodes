@@ -271,7 +271,7 @@ then
 
     sleep 5
 
-    bash -c "sudo /opt/olympusat/scriptsActive/notificationWorkflow-sendEmailWithWeeklyReport_v1.0-.sh contentMissingMetadata > /dev/null 2>&1 &"
+    bash -c "sudo /opt/olympusat/scriptsActive/notificationWorkflow-sendEmailWithWeeklyReport_v1.1.sh contentMissingMetadata > /dev/null 2>&1 &"
 
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-contentMissingMetadata) - ($itemId) - Process completed" >> "$logfile"
 else
