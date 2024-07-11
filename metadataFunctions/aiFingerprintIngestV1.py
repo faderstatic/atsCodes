@@ -114,17 +114,17 @@ try:
   genreList = readCantimoLookup("oly_genreAnalysis")
   for individualGenre in genreList:
     genreLookupXML += f"<field><key>{individualGenre}</key><value>{individualGenre}</value></field>"
-    print(f"{genreLookupXML}")
   for individualGenre in responseJson["genre"]:
     genreXML += f"<value>{individualGenre}</value>"
     if individualGenre.lower() not in genreList:
       addingGenreLookup = "true"
     genreLookupXML += f"<field><key>{individualGenre}</key><value>{individualGenre}</value></field>"
   genreLookupXML += "</SimpleMetadataDocument>"
+  print(genreLookupXML)
   if addingGenreLookup == 'true':
     parsedGenreLookupXML = xml.dom.minidom.parseString(genreLookupXML)
     genreLookupPayload = parsedGenreLookupXML.toprettyxml()
-    createCantimoLookup("oly_genreAnalysis", genreLookupPayload)
+    # createCantimoLookup("oly_genreAnalysis", genreLookupPayload)
   genreXML += "</field></timespan></MetadataDocument>"
   parsedGenreXML = xml.dom.minidom.parseString(genreXML)
   genrePayload = parsedGenreXML.toprettyxml()
