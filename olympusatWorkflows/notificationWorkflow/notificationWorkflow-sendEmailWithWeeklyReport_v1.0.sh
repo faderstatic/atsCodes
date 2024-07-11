@@ -49,10 +49,12 @@ then
         export emailFrom=notify@olympusat.com
 
         # Email Body
-        subject="MAM - New Items Ingested - $mydate"
+        subject="MAM - Content Missing Metadata - Weekly Report - $mydate"
         body="Hi,
 
-The following attached list of items have been ingested into Cantemo today and may require metadata in order to move to the next stage in the process.
+This is a Weekly Report that checks if there are any items in the 'New Content Missing Metadata' or 'Conform Files Missing Metadata' Saved Searches for any items still missing metadata.
+
+The following attached list of items in Cantemo require metadata in order to move to the next stage in the process.
 
 You may find items in one of the following Saved Searches
 
@@ -68,7 +70,7 @@ Link to Saved Search - https://cantemo.olympusat.com/search/#/savedsearch/OLY-34
 
 ***NOTE***: You must be on the Office Network, either via VPN or remoting into a machine on the Network, in order to access Cantemo Web Portal
     
-Please login to the system and review these items.
+Please login to the system and review these items as soon as possible.
     
 Thanks
     
@@ -89,7 +91,7 @@ MAM Notify"
         curl --url 'smtp://smtp-mail.outlook.com:587' \
         --ssl-reqd  \
         --mail-from $emailFrom \
-        --mail-rcpt $recipient1 --mail-rcpt $recipient2 --mail-rcpt $recipient3 \
+        --mail-rcpt $recipient4 --mail-rcpt $recipient5 \
         --user 'notify@olympusat.com:6bOblVsLg9bPQ8WG7JC7f8Zump' \
         -F '=(;type=multipart/mixed' \
         -F "=$sesMessage;type=text/plain" \
