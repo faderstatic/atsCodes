@@ -119,38 +119,42 @@ then
             "parent_collection"
         ]
     }')
+
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-newContentMissingMetadata) - Search Response {$searchResponse}" >> "$logfile"
 
-    # Iterate through items in response
+    #-------------------------------------------------------------------------
+    # Iterate through searchResponse and extract out each vidispine_id
+    items=$(echo "$searchResponse" | jq -r '.results' | jq '.[]' | jq -r '.vidispine_id')
+    for item in ${items[@]}; do
+        # Gather item's metadata
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-newContentMissingMetadata) - ($itemId) - Gathering item metadata from Cantemo" >> "$logfile"
+        itemTitle=$(filterVidispineItemMetadata $itemId "metadata" "title")
+        itemContentType=$(filterVidispineItemMetadata $itemId "metadata" "oly_contentType")
+        itemVersionType=$(filterVidispineItemMetadata $itemId "metadata" "oly_versionType")
+        itemOriginalFilename=$(filterVidispineItemMetadata $itemId "metadata" "originalFilename")
+        itemOriginalExtension=$(echo "$itemOriginalFilename" | awk -F "." '{print $2}')
+        itemOriginalContentQCStatus=$(filterVidispineItemMetadata $itemId "metadata" "oly_originalContentQCStatus")
+        itemFinalQCStatus=$(filterVidispineItemMetadata $itemId "metadata" "oly_finalQCStatus")
 
+        urlGetItemInfo="http://10.1.1.34:8080/API/item/$itemId/metadata?field=oly_contentFlags&terse=yes"
+        httpResponse=$(curl --location --request GET $urlGetItemInfo --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=Tkb9vkSC8v4SceB8CHUyB3iaMPjvgoHrzhLrvo36agG3wqv0jHc7nsOtdTo9JEyM')
 
-    # Gather item's metadata
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-newContentMissingMetadata) - ($itemId) - Gathering item metadata from Cantemo" >> "$logfile"
-    #itemTitle=$(filterVidispineItemMetadata $itemId "metadata" "title")
-    #itemContentType=$(filterVidispineItemMetadata $itemId "metadata" "oly_contentType")
-    #itemVersionType=$(filterVidispineItemMetadata $itemId "metadata" "oly_versionType")
-    #itemOriginalFilename=$(filterVidispineItemMetadata $itemId "metadata" "originalFilename")
-    #itemOriginalExtension=$(echo "$itemOriginalFilename" | awk -F "." '{print $2}')
-    #itemOriginalContentQCStatus=$(filterVidispineItemMetadata $itemId "metadata" "oly_originalContentQCStatus")
-    #itemFinalQCStatus=$(filterVidispineItemMetadata $itemId "metadata" "oly_finalQCStatus")
+        if [[ "$httpResponse" == *"legacycontent"* ]];
+        then
+            itemContentFlags="legacyContent"
+        else
+            itemContentFlags=""
+        fi
 
-    #urlGetItemInfo="http://10.1.1.34:8080/API/item/$itemId/metadata?field=oly_contentFlags&terse=yes"
-    #httpResponse=$(curl --location --request GET $urlGetItemInfo --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=Tkb9vkSC8v4SceB8CHUyB3iaMPjvgoHrzhLrvo36agG3wqv0jHc7nsOtdTo9JEyM')
+        sleep 2
 
-    #if [[ "$httpResponse" == *"legacycontent"* ]];
-    #then
-    #    itemContentFlags="legacyContent"
-    #else
-    #    itemContentFlags=""
-    #fi
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-newContentMissingMetadata) - ($itemId) - Adding item metadata to newContentMissingMetadataWorkflow csv" >> "$logfile"
 
-    sleep 2
+        echo "$itemId,$itemTitle,$itemLicensor,$itemContentType,$itemVersionType,$itemOriginalExtension,$itemContentFlags,$itemOriginalContentQCStatus,$itemFinalQCStatus" >> "$newContentMissingMetadataFileDestination"
 
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-newContentMissingMetadata) - ($itemId) - Adding item metadata to newContentMissingMetadataWorkflow csv" >> "$logfile"
-
-    #echo "$itemId,$itemTitle,$itemLicensor,$itemContentType,$itemVersionType,$itemOriginalExtension,$itemContentFlags,$itemOriginalContentQCStatus,$itemFinalQCStatus" >> "$newContentMissingMetadataFileDestination"
-
-    sleep 2
+        sleep 2
+    done
+    #-------------------------------------------------------------------------
 
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-newContentMissingMetadata) - ($itemId) - Process completed" >> "$logfile"
 
