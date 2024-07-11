@@ -42,21 +42,25 @@ do
 	then
 		sleepTime=$(( (30 - currentMinute) * 60 ))
 		sleepTimeMinutes=$(( sleepTime / 60 ))
+		echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflowManager) - Current Minute is less than 30 - waiting [$sleepTime] seconds or [$sleepTimeMinutes] minutes"
 		echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflowManager) - Current Minute is less than 30 - waiting [$sleepTime] seconds or [$sleepTimeMinutes] minutes" >> "$logfile"
 		sleep $sleepTime
 	#elif [ "$currentMinute" -ge 46 ];
 	else
 		if [ "$currentMinute" -ge 46 ];
 		then
-			echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflowManager) - Current Minute is more than 46 - waiting until the next 30th minute" >> "$logfile"
-			sleep $(( (60 - currentMinute + 30 - 1) * 60 ))
+			sleepTime=$(( (60 - currentMinute + 30) * 60 ))
+			sleepTimeMinutes=$(( sleepTime / 60 ))
+			echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflowManager) - Current Minute is more than 46 - waiting [$sleepTime] seconds or [$sleepTimeMinutes] minutes"
+			echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflowManager) - Current Minute is more than 46 - waiting [$sleepTime] seconds or [$sleepTimeMinutes] minutes" >> "$logfile"
+			sleep $sleepTime
 		#elif [ "$currentMinute" -ge 30 ] && [ "$currentMinute" -lt 46 ];
 		else
 			if [ "$currentMinute" -ge 30 ] && [ "$currentMinute" -lt 46 ];
 			then
+				echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflowManager) - Current Minute is between 30 & 45 - Continuing with process"
 				echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflowManager) - Current Minute is between 30 & 45 - Continuing with process" >> "$logfile"
 
-				: '
 				#--------------------------------------------------
 				# Get the current hour in 24-hour format
 				currentHour=$(date +%H)
@@ -101,7 +105,6 @@ do
 					sleep $checkInterval
 				fi
 				#--------------------------------------------------
-				'
 			fi
 		fi
 	fi
