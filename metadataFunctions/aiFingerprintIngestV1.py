@@ -130,6 +130,8 @@ try:
   genrePayload = parsedGenreXML.toprettyxml()
 
   moodList = readCantimoLookup("oly_moodAnalysis")
+  for individualMood in moodList:
+    moodLookupXML += f"<field><key>{individualMood}</key><value>{individualMood}</value></field>"
   for individualMood in responseJson["mood_tag"]:
     moodXML += f"<value>{individualMood}</value>"
     if individualMood.lower() not in moodList:
@@ -146,6 +148,8 @@ try:
   moodPayload = parsedMoodXML.toprettyxml()
 
   keywordList = readCantimoLookup("oly_keywordAnalysis")
+  for individualKeyword in keywordList:
+    keywordLookupXML += f"<field><key>{individualKeyword}</key><value>{individualKeyword}</value></field>"
   for individualKeyword in responseJson["keyword"]:
     keywordXML += f"<value>{individualKeyword}</value>"
     if individualKeyword.lower() not in keywordList:
