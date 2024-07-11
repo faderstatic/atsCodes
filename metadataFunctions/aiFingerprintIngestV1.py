@@ -61,7 +61,13 @@ def readCantimoLookup(rclFieldName):
   return lookupList
 
 def createCantimoLookup(cckFieldName, cckLookupXMLPayload):
-  print(f"{cckFieldName} is updated with payload... {cckLookupXMLPayload}")
+  headers = {
+  'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
+  'Cookie': 'csrftoken=HFOqrbk9cGt3qnc6WBIxWPjvCFX0udBdbJnzCv9jECumOjfyG7SS2lgVbFcaHBCc',
+  'Content-Type': 'application/xml'
+  }
+  urlPutLookupValues = f"http://10.1.1.34:8080/API/metadata-field/{cckFieldName}/values"
+  httpApiResponse = requests.request("PUT", urlPutLookupValues, headers=headers, data=cckLookupXMLPayload)
   pass
 
 #------------------------------
