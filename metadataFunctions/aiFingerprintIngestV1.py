@@ -107,7 +107,7 @@ try:
   genreList = readCantimoLookup("oly_genreAnalysis")
   for individualGenre in responseJson["genre"]:
     genreXML += f"<value>{individualGenre}</value>"
-    if individualGenre.lower() != genreList:
+    if individualGenre.lower() not in genreList:
       addingGenreLookup = "true"
       genreLookupXML += f"<field><key>{individualGenre}</key><value>{individualGenre}</value></field>"
   genreLookupXML += "</SimpleMetadataDocument>"
@@ -122,7 +122,7 @@ try:
   moodList = readCantimoLookup("oly_moodAnalysis")
   for individualMood in responseJson["mood_tag"]:
     moodXML += f"<value>{individualMood}</value>"
-    if individualMood.lower() != moodList:
+    if individualMood.lower() not in moodList:
       addingMoodLookup = "true"
       moodLookupXML += f"<field><key>{individualMood}</key><value>{individualMood}</value></field>"
   moodLookupXML += "</SimpleMetadataDocument>"
@@ -135,10 +135,10 @@ try:
   moodPayload = parsedMoodXML.toprettyxml()
 
   keywordList = readCantimoLookup("oly_keywordAnalysis")
-  print({keywordList})
+  # print({keywordList})
   for individualKeyword in responseJson["keyword"]:
     keywordXML += f"<value>{individualKeyword}</value>"
-    if individualKeyword.lower() != keywordList:
+    if individualKeyword.lower() not in keywordList:
       addingKeywordLookup = "true"
       keywordLookupXML += f"<field><key>{individualKeyword}</key><value>{individualKeyword}</value></field>"
   keywordLookupXML += "</SimpleMetadataDocument>"
