@@ -61,7 +61,7 @@ def readCantimoLookup(rclFieldName):
   return lookupList
 
 def createCantimoLookup(cckFieldName, cckLookupXMLPayload):
-  print(f"{cckFieldName} is updated with payload... {cckLookupXMLPayload})
+  print(f"{cckFieldName} is updated with payload... {cckLookupXMLPayload}")
   pass
 
 #------------------------------
