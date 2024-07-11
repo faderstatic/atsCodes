@@ -31,7 +31,7 @@ do
 		logfile="/opt/olympusat/logs/notificationWorkflow-$newDate.log"
 	fi
 	#--------------------------------------------------
-	
+
 	#--------------------------------------------------
 	# Get the current hour in 24-hour format
 	currentHour=$(date +%H)
@@ -57,9 +57,13 @@ do
 		
 		currentDay=$(date +'%A')
 
+		echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflowManager) - Check Current Day value - [$currentDay]" >> "$logfile"
+
 		if [[ "$currentDay" == "Friday" ]];
 		then
 			echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflowManager) - Current Day is Friday - continue with triggering Weekly Report Email" >> "$logfile"
+			# Trigger Send Email for finalQCPending Workflow
+			bash -c "sudo /opt/olympusat/scriptsActive/notificationWorkflow-addToWeeklyReport_v1.1.sh contentMissingMetadata > /dev/null 2>&1 &"
 		else
 			echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflowManager) - Current Day is NOT Friday - do nothing" >> "$logfile"
 		fi
