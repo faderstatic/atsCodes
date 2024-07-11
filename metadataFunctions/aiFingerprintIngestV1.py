@@ -94,9 +94,9 @@ try:
   addingGenreLookup = "false"
   addingMoodLookup = "false"
   addingKeywordLookup = "false"
-  genreLookupXML = f"<SimpleMetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><field>"
-  moodLookupXML = f"<SimpleMetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><field>"
-  keywordLookupXML = f"<SimpleMetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><field>"
+  genreLookupXML = f"<SimpleMetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\">"
+  moodLookupXML = f"<SimpleMetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\">"
+  keywordLookupXML = f"<SimpleMetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\">"
   genreXML = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><group>Olympusat</group><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_genreAnalysis</name>"
   moodXML = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><group>Olympusat</group><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_moodAnalysis</name>"
   keywordXML = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><group>Olympusat</group><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_keywordAnalysis</name>"
@@ -109,8 +109,8 @@ try:
     genreXML += f"<value>{individualGenre}</value>"
     if individualGenre.lower() != genreList:
       addingGenreLookup = "true"
-      genreLookupXML += f"<key>{individualGenre}</key><value>{individualGenre}</value>"
-  genreLookupXML += "</field></SimpleMetadataDocument>"
+      genreLookupXML += f"<field><key>{individualGenre}</key><value>{individualGenre}</value></field>"
+  genreLookupXML += "</SimpleMetadataDocument>"
   if addingGenreLookup == 'true':
     parsedGenreLookupXML = xml.dom.minidom.parseString(genreLookupXML)
     genreLookupPayload = parsedGenreLookupXML.toprettyxml()
@@ -124,8 +124,8 @@ try:
     moodXML += f"<value>{individualMood}</value>"
     if individualMood.lower() != moodList:
       addingMoodLookup = "true"
-      moodLookupXML += f"<key>{individualMood}</key><value>{individualMood}</value>"
-  moodLookupXML += "</field></SimpleMetadataDocument>"
+      moodLookupXML += f"<field><key>{individualMood}</key><value>{individualMood}</value></field>"
+  moodLookupXML += "</SimpleMetadataDocument>"
   if addingMoodLookup == 'true':
     parsedMoodLookupXML = xml.dom.minidom.parseString(moodLookupXML)
     moodLookupPayload = parsedMoodLookupXML.toprettyxml()
@@ -139,10 +139,10 @@ try:
     keywordXML += f"<value>{individualKeyword}</value>"
     if individualKeyword.lower() != keywordList:
       addingKeywordLookup = "true"
-      keywordLookupXML += f"<key>{individualKeyword}</key><value>{individualKeyword}</value>"
-  keywordLookupXML += "</field></timespan></MetadataDocument>"
+      keywordLookupXML += f"<field><key>{individualKeyword}</key><value>{individualKeyword}</value></field>"
+  keywordLookupXML += "</SimpleMetadataDocument>"
   if addingKeywordLookup == 'true':
-    parsedKeywordLookupXML = xml.dom.minidom.parseString(KeywordLookupXML)
+    parsedKeywordLookupXML = xml.dom.minidom.parseString(keywordLookupXML)
     keywordLookupPayload = parsedKeywordLookupXML.toprettyxml()
     createCantimoLookup("oly_keywordAnalysis", keywordLookupPayload)
   keywordXML += "</field></timespan></MetadataDocument>"
