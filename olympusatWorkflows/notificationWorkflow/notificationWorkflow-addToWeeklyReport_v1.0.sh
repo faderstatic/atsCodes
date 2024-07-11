@@ -125,7 +125,7 @@ then
     #-------------------------------------------------------------------------
     # Iterate through searchResponse and extract out each vidispine_id
     items=$(echo "$searchResponse" | jq -r '.results' | jq '.[]' | jq -r '.vidispine_id')
-    for item in ${items[@]}; do
+    for itemId in ${items[@]}; do
         # Gather item's metadata
         echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-newContentMissingMetadata) - ($itemId) - Gathering item metadata from Cantemo" >> "$logfile"
         itemTitle=$(filterVidispineItemMetadata $itemId "metadata" "title")
