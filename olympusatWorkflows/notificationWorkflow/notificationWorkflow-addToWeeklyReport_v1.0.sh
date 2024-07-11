@@ -31,7 +31,7 @@ if [[ "$emailNotificationWorkflow" == "newContentMissingMetadata" ]];
 then
     # emailNotificationWorkflow varialbe is set to newContentMissingMetadata
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-newContentMissingMetadata) - Checking for newContentMissingMetadataFileDestination file" >> "$logfile"
-    newContentMissingMetadataFileDestination="/opt/olympusat/resources/emailNotificationWorkflow/newContentMissingMetadata/newContentMissingMetadataWorkflow-$mydate.csv"
+    newContentMissingMetadataFileDestination="/opt/olympusat/resources/emailNotificationWorkflow/newContentMissingMetadata/newContentMissingMetadata-$mydate.csv"
     if [[ ! -e "$newContentMissingMetadataFileDestination" ]];
     then
         echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-newContentMissingMetadata) - newContentMissingMetadataFileDestination file NOT FOUND - creating new file with headers" >> "$logfile"
