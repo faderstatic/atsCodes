@@ -91,7 +91,7 @@ MAM Notify"
         curl --url 'smtp://smtp-mail.outlook.com:587' \
         --ssl-reqd  \
         --mail-from $emailFrom \
-        --mail-rcpt $recipient4 --mail-rcpt $recipient5 \
+        --mail-rcpt $recipient1 --mail-rcpt $recipient2 --mail-rcpt $recipient3 \
         --user 'notify@olympusat.com:6bOblVsLg9bPQ8WG7JC7f8Zump' \
         -F '=(;type=multipart/mixed' \
         -F "=$sesMessage;type=text/plain" \
