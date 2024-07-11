@@ -102,7 +102,7 @@ try:
   for individualGenre in responseJson["genre"]:
     # print(individualGenre)
     genreXML += f"<value>{individualGenre}</value>"
-    if individualGenre.lower() != keywordList:
+    if individualGenre.lower() != genreList:
       createCantimoLookup("oly_genreAnalysis", individualKeyword)
   genreXML += "</field></timespan></MetadataDocument>"
   parsedGenreXML = xml.dom.minidom.parseString(genreXML)
