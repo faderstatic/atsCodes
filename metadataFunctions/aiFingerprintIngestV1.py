@@ -51,11 +51,12 @@ def readCantimoLookup(rclFieldName):
   # Parsing XML data
   ET.register_namespace('ns', 'http://xml.vidispine.com/schema/vidispine')
   lookupXmlRoot = ET.fromstring(lookupValueXml)
-  lookupList = ''
+  # lookupList = ''
   # print(lookupXmlRoot.find('{http://xml.vidispine.com/schema/vidispine}field'))
   for fieldValue in lookupXmlRoot:
     lookupValue = fieldValue.find('{http://xml.vidispine.com/schema/vidispine}key')
-    lookupList += lookupValue.text.lower()+','
+    # lookupList += lookupValue.text.lower()+','
+    lookupList.append(lookupValue.text.lower())
   # print(lookupList)
   #------------------------------
   return lookupList
