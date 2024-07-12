@@ -1,5 +1,6 @@
-#!/opt/cantemo/python/bin/python
+# /opt/cantemo/python/bin/python
 # /usr/local/bin/python3
+#!/usr/bin/python3
 
 # This application ingests metadata from an XML API response into Cantemo
 # PREREQUISITE: -none-
