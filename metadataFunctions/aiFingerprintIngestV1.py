@@ -1,9 +1,9 @@
-# /opt/cantemo/python/bin/python
-#!/usr/local/bin/python3
+#!/opt/cantemo/python/bin/python
+# /usr/local/bin/python3
 
 # This application ingests metadata from an XML API response into Cantemo
 # PREREQUISITE: -none-
-# 	Usage: aiFingerprintIngest.py [full file path of the XML file
+# 	Usage: aiFingerprintIngestV1.py [Cantemo ItemID]
 
 #------------------------------
 # Libraries
@@ -72,12 +72,13 @@ def createCantimoLookup(cckFieldName, cckLookupXMLPayload):
   pass
 
 #------------------------------
+#------------------------------
 
 try:
   cantemoItemId = sys.argv[1]
   # cantemoItemId = os.environ.get("portal_itemId")
   errorReport = ''
-  outputFPFile = f"/Users/kkanjanapitak/Desktop/{cantemoItemId}_FP.json"
+  outputFPFile = f"/opt/olympusat/resources/vionlabsReports/{cantemoItemId}_FP.json"
   
 
   
@@ -87,8 +88,8 @@ try:
     'Accept': 'application/json'
   }
   payload = {}
-  # urlGetProfanitySegments = f"https://apis.prod.vionlabs.com/results/fingerprintplus/v1/{cantemoItemId}?&key=kt8cyimHXxUzFNGyhd7c7g"
-  urlGetProfanitySegments = f"https://apis.prod.vionlabs.com/results/fingerprintplus/v1/OLT-003?&key=kt8cyimHXxUzFNGyhd7c7g"
+  urlGetProfanitySegments = f"https://apis.prod.vionlabs.com/results/fingerprintplus/v1/{cantemoItemId}?&key=kt8cyimHXxUzFNGyhd7c7g"
+  # urlGetProfanitySegments = f"https://apis.prod.vionlabs.com/results/fingerprintplus/v1/OLT-003?&key=kt8cyimHXxUzFNGyhd7c7g"
   httpApiResponse = requests.request("GET", urlGetProfanitySegments, headers=headers, data=payload)
   httpApiResponse.raise_for_status()
   #------------------------------
@@ -123,8 +124,8 @@ try:
   if addingGenreLookup == 'true':
     parsedGenreLookupXML = xml.dom.minidom.parseString(genreLookupXML)
     genreLookupPayload = parsedGenreLookupXML.toprettyxml()
-    print(genreLookupPayload)
-    # createCantimoLookup("oly_genreAnalysis", genreLookupPayload)
+    # print(genreLookupPayload)
+    createCantimoLookup("oly_genreAnalysis", genreLookupPayload)
   genreXML += "</field></timespan></MetadataDocument>"
   parsedGenreXML = xml.dom.minidom.parseString(genreXML)
   genrePayload = parsedGenreXML.toprettyxml()
@@ -141,8 +142,8 @@ try:
   if addingMoodLookup == 'true':
     parsedMoodLookupXML = xml.dom.minidom.parseString(moodLookupXML)
     moodLookupPayload = parsedMoodLookupXML.toprettyxml()
-    print(moodLookupPayload)
-    # createCantimoLookup("oly_moodAnalysis", moodLookupPayload)
+    # print(moodLookupPayload)
+    createCantimoLookup("oly_moodAnalysis", moodLookupPayload)
   moodXML += "</field></timespan></MetadataDocument>"
   parsedMoodXML = xml.dom.minidom.parseString(moodXML)
   moodPayload = parsedMoodXML.toprettyxml()
@@ -159,11 +160,12 @@ try:
   if addingKeywordLookup == 'true':
     parsedKeywordLookupXML = xml.dom.minidom.parseString(keywordLookupXML)
     keywordLookupPayload = parsedKeywordLookupXML.toprettyxml()
-    print(keywordLookupPayload)
-    # createCantimoLookup("oly_keywordAnalysis", keywordLookupPayload)
+    # print(keywordLookupPayload)
+    createCantimoLookup("oly_keywordAnalysis", keywordLookupPayload)
   keywordXML += "</field></timespan></MetadataDocument>"
   parsedKeywordXML = xml.dom.minidom.parseString(keywordXML)
   keywordPayload = parsedKeywordXML.toprettyxml()
+
   #------------------------------
   # Update Cantemo metadata
   headers = {
@@ -173,11 +175,11 @@ try:
   }
   urlPutAnalysisInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata/"
   # genrePayload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_analysisReport</name><value>{errorReport}</value></field></timespan></MetadataDocument>"
-  # httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=genrePayload)
-  # time.sleep(5)
-  # httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=moodPayload)
-  # time.sleep(5)
-  # httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=keywordPayload)
+  httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=genrePayload)
+  time.sleep(5)
+  httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=moodPayload)
+  time.sleep(5)
+  httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=keywordPayload)
   #------------------------------
   #------------------------------
 
