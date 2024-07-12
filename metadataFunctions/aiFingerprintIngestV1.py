@@ -124,7 +124,7 @@ try:
     parsedGenreLookupXML = xml.dom.minidom.parseString(genreLookupXML)
     genreLookupPayload = parsedGenreLookupXML.toprettyxml()
     print(genreLookupPayload)
-    createCantimoLookup("oly_genreAnalysis", genreLookupPayload)
+    # createCantimoLookup("oly_genreAnalysis", genreLookupPayload)
   genreXML += "</field></timespan></MetadataDocument>"
   parsedGenreXML = xml.dom.minidom.parseString(genreXML)
   genrePayload = parsedGenreXML.toprettyxml()
@@ -142,7 +142,7 @@ try:
     parsedMoodLookupXML = xml.dom.minidom.parseString(moodLookupXML)
     moodLookupPayload = parsedMoodLookupXML.toprettyxml()
     print(moodLookupPayload)
-    createCantimoLookup("oly_moodAnalysis", moodLookupPayload)
+    # createCantimoLookup("oly_moodAnalysis", moodLookupPayload)
   moodXML += "</field></timespan></MetadataDocument>"
   parsedMoodXML = xml.dom.minidom.parseString(moodXML)
   moodPayload = parsedMoodXML.toprettyxml()
@@ -160,7 +160,7 @@ try:
     parsedKeywordLookupXML = xml.dom.minidom.parseString(keywordLookupXML)
     keywordLookupPayload = parsedKeywordLookupXML.toprettyxml()
     print(keywordLookupPayload)
-    createCantimoLookup("oly_keywordAnalysis", keywordLookupPayload)
+    # createCantimoLookup("oly_keywordAnalysis", keywordLookupPayload)
   keywordXML += "</field></timespan></MetadataDocument>"
   parsedKeywordXML = xml.dom.minidom.parseString(keywordXML)
   keywordPayload = parsedKeywordXML.toprettyxml()
