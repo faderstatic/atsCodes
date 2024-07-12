@@ -63,8 +63,8 @@ try:
     'Accept': 'application/json'
   }
   payload = {}
-  # urlGetProfanitySegments = f"https://apis.prod.vionlabs.com/results/profanity/v1/segments/{cantemoItemId}?&key=kt8cyimHXxUzFNGyhd7c7g"
-  urlGetProfanitySegments = f"https://apis.prod.vionlabs.com/results/profanity/v1/segments/OLT-003?&key=kt8cyimHXxUzFNGyhd7c7g"
+  urlGetProfanitySegments = f"https://apis.prod.vionlabs.com/results/profanity/v1/segments/{cantemoItemId}?&key=kt8cyimHXxUzFNGyhd7c7g"
+  # urlGetProfanitySegments = f"https://apis.prod.vionlabs.com/results/profanity/v1/segments/OLT-003?&key=kt8cyimHXxUzFNGyhd7c7g"
   httpApiResponse = requests.request("GET", urlGetProfanitySegments, headers=headers, data=payload)
   httpApiResponse.raise_for_status()
   #------------------------------
