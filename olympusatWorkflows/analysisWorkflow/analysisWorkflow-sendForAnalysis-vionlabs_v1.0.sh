@@ -1,10 +1,10 @@
 #!/bin/bash
 
 #::***************************************************************************************************************************
-#::This shell script is the initial trigger to create list of items to send email notification
+#::This shell script will copy an item's proxy to Analysis_Ingest folder & then trigger API Call to Vionlabs
 #::Engineers: Ryan Sims & Tang Kanjanapitak
 #::Client: Olympusat
-#::Updated: 07/08/2024
+#::Updated: 07/11/2024
 #::Rev A: 
 #::System requirements: This script will run in LINUX & MacOS
 #::***************************************************************************************************************************
@@ -19,53 +19,60 @@ IFS=$(echo -e "\n\b")
 
 export mydate=$(date +%Y-%m-%d)
 export datetime=$(date +%Y/%m/%d_%H:%M)
-logfile="/opt/olympusat/logs/notificationWorkflow-$mydate.log"
+logfile="/opt/olympusat/logs/olympusatWorkflow-$mydate.log"
 
 # Set Variables to check before continuing with script
 export itemId=$1
-export emailNotificationWorkflow=$2
+export analysisType=$2
 
-echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - ($itemId) - Email Workflow - [$emailNotificationWorkflow]" >> "$logfile"
+echo "$(date +%Y/%m/%d_%H:%M:%S) - (analysisWorkflow-vionlabs) - ($itemId) - Checking Analysis Type - [$analysisType]" >> "$logfile"
 
-# Check Variable
-if [[ "$emailNotificationWorkflow" == "newItem" ]];
+# Check analysisType Variable
+if [[ "$analysisType" == "vionlabs" ]];
 then
-    # emailNotificationWorkflow varialbe is set to newItem
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - ($itemId) - Checking for newItemFileDestination file" >> "$logfile"
-    newItemFileDestination="/opt/olympusat/resources/emailNotificationWorkflow/newItem/newItemWorkflow-$mydate.csv"
-    if [[ ! -e "$newItemFileDestination" ]];
+    # analysisType varialbe is set to vionlabs
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (analysisWorkflow-vionlabs) - ($itemId) - Checking & Preparing to Send Item to Vionlabs for Analysis" >> "$logfile"
+    
+    itemAnalysisStatus=$(filterVidispineItemMetadata $itemId "metadata" "oly_analysisStatus")
+
+    if [[ "$itemAnalysisStuats" == *"in progress"* ]];
     then
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - ($itemId) - newItemFileDestination file NOT FOUND - creating new file with headers" >> "$logfile"
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (analysisWorkflow-vionlabs) - ($itemId) - Analysis Status is ALREADY in progress - exiting script/workflow" >> "$logfile"    
+    else    
+        itemContentType=$(filterVidispineItemMetadata $itemId "metadata" "oly_contentType")
 
-        sleep 2
+        if [[ "$itemContentType" == "movie" ]] || [[ "$itemContentType" == "episode" ]];
+        then
+            # itemContentType is movie or episode-continue with script/workflow
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (analysisWorkflow-vionlabs) - ($itemId) - Item Content Type is [$itemContentType]" >> "$logfile"
+            
+            export url="http://10.1.1.34:8080/API/item/$itemId/uri?tag=lowres"
+            postResponse=$(curl --location $url --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=q7VRUT9f9VUOd0n4ZqiBmIU6EUxeZYM3886MVW3kGyuG1hODXCyO77DAhEPTOU9c')
+            proxySourcePath=$(echo "$postResponse" | awk -F "<uri>" '{print $2}' | awk -F "</uri>" '{print $1}')
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (analysisWorkflow-vionlabs) - ($itemId) - Item Proxy Source Path is [$proxySourcePath]" >> "$logfile"
+            proxySourceFilename=$(echo "$proxySourcePath" | awk -F '/' '{print $NF}')
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (analysisWorkflow-vionlabs) - ($itemId) - Item Proxy Source Filename is [$proxyFilename]" >> "$logfile"
 
-        echo "ItemId,Title,ContentType,VersionType,FileExtension" >> "$newItemFileDestination"
+            if [[ ! -e "$proxySourcePath" ]];
+            then
+                # no proxySourcePath-exiting script/workflow
+                echo "$(date +%Y/%m/%d_%H:%M:%S) - (analysisWorkflow-vionlabs) - ($itemId) - No Proxy Source Path - exiting script/workflow" >> "$logfile"
+            else
+                # proxySourcePath exists-continuing with script/workflow
+                echo "$(date +%Y/%m/%d_%H:%M:%S) - (analysisWorkflow-vionlabs) - ($itemId) - Proxy Source Path exists - continugin with script/workflow" >> "$logfile"
+                destinationPath="/Volumes/creative/Content_Processing/Analysis_Ingest/$proxySourceFilename"
 
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - ($itemId) - New File created - [$newItemFileDestination]" >> "$logfile"
-        
-        sleep 5
-    fi 
-
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - ($itemId) - Gathering item metadata from Cantemo" >> "$logfile"
-    itemTitle=$(filterVidispineItemMetadata $itemId "metadata" "title")
-    itemContentType=$(filterVidispineItemMetadata $itemId "metadata" "oly_contentType")
-    itemVersionType=$(filterVidispineItemMetadata $itemId "metadata" "oly_versionType")
-    itemOriginalFilename=$(filterVidispineItemMetadata $itemId "metadata" "originalFilename")
-    itemOriginalExtension=$(echo "$itemOriginalFilename" | awk -F "." '{print $2}')
-
-    sleep 2
-
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - ($itemId) - Adding item metadata to newItemWorkflow csv" >> "$logfile"
-
-    echo "$itemId,$itemTitle,$itemContentType,$itemVersionType,$itemOriginalExtension" >> "$newItemFileDestination"
-
-    sleep 2
-
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - ($itemId) - Process completed" >> "$logfile"
-
+                echo "$(date +%Y/%m/%d_%H:%M:%S) - (analysisWorkflow-vionlabs) - ($itemId) - Copy Proxy to Destination [$destinationPath] In Progress" >> "$logfile"
+                #cp "$proxySourcePath" "$destinationPath"
+            fi 
+        else
+            # itemContentType is not supported-exit script/workflow
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (analysisWorkflow-vionlabs) - ($itemId) - Item Content Type is NOT supported - [$itemContentType]" >> "$logfile"
+        fi
+    fi
 else
-    # emailNotificationWorkflow variable is not supported
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - ($itemId) - emailNotificationWorkflow variable is not supported" >> "$logfile"
+    # analysisType variable is not supported
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (emailNotificationWorkflow) - ($itemId) - analysisType variable is not supported" >> "$logfile"
 fi
 
 IFS=$saveIFS
