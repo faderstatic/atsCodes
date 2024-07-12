@@ -63,7 +63,8 @@ then
                 # proxySourcePath exists-continuing with script/workflow
                 echo "$(date +%Y/%m/%d_%H:%M:%S) - (analysisWorkflow-vionlabs) - ($itemId) - Proxy Source Path exists - continuing with script/workflow" >> "$logfile"
                 destinationPath="/Volumes/creative/Content_Processing/Analysis_Ingest/$proxySourceFilename"
-                apiFileUri="/mnt${destinationPath#/Volumes/creative/Content_Processing}"
+                #apiFileUri="/mnt${destinationPath#/Volumes/creative/Content_Processing}"
+                apiFileUri="/mnt/media/Vionlabs/$proxySourceFilename"
                 echo "$(date +%Y/%m/%d_%H:%M:%S) - (analysisWorkflow-vionlabs) - ($itemId) - apiFileUri is [$apiFileUri]" >> "$logfile"
 
                 updateVidispineMetadata $itemId "oly_analysisStatus" "in progress - copying proxy to Analysis_Ingest"
@@ -83,7 +84,7 @@ then
                     updateVidispineMetadata $itemId "oly_analysisStatus" "in progress - copy job completed - delay 10 seconds"
                     echo "$(date +%Y/%m/%d_%H:%M:%S) - (analysisWorkflow-vionlabs) - ($itemId) - Copy Proxy to Destination COMPLETED - delay 10 seconds" >> "$logfile"
 
-                    sleep 10
+                    sleep 60
 
                     itemTitle=$(filterVidispineItemMetadata $itemId "metadata" "title")
                     updateVidispineMetadata $itemId "oly_analysisStatus" "in progress - triggering api call to vionlabs"
