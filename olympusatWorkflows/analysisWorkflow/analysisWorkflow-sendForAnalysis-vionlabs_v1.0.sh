@@ -48,22 +48,83 @@ then
             
             export url="http://10.1.1.34:8080/API/item/$itemId/uri?tag=lowres"
             postResponse=$(curl --location $url --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=q7VRUT9f9VUOd0n4ZqiBmIU6EUxeZYM3886MVW3kGyuG1hODXCyO77DAhEPTOU9c')
-            proxySourcePath=$(echo "$postResponse" | awk -F "<uri>" '{print $2}' | awk -F "</uri>" '{print $1}')
+            proxySourcePath=$(echo "$postResponse" | awk -F "<uri>" '{print $2}' | awk -F "</uri>" '{print $1}' | sed 's/%20/ /g')
+            proxySourcePath=$(echo "${proxySourcePath:7}")
             echo "$(date +%Y/%m/%d_%H:%M:%S) - (analysisWorkflow-vionlabs) - ($itemId) - Item Proxy Source Path is [$proxySourcePath]" >> "$logfile"
             proxySourceFilename=$(echo "$proxySourcePath" | awk -F '/' '{print $NF}')
-            echo "$(date +%Y/%m/%d_%H:%M:%S) - (analysisWorkflow-vionlabs) - ($itemId) - Item Proxy Source Filename is [$proxyFilename]" >> "$logfile"
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (analysisWorkflow-vionlabs) - ($itemId) - Item Proxy Source Filename is [$proxySourceFilename]" >> "$logfile"
 
             if [[ ! -e "$proxySourcePath" ]];
             then
                 # no proxySourcePath-exiting script/workflow
+                updateVidispineMetadata $itemId "oly_analysisStatus" "failed copy job - no proxy source path"
                 echo "$(date +%Y/%m/%d_%H:%M:%S) - (analysisWorkflow-vionlabs) - ($itemId) - No Proxy Source Path - exiting script/workflow" >> "$logfile"
             else
                 # proxySourcePath exists-continuing with script/workflow
-                echo "$(date +%Y/%m/%d_%H:%M:%S) - (analysisWorkflow-vionlabs) - ($itemId) - Proxy Source Path exists - continugin with script/workflow" >> "$logfile"
+                echo "$(date +%Y/%m/%d_%H:%M:%S) - (analysisWorkflow-vionlabs) - ($itemId) - Proxy Source Path exists - continuing with script/workflow" >> "$logfile"
                 destinationPath="/Volumes/creative/Content_Processing/Analysis_Ingest/$proxySourceFilename"
+                apiFileUri="/mnt${destinationPath#/Volumes/creative/Content_Processing}"
+                echo "$(date +%Y/%m/%d_%H:%M:%S) - (analysisWorkflow-vionlabs) - ($itemId) - apiFileUri is [$apiFileUri]" >> "$logfile"
 
+                updateVidispineMetadata $itemId "oly_analysisStatus" "in progress - copying proxy to Analysis_Ingest"
                 echo "$(date +%Y/%m/%d_%H:%M:%S) - (analysisWorkflow-vionlabs) - ($itemId) - Copy Proxy to Destination [$destinationPath] In Progress" >> "$logfile"
-                #cp "$proxySourcePath" "$destinationPath"
+                cp "$proxySourcePath" "$destinationPath"
+
+                sleep 5
+                
+                # Checking if proxy file exists in destinationPath
+                if [[ ! -e "$destinationPath" ]];
+                then
+                    # Proxy copy job failed-exiting script/workflow
+                    updateVidispineMetadata $itemId "oly_analysisStatus" "failed copy job"
+                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (analysisWorkflow-vionlabs) - ($itemId) - Copy Proxy to Destination FAILED - exiting script/workflow" >> "$logfile"
+                else
+                    # Proxy copy job completed-continuing with script/workflow
+                    updateVidispineMetadata $itemId "oly_analysisStatus" "in progress - copy job completed - delay 10 seconds"
+                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (analysisWorkflow-vionlabs) - ($itemId) - Copy Proxy to Destination COMPLETED - delay 10 seconds" >> "$logfile"
+
+                    sleep 10
+
+                    itemTitle=$(filterVidispineItemMetadata $itemId "metadata" "title")
+                    updateVidispineMetadata $itemId "oly_analysisStatus" "in progress - triggering api call to vionlabs"
+                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (analysisWorkflow-vionlabs) - ($itemId) - Triggering API Call to Vionlabs" >> "$logfile"
+
+                    case "$itemContentType" in
+
+                        "episode")
+                            itemSeriesName=$(filterVidispineItemMetadata $itemId "metadata" "oly_seriesName")
+                            itemSeasonNumber=$(filterVidispineItemMetadata $itemId "metadata" "oly_seasonNumber")
+                            itemEpisodeNumber=$(filterVidispineItemMetadata $itemId "metadata" "oly_episodeNumber")
+                            url="https://apis.prod.vionlabs.com/catalog/v1/item?key=kt8cyimHXxUzFNGyhd7c7g"
+                            body="{\"id\": \"$itemId\",\"type\": \"episode\",\"title\": \"$itemTitle\",\"asset_info\": {\"file_uri\": \"$apiFileUri\"},\"extended_episodic_info\": {\"series_id\": \"$itemSeriesName\",\"series_title\": \"$itemSeriesName\",\"season_id\": \"$itemSeriesName S$itemSeasonNumber\",\"season_title\": \"Season $itemSeasonNumber\",\"season_number\": $itemSeasonNumber,\"episode_number\": $itemEpisodeNumber}}"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (analysisWorkflow-vionlabs) - ($itemId) - Body {$body}" >> "$logfile"
+                            postResponse=$(curl --location --request PUT $url --header 'Accept: application/json' --header 'Content-Type: application/json' --data $body)
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (analysisWorkflow-vionlabs) - ($itemId) - Vionlabs API Response {$postResponse}" >> "$logfile"
+
+                            sleep 5
+
+                            updateVidispineMetadata $itemId "oly_analysisStatus" "in progress - submitted to vionlabs"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (analysisWorkflow-vionlabs) - ($itemId) - Submitted to Vionlabs for Analysis" >> "$logfile"
+
+                        ;;
+
+                        "movie")
+                            url="https://apis.prod.vionlabs.com/catalog/v1/item?key=kt8cyimHXxUzFNGyhd7c7g"
+                            body="{\"id\": \"$itemId\",\"type\": \"standalone\",\"title\": \"$itemTitle\",\"asset_info\": {\"file_uri\": \"$apiFileUri\"}}"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (analysisWorkflow-vionlabs) - ($itemId) - Body {$body}" >> "$logfile"
+                            postResponse=$(curl --location --request PUT $url --header 'Accept: application/json' --header 'Content-Type: application/json' --data $body)
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (analysisWorkflow-vionlabs) - ($itemId) - Vionlabs API Response {$postResponse}" >> "$logfile"
+
+                            sleep 5
+
+                            updateVidispineMetadata $itemId "oly_analysisStatus" "in progress - submitted to vionlabs"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (analysisWorkflow-vionlabs) - ($itemId) - Submitted to Vionlabs for Analysis" >> "$logfile"
+
+                        ;;
+
+                    esac
+
+                fi
             fi 
         else
             # itemContentType is not supported-exit script/workflow
