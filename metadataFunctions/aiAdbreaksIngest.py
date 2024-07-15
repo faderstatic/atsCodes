@@ -123,6 +123,12 @@ try:
       # print(httpApiResponse.text)
       time.sleep(5)
       #------------------------------
+
+  statusRawPayload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_analysisStatus</name><value>completed - last request - adbreak</value></field></timespan></MetadataDocument>"
+  parsedStatusPayload = xml.dom.minidom.parseString(statusRawPayload)
+  statusPayload = parsedStatusPayload.toprettyxml()
+  httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=statusPayload)
+
   #------------------------------
 
 except HTTPError as http_err:
