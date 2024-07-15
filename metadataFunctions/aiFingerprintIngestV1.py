@@ -167,7 +167,7 @@ try:
   parsedKeywordXML = xml.dom.minidom.parseString(keywordXML)
   keywordPayload = parsedKeywordXML.toprettyxml()
 
-  statusRawPayload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_analysisStatus</name><value>completed - last request - fingerprint</value></field></timespan></MetadataDocument>""
+  statusRawPayload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_analysisStatus</name><value>completed - last request - fingerprint</value></field></timespan></MetadataDocument>"
   parsedStatusPayload = xml.dom.minidom.parseString(statusRawPayload)
   statusPayload = parsedStatusPayload.toprettyxml()
 
