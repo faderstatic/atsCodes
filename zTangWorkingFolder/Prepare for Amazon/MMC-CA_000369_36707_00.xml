@@ -1,0 +1,232 @@
+<manifest:MediaManifest xmlns:manifest="http://www.movielabs.com/schema/manifest/v1.8/manifest" xmlns:md="http://www.movielabs.com/schema/md/v2.7/md" xmlns:xsi="http://www.w3.org:olympusat/2001/XMLSchema-instance" xsi:schemaLocation="http://www.movielabs.com/schema/manifest/v1.8/manifest manifest-v1.8.1.xsd" ManifestID="SofaSpud.Example" updateNum="1">
+    <!-- script/ -->
+    <manifest:Compatibility>
+        <manifest:SpecVersion>1.5</manifest:SpecVersion>
+        <manifest:Profile>MMC-1</manifest:Profile>
+    </manifest:Compatibility>
+    <manifest:Inventory>
+        <!--  Main audio file for movie  -->
+        <manifest:Audio AudioTrackID="md:audtrackid:org:olympusat:OLY_4534-M:feature.audio.en">
+            <md:Type>primary</md:Type>
+            <md:Language>en-US</md:Language>
+            <manifest:ContainerReference>
+                <manifest:ContainerLocation>CA_000369_36707_00.mp4</manifest:ContainerLocation>
+            </manifest:ContainerReference>
+        </manifest:Audio>
+        <!--   Trailer   -->
+        <!-- manifest:Audio AudioTrackID="md:audtrackid:org:olympusat:OLY_4534-M:trailer.1.audio.en">
+            <md:Type>primary</md:Type>
+            <md:Language>en-US</md:Language>
+            <manifest:ContainerReference>
+                <manifest:ContainerLocation>CA_000369_36707_00.mp4</manifest:ContainerLocation>
+            </manifest:ContainerReference>
+        </manifest:Audio -->
+        <!--   main video file for the movie   -->
+        <manifest:Video VideoTrackID="md:vidtrackid:org:olympusat:OLY_4534-M:feature.video">
+            <md:Type>primary</md:Type>
+            <md:Picture/>
+            <manifest:ContainerReference>
+                <manifest:ContainerLocation>CA_000369_36707_00.mp4</manifest:ContainerLocation>
+            </manifest:ContainerReference>
+        </manifest:Video>
+        <!--   video files for the trailers  -->
+        <!-- manifest:Video VideoTrackID="md:vidtrackid:org:olympusat:OLY_4534-M:trailer.1.video.en">
+            <md:Type>primary</md:Type>
+            <md:Picture/>
+            <manifest:ContainerReference>
+                <manifest:ContainerLocation>CA_000369_36707_00.mp4</manifest:ContainerLocation>
+            </manifest:ContainerReference>
+        </manifest:Video -->
+        <!--   subtitle and caption components for the feature   -->
+        <!-- manifest:Subtitle SubtitleTrackID="md:subtrackid:org:olympusat:OLY_4534-M:feature.caption.en">
+            <md:Type>SDH</md:Type>
+            <md:Language>en-US</md:Language>
+            <manifest:ContainerReference>
+                <manifest:ContainerLocation>CA_000369_36707_00_ENG.scc</manifest:ContainerLocation>
+            </manifest:ContainerReference>
+        </manifest:Subtitle -->
+        <!--   movie poster artwork is listed as images   -->
+        <!-- manifest:Image ImageID="md:imageid:org:olympusat:OLY_4534-M:art.en">
+            <md:Width>1200</md:Width>
+            <md:Height>1600</md:Height>
+            <md:Encoding>jpg</md:Encoding>
+            <md:Language>en-US</md:Language>
+            <manifest:ContainerReference>
+                <manifest:ContainerLocation>CA_000369_4588_00-3x4.jpg</manifest:ContainerLocation>
+            </manifest:ContainerReference>
+        </manifest:Image>
+        <manifest:Image ImageID="md:imageid:org:olympusat:OLY_4534-M:art.fr">
+            <md:Width>1789</md:Width>
+            <md:Height>2560</md:Height>
+            <md:Encoding>jpg</md:Encoding>
+            <md:Language>fr</md:Language>
+            <manifest:ContainerReference>
+                <manifest:ContainerLocation>CA_000369_36707_00_art_FR.jpg</manifest:ContainerLocation>
+            </manifest:ContainerReference>
+        </manifest:Image>
+        <manifest:Image ImageID="md:imageid:org:olympusat:OLY_4534-M:art.ru">
+            <md:Width>1789</md:Width>
+            <md:Height>2560</md:Height>
+            <md:Encoding>jpg</md:Encoding>
+            <md:Language>ru</md:Language>
+            <manifest:ContainerReference>
+                <manifest:ContainerLocation>CA_000369_36707_00_art_RU.jpg</manifest:ContainerLocation>
+            </manifest:ContainerReference>
+        </manifest:Image>
+        <manifest:Image ImageID="md:imageid:org:olympusat:OLY_4534-M:art.it">
+            <md:Width>1789</md:Width>
+            <md:Height>2560</md:Height>
+            <md:Encoding>jpg</md:Encoding>
+            <md:Language>it</md:Language>
+            <manifest:ContainerReference>
+                <manifest:ContainerLocation>CA_000369_36707_00_art_IT.jpg</manifest:ContainerLocation>
+            </manifest:ContainerReference>
+        </manifest:Image>
+        <manifest:Image ImageID="md:imageid:org:olympusat:OLY_4534-M:art.es">
+            <md:Width>1789</md:Width>
+            <md:Height>2560</md:Height>
+            <md:Encoding>jpg</md:Encoding>
+            <md:Language>es</md:Language>
+            <manifest:ContainerReference>
+                <manifest:ContainerLocation>CA_000369_36707_00_art_ES.jpg</manifest:ContainerLocation>
+            </manifest:ContainerReference>
+        </manifest:Image>
+        <manifest:Image ImageID="md:imageid:org:olympusat:OLY_4534-M:art.es-419">
+            <md:Width>1789</md:Width>
+            <md:Height>2560</md:Height>
+            <md:Encoding>jpg</md:Encoding>
+            <md:Language>es-419</md:Language>
+            <manifest:ContainerReference>
+                <manifest:ContainerLocation>CA_000369_36707_00_art_ES-419.jpg</manifest:ContainerLocation>
+            </manifest:ContainerReference>
+        </manifest:Image>
+        <manifest:Image ImageID="md:imageid:org:olympusat:OLY_4534-M:art.ko">
+            <md:Width>1000</md:Width>
+            <md:Height>1440</md:Height>
+            <md:Encoding>jpg</md:Encoding>
+            <md:Language>ko</md:Language>
+            <manifest:ContainerReference>
+                <manifest:ContainerLocation>CA_000369_36707_00_art_KO.jpg</manifest:ContainerLocation>
+            </manifest:ContainerReference>
+        </manifest:Image>
+        <manifest:Metadata ContentID="md:cid:org:olympusat:OLY_4534">
+            <manifest:ContainerReference type="common">
+                <manifest:ContainerLocation>MEC-CA_000369_36707_00.xml</manifest:ContainerLocation>
+            </manifest:ContainerReference>
+        </manifest:Metadata>
+        <manifest:Metadata ContentID="md:cid:org:olympusat:OLY_4534-M:trailer.1">
+        <manifest:ContainerReference type="common">
+        <manifest:ContainerLocation>MEC-CA_000369_36707_00_Trailer1.xml</manifest:ContainerLocation>
+        </manifest:ContainerReference>
+        </manifest:Metadata -->
+    </manifest:Inventory>
+    <!--   presentations are defined for all the inventory that is synched together. they are references of the video, audio, and subtitle inventory  -->
+    <manifest:Presentations>
+        <!--   the main feature presentation   -->
+        <manifest:Presentation PresentationID="md:presentationid:org:olympusat:OLY_4534-M:feature.presentation">
+            <manifest:TrackMetadata>
+                <manifest:TrackSelectionNumber>0</manifest:TrackSelectionNumber>
+                <manifest:VideoTrackReference>
+                    <manifest:VideoTrackID>md:vidtrackid:org:olympusat:OLY_4534-M:feature.video</manifest:VideoTrackID>
+                </manifest:VideoTrackReference>
+                <manifest:AudioTrackReference>
+                    <manifest:AudioTrackID>md:audtrackid:org:olympusat:OLY_4534-M:feature.audio.en</manifest:AudioTrackID>
+                </manifest:AudioTrackReference>
+                <!-- manifest:SubtitleTrackReference>
+                    <manifest:SubtitleTrackID>md:subtrackid:org:olympusat:OLY_4534-M:feature.caption.en</manifest:SubtitleTrackID>
+                </manifest:SubtitleTrackReference -->
+            </manifest:TrackMetadata>
+        </manifest:Presentation>
+        <!--   Trailer   -->
+        <!-- manifest:Presentation PresentationID="md:presentationid:org:olympusat:OLY_4534-M:trailer.1.presentation">
+            <manifest:TrackMetadata>
+                <manifest:TrackSelectionNumber>0</manifest:TrackSelectionNumber>
+                <manifest:VideoTrackReference>
+                    <manifest:VideoTrackID>md:vidtrackid:org:olympusat:OLY_4534-M:trailer.1.video.en</manifest:VideoTrackID>
+                </manifest:VideoTrackReference>
+                <manifest:AudioTrackReference>
+                    <manifest:AudioTrackID>md:audtrackid:org:olympusat:OLY_4534-M:trailer.1.audio.en</manifest:AudioTrackID>
+                </manifest:AudioTrackReference>
+            </manifest:TrackMetadata>
+        </manifest:Presentation -->
+    </manifest:Presentations>
+    <!-- manifest:PictureGroups>
+        <manifest:PictureGroup PictureGroupID="md:picturegroupid:org:olympusat:OLY_4534-M:feature">
+            <manifest:Picture>
+                <manifest:PictureID>md:pictureid:org:olympusat:OLY_4534-M:art.en</manifest:PictureID>
+                <manifest:ImageID>md:imageid:org:olympusat:OLY_4534-M:art.en</manifest:ImageID>
+                <manifest:LanguageInImage>en</manifest:LanguageInImage>
+            </manifest:Picture>
+            <manifest:Picture>
+                <manifest:PictureID>md:pictureid:org:olympusat:OLY_4534-M:art.fr</manifest:PictureID>
+                <manifest:ImageID>md:imageid:org:olympusat:OLY_4534-M:art.fr</manifest:ImageID>
+                <manifest:LanguageInImage>fr</manifest:LanguageInImage>
+            </manifest:Picture>
+            <manifest:Picture>
+                <manifest:PictureID>md:pictureid:org:olympusat:OLY_4534-M:art.ru</manifest:PictureID>
+                <manifest:ImageID>md:imageid:org:olympusat:OLY_4534-M:art.ru</manifest:ImageID>
+                <manifest:LanguageInImage>ru</manifest:LanguageInImage>
+            </manifest:Picture>
+            <manifest:Picture>
+                <manifest:PictureID>md:pictureid:org:olympusat:OLY_4534-M:art.it</manifest:PictureID>
+                <manifest:ImageID>md:imageid:org:olympusat:OLY_4534-M:art.it</manifest:ImageID>
+                <manifest:LanguageInImage>it</manifest:LanguageInImage>
+            </manifest:Picture>
+            <manifest:Picture>
+                <manifest:PictureID>md:pictureid:org:olympusat:OLY_4534-M:art.es</manifest:PictureID>
+                <manifest:ImageID>md:imageid:org:olympusat:OLY_4534-M:art.es</manifest:ImageID>
+                <manifest:LanguageInImage>es</manifest:LanguageInImage>
+            </manifest:Picture>
+            <manifest:Picture>
+                <manifest:PictureID>md:pictureid:org:olympusat:OLY_4534-M:art.es-419</manifest:PictureID>
+                <manifest:ImageID>md:imageid:org:olympusat:OLY_4534-M:art.es-419</manifest:ImageID>
+                <manifest:LanguageInImage>es-419</manifest:LanguageInImage>
+            </manifest:Picture>
+            <manifest:Picture>
+                <manifest:PictureID>md:pictureid:org:olympusat:OLY_4534-M:art.ko</manifest:PictureID>
+                <manifest:ImageID>md:imageid:org:olympusat:OLY_4534-M:art.ko</manifest:ImageID>
+                <manifest:LanguageInImage>ko</manifest:LanguageInImage>
+            </manifest:Picture>
+        </manifest:PictureGroup>
+        <manifest:PictureGroup PictureGroupID="md:picturegroupid:org:olympusat:OLY_4534-M:trailer.1">
+            <manifest:Picture>
+                <manifest:PictureID>md:pictureid:org:olympusat:OLY_4534-M:art.en</manifest:PictureID>
+                <manifest:ImageID>md:imageid:org:olympusat:OLY_4534-M:art.en</manifest:ImageID>
+                <manifest:LanguageInImage>en</manifest:LanguageInImage>
+            </manifest:Picture>
+        </manifest:PictureGroup>
+    </manifest:PictureGroups -->
+    <manifest:Experiences>
+        <!--  Root Experience  -->
+        <manifest:Experience ExperienceID="md:experienceid:org:olympusat:OLY_4534-M:experience" version="1.0">
+            <manifest:ContentID>md:cid:org:olympusat:OLY_4534</manifest:ContentID>
+            <manifest:Audiovisual ContentID="md:cid:org:olympusat:OLY_4534">
+                <manifest:Type>Main</manifest:Type>
+                <manifest:SubType>Feature</manifest:SubType>
+                <manifest:PresentationID>md:presentationid:org:olympusat:OLY_4534-M:feature.presentation</manifest:PresentationID>
+            </manifest:Audiovisual>
+            <!-- manifest:PictureGroupID>md:picturegroupid:org:olympusat:OLY_4534-M:feature</manifest:PictureGroupID>
+            <manifest:ExperienceChild>
+                <manifest:Relationship>ispromotionfor</manifest:Relationship>
+                <manifest:ExperienceID>md:experienceid:org:olympusat:OLY_4534-M:trailer.1.experience</manifest:ExperienceID>
+            </manifest:ExperienceChild -->
+        </manifest:Experience>
+        <!--  MultiLanguage  -->
+        <!--  Child Experiences (international)  -->
+        <!-- manifest:Experience ExperienceID="md:experienceid:org:olympusat:OLY_4534-M:trailer.1.experience" version="1.0">
+            <manifest:ContentID>md:cid:org:olympusat:OLY_4534-M:trailer.1</manifest:ContentID>
+            <manifest:Audiovisual ContentID="md:cid:org:olympusat:OLY_4534-M:trailer.1">
+                <manifest:Type>Promotion</manifest:Type>
+                <manifest:SubType>Default Trailer</manifest:SubType>
+                <manifest:PresentationID>md:presentationid:org:olympusat:OLY_4534-M:trailer.1.presentation</manifest:PresentationID>
+            </manifest:Audiovisual>
+            <manifest:PictureGroupID>md:picturegroupid:org:olympusat:OLY_4534-M:trailer.1</manifest:PictureGroupID>
+        </manifest:Experience -->
+    </manifest:Experiences>
+    <manifest:ALIDExperienceMaps>
+        <manifest:ALIDExperienceMap>
+            <manifest:ALID>md:alid:org:olympusat:OLY_4534</manifest:ALID>
+            <manifest:ExperienceID>md:experienceid:org:olympusat:OLY_4534-M:experience</manifest:ExperienceID>
+        </manifest:ALIDExperienceMap>
+    </manifest:ALIDExperienceMaps>
+</manifest:MediaManifest> 
