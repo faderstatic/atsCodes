@@ -10,9 +10,9 @@
 			<md:TitleDisplayUnlimited>Episode 01</md:TitleDisplayUnlimited>
 			<!-- TitleSort is required by the MEC XSD, but is not used by Amazon. Blank fields such as below are acceptable.  -->
 			<md:TitleSort></md:TitleSort>
-			<!-- md:ArtReference resolution="2560x1920" purpose="boxart">CA_000369_36712_00-still.jpg</md:ArtReference -->
-			<md:ArtReference resolution="1920x1080" purpose="cover">CA_000369_36707_00-still.jpg</md:ArtReference>
-			<!-- md:ArtReference resolution="1920x2560" purpose="hero">CA_000369_36712_00-3x4.jpg</md:ArtReference -->
+			<!-- md:ArtReference resolution="2560x1920" purpose="boxart">CA_000369_36707_00-still-16x9.jpg</md:ArtReference -->
+			<md:ArtReference resolution="1920x1080" purpose="cover">CA_000369_36707_00-still-16x9.jpg</md:ArtReference>
+			<!-- md:ArtReference resolution="1920x2560" purpose="hero">CA_000369_36707_00-3x4.jpg</md:ArtReference -->
 			<!-- Summary190 is required by the MEC XSD, but is not required by Amazon. Blank fields such as below are acceptable.  -->
 			<md:Summary190></md:Summary190>
 			<!-- Summary400 is required by Amazon -->
