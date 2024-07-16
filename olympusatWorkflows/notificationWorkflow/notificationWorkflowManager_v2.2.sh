@@ -87,13 +87,13 @@ do
 
 					echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflowManager) - Check Current Day value - [$currentDay]" >> "$logfile"
 
-					if [[ "$currentDay" == "Friday" ]];
+					if [[ "$currentDay" == "Tuesday" ]];
 					then
-						echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflowManager) - Current Day is Friday - continue with triggering Weekly Report Email" >> "$logfile"
-						# Trigger Send Email for finalQCPending Workflow
-						bash -c "sudo /opt/olympusat/scriptsActive/notificationWorkflow-addToWeeklyReport_v1.1.sh contentMissingMetadata > /dev/null 2>&1 &"
+						echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflowManager) - Current Day is Tuesday - continue with triggering Weekly Report Email" >> "$logfile"
+						# Trigger Send Email for contentMissingMetadata Workflow
+						bash -c "sudo /opt/olympusat/scriptsActive/notificationWorkflow-addToWeeklyReport_v1.2.sh contentMissingMetadata > /dev/null 2>&1 &"
 					else
-						echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflowManager) - Current Day is NOT Friday - do nothing" >> "$logfile"
+						echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflowManager) - Current Day is NOT Tuesday - do nothing" >> "$logfile"
 					fi
 
 					sleep $checkInterval

@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mdmec:CoreMetadata xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.movielabs.com/schema/mdmec/v2.9 ../mdmec-v2.9.xsd"
+ xmlns:md="http://www.movielabs.com/schema/md/v2.9/md"
+ xmlns:mdmec="http://www.movielabs.com/schema/mdmec/v2.9">
+	
+	<mdmec:Basic ContentID="md:cid:org:olympusat:OLY_6335">
+
+		<md:LocalizedInfo language="en-US">
+			<!-- TitleDisplayUnlimited is required by Amazon. Limited to 250 characters. -->
+			<md:TitleDisplayUnlimited>Tintansón CruZoe</md:TitleDisplayUnlimited>
+			<!-- TitleSort is required by the MEC XSD, but is not used by Amazon. Blank fields such as below are acceptable.  -->
+			<md:TitleSort></md:TitleSort>
+			<md:ArtReference resolution="1600x1200" purpose="boxart">CA_000532_865_00-box-4x3.jpg</md:ArtReference>
+			<md:ArtReference resolution="2560x1440" purpose="cover">CA_000532_865_00-cover-16x9.jpg</md:ArtReference>
+			<md:ArtReference resolution="1200x1600" purpose="hero">CA_000532_865_00-hero-16x9.jpg</md:ArtReference>			
+			<!-- Summary190 is required by the MEC XSD, but is not required by Amazon. Blank fields such as below are acceptable.  -->
+			<md:Summary190></md:Summary190>
+			<!-- Summary400 is required by Amazon -->
+			<md:Summary400>Tin-Tan Cruz, a taxi driver accused of stealing money from tourists, escapes to an island.</md:Summary400>
+			<md:Summary4000>Tin-Tan Cruz, a taxi driver accused of stealing money from tourists, escapes to an island where men are prisoners of the god Mio Mao and women are ruled by the evil king Soleto.</md:Summary4000>
+			<!-- Genres must be submitted using the AV Genre codes, such as below. -->
+			<!-- Genres may be provided in just one, or all LocalizedInfo blocks. See the spec documentation for more detail. -->
+			<!-- At least 1 genre is required. Up to 3 genres are allowed. -->		
+			<md:Genre id="av_genre_action"></md:Genre>
+			<md:Genre id="av_subgenre_action_comedy"></md:Genre>
+			<md:Genre id="av_subgenre_action_romance"></md:Genre>
+			<!-- md:Genre id="av_genre_adventure"></md:Genre>
+			<md:Genre id="av_genre_drama"></md:Genre -->
+		</md:LocalizedInfo>
+		<md:LocalizedInfo language="es-MX">
+			<md:TitleDisplayUnlimited>Tintansón CruZoe</md:TitleDisplayUnlimited>
+			<md:TitleSort></md:TitleSort>
+			<md:Summary190>En una extraña isla.</md:Summary190>
+			<md:Summary400>Tin-Tan Cruz, un taxista acusado de robar dinero a los turistas, escapa a una isla.</md:Summary400>
+			<md:Summary4000>Tin-Tan Cruz, un taxista acusado de robar dinero a los turistas, escapa a una isla donde los hombres son prisioneros del dios Mio Mao y las mujeres son gobernadas por el malvado rey Soleto.</md:Summary4000>
+		</md:LocalizedInfo>
+		<!-- md:LocalizedInfo language="ja-JP">
+			<md:TitleDisplayUnlimited>スーサイド・スクワッド エクステンデッド･エディション</md:TitleDisplayUnlimited>
+			<md:TitleSort></md:TitleSort>
+			<md:Summary190></md:Summary190>
+			<md:Summary400>未公開映像約11分を追加。バットマンやスーパーマンでは世界は救えない！？人類の未来は、クレイジーな“悪党”たちに託された！迫り来る世界崩壊の危機を前に、政府は、あるとんでもない決断を下す。それは、バットマンやスーパーマンによって捕らえられた悪党たちによる最「狂」軍団を結成するというものだった。思いがけず“正義のヒーロー”を任された寄せ集めの悪党たちは、世界を救えるのか！？※本編終了後特典映像あり</md:Summary400>
+		</md:LocalizedInfo -->
+		<!-- end of Localized Info -->
+		
+		<md:ReleaseYear>1965</md:ReleaseYear>
+		<md:ReleaseDate>1965-01-01</md:ReleaseDate>
+		
+		<!-- Provide as much release history as possible.  -->
+		<md:ReleaseHistory>
+			<md:ReleaseType>Theatrical</md:ReleaseType>
+			<md:DistrTerritory>
+				<md:country>MX</md:country>
+			</md:DistrTerritory>
+			<md:Date>1965-01-01</md:Date>
+		</md:ReleaseHistory>
+		
+		<!-- WorkType is Required -->
+		<md:WorkType>movie</md:WorkType>
+
+		<!-- The ID used in the MMC and in the Avail must also be included in the AltIdentifier section -->
+		<md:AltIdentifier>
+			<md:Namespace>ORG</md:Namespace>
+			<md:Identifier>OLY_6335</md:Identifier>
+		</md:AltIdentifier>
+		<!-- md:AltIdentifier>
+			<md:Namespace>IMDB</md:Namespace>
+			<md:Identifier>tt4518590</md:Identifier>
+		</md:AltIdentifier -->
+		
+		<md:RatingSet>
+			<!-- each rating specifies exactly one country, system and value -->
+			<!-- At least one rating is required. If the work is not rated, use <md:notrated>true</md:notrated>  -->
+			<!-- see http://www.movielabs.com/md/ratings/current.html for ratings -->
+			<md:Rating>
+				<md:Region>
+					<md:country>MX</md:country>
+				</md:Region>
+				<md:System>RTC</md:System>
+				<md:Value>B</md:Value>
+			</md:Rating>
+			<md:Rating>
+				<md:Region>
+					<md:country>US</md:country>
+				</md:Region>
+				<md:System>TVPG</md:System>
+				<md:Value>TV-PG</md:Value>
+			</md:Rating>
+		</md:RatingSet>
+			
+		<!-- people are used for the cast and crew.  -->
+		<md:People>
+			<md:Job>
+				<md:JobFunction>Actor</md:JobFunction>
+				<md:BillingBlockOrder>1</md:BillingBlockOrder>
+			</md:Job>
+			<md:Name>
+				<md:DisplayName language="en-US">Elvira Quintana</md:DisplayName>
+				<md:DisplayName language="es-MX">Elvira Quintana</md:DisplayName>
+			</md:Name>
+		</md:People>
+		<md:People>
+			<md:Job>
+				<md:JobFunction>Actor</md:JobFunction>
+				<md:BillingBlockOrder>2</md:BillingBlockOrder>
+			</md:Job>
+			<md:Name>
+				<md:DisplayName language="en-US">Germán -Tin-Tan- Valdés</md:DisplayName>
+				<md:DisplayName language="es-MX">Germán -Tin-Tan- Valdés</md:DisplayName>
+			</md:Name>
+		</md:People>
+		<md:People>
+			<md:Job>
+				<md:JobFunction>Actor</md:JobFunction>
+				<md:BillingBlockOrder>3</md:BillingBlockOrder>
+			</md:Job>
+			<md:Name>
+				<md:DisplayName language="en-US">Lorena Velazquez</md:DisplayName>
+				<md:DisplayName language="es-MX">Lorena Velazquez</md:DisplayName>
+			</md:Name>
+		</md:People>
+		<md:People>
+			<md:Job>
+				<md:JobFunction>Actor</md:JobFunction>
+				<md:BillingBlockOrder>4</md:BillingBlockOrder>
+			</md:Job>
+			<md:Name>
+				<md:DisplayName language="en-US">Manuel -Loco- Valdés</md:DisplayName>
+				<md:DisplayName language="es-MX">Manuel -Loco- Valdés</md:DisplayName>
+			</md:Name>
+		</md:People>
+		<md:People>
+			<md:Job>
+				<md:JobFunction>Director</md:JobFunction>
+				<md:BillingBlockOrder>1</md:BillingBlockOrder>
+			</md:Job>
+			<md:Name>
+				<md:DisplayName language="en-US">Gilberto Martínez Solares</md:DisplayName>
+				<md:DisplayName language="es-MX">Gilberto Martínez Solares</md:DisplayName>
+			</md:Name>
+		</md:People>
+		<md:People>
+			<md:Job>
+				<md:JobFunction>Producer</md:JobFunction>
+				<md:BillingBlockOrder>1</md:BillingBlockOrder>
+			</md:Job>
+			<md:Name>
+				<md:DisplayName language="en-US">Germán -Tin-Tan- Valdés</md:DisplayName>
+				<md:DisplayName language="es-MX">Germán -Tin-Tan- Valdés</md:DisplayName>
+			</md:Name>
+		</md:People>
+		
+		<!-- OriginalLanguage is required by Amazon -->
+		<md:OriginalLanguage>es-MX</md:OriginalLanguage>
+		
+		<!-- AssociatedOrg is used to provide the Partner Alias and is required -->
+		<!-- Include the Partner Alias value in the @organizationID attribute and the value of "licensor" in the @role attribute -->
+		<md:AssociatedOrg organizationID="olympusat" role="licensor"></md:AssociatedOrg>
+		
+	</mdmec:Basic>
+	
+	<!-- CompanyDisplayCredit is used to provide customer-facing studio credits. Required. -->
+	<mdmec:CompanyDisplayCredit>
+		<md:DisplayString language="en-US">Olympusat</md:DisplayString>
+	</mdmec:CompanyDisplayCredit>
+	
+</mdmec:CoreMetadata>
