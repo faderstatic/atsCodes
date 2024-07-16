@@ -1,0 +1,315 @@
+{
+    "enable_item_gear": true,
+    "locations": {
+        "amagi_video": {
+            "storage_id": "OLY-44",
+            "field": "Distribution/oly_channel",
+            "map": {
+                "aplauso": {
+                    "path": "/Media/S3/APLA"
+                },
+                "chiquilines": {
+                    "path": "/Media/S3/CHIQU"
+                },
+                "horrorfy": {
+                    "path": "/Media/S3/HRRFY"
+                },
+                "_default,_multiple": {
+                    "field": "oly_primaryMetadataLanguage",
+                    "map": {
+                        "english": {
+                            "path": "/Media/S3/ENG"
+                        },
+                        "spanish": {
+                            "path": "/Media/S3/OLY"
+                        }
+                    }
+                }
+            }
+        },
+        "amagi_image": {
+            "storage_id": "OLY-44",
+            "path": "/Images/S3"
+        },
+        "amagi_closed_caption_file": {
+            "storage_id": "OLY-44",
+            "path": "/Subtitles/S3"
+        },
+        "amagi_metadata": {
+            "storage_id": "OLY-44",
+            "path": "/Meta/S3"
+        },
+        "amazon_video": {
+            "uri": "/Volumes/creative/CS13/Distribution/Amazon_Staging",
+            "path": "/video"
+        },
+        "amazon_metadata": {
+            "uri": "/Volumes/creative/CS13/Distribution/Amazon_Staging",
+            "path": "/metadata"
+        },
+        "amazon_graphics": {
+            "uri": "/Volumes/creative/CS13/Distribution/Amazon_Staging",
+            "path": "/graphics"
+        }
+    },
+    "files": {
+        "broadcast-amagi": {
+            "title": "Broadcast-Amagi",
+            "shape_tag": "Broadcast-Amagi",
+            "file_name": "<title>",
+            "location": "amagi_video",
+            "upcoming": true
+        },
+        "artwork_image": {
+            "title": "Artwork Image",
+            "location": "amagi_image",
+            "multiple_files": false,
+            "field": "oly_contentType",
+            "map": {
+                "movie": {
+                    "shape_tag": "_related/forDistribution:original",
+                    "file_name": "<primary_title>_FEATURE_16x9_72dpi",
+                    "field": "oly_primaryMetadataLanguage",
+                    "map": {
+                        "english": {
+                            "filter_metadata": "title:/2560x1440/,oly_primaryMetadataLanguage:english"
+                        },
+                        "spanish": {
+                            "filter_metadata": "title:/2560x1440/,oly_primaryMetadataLanguage:spanish"
+                        }
+                    }
+                },
+                "episode": {
+                    "shape_tag": "_related/forDistribution:original",
+                    "file_name": "<primary_title>_SCREENSHOT_16x9_72dpi",
+                    "filter_metadata": "title:/still/,title:/1920x1080/"
+                }
+            }
+        },
+        "poster_image": {
+            "title": "Poster Image",
+            "location": "amagi_image",
+            "multiple_files": false,
+            "field": "oly_contentType",
+            "map": {
+                "movie": {
+                    "shape_tag": "_related/forDistribution:original",
+                    "file_name": "<primary_title>_FEATURE_2x3_72dpi",
+                    "field": "oly_primaryMetadataLanguage",
+                    "map": {
+                        "english": {
+                            "filter_metadata": "title:/1080x1620/,oly_primaryMetadataLanguage:english"
+                        },
+                        "spanish": {
+                            "filter_metadata": "title:/1080x1620/,oly_primaryMetadataLanguage:spanish"
+                        }
+                    }
+                },
+                "episode": {
+                    "shape_tag": "_related/series/forDistribution:original",
+                    "file_name": "<primary_title>_FEATURE_2x3_72dpi",
+                    "field": "oly_primaryMetadataLanguage",
+                    "map": {
+                        "english": {
+                            "filter_metadata": "title:/1080x1620/,oly_primaryMetadataLanguage:english"
+                        },
+                        "spanish": {
+                            "filter_metadata": "title:/1080x1620/,oly_primaryMetadataLanguage:spanish"
+                        }
+                    }
+                }
+            }
+        },
+        "series_artwork_image": {
+            "title": "Series Artwork Image",
+            "location": "amagi_image",
+            "shape_tag": "_related/series/forDistribution:original",
+            "multiple_files": false,
+            "field": "oly_contentType",
+            "map": {
+                "movie": {},
+                "episode": {
+                    "file_name": "<primary_title>_FEATURE_16x9_72dpi",
+                    "field": "oly_primaryMetadataLanguage",
+                    "map": {
+                        "english": {
+                            "filter_metadata": "title:/2560x1440/,oly_primaryMetadataLanguage:english"
+                        },
+                        "spanish": {
+                            "filter_metadata": "title:/2560x1440/,oly_primaryMetadataLanguage:spanish"
+                        }
+                    }
+                }
+            }
+        },
+        "closed_caption_file": {
+            "title": "Closed Caption File",
+            "shape_tag": "_related/forDistributionCaption:original",
+            "file_name": "<file_name>",
+            "location": "amagi_closed_caption_file",
+            "filter_metadata": "title:/Subtitle_CC/"
+        },
+        "metadata-amagi": {
+            "title": "Metadata-Amagi",
+            "shape_tag": "metadata-amagi",
+            "file_name": "<file_name>",
+            "location": "amagi_metadata",
+            "upcoming": true
+        },
+        "broadcast-amazon": {
+            "title": "Broadcast-Amazon",
+            "shape_tag": "Broadcast-Amazon",
+            "file_name": "<title>",
+            "location": "amazon_video",
+            "upcoming": true
+        },
+        "metadata-amazon": {
+            "title": "Metadata-Amazon",
+            "shape_tag": "metadata-amazon",
+            "file_name": "<file_name>",
+            "location": "amazon_metadata",
+            "upcoming": true
+        },
+        "boxart-amazon": {
+            "title": "Box Art",
+            "location": "amazon_graphics",
+            "multiple_files": false,
+            "field": "oly_contentType",
+            "map": {
+                "movie": {
+                    "shape_tag": "_related/forDistribution:original",
+                    "file_name": "<primary_title>-box-3x4",
+                    "field": "Distribution/oly_distributionLanguage",
+                    "map": {
+                        "english": {
+                            "filter_metadata": "oly_graphicsType:cover,oly_graphicsResolution:1200x1600,oly_graphicsLanguage:english"
+                        },
+                        "spanish": {
+                            "filter_metadata": "oly_graphicsType:cover,oly_graphicsResolution:1200x1600,oly_graphicsLanguage:spanish"
+                        }
+                    }
+                },
+                "episode": {
+                    "shape_tag": "_related/season/forDistribution:original",
+                    "file_name": "<primary_title>-box-4x3",
+                    "field": "Distribution/oly_distributionLanguage",
+                    "map": {
+                        "english": {
+                            "filter_metadata": "oly_graphicsType:cover,oly_graphicsResolution:1600x1200,oly_graphicsLanguage:english"
+                        },
+                        "spanish": {
+                            "filter_metadata": "oly_graphicsType:cover,oly_graphicsResolution:1600x1200,oly_graphicsLanguage:spanish"
+                        }
+                    }
+                }
+            }
+        },
+        "coverart-amazon": {
+            "title": "Cover Art",
+            "location": "amazon_graphics",
+            "multiple_files": false,
+            "field": "oly_contentType",
+            "map": {
+                "movie": {
+                    "shape_tag": "_related/forDistribution:original",
+                    "file_name": "<primary_title>-cover-16x9",
+                    "field": "Distribution/oly_distributionLanguage",
+                    "map": {
+                        "english": {
+                            "filter_metadata": "oly_graphicsType:cover,oly_graphicsResolution:1920x1080,oly_graphicsLanguage:english"
+                        },
+                        "spanish": {
+                            "filter_metadata": "oly_graphicsType:cover,oly_graphicsResolution:1920x1080,oly_graphicsLanguage:spanish"
+                        }
+                    }
+                },
+                "episode": {
+                    "shape_tag": "_related/season/forDistribution:original",
+                    "file_name": "<primary_title>-box-4x3",
+                    "field": "Distribution/oly_distributionLanguage",
+                    "map": {
+                        "english": {
+                            "filter_metadata": "oly_graphicsType:cover,oly_graphicsResolution:1920x1080,oly_graphicsLanguage:english"
+                        },
+                        "spanish": {
+                            "filter_metadata": "oly_graphicsType:cover,oly_graphicsResolution:1920x1080,oly_graphicsLanguage:spanish"
+                        }
+                    }
+                }
+            }
+        },
+        "heroart-amazon": {
+            "title": "Hero Art",
+            "location": "amazon_graphics",
+            "multiple_files": false,
+            "field": "oly_contentType",
+            "map": {
+                "movie": {
+                    "shape_tag": "_related/forDistribution:original",
+                    "file_name": "<primary_title>-hero-16x9",
+                    "field": "Distribution/oly_distributionLanguage",
+                    "map": {
+                        "english": {
+                            "filter_metadata": "oly_graphicsType:feature,oly_graphicsResolution:1920x1080,oly_graphicsLanguage:english"
+                        },
+                        "spanish": {
+                            "filter_metadata": "oly_graphicsType:feature,oly_graphicsResolution:1920x1080,oly_graphicsLanguage:spanish"
+                        }
+                    }
+                },
+                "episode": {
+                    "shape_tag": "_related/season/forDistribution:original",
+                    "file_name": "<primary_title>-box-4x3",
+                    "field": "Distribution/oly_distributionLanguage",
+                    "map": {
+                        "english": {
+                            "filter_metadata": "oly_graphicsType:feature,oly_graphicsResolution:1920x1080,oly_graphicsLanguage:english"
+                        },
+                        "spanish": {
+                            "filter_metadata": "oly_graphicsType:feature,oly_graphicsResolution:1920x1080,oly_graphicsLanguage:spanish"
+                        }
+                    }
+                }
+            }
+        },
+        "episodicart-amazon": {
+            "title": "Episodic Art",
+            "location": "amazon_graphics",
+            "multiple_files": false,
+            "field": "oly_contentType",
+            "map": {
+                "movie": {},
+                "episode": {
+                    "shape_tag": "_related/forDistribution:original",
+                    "file_name": "<primary_title>-episodic-16x9",
+                    "filter_metadata": "oly_graphicsType:still,oly_graphicsResolution:1920x1080"
+                }
+            }
+        }
+    },
+    "export_group_field": "Distribution/oly_distributionTo",
+    "export_groups": {
+        "amagi": {
+            "title": "Amagi",
+            "files": [
+                "broadcast-amagi",
+                "artwork_image",
+                "poster_image",
+                "series_artwork_image",
+                "closed_caption_file",
+                "metadata-amagi"
+            ]
+        },
+        "amazon": {
+            "title": "Amazon",
+            "files": [
+                "broadcast-amazon",
+                "metadata-amazon",
+                "boxart-amazon",
+                "coverart-amazon",
+                "heroart-amazon",
+                "episodicart-amazon"
+            ]
+        }
+    }
+}
