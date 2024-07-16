@@ -80,6 +80,7 @@ try:
   creditStartTimecode = responseJson["credit_start"]
   creditEndTimecode = responseJson["credit_end"]
   # print(f"{introStartTimecode}, {introEndTimecode}, {recapStartTimecode}, {recapEndTimecode}, {creditStartTimecode}, {creditEndTimecode}")
+  urlPutBingeMarkerInfo = f"http://10.1.1.34/AVAPI/asset/{cantemoItemId}/timespan/bulk"
 
   if not introStartTimecode and not introEndTimecode:
     # segmentPayload = '{"comment": "Profanity level '+str(profanityScore)+' of 100", "start_tc": "'+str(startingTimecode)+f"@{itemTimebase}"+'", "end_tc": "'+str(endingTimecode)+f"@{itemTimebase}"+'"}'
@@ -121,7 +122,6 @@ try:
       'Cookie': 'csrftoken=obqpl1uZPs93ldSOFjsRbk2bL25JxPgBOb8t1zUH20fP0tUEdXNNjrYO8kzeOSah',
       'Content-Type': 'application/json'
     }
-    urlPutBingeMarkerInfo = f"http://10.1.1.34/AVAPI/asset/{cantemoItemId}/timespan/bulk"
     httpApiResponse = requests.request("PUT", urlPutBingeMarkerInfo, headers=headers, data=segmentPayload)
     httpApiResponse.raise_for_status()
     print(httpApiResponse.text)
