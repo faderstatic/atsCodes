@@ -89,8 +89,8 @@ try:
 
   if introStartTime and introEndTime:
     # segmentPayload = '{"comment": "Profanity level '+str(profanityScore)+' of 100", "start_tc": "'+str(startingTimecode)+f"@{itemTimebase}"+'", "end_tc": "'+str(endingTimecode)+f"@{itemTimebase}"+'"}'
-    introStartTimecode = (int(introStartTime)*int(timebaseNumerator))//int(timebaseDenominator)
-    introEndTimecode = (int(introEndTime)*int(timebaseNumerator))//int(timebaseDenominator)
+    introStartTimecode = ((int(introStartTime)*int(timebaseNumerator))//int(timebaseDenominator))+60
+    introEndTimecode = ((int(introEndTime)*int(timebaseNumerator))//int(timebaseDenominator))+60
     segmentPayload = json.dumps([
       {
         "start": {
@@ -131,8 +131,8 @@ try:
     #------------------------------
 
   if recapStartTime and recapEndTime:
-    recapStartTimecode = (int(recapStartTime)*int(timebaseNumerator))//int(timebaseDenominator)
-    recapEndTimecode = (int(recapEndTime)*int(timebaseNumerator))//int(timebaseDenominator)
+    recapStartTimecode = ((int(recapStartTime)*int(timebaseNumerator))//int(timebaseDenominator))+60
+    recapEndTimecode = ((int(recapEndTime)*int(timebaseNumerator))//int(timebaseDenominator))+60
     segmentPayload = json.dumps([
       {
         "start": {
@@ -173,8 +173,8 @@ try:
     #------------------------------
 
   if creditStartTime and creditEndTime:
-    creditStartTimecode = (int(creditStartTime)*int(timebaseNumerator))//int(timebaseDenominator)
-    creditEndTimecode = (int(creditEndTime)*int(timebaseNumerator))//int(timebaseDenominator)
+    creditStartTimecode = ((int(creditStartTime)*int(timebaseNumerator))//int(timebaseDenominator))+60
+    creditEndTimecode = ((int(creditEndTime)*int(timebaseNumerator))//int(timebaseDenominator))+60
     segmentPayload = json.dumps([
       {
         "start": {
