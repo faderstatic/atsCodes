@@ -119,7 +119,7 @@ try:
       "assetId": '"'+cantemoItemId+'"'
     }
   ])
-    
+    print(segmentPayload)
     #------------------------------
     # Update Cantemo metadata
     httpApiResponse = requests.request("PUT", urlPutBingeMarkerInfo, headers=headers, data=segmentPayload)
@@ -159,7 +159,7 @@ try:
       "assetId": '"'+cantemoItemId+'"'
     }
   ])
-    
+    print(segmentPayload)
     #------------------------------
     # Update Cantemo metadata
     httpApiResponse = requests.request("PUT", urlPutBingeMarkerInfo, headers=headers, data=segmentPayload)
@@ -199,7 +199,7 @@ try:
       "assetId": '"'+cantemoItemId+'"'
     }
   ])
-    
+    print(segmentPayload)
     #------------------------------
     # Update Cantemo metadata
     httpApiResponse = requests.request("PUT", urlPutBingeMarkerInfo, headers=headers, data=segmentPayload)
