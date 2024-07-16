@@ -4,21 +4,21 @@
  xmlns:md="http://www.movielabs.com/schema/md/v2.9/md"
  xmlns:mdmec="http://www.movielabs.com/schema/mdmec/v2.9">
 	
-	<mdmec:Basic ContentID="md:cid:org:olympusat:OLY_6335">
+	<mdmec:Basic ContentID="md:cid:org:olympusat:OLY_6888">
 
 		<md:LocalizedInfo language="en-US">
 			<!-- TitleDisplayUnlimited is required by Amazon. Limited to 250 characters. -->
-			<md:TitleDisplayUnlimited>Tintansón CruZoe</md:TitleDisplayUnlimited>
+			<md:TitleDisplayUnlimited>Title Here</md:TitleDisplayUnlimited>
 			<!-- TitleSort is required by the MEC XSD, but is not used by Amazon. Blank fields such as below are acceptable.  -->
 			<md:TitleSort></md:TitleSort>
-			<md:ArtReference resolution="1600x1200" purpose="boxart">CA_000532_865_00-box-4x3.jpg</md:ArtReference>
-			<md:ArtReference resolution="2560x1440" purpose="cover">CA_000532_865_00-cover-16x9.jpg</md:ArtReference>
-			<md:ArtReference resolution="1200x1600" purpose="hero">CA_000532_865_00-hero-16x9.jpg</md:ArtReference>			
+			<md:ArtReference resolution="1600x1200" purpose="boxart">CA_000734_942_00-box-3x4.jpg</md:ArtReference>
+			<md:ArtReference resolution="2560x1440" purpose="cover">CA_000734_942_00-cover-16x9.jpg</md:ArtReference>
+			<md:ArtReference resolution="1200x1600" purpose="hero">CA_000734_942_00-hero-16x9.jpg</md:ArtReference>			
 			<!-- Summary190 is required by the MEC XSD, but is not required by Amazon. Blank fields such as below are acceptable.  -->
-			<md:Summary190></md:Summary190>
+			<md:Summary190>Log Line EN Here</md:Summary190>
 			<!-- Summary400 is required by Amazon -->
-			<md:Summary400>Tin-Tan Cruz, a taxi driver accused of stealing money from tourists, escapes to an island.</md:Summary400>
-			<md:Summary4000>Tin-Tan Cruz, a taxi driver accused of stealing money from tourists, escapes to an island where men are prisoners of the god Mio Mao and women are ruled by the evil king Soleto.</md:Summary4000>
+			<md:Summary400>Short Description EN Here</md:Summary400>
+			<md:Summary4000>Description EN Here</md:Summary4000>
 			<!-- Genres must be submitted using the AV Genre codes, such as below. -->
 			<!-- Genres may be provided in just one, or all LocalizedInfo blocks. See the spec documentation for more detail. -->
 			<!-- At least 1 genre is required. Up to 3 genres are allowed. -->		
@@ -29,11 +29,11 @@
 			<md:Genre id="av_genre_drama"></md:Genre -->
 		</md:LocalizedInfo>
 		<md:LocalizedInfo language="es-MX">
-			<md:TitleDisplayUnlimited>Tintansón CruZoe</md:TitleDisplayUnlimited>
+			<md:TitleDisplayUnlimited>Title ES Here</md:TitleDisplayUnlimited>
 			<md:TitleSort></md:TitleSort>
-			<md:Summary190>En una extraña isla.</md:Summary190>
-			<md:Summary400>Tin-Tan Cruz, un taxista acusado de robar dinero a los turistas, escapa a una isla.</md:Summary400>
-			<md:Summary4000>Tin-Tan Cruz, un taxista acusado de robar dinero a los turistas, escapa a una isla donde los hombres son prisioneros del dios Mio Mao y las mujeres son gobernadas por el malvado rey Soleto.</md:Summary4000>
+			<md:Summary190>Log Line ES Here</md:Summary190>
+			<md:Summary400>Short Description ES Here</md:Summary400>
+			<md:Summary4000>Description ES Here</md:Summary4000>
 		</md:LocalizedInfo>
 		<!-- md:LocalizedInfo language="ja-JP">
 			<md:TitleDisplayUnlimited>スーサイド・スクワッド エクステンデッド･エディション</md:TitleDisplayUnlimited>
@@ -61,7 +61,7 @@
 		<!-- The ID used in the MMC and in the Avail must also be included in the AltIdentifier section -->
 		<md:AltIdentifier>
 			<md:Namespace>ORG</md:Namespace>
-			<md:Identifier>OLY_6335</md:Identifier>
+			<md:Identifier>OLY_6888</md:Identifier>
 		</md:AltIdentifier>
 		<!-- md:AltIdentifier>
 			<md:Namespace>IMDB</md:Namespace>
