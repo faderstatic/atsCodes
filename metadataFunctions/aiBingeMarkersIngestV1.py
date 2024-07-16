@@ -87,7 +87,7 @@ try:
     }
   urlPutBingeMarkerInfo = f"http://10.1.1.34/AVAPI/asset/{cantemoItemId}/timespan/bulk"
 
-  if not introStartTimecode and not introEndTimecode:
+  if introStartTimecode and introEndTimecode:
     # segmentPayload = '{"comment": "Profanity level '+str(profanityScore)+' of 100", "start_tc": "'+str(startingTimecode)+f"@{itemTimebase}"+'", "end_tc": "'+str(endingTimecode)+f"@{itemTimebase}"+'"}'
     segmentPayload = json.dumps([
       {
@@ -128,7 +128,7 @@ try:
     time.sleep(5)
     #------------------------------
 
-  if not recapStartTimecode and not recapEndTimecode:
+  if recapStartTimecode and recapEndTimecode:
     segmentPayload = json.dumps([
       {
         "start": {
@@ -168,7 +168,7 @@ try:
     time.sleep(5)
     #------------------------------
 
-  if not creditStartTimecode and not creditEndTimecode:
+  if creditStartTimecode and creditEndTimecode:
     segmentPayload = json.dumps([
       {
         "start": {
