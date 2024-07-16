@@ -79,7 +79,7 @@ try:
     profanityScore = individualSegment["score"]
     profanityScore *= 100
     profanityScore = round(profanityScore, 2)
-    if profanityScore >= 70:
+    if profanityScore >= 79:
       startingTimecode = int(individualSegment["start"] * timebaseMultiplier)
       endingTimecode = int(individualSegment["end"] * timebaseMultiplier)
       # segmentPayload = '{"comment": "Profanity level '+str(profanityScore)+' of 100", "start_tc": "'+str(startingTimecode)+f"@{itemTimebase}"+'", "end_tc": "'+str(endingTimecode)+f"@{itemTimebase}"+'"}'
