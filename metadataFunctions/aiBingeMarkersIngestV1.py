@@ -79,8 +79,8 @@ try:
   recapEndTimecode = responseJson["recap_end"]
   creditStartTimecode = responseJson["credit_start"]
   creditEndTimecode = responseJson["credit_end"]
-  print(f"{introStartTimecode}, {introEndTimecode}, {recapStartTimecode}, {recapEndTimecode}, {creditStartTimecode}, {creditEndTimecode}")
-'''
+  # print(f"{introStartTimecode}, {introEndTimecode}, {recapStartTimecode}, {recapEndTimecode}, {creditStartTimecode}, {creditEndTimecode}")
+
   if not introStartTimecode and not introEndTimecode:
     # segmentPayload = '{"comment": "Profanity level '+str(profanityScore)+' of 100", "start_tc": "'+str(startingTimecode)+f"@{itemTimebase}"+'", "end_tc": "'+str(endingTimecode)+f"@{itemTimebase}"+'"}'
     segmentPayload = json.dumps([
@@ -220,7 +220,7 @@ try:
   httpApiResponse = requests.request("PUT", urlPutAnalysisStatusInfo, headers=headers, data=statusPayload)
   
   #------------------------------
-'''
+
 except HTTPError as http_err:
     print(f'HTTP error occurred: {http_err}')
 except Exception as err:
