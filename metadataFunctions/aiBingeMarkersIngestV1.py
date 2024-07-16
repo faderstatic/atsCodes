@@ -73,12 +73,12 @@ try:
   #------------------------------
   # Parsing and POST JSON data
   responseJson = httpApiResponse.json()
-  introStartTimecode = responseJson["intro_start"]
-  introEndTimecode = responseJson["intro_end"]
-  recapStartTimecode = responseJson["recap_start"]
-  recapEndTimecode = responseJson["recap_end"]
-  creditStartTimecode = responseJson["credit_start"]
-  creditEndTimecode = responseJson["credit_end"]
+  introStartTime = responseJson["intro_start"]
+  introEndTime = responseJson["intro_end"]
+  recapStartTime = responseJson["recap_start"]
+  recapEndTime = responseJson["recap_end"]
+  creditStartTime = responseJson["credit_start"]
+  creditEndTime = responseJson["credit_end"]
   # print(f"{introStartTimecode}, {introEndTimecode}, {recapStartTimecode}, {recapEndTimecode}, {creditStartTimecode}, {creditEndTimecode}")
   headers = {
       'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
@@ -87,8 +87,10 @@ try:
     }
   urlPutBingeMarkerInfo = f"http://10.1.1.34/AVAPI/asset/{cantemoItemId}/timespan/bulk"
 
-  if introStartTimecode and introEndTimecode:
+  if introStartTime and introEndTime:
     # segmentPayload = '{"comment": "Profanity level '+str(profanityScore)+' of 100", "start_tc": "'+str(startingTimecode)+f"@{itemTimebase}"+'", "end_tc": "'+str(endingTimecode)+f"@{itemTimebase}"+'"}'
+    introStartTimecode = (int(introStartTime)*int(timebaseNumberator))//int(timebaseDenominator)
+    introEndTimecode = (int(introEndTime)*int(timebaseNumberator))//int(timebaseDenominator)
     segmentPayload = json.dumps([
       {
         "start": {
@@ -128,7 +130,9 @@ try:
     time.sleep(5)
     #------------------------------
 
-  if recapStartTimecode and recapEndTimecode:
+  if recapStartTime and recapEndTime:
+    recapStartTimecode = (int(recapStartTime)*int(timebaseNumberator))//int(timebaseDenominator)
+    recapEndTimecode = (int(recapEndTime)*int(timebaseNumberator))//int(timebaseDenominator)
     segmentPayload = json.dumps([
       {
         "start": {
@@ -168,7 +172,9 @@ try:
     time.sleep(5)
     #------------------------------
 
-  if creditStartTimecode and creditEndTimecode:
+  if creditStartTime and creditEndTime:
+    creditStartTimecode = (int(creditStartTime)*int(timebaseNumberator))//int(timebaseDenominator)
+    creditEndTimecode = (int(creditEndTime)*int(timebaseNumberator))//int(timebaseDenominator)
     segmentPayload = json.dumps([
       {
         "start": {
