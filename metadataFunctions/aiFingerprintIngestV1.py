@@ -81,114 +81,115 @@ try:
   errorReport = ''
   outputFPFile = f"/opt/olympusat/resources/vionlabsReports/{cantemoItemId}_FP.json"
   
+  if outputFPFile:
+    print(f"{outputFPFile} exists")
+  else:
+    #------------------------------
+    # Making API call to Vionlabs to get fingerprints
+    headers = {
+      'Accept': 'application/json'
+    }
+    payload = {}
+    urlGetProfanitySegments = f"https://apis.prod.vionlabs.com/results/fingerprintplus/v1/{cantemoItemId}?&key=kt8cyimHXxUzFNGyhd7c7g"
+    # urlGetProfanitySegments = f"https://apis.prod.vionlabs.com/results/fingerprintplus/v1/OLT-003?&key=kt8cyimHXxUzFNGyhd7c7g"
+    httpApiResponse = requests.request("GET", urlGetProfanitySegments, headers=headers, data=payload)
+    httpApiResponse.raise_for_status()
+    #------------------------------
+    apiResponseJson = json.loads(httpApiResponse.text)
+    apiResponseJsonFormat = json.dumps(apiResponseJson, indent=2)
+    responseWriting = open(outputFPFile, "w")
+    responseWriting.write(apiResponseJsonFormat)
+    responseWriting.close()
 
-  
-  #------------------------------
-  # Making API call to Vionlabs to get fingerprints
-  headers = {
-    'Accept': 'application/json'
-  }
-  payload = {}
-  urlGetProfanitySegments = f"https://apis.prod.vionlabs.com/results/fingerprintplus/v1/{cantemoItemId}?&key=kt8cyimHXxUzFNGyhd7c7g"
-  # urlGetProfanitySegments = f"https://apis.prod.vionlabs.com/results/fingerprintplus/v1/OLT-003?&key=kt8cyimHXxUzFNGyhd7c7g"
-  httpApiResponse = requests.request("GET", urlGetProfanitySegments, headers=headers, data=payload)
-  httpApiResponse.raise_for_status()
-  #------------------------------
-  apiResponseJson = json.loads(httpApiResponse.text)
-  apiResponseJsonFormat = json.dumps(apiResponseJson, indent=2)
-  responseWriting = open(outputFPFile, "w")
-  responseWriting.write(apiResponseJsonFormat)
-  responseWriting.close()
+    addingGenreLookup = "false"
+    addingMoodLookup = "false"
+    addingKeywordLookup = "false"
+    genreLookupXML = f"<SimpleMetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\">"
+    moodLookupXML = f"<SimpleMetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\">"
+    keywordLookupXML = f"<SimpleMetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\">"
+    genreXML = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><group>Olympusat</group><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_genreAnalysis</name>"
+    moodXML = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><group>Olympusat</group><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_moodAnalysis</name>"
+    keywordXML = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><group>Olympusat</group><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_keywordAnalysis</name>"
+    #------------------------------
+    # Parsing JSON and POST XML data
+    responseJson = httpApiResponse.json()
 
-  addingGenreLookup = "false"
-  addingMoodLookup = "false"
-  addingKeywordLookup = "false"
-  genreLookupXML = f"<SimpleMetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\">"
-  moodLookupXML = f"<SimpleMetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\">"
-  keywordLookupXML = f"<SimpleMetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\">"
-  genreXML = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><group>Olympusat</group><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_genreAnalysis</name>"
-  moodXML = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><group>Olympusat</group><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_moodAnalysis</name>"
-  keywordXML = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><group>Olympusat</group><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_keywordAnalysis</name>"
-  #------------------------------
-  # Parsing JSON and POST XML data
-  responseJson = httpApiResponse.json()
-
-  genreList = readCantimoLookup("oly_genreAnalysis")
-  for individualGenre in genreList:
-    genreLookupXML += f"<field><key>{individualGenre}</key><value>{individualGenre}</value></field>"
-  for individualGenre in responseJson["genre"]:
-    genreXML += f"<value>{individualGenre}</value>"
-    if individualGenre.lower() not in genreList:
-      addingGenreLookup = "true"
+    genreList = readCantimoLookup("oly_genreAnalysis")
+    for individualGenre in genreList:
       genreLookupXML += f"<field><key>{individualGenre}</key><value>{individualGenre}</value></field>"
-  genreLookupXML += "</SimpleMetadataDocument>"
-  if addingGenreLookup == 'true':
-    parsedGenreLookupXML = xml.dom.minidom.parseString(genreLookupXML)
-    genreLookupPayload = parsedGenreLookupXML.toprettyxml()
-    # print(genreLookupPayload)
-    createCantimoLookup("oly_genreAnalysis", genreLookupPayload)
-  genreXML += "</field></timespan></MetadataDocument>"
-  parsedGenreXML = xml.dom.minidom.parseString(genreXML)
-  genrePayload = parsedGenreXML.toprettyxml()
+    for individualGenre in responseJson["genre"]:
+      genreXML += f"<value>{individualGenre}</value>"
+      if individualGenre.lower() not in genreList:
+        addingGenreLookup = "true"
+        genreLookupXML += f"<field><key>{individualGenre}</key><value>{individualGenre}</value></field>"
+    genreLookupXML += "</SimpleMetadataDocument>"
+    if addingGenreLookup == 'true':
+      parsedGenreLookupXML = xml.dom.minidom.parseString(genreLookupXML)
+      genreLookupPayload = parsedGenreLookupXML.toprettyxml()
+      # print(genreLookupPayload)
+      createCantimoLookup("oly_genreAnalysis", genreLookupPayload)
+    genreXML += "</field></timespan></MetadataDocument>"
+    parsedGenreXML = xml.dom.minidom.parseString(genreXML)
+    genrePayload = parsedGenreXML.toprettyxml()
 
-  moodList = readCantimoLookup("oly_moodAnalysis")
-  for individualMood in moodList:
-    moodLookupXML += f"<field><key>{individualMood}</key><value>{individualMood}</value></field>"
-  for individualMood in responseJson["mood_tag"]:
-    moodXML += f"<value>{individualMood}</value>"
-    if individualMood.lower() not in moodList:
-      addingMoodLookup = "true"
+    moodList = readCantimoLookup("oly_moodAnalysis")
+    for individualMood in moodList:
       moodLookupXML += f"<field><key>{individualMood}</key><value>{individualMood}</value></field>"
-  moodLookupXML += "</SimpleMetadataDocument>"
-  if addingMoodLookup == 'true':
-    parsedMoodLookupXML = xml.dom.minidom.parseString(moodLookupXML)
-    moodLookupPayload = parsedMoodLookupXML.toprettyxml()
-    # print(moodLookupPayload)
-    createCantimoLookup("oly_moodAnalysis", moodLookupPayload)
-  moodXML += "</field></timespan></MetadataDocument>"
-  parsedMoodXML = xml.dom.minidom.parseString(moodXML)
-  moodPayload = parsedMoodXML.toprettyxml()
+    for individualMood in responseJson["mood_tag"]:
+      moodXML += f"<value>{individualMood}</value>"
+      if individualMood.lower() not in moodList:
+        addingMoodLookup = "true"
+        moodLookupXML += f"<field><key>{individualMood}</key><value>{individualMood}</value></field>"
+    moodLookupXML += "</SimpleMetadataDocument>"
+    if addingMoodLookup == 'true':
+      parsedMoodLookupXML = xml.dom.minidom.parseString(moodLookupXML)
+      moodLookupPayload = parsedMoodLookupXML.toprettyxml()
+      # print(moodLookupPayload)
+      createCantimoLookup("oly_moodAnalysis", moodLookupPayload)
+    moodXML += "</field></timespan></MetadataDocument>"
+    parsedMoodXML = xml.dom.minidom.parseString(moodXML)
+    moodPayload = parsedMoodXML.toprettyxml()
 
-  keywordList = readCantimoLookup("oly_keywordAnalysis")
-  for individualKeyword in keywordList:
-    keywordLookupXML += f"<field><key>{individualKeyword}</key><value>{individualKeyword}</value></field>"
-  for individualKeyword in responseJson["keyword"]:
-    keywordXML += f"<value>{individualKeyword}</value>"
-    if individualKeyword.lower() not in keywordList:
-      addingKeywordLookup = "true"
+    keywordList = readCantimoLookup("oly_keywordAnalysis")
+    for individualKeyword in keywordList:
       keywordLookupXML += f"<field><key>{individualKeyword}</key><value>{individualKeyword}</value></field>"
-  keywordLookupXML += "</SimpleMetadataDocument>"
-  if addingKeywordLookup == 'true':
-    parsedKeywordLookupXML = xml.dom.minidom.parseString(keywordLookupXML)
-    keywordLookupPayload = parsedKeywordLookupXML.toprettyxml()
-    # print(keywordLookupPayload)
-    createCantimoLookup("oly_keywordAnalysis", keywordLookupPayload)
-  keywordXML += "</field></timespan></MetadataDocument>"
-  parsedKeywordXML = xml.dom.minidom.parseString(keywordXML)
-  keywordPayload = parsedKeywordXML.toprettyxml()
+    for individualKeyword in responseJson["keyword"]:
+      keywordXML += f"<value>{individualKeyword}</value>"
+      if individualKeyword.lower() not in keywordList:
+        addingKeywordLookup = "true"
+        keywordLookupXML += f"<field><key>{individualKeyword}</key><value>{individualKeyword}</value></field>"
+    keywordLookupXML += "</SimpleMetadataDocument>"
+    if addingKeywordLookup == 'true':
+      parsedKeywordLookupXML = xml.dom.minidom.parseString(keywordLookupXML)
+      keywordLookupPayload = parsedKeywordLookupXML.toprettyxml()
+      # print(keywordLookupPayload)
+      createCantimoLookup("oly_keywordAnalysis", keywordLookupPayload)
+    keywordXML += "</field></timespan></MetadataDocument>"
+    parsedKeywordXML = xml.dom.minidom.parseString(keywordXML)
+    keywordPayload = parsedKeywordXML.toprettyxml()
 
-  statusRawPayload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_analysisStatus</name><value>completed - last request - fingerprint</value></field></timespan></MetadataDocument>"
-  parsedStatusPayload = xml.dom.minidom.parseString(statusRawPayload)
-  statusPayload = parsedStatusPayload.toprettyxml()
+    statusRawPayload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_analysisStatus</name><value>completed - last request - fingerprint</value></field></timespan></MetadataDocument>"
+    parsedStatusPayload = xml.dom.minidom.parseString(statusRawPayload)
+    statusPayload = parsedStatusPayload.toprettyxml()
 
-  #------------------------------
-  # Update Cantemo metadata
-  headers = {
-  'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
-  'Cookie': 'csrftoken=HFOqrbk9cGt3qnc6WBIxWPjvCFX0udBdbJnzCv9jECumOjfyG7SS2lgVbFcaHBCc',
-  'Content-Type': 'application/xml'
-  }
-  urlPutAnalysisInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata/"
-  # genrePayload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_analysisReport</name><value>{errorReport}</value></field></timespan></MetadataDocument>"
-  httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=genrePayload)
-  time.sleep(5)
-  httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=moodPayload)
-  time.sleep(5)
-  httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=keywordPayload)
-  time.sleep(5)
-  httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=statusPayload)
-  #------------------------------
-  #------------------------------
+    #------------------------------
+    # Update Cantemo metadata
+    headers = {
+    'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
+    'Cookie': 'csrftoken=HFOqrbk9cGt3qnc6WBIxWPjvCFX0udBdbJnzCv9jECumOjfyG7SS2lgVbFcaHBCc',
+    'Content-Type': 'application/xml'
+    }
+    urlPutAnalysisInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata/"
+    # genrePayload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_analysisReport</name><value>{errorReport}</value></field></timespan></MetadataDocument>"
+    httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=genrePayload)
+    time.sleep(5)
+    httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=moodPayload)
+    time.sleep(5)
+    httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=keywordPayload)
+    time.sleep(5)
+    httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=statusPayload)
+    #------------------------------
+    #------------------------------
 
 except HTTPError as http_err:
     print(f'HTTP error occurred: {http_err}')
