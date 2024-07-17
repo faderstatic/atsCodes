@@ -9,6 +9,7 @@
 #------------------------------
 # Libraries
 import os
+import os.path
 import glob
 import sys
 import datetime
@@ -81,7 +82,7 @@ try:
   errorReport = ''
   outputFPFile = f"/opt/olympusat/resources/vionlabsReports/{cantemoItemId}_FP.json"
   
-  if outputFPFile:
+  if os.path.isfile(outputFPFile):
     existingAnalysisRead = open(outputFPFile, "r")
     responseJson = json.loads(existingAnalysisRead.read())
     existingAnalysisRead.close()
