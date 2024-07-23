@@ -48,6 +48,7 @@ then
 
         mmcFileDestination="/opt/olympusat/xmlsForDistribution/$distributionTo/MMC-$itemTitle.xml"
         mecFileDestination="/opt/olympusat/xmlsForDistribution/$distributionTo/MEC-$itemTitle.xml"
+        mecFileDestinationGenre="/opt/olympusat/xmlsForDistribution/$distributionTo/_miscFiles/GenreForMEC-$itemTitle.xml"
 
         # Check to see if mmcFileDestination file exists
         if [[ -e "$mmcFileDestination" ]];
@@ -77,6 +78,22 @@ then
         else
             # mecFileDestination file does NOT exists
             echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - mecFileDestination file does NOT exist" >> "$logfile"
+
+            sleep 1
+        fi
+
+        # Check to see if mecFileDestinationGenre file exists
+        if [[ -e "$mecFileDestinationGenre" ]];
+        then
+            # mecFileDestinationGenre file exists-deleting file before continuing
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - mecFileDestinationGenre file exists - moving file to zMoved folder before continuing with script" >> "$logfile"
+
+            mv -f "$mecFileDestinationGenre" "/opt/olympusat/xmlsForDistribution/zMoved/"
+
+            sleep 2
+        else
+            # mecFileDestinationGenre file does NOT exists
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - mecFileDestinationGenre file does NOT exist" >> "$logfile"
 
             sleep 1
         fi
@@ -229,7 +246,7 @@ then
         echo "    <mdmec:Basic ContentID="md:cid:org:olympusat:$itemIdXml">" >> "$mecFileDestination"
 
         # Adding LocalizedInfo in English Block Start
-        echo "      <md:LocalizedInfo language="en-US">" >> "$mecFileDestination"
+        echo "        <md:LocalizedInfo language="en-US">" >> "$mecFileDestination"
 
         # Adding LocalizedInfo in English Block - Title, ArtReference & Summaries
 		echo "            <!-- TitleDisplayUnlimited is required by Amazon. Limited to 250 characters. -->
@@ -246,10 +263,7 @@ then
 			<md:Summary4000>$itemDescriptionEn</md:Summary4000>" >> "$mecFileDestination"
 
         # Preparing Genre Info for LocalizedInfo in English Block
-        mecFileDestinationGenre="/opt/olympusat/xmlsForDistribution/$distributionTo/_miscFiles/GenreForMEC-$itemTitle.xml"
-
         itemPrimaryGenre=$(filterVidispineItemMetadata $itemId "metadata" "oly_primaryGenre")
-        #itemSecondaryGenres=$(filterVidispineItemMetadata $itemId "metadata" "oly_secondaryGenres")
 
         urlGetItemSecondaryGenres="http://10.1.1.34:8080/API/item/$itemId/metadata?field=oly_secondaryGenres&terse=yes"
 	    httpResponseSecondaryGenres=$(curl --location --request GET $urlGetItemSecondaryGenres  --header 'Accept: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=Tkb9vkSC8v4SceB8CHUyB3iaMPjvgoHrzhLrvo36agG3wqv0jHc7nsOtdTo9JEyM')
@@ -259,6 +273,7 @@ then
 
         subGenreItemCount=$(echo $httpResponseSecondaryGenres | awk -F '</oly_secondaryGenres>' '{print NF}')
         subGenreItemCount=$(($subGenreItemCount - 1))
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - SubGenre Item Count {$subGenreItemCount}" >> "$logfile"
 
         if [[ $subGenreItemCount -lt 2 ]];
         then
@@ -267,9 +282,7 @@ then
             occurenceCount=2
         fi
 
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - SubGenre Item Count {$subGenreItemCount}" >> "$logfile"
-
-        # Get item's primary genre and set variable genreId1 to use to set in xml
+        # Get item's primary genre and add information into genre xml
         case "$itemPrimaryGenre" in
             "action")
                 echo "            <md:Genre id="av_genre_action"></md:Genre>" >> "$mecFileDestinationGenre"
@@ -285,8 +298,7 @@ then
             ;;
         esac
 
-        # Get item's secondary genres and iterate through each and set only genreId2 and genreId3 with appropriate genre/subgenre for Amazon
-        #currentFieldValue=""
+        # Get item's secondary genres and iterate through each and add information into genre xml with appropriate genre/subgenre for Amazon
         for (( j=1 ; j<=$occurenceCount ; j++ ));
         do
             if [[ $j -eq 1 ]];
@@ -333,7 +345,7 @@ then
 		cat "$mecFileDestinationGenre" >> "$mecFileDestination"
 
 		# Adding LocalizedInfo in English Block Close
-        echo "</md:LocalizedInfo>" >> "$mecFileDestination"
+        echo "        </md:LocalizedInfo>" >> "$mecFileDestination"
 
         # ----------------------------------------------------------------------
 
