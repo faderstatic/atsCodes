@@ -205,8 +205,8 @@
                 <manifest:SubType>Feature</manifest:SubType>
                 <manifest:PresentationID>md:presentationid:org:olympusat:OLY_6888:feature.presentation</manifest:PresentationID>
             </manifest:Audiovisual>
-            <manifest:PictureGroupID>md:picturegroupid:org:olympusat:OLY_6888:feature</manifest:PictureGroupID>
-            <!-- manifest:ExperienceChild>
+            <!-- manifest:PictureGroupID>md:picturegroupid:org:olympusat:OLY_6888:feature</manifest:PictureGroupID>
+            <manifest:ExperienceChild>
                 <manifest:Relationship>ispromotionfor</manifest:Relationship>
                 <manifest:ExperienceID>md:experienceid:org:olympusat:OLY_6888:trailer.1.experience</manifest:ExperienceID>
             </manifest:ExperienceChild -->

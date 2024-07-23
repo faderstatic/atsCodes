@@ -311,6 +311,13 @@ then
             echo "$currentValue"
             
             case "$currentValue" in
+                "adventure")
+                    case "$itemPrimaryGenre" in
+                        "action")
+                            echo "            <md:Genre id="av_subgenre_action_adventure"></md:Genre>" >> "$mecFileDestinationGenre"
+                        ;;
+                    esac
+                ;;
                 "comedy")
                     case "$itemPrimaryGenre" in
                         "action")
