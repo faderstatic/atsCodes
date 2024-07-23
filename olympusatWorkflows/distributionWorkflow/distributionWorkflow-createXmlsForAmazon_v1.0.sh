@@ -57,7 +57,7 @@ then
 
             mv -f "$mmcFileDestination" "/opt/olympusat/xmlsForDistribution/zMoved/"
 
-            sleep 5
+            sleep 2
         else
             # mmcFileDestination file does NOT exists
             echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - mmcFileDestination file does NOT exist" >> "$logfile"
@@ -73,7 +73,7 @@ then
 
             mv -f "$mecFileDestination" "/opt/olympusat/xmlsForDistribution/zMoved/"
 
-            sleep 5
+            sleep 2
         else
             # mecFileDestination file does NOT exists
             echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - mecFileDestination file does NOT exist" >> "$logfile"
@@ -113,7 +113,7 @@ then
         # Creating MMC XML
         echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - Creating MMC XML for [$itemTitle]" >> "$logfile"
 
-        # Adding Header
+        # Adding MediaManifest Block Start
         echo "<manifest:MediaManifest xmlns:manifest="http://www.movielabs.com/schema/manifest/v1.8/manifest" xmlns:md="http://www.movielabs.com/schema/md/v2.7/md" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.movielabs.com/schema/manifest/v1.8/manifest manifest-v1.8.1.xsd" ManifestID="SofaSpud.Example" updateNum="1">" >> "$mmcFileDestination"
 
         # Adding Compatibility Block
@@ -216,7 +216,124 @@ then
         # Creating MEC XML
         echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - Creating MEC XML for [$itemTitle]" >> "$logfile"
 
+        # Adding XML Header
+        echo "<?xml version="1.0" encoding="UTF-8"?>" >> "$mecFileDestination"
 
+        # Adding CoreMetadata Block Start
+        echo "<mdmec:CoreMetadata xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.movielabs.com/schema/mdmec/v2.9 ../mdmec-v2.9.xsd"
+ xmlns:md="http://www.movielabs.com/schema/md/v2.9/md"
+ xmlns:mdmec="http://www.movielabs.com/schema/mdmec/v2.9">" >> "$mecFileDestination"
+
+        # Adding Basic Block Start
+        echo "    <mdmec:Basic ContentID="md:cid:org:olympusat:$itemIdXml">" >> "$mecFileDestination"
+
+        # Adding LocalizedInfo in English Block Start
+        echo "      <md:LocalizedInfo language="en-US">" >> "$mecFileDestination"
+
+        # Adding LocalizedInfo in English Block - Title, ArtReference & Summaries
+		echo "            <!-- TitleDisplayUnlimited is required by Amazon. Limited to 250 characters. -->
+			<md:TitleDisplayUnlimited>$itemTitleEn</md:TitleDisplayUnlimited>
+			<!-- TitleSort is required by the MEC XSD, but is not used by Amazon. Blank fields such as below are acceptable.  -->
+			<md:TitleSort></md:TitleSort>
+			<md:ArtReference resolution="$relatedItemBoxResolution" purpose="boxart">$itemTitle-box-3x4.jpg</md:ArtReference>
+			<md:ArtReference resolution="$relatedItemCoverResolution" purpose="cover">$itemTitle-cover-16x9.jpg</md:ArtReference>
+			<md:ArtReference resolution="$relatedItemHeroResolution" purpose="hero">$itemTitle-hero-16x9.jpg</md:ArtReference>			
+			<!-- Summary190 is required by the MEC XSD, but is not required by Amazon. Blank fields such as below are acceptable.  -->
+			<md:Summary190>$itemLogLineEn</md:Summary190>
+			<!-- Summary400 is required by Amazon -->
+			<md:Summary400>$itemShortDescriptionEn</md:Summary400>
+			<md:Summary4000>$itemDescriptionEn</md:Summary4000>" >> "$mecFileDestination"
+
+        # Preparing Genre Info for LocalizedInfo in English Block
+        mecFileDestinationGenre="/opt/olympusat/xmlsForDistribution/$distributionTo/_miscFiles/GenreForMEC-$itemTitle.xml"
+
+        itemPrimaryGenre=$(filterVidispineItemMetadata $itemId "metadata" "oly_primaryGenre")
+        #itemSecondaryGenres=$(filterVidispineItemMetadata $itemId "metadata" "oly_secondaryGenres")
+
+        urlGetItemSecondaryGenres="http://10.1.1.34:8080/API/item/$itemId/metadata?field=oly_secondaryGenres&terse=yes"
+	    httpResponseSecondaryGenres=$(curl --location --request GET $urlGetItemSecondaryGenres  --header 'Accept: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=Tkb9vkSC8v4SceB8CHUyB3iaMPjvgoHrzhLrvo36agG3wqv0jHc7nsOtdTo9JEyM')
+
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - Primary Genre {$itemPrimaryGenre}" >> "$logfile"
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - Secondary Genres {$httpResponseSecondaryGenres}" >> "$logfile"
+
+        subGenreItemCount=$(echo $httpResponseSecondaryGenres | awk -F '</oly_secondaryGenres>' '{print NF}')
+        subGenreItemCount=$(($subGenreItemCount - 1))
+
+        if [[ $subGenreItemCount -lt 2 ]];
+        then
+            occurenceCount=$subGenreItemCount
+        else
+            occurenceCount=2
+        fi
+
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - SubGenre Item Count {$subGenreItemCount}" >> "$logfile"
+
+        # Get item's primary genre and set variable genreId1 to use to set in xml
+        case "$itemPrimaryGenre" in
+            "action")
+                echo "            <md:Genre id="av_genre_action"></md:Genre>" >> "$mecFileDestinationGenre"
+            ;;
+            "adventure")
+                echo "            <md:Genre id="av_genre_adventure"></md:Genre>" >> "$mecFileDestinationGenre"
+            ;;
+            "comedy")
+                echo "            <md:Genre id="av_genre_comedy"></md:Genre>" >> "$mecFileDestinationGenre"
+            ;;
+            *)
+                # Do nothing for now - might add logging later
+            ;;
+        esac
+
+        # Get item's secondary genres and iterate through each and set only genreId2 and genreId3 with appropriate genre/subgenre for Amazon
+        #currentFieldValue=""
+        for (( j=1 ; j<=$occurenceCount ; j++ ));
+        do
+            if [[ $j -eq 1 ]];
+            then
+                k=3
+            else
+                k=2
+            fi
+            currentValue=$(echo "$httpResponseSecondaryGenres" | awk -F '</oly_secondaryGenres>' '{print $'$j'}' | awk -F '/vidispine">' '{print $'$k'}' )
+            echo "$currentValue"
+            
+            case "$currentValue" in
+                "comedy")
+                    case "$itemPrimaryGenre" in
+                        "action")
+                            echo "            <md:Genre id="av_subgenre_action_comedy"></md:Genre>" >> "$mecFileDestinationGenre"
+                        ;;
+                    esac
+                ;;
+                "crime")
+                    case "$itemPrimaryGenre" in
+                        "action")
+                            echo "            <md:Genre id="av_subgenre_action_crime"></md:Genre>" >> "$mecFileDestinationGenre"
+                        ;;
+                    esac
+                ;;
+                "romance")
+                    case "$itemPrimaryGenre" in
+                        "action")
+                            echo "            <md:Genre id="av_subgenre_action_romance"></md:Genre>" >> "$mecFileDestinationGenre"
+                        ;;
+                    esac
+                ;;
+                *)
+                    # Do nothing for now - might add logging later
+                ;;
+            esac
+        done
+        
+        # Adding LocalizedInfo in English Block - Genre
+		echo "            <!-- Genres must be submitted using the AV Genre codes, such as below. -->
+			<!-- Genres may be provided in just one, or all LocalizedInfo blocks. See the spec documentation for more detail. -->
+			<!-- At least 1 genre is required. Up to 3 genres are allowed. -->" >> "$mecFileDestination"
+		cat "$mecFileDestinationGenre" >> "$mecFileDestination"
+
+		# Adding LocalizedInfo in English Block Close
+        echo "</md:LocalizedInfo>" >> "$mecFileDestination"
 
         # ----------------------------------------------------------------------
 
