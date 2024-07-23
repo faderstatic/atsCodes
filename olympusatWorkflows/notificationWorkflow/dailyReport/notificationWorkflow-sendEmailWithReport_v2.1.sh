@@ -308,20 +308,20 @@ MAM Notify"
                     subject="MAM - Content Marked to be Deleted - $mydate"
                     body="Hi,
         
-    The following attached list of items have been Marked to be Deleted.
+The following attached list of items have been Marked to be Deleted.
 
-    You can find all of the items in the following Saved Searches
+You can find all of the items in the following Saved Searches
 
-    'Content User Marked as to be Deleted'
-    Link to Saved Search - https://cantemo.olympusat.com/search/#/savedsearch/OLY-21/?search_id=3126
+'Content User Marked as to be Deleted'
+Link to Saved Search - https://cantemo.olympusat.com/search/#/savedsearch/OLY-21/?search_id=3126
 
-    ***NOTE***: You must be on the Office Network, either via VPN or remoting into a machine on the Network, in order to access Cantemo Web Portal
+***NOTE***: You must be on the Office Network, either via VPN or remoting into a machine on the Network, in order to access Cantemo Web Portal
                 
-    Please login to the system, review & either delete these items or remove metadata marking as to be deleted.
+Please login to the system, review & either delete these items or remove metadata marking as to be deleted.
                 
-    Thanks
+Thanks
                 
-    MAM Notify"
+MAM Notify"
 
                     echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-markedToBeDeleted) - Sending Email for New Items Ingested into Cantemo Today" >> "$logfile"
                     echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-markedToBeDeleted) - To - $recipient1, $recipient2, $recipient3, $recipient4, $recipient5" >> "$logfile"
