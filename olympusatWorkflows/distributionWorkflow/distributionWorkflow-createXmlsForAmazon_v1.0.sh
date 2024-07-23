@@ -1,10 +1,10 @@
 #!/bin/bash
 
 #::***************************************************************************************************************************
-#::This shell script to trigger the actual email to send out list
+#::This shell script will create the appropriate xmls for the content type, for Amazon delivery
 #::Engineers: Ryan Sims & Tang Kanjanapitak
 #::Client: Olympusat
-#::Updated: 07/08/2024
+#::Updated: 07/23/2024
 #::Rev A: 
 #::System requirements: This script will run in LINUX & MacOS
 #::***************************************************************************************************************************
@@ -19,355 +19,215 @@ IFS=$(echo -e "\n\b")
 
 export mydate=$(date +%Y-%m-%d)
 export datetime=$(date +%Y/%m/%d_%H:%M)
-logfile="/opt/olympusat/logs/notificationWorkflow-$mydate.log"
-notificationType="$1"
+logfile="/opt/olympusat/logs/distributionWorkflow-$mydate.log"
 
-echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow) - Workflow Triggered - Check Notification Type {$notificationType}" >> "$logfile"
+# Set variables to check before continuing
+export itemId=$1
+export distributionTo=$2
 
-# Check notificationType Variable
-if [[ "$notificationType" == "newItem" ]];
+echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - Create XMLs for Job Initiated" >> "$logfile"
+
+sleep 1
+
+# Check distributionTo Variable
+if [[ "$distributionTo" == "amazon" ]];
 then
-    # notificationType is 'newItem'-continue with workflow
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-newItem) - New Item Workflow Triggered - Check for List to Send Email" >> "$logfile"
+    # distributionTo is 'amazon'-continue with script
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - Create Amazon XMLs - Checking contentType" >> "$logfile"
 
-    newItemFileDestination="/opt/olympusat/resources/emailNotificationWorkflow/newItem/newItemWorkflow-$mydate.csv"
+    sleep 1
 
-    # Check newItemFileDestination Variable
-    if [[ -e "$newItemFileDestination" ]];
+    itemContentType=$(filterVidispineItemMetadata $itemId "metadata" "oly_contentType")
+
+    # Check if contentType is movie
+    if [[ "$itemContentType" == "movie" ]];
     then
-        # newItemFileDestination file exists - continuing with script/workflow
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-newItem) - newItemFileDestination file exists - continuing with script/workflow" >> "$logfile"
+        # contentType is movie-continue with script
+        itemTitle=$(filterVidispineItemMetadata $itemId "metadata" "title")
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - Check if MMC & MEC XMLs exist for [$itemContentType] [$itemTitle]" >> "$logfile"
 
-        # Recipient email addresses
-        export recipient1=mamAdmin@olympusat.com
-        export recipient2=amorales@olympusat.com
-        export recipient3=srusso@olympusat.com
-        export recipient4=rsims@olympusat.com
-        export recipient5=kkanjanapitak@olympusat.com
+        mmcFileDestination="/opt/olympusat/xmlsForDistribution/$distributionTo/MMC-$itemTitle.xml"
+        mecFileDestination="/opt/olympusat/xmlsForDistribution/$distributionTo/MEC-$itemTitle.xml"
 
-        # Sending email address
-        export emailFrom=notify@olympusat.com
+        # Check to see if mmcFileDestination file exists
+        if [[ -e "$mmcFileDestination" ]];
+        then
+            # mmcFileDestination file exists-deleting file before continuing
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - mmcFileDestination file exists - moving file to zMoved folder before continuing with script" >> "$logfile"
 
-        # Email Body
-        subject="MAM - New Items Ingested - $mydate"
-        body="Hi,
+            mv -f "$mmcFileDestination" "/opt/olympusat/xmlsForDistribution/zMoved/"
 
-The following attached list of items have been ingested into Cantemo today and may require metadata in order to move to the next stage in the process.
+            sleep 5
+        else
+            # mmcFileDestination file does NOT exists
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - mmcFileDestination file does NOT exist" >> "$logfile"
 
-You may find items in one of the following Saved Searches
+            sleep 1
+        fi
 
-'New Content Missing Metadata'
-Link to Saved Search - https://cantemo.olympusat.com/search/#/savedsearch/OLY-318/?search_id=2232
+        # Check to see if mecFileDestination file exists
+        if [[ -e "$mecFileDestination" ]];
+        then
+            # mecFileDestination file exists-deleting file before continuing
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - mecFileDestination file exists - moving file to zMoved folder before continuing with script" >> "$logfile"
 
-'Conform Files Missing Metadata'
-Link to Saved Search - https://cantemo.olympusat.com/search/#/savedsearch/OLY-317/?search_id=1695
+            mv -f "$mecFileDestination" "/opt/olympusat/xmlsForDistribution/zMoved/"
 
-For Legacy Original Raw Master Content, you may need to set with Rightsline Item ID & import Rightsline Legacy Info. You may find those items in the following Saved Search
-'Legacy Original-Needs Manual Input-Rightsline IDs
-Link to Saved Search - https://cantemo.olympusat.com/search/#/savedsearch/OLY-347/?search_id=2173
+            sleep 5
+        else
+            # mecFileDestination file does NOT exists
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - mecFileDestination file does NOT exist" >> "$logfile"
 
-***NOTE***: You must be on the Office Network, either via VPN or remoting into a machine on the Network, in order to access Cantemo Web Portal
-    
-Please login to the system and review these items.
-    
-Thanks
-    
-MAM Notify"
+            sleep 1
+        fi
 
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-newItem) - Sending Email for New Items Ingested into Cantemo Today" >> "$logfile"
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-newItem) - To - $recipient1, $recipient2, $recipient3, $recipient4, $recipient5" >> "$logfile"
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-newItem) - From - $emailFrom" >> "$logfile"
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-newItem) - Subject - $subject" >> "$logfile"
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-newItem) - Body - [$(echo $body)]" >> "$logfile"
+        itemIdXml=$(echo $itemId | sed 's/-/_/g')
+        itemOriginalFilename=$(filterVidispineItemMetadata $itemId "metadata" "originalFilename")
+        itemDistributionLanguage=$(filterVidispineItemSubgroupMetadata $itemId "metadata" "oly_distributionLanguage" "Distribution")
 
-        # Setup to send email with attachment
-        sesSubject=$(echo $subject) 
-        sesMessage=$body
-        sesFile=$(echo $newItemFileDestination)
-        sesMIMEType=`file --mime-type "$sesFile" | sed 's/.*: //'`
+        # Check distributionLangugae to create proper languageCode for XMLs
+        if [[ "$itemDistributionLanguage" == "spanish" ]];
+        then
+            # distributionLanguage is spanish-continue with script
+            export itemLanguageCode1="es-MX"
+            export itemLanguageCode2="es"
+            #echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - Language Code - [$itemLanguageCode]" >> "$logfile"
+        else
+            if [[ "$itemDistributionLanguage" == "english" ]];
+            then
+                # distributionLanguage is english-continue with script
+                export itemLanguageCode1="en-US"
+                export itemLanguageCode2="en"
+                #echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - Language Code - [$itemLanguageCode]" >> "$logfile"
+            fi
+        fi
 
-        curl --url 'smtp://smtp-mail.outlook.com:587' \
-        --ssl-reqd  \
-        --mail-from $emailFrom \
-        --mail-rcpt $recipient1 --mail-rcpt $recipient2 --mail-rcpt $recipient3 \
-        --user 'notify@olympusat.com:6bOblVsLg9bPQ8WG7JC7f8Zump' \
-        -F '=(;type=multipart/mixed' \
-        -F "=$sesMessage;type=text/plain" \
-        -F "file=@$sesFile;type=$sesMIMEType;encoder=base64" \
-        -F '=)' \
-        -H "Subject: $sesSubject"
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - Item Id Xml - [$itemIdXml]" >> "$logfile"
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - Title - [$itemTitle]" >> "$logfile"
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - Original Filename - [$itemOriginalFilename]" >> "$logfile"
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - Distribution Language - [$itemDistributionLanguage]" >> "$logfile"
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - Language Code 1 - [$itemLanguageCode1]" >> "$logfile"
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - Language Code 2 - [$itemLanguageCode2]" >> "$logfile"
 
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-newItem) - Email Sent Successfully" >> "$logfile"
+        # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        # Creating MMC XML
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - Creating MMC XML for [$itemTitle]" >> "$logfile"
 
-        sleep 2
+        # Adding Header
+        echo "<manifest:MediaManifest xmlns:manifest="http://www.movielabs.com/schema/manifest/v1.8/manifest" xmlns:md="http://www.movielabs.com/schema/md/v2.7/md" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.movielabs.com/schema/manifest/v1.8/manifest manifest-v1.8.1.xsd" ManifestID="SofaSpud.Example" updateNum="1">" >> "$mmcFileDestination"
 
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-newItem) - Moving newItem csv to zCompleted folder" >> "$logfile"
+        # Adding Compatibility Block
+        echo "    <!-- script/ -->
+    <manifest:Compatibility>
+        <manifest:SpecVersion>1.5</manifest:SpecVersion>
+        <manifest:Profile>MMC-1</manifest:Profile>
+    </manifest:Compatibility>" >> "$mmcFileDestination"
 
-        mv "$newItemFileDestination" "/opt/olympusat/resources/emailNotificationWorkflow/zCompleted/"
+        # Adding Inventory Block Start
+        echo "    <manifest:Inventory>" >> "$mmcFileDestination"
 
-        sleep 2
+        # Adding Audio Block in Inventory Block
+        echo "        <!--  Main audio file for movie  -->
+        <manifest:Audio AudioTrackID="md:audtrackid:org:olympusat:$itemIdXml:feature.audio.$itemLanguageCode2">
+            <md:Type>primary</md:Type>
+            <md:Language>$itemLanguageCode1</md:Language>
+            <manifest:ContainerReference>
+                <manifest:ContainerLocation>$itemOriginalFilename</manifest:ContainerLocation>
+            </manifest:ContainerReference>
+        </manifest:Audio>" >> "$mmcFileDestination"
 
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-newItem) - New Item Email Notification Process Completed" >> "$logfile"
+        # Adding Video Block in Inventory Block
+        echo "        <manifest:Video VideoTrackID="md:vidtrackid:org:olympusat:$itemIdXml:feature.video">
+            <md:Type>primary</md:Type>
+            <md:Picture></md:Picture>
+            <manifest:ContainerReference>
+                <manifest:ContainerLocation>$itemOriginalFilename</manifest:ContainerLocation>
+            </manifest:ContainerReference>
+        </manifest:Video>" >> "$mmcFileDestination"
+
+        # Adding Metadata Block in Inventory Block
+        echo "        <manifest:Metadata ContentID="md:cid:org:olympusat:$itemIdXml">
+            <manifest:ContainerReference type="common">
+                <manifest:ContainerLocation>MEC-$itemTitle.xml</manifest:ContainerLocation>
+            </manifest:ContainerReference>
+        </manifest:Metadata>" >> "$mmcFileDestination"
+
+        # Adding Inventory Block Close
+        echo "    </manifest:Inventory>" >> "$mmcFileDestination"
+
+        # Adding Presentations Block Start
+        echo "    <manifest:Presentations>" >> "$mmcFileDestination"
+
+        # Adding Presentation Block in Presentations Block
+        echo "        <!--   the main feature presentation   -->
+        <manifest:Presentation PresentationID="md:presentationid:org:olympusat:$itemIdXml:feature.presentation">
+            <manifest:TrackMetadata>
+                <manifest:TrackSelectionNumber>0</manifest:TrackSelectionNumber>
+                <manifest:VideoTrackReference>
+                    <manifest:VideoTrackID>md:vidtrackid:org:olympusat:$itemIdXml:feature.video</manifest:VideoTrackID>
+                </manifest:VideoTrackReference>
+                <manifest:AudioTrackReference>
+                    <manifest:AudioTrackID>md:audtrackid:org:olympusat:$itemIdXml:feature.audio.$itemLanguageCode2</manifest:AudioTrackID>
+                </manifest:AudioTrackReference>
+                <!-- manifest:SubtitleTrackReference>
+                <manifest:SubtitleTrackID>md:subtrackid:org:olympusat:$itemIdXml:feature.caption.en</manifest:SubtitleTrackID>
+                </manifest:SubtitleTrackReference -->
+            </manifest:TrackMetadata>
+        </manifest:Presentation>" >> "$mmcFileDestination"
+
+        # Adding Presentations Block Close
+        echo "    </manifest:Presentations>" >> "$mmcFileDestination"
+
+        # Adding Experiences Block Start
+        echo "    <manifest:Experiences>" >> "$mmcFileDestination"
+
+        # Adding Experience Block in Experiences Block
+        echo "        <manifest:Experience ExperienceID="md:experienceid:org:olympusat:$itemIdXml:experience" version="1.0">
+            <manifest:ContentID>md:cid:org:olympusat:$itemIdXml</manifest:ContentID>
+            <manifest:Audiovisual ContentID="md:cid:org:olympusat:$itemIdXml">
+                <manifest:Type>Main</manifest:Type>
+                <manifest:SubType>Feature</manifest:SubType>
+                <manifest:PresentationID>md:presentationid:org:olympusat:$itemIdXml:feature.presentation</manifest:PresentationID>
+            </manifest:Audiovisual>
+            <manifest:PictureGroupID>md:picturegroupid:org:olympusat:$itemIdXml:feature</manifest:PictureGroupID>
+            <!-- manifest:ExperienceChild>
+                <manifest:Relationship>ispromotionfor</manifest:Relationship>
+                <manifest:ExperienceID>md:experienceid:org:olympusat:$itemIdXml:trailer.1.experience</manifest:ExperienceID>
+            </manifest:ExperienceChild -->
+        </manifest:Experience>" >> "$mmcFileDestination"
+
+        # Adding Experiences Block Close
+        echo "    </manifest:Experiences>" >> "$mmcFileDestination"
+
+        # Adding ALIDExperienceMaps Block
+        echo "    <manifest:ALIDExperienceMaps>
+        <manifest:ALIDExperienceMap>
+            <manifest:ALID>md:alid:org:olympusat:$itemIdXml</manifest:ALID>
+            <manifest:ExperienceID>md:experienceid:org:olympusat:$itemIdXml:experience</manifest:ExperienceID>
+        </manifest:ALIDExperienceMap>
+    </manifest:ALIDExperienceMaps>" >> "$mmcFileDestination"
+
+        # Adding MediaManifest Block Close
+        echo "</manifest:MediaManifest>" >> "$mmcFileDestination"
+
+        # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        
+        # ----------------------------------------------------------------------
+        # Creating MEC XML
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - Creating MEC XML for [$itemTitle]" >> "$logfile"
+
+
+
+        # ----------------------------------------------------------------------
 
     else
-        # newItemFileDestination file DOES NOT exist-exiting script/workflow
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow) - newItemFileDestination file DOES NOT exist - exiting script/workflow" >> "$logfile"
+        # contentType is NOT supported-exiting script
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - Content Type NOT Supported - exiting script" >> "$logfile"
     fi
+
 else
-    if [[ "$notificationType" == "originalContentQCPending" ]];
-    then
-        # notificationType is 'originalContentQCPending'-continue with workflow
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-originalContentQCPending) - Original Content QC Pending Workflow Triggered - Check for List to Send Email" >> "$logfile"
-
-        originalContentQCPendingFileDestination="/opt/olympusat/resources/emailNotificationWorkflow/originalContentQCPending/originalContentQCPending-$mydate.csv"
-
-        # Check originalContentQCPendingFileDestination Variable
-        if [[ -e "$originalContentQCPendingFileDestination" ]];
-        then
-            # originalContentQCPendingFileDestination file exists - continuing with script/workflow
-            echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-originalContentQCPending) - originalContentQCPendingFileDestination file exists - continuing with script/workflow" >> "$logfile"
-
-            # Recipient email addresses
-            export recipient1=qcmanagement@olympusat.com
-            export recipient2=srusso@olympusat.com
-            export recipient3=mamAdmin@olympusat.com
-            export recipient4=rsims@olympusat.com
-            export recipient5=kkanjanapitak@olympusat.com
-
-            # Sending email address
-            export emailFrom=notify@olympusat.com
-
-            # Email Body
-            subject="MAM - Original Content QC - Pending - $mydate"
-            body="Hi,
-   
-The following attached list of original content items are now Pending Original Content QC.
-
-You can find all of the items in the following Saved Searches
-
-For Legacy Content - 'Original Legacy Content QC-Pending'
-Link to Saved Search - https://cantemo.olympusat.com/search/#/savedsearch/OLY-358/?search_id=2434
-
-For New Content - 'Original Content QC-Pending'
-Link to Saved Search - https://cantemo.olympusat.com/search/#/savedsearch/OLY-246/?search_id=1503
-
-***NOTE***: You must be on the Office Network, either via VPN or remoting into a machine on the Network, in order to access Cantemo Web Portal
-        
-Please login to the system, review & QC these items.
-
-***NOTE***: If the content is 'legacyContent', please check with IT to make sure the files are deleted from the Backup before marking as Approved, as they will be Archived via Cantemo after Approving.
-        
-Thanks
-        
-MAM Notify"
-
-            echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-originalContentQCPending) - Sending Email for New Items Ingested into Cantemo Today" >> "$logfile"
-            echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-originalContentQCPending) - To - $recipient1, $recipient2, $recipient3, $recipient4, $recipient5" >> "$logfile"
-            echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-originalContentQCPending) - From - $emailFrom" >> "$logfile"
-            echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-originalContentQCPending) - Subject - $subject" >> "$logfile"
-            echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-originalContentQCPending) - Body - [$(echo $body)]" >> "$logfile"
-
-            # Setup to send email with attachment
-            sesSubject=$(echo $subject) 
-            sesMessage=$body
-            sesFile=$(echo $originalContentQCPendingFileDestination)
-            sesMIMEType=`file --mime-type "$sesFile" | sed 's/.*: //'`
-
-            curl --url 'smtp://smtp-mail.outlook.com:587' \
-            --ssl-reqd  \
-            --mail-from $emailFrom \
-            --mail-rcpt $recipient1 --mail-rcpt $recipient2 --mail-rcpt $recipient3 \
-            --user 'notify@olympusat.com:6bOblVsLg9bPQ8WG7JC7f8Zump' \
-            -F '=(;type=multipart/mixed' \
-            -F "=$sesMessage;type=text/plain" \
-            -F "file=@$sesFile;type=$sesMIMEType;encoder=base64" \
-            -F '=)' \
-            -H "Subject: $sesSubject"
-
-            echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-originalContentQCPending) - Email Sent Successfully" >> "$logfile"
-
-            sleep 2
-
-            echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-originalContentQCPending) - Moving originalContentQCPending csv to zCompleted folder" >> "$logfile"
-
-            mv "$originalContentQCPendingFileDestination" "/opt/olympusat/resources/emailNotificationWorkflow/zCompleted/"
-
-            sleep 2
-
-            echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-originalContentQCPending) - Original Content QC Pending Email Notification Process Completed" >> "$logfile"
-
-        else
-            # originalContentQCPendingFileDestination file DOES NOT exist-exiting script/workflow
-            echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow) - originalContentQCPendingFileDestination file DOES NOT exist - exiting script/workflow" >> "$logfile"
-        fi
-    else
-        if [[ "$notificationType" == "finalQCPending" ]];
-        then
-            # notificationType is 'finalQCPending'-continue with workflow
-            echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-finalQCPending) - Final QC Pending Workflow Triggered - Check for List to Send Email" >> "$logfile"
-
-            finalQCPendingFileDestination="/opt/olympusat/resources/emailNotificationWorkflow/finalQCPending/finalQCPending-$mydate.csv"
-
-            # Check finalQCPendingFileDestination Variable
-            if [[ -e "$finalQCPendingFileDestination" ]];
-            then
-                # finalQCPendingFileDestination file exists - continuing with script/workflow
-                echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-finalQCPending) - finalQCPendingFileDestination file exists - continuing with script/workflow" >> "$logfile"
-
-                # Recipient email addresses
-                export recipient1=qcmanagement@olympusat.com
-                export recipient2=srusso@olympusat.com
-                export recipient3=mamAdmin@olympusat.com
-                export recipient4=rsims@olympusat.com
-                export recipient5=kkanjanapitak@olympusat.com
-
-                # Sending email address
-                export emailFrom=notify@olympusat.com
-
-                # Email Body
-                subject="MAM - Final QC - Pending - $mydate"
-                body="Hi,
-      
-The following attached list of conform content items are now Pending Final QC.
-
-You can find all of the items in the following Saved Searches
-
-'Final QC-Pending'
-Link to Saved Search - https://cantemo.olympusat.com/search/#/savedsearch/OLY-224/?search_id=972
-
-***NOTE***: You must be on the Office Network, either via VPN or remoting into a machine on the Network, in order to access Cantemo Web Portal
-            
-Please login to the system, review & QC these items.
-            
-Thanks
-            
-MAM Notify"
-
-                echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-finalQCPending) - Sending Email for New Items Ingested into Cantemo Today" >> "$logfile"
-                echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-finalQCPending) - To - $recipient1, $recipient2, $recipient3, $recipient4, $recipient5" >> "$logfile"
-                echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-finalQCPending) - From - $emailFrom" >> "$logfile"
-                echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-finalQCPending) - Subject - $subject" >> "$logfile"
-                echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-finalQCPending) - Body - [$(echo $body)]" >> "$logfile"
-
-                # Setup to send email with attachment
-                sesSubject=$(echo $subject) 
-                sesMessage=$body
-                sesFile=$(echo $finalQCPendingFileDestination)
-                sesMIMEType=`file --mime-type "$sesFile" | sed 's/.*: //'`
-
-                curl --url 'smtp://smtp-mail.outlook.com:587' \
-                --ssl-reqd  \
-                --mail-from $emailFrom \
-                --mail-rcpt $recipient1 --mail-rcpt $recipient2 --mail-rcpt $recipient3 \
-                --user 'notify@olympusat.com:6bOblVsLg9bPQ8WG7JC7f8Zump' \
-                -F '=(;type=multipart/mixed' \
-                -F "=$sesMessage;type=text/plain" \
-                -F "file=@$sesFile;type=$sesMIMEType;encoder=base64" \
-                -F '=)' \
-                -H "Subject: $sesSubject"
-
-                echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-finalQCPending) - Email Sent Successfully" >> "$logfile"
-
-                sleep 2
-
-                echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-finalQCPending) - Moving finalQCPending csv to zCompleted folder" >> "$logfile"
-
-                mv "$finalQCPendingFileDestination" "/opt/olympusat/resources/emailNotificationWorkflow/zCompleted/"
-
-                sleep 2
-
-                echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-finalQCPending) - Final QC Pending Email Notification Process Completed" >> "$logfile"
-
-            else
-                # finalQCPendingFileDestination file DOES NOT exist-exiting script/workflow
-                echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow) - finalQCPendingFileDestination file DOES NOT exist - exiting script/workflow" >> "$logfile"
-            fi
-        else
-            if [[ "$notificationType" == "markedToBeDeleted" ]];
-            then
-                # notificationType is 'markedToBeDeleted'-continue with workflow
-                echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-markedToBeDeleted) - Marked to be Deleted Workflow Triggered - Check for List to Send Email" >> "$logfile"
-
-                markedToBeDeletedFileDestination="/opt/olympusat/resources/emailNotificationWorkflow/markedToBeDeleted/markedToBeDeleted-$mydate.csv"
-
-                # Check markedToBeDeletedFileDestination Variable
-                if [[ -e "$markedToBeDeletedFileDestination" ]];
-                then
-                    # markedToBeDeletedFileDestination file exists - continuing with script/workflow
-                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-markedToBeDeleted) - markedToBeDeletedFileDestination file exists - continuing with script/workflow" >> "$logfile"
-
-                    # Recipient email addresses
-                    export recipient1=mamAdmin@olympusat.com
-                    export recipient2=rsims@olympusat.com
-                    export recipient3=kkanjanapitak@olympusat.com
-
-                    # Sending email address
-                    export emailFrom=notify@olympusat.com
-
-                    # Email Body
-                    subject="MAM - Content Marked to be Deleted - $mydate"
-                    body="Hi,
-        
-The following attached list of items have been Marked to be Deleted.
-
-You can find all of the items in the following Saved Searches
-
-'Content User Marked as to be Deleted'
-Link to Saved Search - https://cantemo.olympusat.com/search/#/savedsearch/OLY-21/?search_id=3126
-
-***NOTE***: You must be on the Office Network, either via VPN or remoting into a machine on the Network, in order to access Cantemo Web Portal
-                
-Please login to the system, review & either delete these items or remove metadata marking as to be deleted.
-                
-Thanks
-                
-MAM Notify"
-
-                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-markedToBeDeleted) - Sending Email for New Items Ingested into Cantemo Today" >> "$logfile"
-                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-markedToBeDeleted) - To - $recipient1, $recipient2, $recipient3, $recipient4, $recipient5" >> "$logfile"
-                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-markedToBeDeleted) - From - $emailFrom" >> "$logfile"
-                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-markedToBeDeleted) - Subject - $subject" >> "$logfile"
-                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-markedToBeDeleted) - Body - [$(echo $body)]" >> "$logfile"
-
-                    # Setup to send email with attachment
-                    sesSubject=$(echo $subject) 
-                    sesMessage=$body
-                    sesFile=$(echo $markedToBeDeletedFileDestination)
-                    sesMIMEType=`file --mime-type "$sesFile" | sed 's/.*: //'`
-
-                    curl --url 'smtp://smtp-mail.outlook.com:587' \
-                    --ssl-reqd  \
-                    --mail-from $emailFrom \
-                    --mail-rcpt $recipient1 \
-                    --user 'notify@olympusat.com:6bOblVsLg9bPQ8WG7JC7f8Zump' \
-                    -F '=(;type=multipart/mixed' \
-                    -F "=$sesMessage;type=text/plain" \
-                    -F "file=@$sesFile;type=$sesMIMEType;encoder=base64" \
-                    -F '=)' \
-                    -H "Subject: $sesSubject"
-
-                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-markedToBeDeleted) - Email Sent Successfully" >> "$logfile"
-
-                    sleep 2
-
-                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-markedToBeDeleted) - Moving markedToBeDeleted csv to zCompleted folder" >> "$logfile"
-
-                    mv "$markedToBeDeletedFileDestination" "/opt/olympusat/resources/emailNotificationWorkflow/zCompleted/"
-
-                    sleep 2
-
-                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-markedToBeDeleted) - Marked to be Deleted Email Notification Process Completed" >> "$logfile"
-
-                else
-                    # markedToBeDeletedFileDestination file DOES NOT exist-exiting script/workflow
-                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow) - markedToBeDeletedFileDestination file DOES NOT exist - exiting script/workflow" >> "$logfile"
-                fi
-            else
-                # notificationType is NOT supported-exiting script/workflow
-                echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow) - notificationType is NOT supported - exiting script/workflow" >> "$logfile"
-            fi
-        fi
-    fi
+    # distributionTo NOT supported-exiting script
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - Distribution To NOT Supported - exiting script" >> "$logfile"
 fi
 
 IFS=$saveIFS
