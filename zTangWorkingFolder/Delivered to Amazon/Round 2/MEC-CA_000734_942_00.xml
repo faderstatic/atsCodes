@@ -71,13 +71,7 @@
 			<!-- each rating specifies exactly one country, system and value -->
 			<!-- At least one rating is required. If the work is not rated, use <md:notrated>true</md:notrated>  -->
 			<!-- see http://www.movielabs.com/md/ratings/current.html for ratings -->
-			<md:Rating>
-				<md:Region>
-					<md:country>MX</md:country>
-				</md:Region>
-				<md:System>RTC</md:System>
-				<md:Value>B15</md:Value>
-			</md:Rating>
+			
 			<md:Rating>
 				<md:Region>
 					<md:country>US</md:country>
