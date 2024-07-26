@@ -771,11 +771,14 @@ then
         itemOriginalLanguage=$(filterVidispineItemSubgroupMetadata $itemId "metadata" "oly_originalLanguage")
         # Check originalLangugae to create proper originalLanguageCode for XMLs
         case "$itemOriginalLanguage" in
-            "spanish")
-                export itemOriginalLanguageCode="es-MX"
+            "chinese")
+                export itemOriginalLanguageCode="zh-CH"
             ;;
             "english")
                 export itemOriginalLanguageCode="en-US"
+            ;;
+            "spanish")
+                export itemOriginalLanguageCode="es-MX"
             ;;
         esac
         echo "        <!-- OriginalLanguage is required by Amazon -->
