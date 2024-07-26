@@ -857,7 +857,7 @@ then
         mecSeasonFileDestinationDirector="/opt/olympusat/xmlsForDistribution/$distributionTo/_miscFiles/DirectorForMEC-$seasonItemTitle.xml"
         mecSeasonFileDestinationProducer="/opt/olympusat/xmlsForDistribution/$distributionTo/_miscFiles/ProducerForMEC-$seasonItemTitle.xml"
         # Check to see if mecSeasonFileDestination file exists
-        if [[ -e "$mecSeasonFileDestination" ]];
+        if [[ ! -e "$mecSeasonFileDestination" ]];
         then
             # Gathering metadata from Cantemo
             itemContentType=$(filterVidispineItemMetadata $itemId "metadata" "oly_contentType")
@@ -1305,7 +1305,7 @@ then
         mecSeriesFileDestinationGenre="/opt/olympusat/xmlsForDistribution/$distributionTo/_miscFiles/GenreForMEC-$seriesItemTitle.xml"
         mecSeriesFileDestinationRating="/opt/olympusat/xmlsForDistribution/$distributionTo/_miscFiles/RatingForMEC-$seriesItemTitle.xml"
         # Check to see if mecSeriesFileDestination file exists
-        if [[ -e "$mecSeriesFileDestination" ]];
+        if [[ ! -e "$mecSeriesFileDestination" ]];
         then
             # Gathering metadata from Cantemo
             itemContentType=$(filterVidispineItemMetadata $itemId "metadata" "oly_contentType")
