@@ -11,9 +11,9 @@
 			<md:TitleDisplayUnlimited>El Cártel</md:TitleDisplayUnlimited>
 			<!-- TitleSort is required by the MEC XSD, but is not used by Amazon. Blank fields such as below are acceptable.  -->
 			<md:TitleSort></md:TitleSort>
-			<md:ArtReference resolution="1600x1200" purpose="boxart">CA_000752_1027_00-box-3x4.jpg</md:ArtReference>
-			<md:ArtReference resolution="2560x1440" purpose="cover">CA_000752_1027_00-cover-16x9.jpg</md:ArtReference>
-			<md:ArtReference resolution="1200x1600" purpose="hero">CA_000752_1027_00-hero-16x9.jpg</md:ArtReference>			
+			<md:ArtReference resolution="1920x2560" purpose="boxart">CA_000752_1027_00-box-3x4.jpg</md:ArtReference>
+			<md:ArtReference resolution="1920x1080" purpose="cover">CA_000752_1027_00-cover-16x9.jpg</md:ArtReference>
+			<md:ArtReference resolution="3840x2160" purpose="hero">CA_000752_1027_00-hero-16x9.jpg</md:ArtReference>			
 			<!-- Summary190 is required by the MEC XSD, but is not required by Amazon. Blank fields such as below are acceptable.  -->
 			<md:Summary190>Digging his own grave</md:Summary190>
 			<!-- Summary400 is required by Amazon -->
@@ -73,10 +73,10 @@
 			<!-- see http://www.movielabs.com/md/ratings/current.html for ratings -->
 			<md:Rating>
 				<md:Region>
-					<md:country>MX</md:country>
+					<md:country>US</md:country>
 				</md:Region>
-				<md:System>RTC</md:System>
-				<md:Value>B15</md:Value>
+				<md:System>MPAA</md:System>
+				<md:NotRated>true</md:NotRated>
 			</md:Rating>
 			<md:Rating>
 				<md:Region>
