@@ -851,7 +851,6 @@ then
         seasonItemTitle=$(echo "$itemTitle" | awk -F '_' '{print $2}')
         seasonItemTitleEnd=$(echo "$itemTitle" | awk -F '_' '{print $4}')
         seasonItemTitle=$(echo CA_"$seasonItemTitle"_"$itemRLItemId"_$seasonItemTitleEnd)
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - Create Season MEC XML In Progress for [$seasonItemTitle]" >> "$logfile"
         mecSeasonFileDestination="/opt/olympusat/xmlsForDistribution/$distributionTo/MEC-$seasonItemTitle.xml"
         mecSeasonFileDestinationArt="/opt/olympusat/xmlsForDistribution/$distributionTo/_miscFiles/ArtForMEC-$seasonItemTitle.xml"
         mecSeasonFileDestinationGenre="/opt/olympusat/xmlsForDistribution/$distributionTo/_miscFiles/GenreForMEC-$seasonItemTitle.xml"
@@ -862,6 +861,7 @@ then
         # Check to see if mecSeasonFileDestination file exists
         if [[ ! -e "$mecSeasonFileDestination" ]];
         then
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - Create Season MEC XML In Progress for [$seasonItemTitle]" >> "$logfile"
             # Gathering metadata from Cantemo
             itemContentType=$(filterVidispineItemMetadata $itemId "metadata" "oly_contentType")
             itemTitleEn=$(filterVidispineItemMetadata $itemId "metadata" "oly_titleEn")
@@ -1302,7 +1302,6 @@ then
         seriesItemTitle=$(echo "$itemTitle" | awk -F '_' '{print $2}')
         seriesItemTitleEnd=$(echo "$itemTitle" | awk -F '_' '{print $4}')
         seriesItemTitle=$(echo CA_"$seriesItemTitle"_"$itemRLItemId"_$seriesItemTitleEnd)
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - Create Series MEC XML In Progress for [$seriesItemTitle]" >> "$logfile"
         mecSeriesFileDestination="/opt/olympusat/xmlsForDistribution/$distributionTo/MEC-$seriesItemTitle.xml"
         mecSeriesFileDestinationArt="/opt/olympusat/xmlsForDistribution/$distributionTo/_miscFiles/ArtForMEC-$seriesItemTitle.xml"
         mecSeriesFileDestinationGenre="/opt/olympusat/xmlsForDistribution/$distributionTo/_miscFiles/GenreForMEC-$seriesItemTitle.xml"
@@ -1310,6 +1309,7 @@ then
         # Check to see if mecSeriesFileDestination file exists
         if [[ ! -e "$mecSeriesFileDestination" ]];
         then
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - Create Series MEC XML In Progress for [$seriesItemTitle]" >> "$logfile"
             # Gathering metadata from Cantemo
             itemContentType=$(filterVidispineItemMetadata $itemId "metadata" "oly_contentType")
             itemTitleEn=$(filterVidispineItemMetadata $itemId "metadata" "oly_titleEn")
