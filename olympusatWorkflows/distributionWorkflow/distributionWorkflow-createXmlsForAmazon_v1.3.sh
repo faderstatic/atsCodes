@@ -1237,9 +1237,6 @@ then
             cat "$mecSeasonFileDestinationDirector" >> "$mecSeasonFileDestination"
             cat "$mecSeasonFileDestinationProducer" >> "$mecSeasonFileDestination"
             # Adding OriginalLanguage Block
-            echo "SEASON"
-            echo "ORIGINAL LANGUAGE CODE"
-            echo "[$itemOriginalLanguageCode]"
             echo "        <!-- OriginalLanguage is required by Amazon -->
 		<md:OriginalLanguage>$itemOriginalLanguageCode</md:OriginalLanguage>" >> "$mecSeasonFileDestination"
             # Adding AssociatedOrg Block
@@ -1545,9 +1542,6 @@ then
             # Adding RatingSet Block Close
             echo "        </md:RatingSet>" >> "$mecSeriesFileDestination"
             # Adding OriginalLanguage Block
-            echo "SERIES"
-            echo "ORIGINAL LANGUAGE CODE"
-            echo "[$itemOriginalLanguageCode]"
             echo "        <!-- OriginalLanguage is required by Amazon -->
 		<md:OriginalLanguage>$itemOriginalLanguageCode</md:OriginalLanguage>" >> "$mecSeriesFileDestination"
             # Adding AssociatedOrg Block
