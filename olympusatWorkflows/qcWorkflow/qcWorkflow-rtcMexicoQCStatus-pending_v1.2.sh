@@ -130,7 +130,7 @@ curl --url 'smtp://smtp-mail.outlook.com:587' \
   --ssl-reqd \
   --mail-from $emailFrom \
   --mail-rcpt $recipient2 \
-  --user 'notify@olympusat.com:560Village' \
+  --user 'notify@olympusat.com:6bOblVsLg9bPQ8WG7JC7f8Zump' \
   --tlsv1.2 \
   -T <(echo -e "$message")
 

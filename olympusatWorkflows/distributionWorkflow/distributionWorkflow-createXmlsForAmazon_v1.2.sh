@@ -62,6 +62,7 @@ then
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - Create Amazon XMLs - Checking contentType" >> "$logfile"
     sleep 1
     itemContentType=$(filterVidispineItemMetadata $itemId "metadata" "oly_contentType")
+    itemContentTypeOriginal=$(echo "$itemContentType")
     # Check if contentType is movie or episode
     if [[ "$itemContentType" == "movie" || "$itemContentType" == "episode" ]];
     then
@@ -837,17 +838,17 @@ then
         echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - Content Type NOT Supported - exiting script" >> "$logfile"
     fi
 
-    if [[ "$itemContentType" == "episode" ]];
+    if [[ "$itemContentTypeOriginal" == "episode" ]];
     then
         # ----------------------------------------------------------------------
         # Create MEC XML for Season
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - Create Season MEC XML In Progress for [$itemTitle]" >> "$logfile"
         itemId=$(echo $seasonItemId)
         itemIdXml=$(echo $seasonItemIdXml)
         itemRLItemId=$(filterVidispineItemMetadata $itemId "metadata" "oly_rightslineItemId")
         seasonItemTitle=$(echo "$itemTitle" | awk -F '_' '{print $2}')
         seasonItemTitleEnd=$(echo "$itemTitle" | awk -F '_' '{print $4}')
         seasonItemTitle=$(echo CA_"$seasonItemTitle"_"$itemRLItemId"_$seasonItemTitleEnd)
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - Create Season MEC XML In Progress for [$seasonItemTitle]" >> "$logfile"
         mecSeasonFileDestination="/opt/olympusat/xmlsForDistribution/$distributionTo/MEC-$seasonItemTitle.xml"
         mecSeasonFileDestinationArt="/opt/olympusat/xmlsForDistribution/$distributionTo/_miscFiles/ArtForMEC-$seasonItemTitle.xml"
         mecSeasonFileDestinationGenre="/opt/olympusat/xmlsForDistribution/$distributionTo/_miscFiles/GenreForMEC-$seasonItemTitle.xml"
@@ -1022,15 +1023,15 @@ then
             ;;
         esac
         ## Get item's secondary genres and iterate through each and add information into genre xml with appropriate genre/subgenre for Amazon
-        for (( j=1 ; j<=$occurenceCount ; j++ ));
+        for (( w=1 ; w<=$occurenceCount ; w++ ));
         do
-            if [[ $j -eq 1 ]];
+            if [[ $w -eq 1 ]];
             then
-                k=3
+                x=3
             else
-                k=2
+                x=2
             fi
-            currentValue=$(echo "$httpResponseSecondaryGenres" | awk -F '</oly_secondaryGenres>' '{print $'$j'}' | awk -F '/vidispine">' '{print $'$k'}' )
+            currentValue=$(echo "$httpResponseSecondaryGenres" | awk -F '</oly_secondaryGenres>' '{print $'$w'}' | awk -F '/vidispine">' '{print $'$x'}' )
             case "$currentValue" in
                 "adventure")
                     case "$itemPrimaryGenre" in
@@ -1348,10 +1349,319 @@ then
         sleep 2
         echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - Create Season MEC XML COMPLETED" >> "$logfile"
         # ----------------------------------------------------------------------
+
+        # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        # Create MEC XML for Series
+        itemId=$(echo $seriesItemId)
+        itemIdXml=$(echo $seriesItemIdXml)
+        itemRLItemId=$(filterVidispineItemMetadata $itemId "metadata" "oly_rightslineItemId")
+        seriesItemTitle=$(echo "$itemTitle" | awk -F '_' '{print $2}')
+        seriesItemTitleEnd=$(echo "$itemTitle" | awk -F '_' '{print $4}')
+        seriesItemTitle=$(echo CA_"$seriesItemTitle"_"$itemRLItemId"_$seriesItemTitleEnd)
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - Create Series MEC XML In Progress for [$seriesItemTitle]" >> "$logfile"
+        mecSeriesFileDestination="/opt/olympusat/xmlsForDistribution/$distributionTo/MEC-$seriesItemTitle.xml"
+        mecSeriesFileDestinationArt="/opt/olympusat/xmlsForDistribution/$distributionTo/_miscFiles/ArtForMEC-$seriesItemTitle.xml"
+        mecSeriesFileDestinationGenre="/opt/olympusat/xmlsForDistribution/$distributionTo/_miscFiles/GenreForMEC-$seriesItemTitle.xml"
+        mecSeriesFileDestinationRating="/opt/olympusat/xmlsForDistribution/$distributionTo/_miscFiles/RatingForMEC-$seriesItemTitle.xml"
+        # Check to see if mecSeriesFileDestination file exists
+        if [[ -e "$mecSeriesFileDestination" ]];
+        then
+            # mecSeriesFileDestination file exists-deleting file before continuing
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - mecSeriesFileDestination file exists - moving file to zMoved folder before continuing with script" >> "$logfile"
+            mv -f "$mecSeriesFileDestination" "/opt/olympusat/xmlsForDistribution/zMoved/"
+            sleep 1
+        fi
+        # Check to see if mecSeriesFileDestinationArt file exists
+        if [[ -e "$mecSeriesFileDestinationArt" ]];
+        then
+            # mecSeriesFileDestinationArt file exists-deleting file before continuing
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - mecSeriesFileDestinationArt file exists - moving file to zMoved folder before continuing with script" >> "$logfile"
+            mv -f "$mecSeriesFileDestinationArt" "/opt/olympusat/xmlsForDistribution/zMoved/"
+            sleep 1
+        fi
+        # Check to see if mecSeriesFileDestinationGenre file exists
+        if [[ -e "$mecSeriesFileDestinationGenre" ]];
+        then
+            # mecSeriesFileDestinationGenre file exists-deleting file before continuing
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - mecSeriesFileDestinationGenre file exists - moving file to zMoved folder before continuing with script" >> "$logfile"
+            mv -f "$mecSeriesFileDestinationGenre" "/opt/olympusat/xmlsForDistribution/zMoved/"
+            sleep 1
+        fi
+        # Check to see if mecSeriesFileDestinationRating file exists
+        if [[ -e "$mecSeriesFileDestinationRating" ]];
+        then
+            # mecSeriesFileDestinationRating file exists-deleting file before continuing
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - mecSeriesFileDestinationRating file exists - moving file to zMoved folder before continuing with script" >> "$logfile"
+            mv -f "$mecSeriesFileDestinationRating" "/opt/olympusat/xmlsForDistribution/zMoved/"
+            sleep 1
+        fi
+        # Gathering metadata from Cantemo
+        itemContentType=$(filterVidispineItemMetadata $itemId "metadata" "oly_contentType")
+        itemTitleEn=$(filterVidispineItemMetadata $itemId "metadata" "oly_titleEn")
+        itemTitleEs=$(filterVidispineItemMetadata $itemId "metadata" "oly_titleEs")
+        itemLogLineEn=$(filterVidispineItemSubgroupMetadata $itemId "metadata" "oly_logLineEn" "English%20Synopsis")
+        itemShortDescriptionEn=$(filterVidispineItemSubgroupMetadata $itemId "metadata" "oly_shortDescriptionEn" "English%20Synopsis")
+        itemDescriptionEn=$(filterVidispineItemSubgroupMetadata $itemId "metadata" "oly_descriptionEn" "English%20Synopsis")
+        itemLogLineEs=$(filterVidispineItemSubgroupMetadata $itemId "metadata" "oly_logLineEs" "Spanish%20Synopsis")
+        itemShortDescriptionEs=$(filterVidispineItemSubgroupMetadata $itemId "metadata" "oly_shortDescriptionEs" "Spanish%20Synopsis")
+        itemDescriptionEs=$(filterVidispineItemSubgroupMetadata $itemId "metadata" "oly_descriptionEs" "Spanish%20Synopsis")
+        itemProductionYear=$(filterVidispineItemMetadata $itemId "metadata" "oly_productionYear")
+        if [[ "$itemTitleEn" == "" ]];
+        then
+            if [[ "$itemTitleEs" != "" ]];
+            then
+                itemTitleEn=$(echo "$itemTitleEs")
+            fi            
+        fi
+        if [[ "$itemTitleEs" == "" ]];
+        then
+            if [[ "$itemTitleEn" != "" ]];
+            then
+                itemTitleEs=$(echo "$itemTitleEn")
+            fi            
+        fi
+        # Adding XML Header
+        echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" >> "$mecSeriesFileDestination"
+        # Adding CoreMetadata Block Start
+        echo "<mdmec:CoreMetadata xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"
+ xsi:schemaLocation=\"http://www.movielabs.com/schema/mdmec/v2.9 ../mdmec-v2.9.xsd\"
+ xmlns:md=\"http://www.movielabs.com/schema/md/v2.9/md\"
+ xmlns:mdmec=\"http://www.movielabs.com/schema/mdmec/v2.9\">" >> "$mecSeriesFileDestination"
+        # Adding Basic Block Start
+        echo "    <mdmec:Basic ContentID=\"md:cid:org:olympusat:$itemIdXml\">" >> "$mecSeriesFileDestination"
+        # Adding LocalizedInfo in English Block Start
+        echo "        <md:LocalizedInfo language=\"en-US\">" >> "$mecSeriesFileDestination"
+        # Adding LocalizedInfo in English Block - Title
+		echo "            <!-- TitleDisplayUnlimited is required by Amazon. Limited to 250 characters. -->
+			<md:TitleDisplayUnlimited>$itemTitleEn</md:TitleDisplayUnlimited>
+			<!-- TitleSort is required by the MEC XSD, but is not used by Amazon. Blank fields such as below are acceptable.  -->
+			<md:TitleSort></md:TitleSort>" >> "$mecSeriesFileDestination"
+        # Adding LocalizedInfo in English Block - Summaries
+		echo "            <!-- Summary190 is required by the MEC XSD, but is not required by Amazon. Blank fields such as below are acceptable.  -->
+			<md:Summary190>$itemLogLineEn</md:Summary190>
+			<!-- Summary400 is required by Amazon -->
+			<md:Summary400>$itemShortDescriptionEn</md:Summary400>
+			<md:Summary4000>$itemDescriptionEn</md:Summary4000>" >> "$mecSeriesFileDestination"
+        # Preparing Genre Info for LocalizedInfo in English Block
+        itemPrimaryGenre=$(filterVidispineItemMetadata $itemId "metadata" "oly_primaryGenre")
+        urlGetItemSecondaryGenres="http://10.1.1.34:8080/API/item/$itemId/metadata?field=oly_secondaryGenres&terse=yes"
+	    httpResponseSecondaryGenres=$(curl --location --request GET $urlGetItemSecondaryGenres  --header 'Accept: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=Tkb9vkSC8v4SceB8CHUyB3iaMPjvgoHrzhLrvo36agG3wqv0jHc7nsOtdTo9JEyM')
+        subGenreItemCount=$(echo $httpResponseSecondaryGenres | awk -F '</oly_secondaryGenres>' '{print NF}')
+        subGenreItemCount=$(($subGenreItemCount - 1))
+        if [[ $subGenreItemCount -lt 2 ]];
+        then
+            occurenceCount=$subGenreItemCount
+        else
+            occurenceCount=2
+        fi
+        ## Get item's primary genre and add information into genre xml
+        case "$itemPrimaryGenre" in
+            "action")
+                echo "            <md:Genre id=\"av_genre_action\"></md:Genre>" >> "$mecSeriesFileDestinationGenre"
+            ;;
+            "adventure")
+                echo "            <md:Genre id=\"av_genre_adventure\"></md:Genre>" >> "$mecSeriesFileDestinationGenre"
+            ;;
+            "comedy")
+                echo "            <md:Genre id=\"av_genre_comedy\"></md:Genre>" >> "$mecSeriesFileDestinationGenre"
+            ;;
+            *)
+                # Do nothing for now - might add logging later
+            ;;
+        esac
+        ## Get item's secondary genres and iterate through each and add information into genre xml with appropriate genre/subgenre for Amazon
+        for (( y=1 ; y<=$occurenceCount ; y++ ));
+        do
+            if [[ $y -eq 1 ]];
+            then
+                z=3
+            else
+                z=2
+            fi
+            currentValue=$(echo "$httpResponseSecondaryGenres" | awk -F '</oly_secondaryGenres>' '{print $'$y'}' | awk -F '/vidispine">' '{print $'$z'}' )
+            case "$currentValue" in
+                "adventure")
+                    case "$itemPrimaryGenre" in
+                        "action")
+                            echo "            <md:Genre id=\"av_subgenre_action_adventure\"></md:Genre>" >> "$mecSeriesFileDestinationGenre"
+                        ;;
+                    esac
+                ;;
+                "comedy")
+                    case "$itemPrimaryGenre" in
+                        "action")
+                            echo "            <md:Genre id=\"av_subgenre_action_comedy\"></md:Genre>" >> "$mecSeriesFileDestinationGenre"
+                        ;;
+                    esac
+                ;;
+                "crime")
+                    case "$itemPrimaryGenre" in
+                        "action")
+                            echo "            <md:Genre id=\"av_subgenre_action_crime\"></md:Genre>" >> "$mecSeriesFileDestinationGenre"
+                        ;;
+                    esac
+                ;;
+                "fantasy")
+                    case "$itemPrimaryGenre" in
+                        "action")
+                            echo "            <md:Genre id=\"av_subgenre_action_fantasy\"></md:Genre>" >> "$mecSeriesFileDestinationGenre"
+                        ;;
+                    esac
+                ;;
+                "romance")
+                    case "$itemPrimaryGenre" in
+                        "action")
+                            echo "            <md:Genre id=\"av_subgenre_action_romance\"></md:Genre>" >> "$mecSeriesFileDestinationGenre"
+                        ;;
+                    esac
+                ;;
+                "suspense")
+                    case "$itemPrimaryGenre" in
+                        "action")
+                            echo "            <md:Genre id=\"av_subgenre_action_suspense\"></md:Genre>" >> "$mecSeriesFileDestinationGenre"
+                        ;;
+                    esac
+                ;;
+                *)
+                    # Do nothing for now - might add logging later
+                ;;
+            esac
+        done
+        # Adding LocalizedInfo in English Block - Genre
+		echo "            <!-- Genres must be submitted using the AV Genre codes, such as below. -->
+			<!-- Genres may be provided in just one, or all LocalizedInfo blocks. See the spec documentation for more detail. -->
+			<!-- At least 1 genre is required. Up to 3 genres are allowed. -->" >> "$mecSeriesFileDestination"
+		cat "$mecSeriesFileDestinationGenre" >> "$mecSeriesFileDestination"
+		# Adding LocalizedInfo in English Block Close
+        echo "        </md:LocalizedInfo>" >> "$mecSeriesFileDestination"
+        # Adding LocalizedInfo in Spanish Block Start
+        echo "        <md:LocalizedInfo language=\"es-MX\">" >> "$mecSeriesFileDestination"
+        # Adding LocalizedInfo in Spanish Block
+        echo "            <md:TitleDisplayUnlimited>$itemTitleEs</md:TitleDisplayUnlimited>
+			<md:TitleSort></md:TitleSort>
+			<md:Summary190>$itemLogLineEs</md:Summary190>
+			<md:Summary400>$itemShortDescriptionEs</md:Summary400>
+			<md:Summary4000>$itemDescriptionEs</md:Summary4000>" >> "$mecSeriesFileDestination"
+        # Adding LocalizedInfo in Spanish Block Close
+        echo "        </md:LocalizedInfo>" >> "$mecSeriesFileDestination"
+        # Adding ReleaseYear Block
+        echo "        <md:ReleaseYear>$itemProductionYear</md:ReleaseYear>" >> "$mecSeriesFileDestination"
+        # Adding WorkType Block
+        echo "        <!-- WorkType is Required -->
+		<md:WorkType>$itemContentType</md:WorkType>" >> "$mecSeriesFileDestination"
+        # Adding AltIdentifier Block
+        echo "        <!-- The ID used in the MMC and in the Avail must also be included in the AltIdentifier section -->
+		<md:AltIdentifier>
+			<md:Namespace>ORG</md:Namespace>
+			<md:Identifier>$itemIdXml</md:Identifier>
+		</md:AltIdentifier>
+		<!-- md:AltIdentifier>
+			<md:Namespace>IMDB</md:Namespace>
+			<md:Identifier>tt4518590</md:Identifier>
+		</md:AltIdentifier -->" >> "$mecSeriesFileDestination"
+        # Adding RatingSet Block Start
+        echo "        <md:RatingSet>
+			<!-- each rating specifies exactly one country, system and value -->
+			<!-- At least one rating is required. If the work is not rated, use <md:notrated>true</md:notrated>  -->
+			<!-- see http://www.movielabs.com/md/ratings/current.html for ratings -->" >> "$mecSeriesFileDestination"
+        # Preparing Rating Block
+        itemOriginalRating=$(filterVidispineItemMetadata $itemId "metadata" "oly_originalRating")
+        case "$itemOriginalRating" in
+            "tv-14")
+                echo "            <md:Rating>
+				<md:Region>
+					<md:country>US</md:country>
+				</md:Region>
+				<md:System>TVPG</md:System>
+				<md:Value>TV-14</md:Value>
+			</md:Rating>" >> "$mecSeriesFileDestinationRating"
+            ;;
+            "tv-g")
+                echo "            <md:Rating>
+				<md:Region>
+					<md:country>US</md:country>
+				</md:Region>
+				<md:System>TVPG</md:System>
+				<md:Value>TV-G</md:Value>
+			</md:Rating>" >> "$mecSeriesFileDestinationRating"
+            ;;
+            "tv-ma")
+                echo "            <md:Rating>
+				<md:Region>
+					<md:country>US</md:country>
+				</md:Region>
+				<md:System>TVPG</md:System>
+				<md:Value>TV-MA</md:Value>
+			</md:Rating>" >> "$mecSeriesFileDestinationRating"
+            ;;
+            "tv-nr")
+                echo "            <md:Rating>
+				<md:Region>
+					<md:country>US</md:country>
+				</md:Region>
+				<md:System>TVPG</md:System>
+				<md:NotRated>true</md:NotRated>
+			</md:Rating>" >> "$mecSeriesFileDestinationRating"
+            ;;
+            "tv-pg")
+                echo "            <md:Rating>
+				<md:Region>
+					<md:country>US</md:country>
+				</md:Region>
+				<md:System>TVPG</md:System>
+				<md:Value>TV-PG</md:Value>
+			</md:Rating>" >> "$mecSeriesFileDestinationRating"
+            ;;
+            "tv-y")
+                echo "            <md:Rating>
+				<md:Region>
+					<md:country>US</md:country>
+				</md:Region>
+				<md:System>TVPG</md:System>
+				<md:Value>TV-Y</md:Value>
+			</md:Rating>" >> "$mecSeriesFileDestinationRating"
+            ;;
+            *)
+                echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - Season Does NOT have Original Rating Set in Cantemo" >> "$logfile"
+            ;;
+        esac
+        # Adding Rating Block
+        cat "$mecSeriesFileDestinationRating" >> "$mecSeriesFileDestination"
+        # Adding RatingSet Block Close
+        echo "        </md:RatingSet>" >> "$mecSeriesFileDestination"
+        # Adding OriginalLanguage Block
+        itemOriginalLanguage=$(filterVidispineItemSubgroupMetadata $itemId "metadata" "oly_originalLanguage")
+        # Check originalLangugae to create proper originalLanguageCode for XMLs
+        case "$itemOriginalLanguage" in
+            "spanish")
+                export itemOriginalLanguageCode="es-MX"
+            ;;
+            "english")
+                export itemOriginalLanguageCode="en-US"
+            ;;
+        esac
+        echo "        <!-- OriginalLanguage is required by Amazon -->
+		<md:OriginalLanguage>$itemOriginalLanguageCode</md:OriginalLanguage>" >> "$mecSeriesFileDestination"
+        # Adding AssociatedOrg Block
+        echo "        <!-- AssociatedOrg is used to provide the Partner Alias and is required -->
+		<!-- Include the Partner Alias value in the @organizationID attribute and the value of "licensor" in the @role attribute -->
+		<md:AssociatedOrg organizationID=\"olympusat\" role=\"licensor\"></md:AssociatedOrg>" >> "$mecSeriesFileDestination"
+        # Adding Basic Block Close
+        echo "    </mdmec:Basic>" >> "$mecSeriesFileDestination"
+        # Adding CompanyDisplayCredit Block
+        echo "    <!-- CompanyDisplayCredit is used to provide customer-facing studio credits. Required. -->
+	<mdmec:CompanyDisplayCredit>
+		<md:DisplayString language=\"en-US\">Olympusat</md:DisplayString>
+	</mdmec:CompanyDisplayCredit>" >> "$mecSeriesFileDestination"
+        # Adding CoreMetadata Block Close
+        echo "</mdmec:CoreMetadata>" >> "$mecSeriesFileDestination"
+        sleep 2
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - Create Series MEC XML COMPLETED" >> "$logfile"
+        # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     fi
 else
     # distributionTo NOT supported-exiting script
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - Distribution To NOT Supported - exiting script" >> "$logfile"
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - 'Distribution To' NOT Supported - exiting script" >> "$logfile"
 fi
 
 IFS=$saveIFS
