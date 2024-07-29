@@ -1,0 +1,910 @@
+Amazon-PrimaryGenre-Action
+{
+    "fields": [
+        {
+            "keys": [
+                "av_genre_action"
+            ],
+            "field_name": "oly_amazonPrimaryGenre"
+        },
+        {
+            "keys": [
+                "av_subgenre_action_comedy",
+                "av_subgenre_action_crime",
+                "av_subgenre_action_disaster",
+                "av_subgenre_action_epic",
+                "av_subgenre_action_espionage_and_spies",
+                "av_subgenre_action_fantasy",
+                "av_subgenre_action_historical",
+                "av_subgenre_action_martial_arts",
+                "av_subgenre_action_military_and_war",
+                "av_subgenre_action_peplum_sword_and_sandal",
+                "av_subgenre_action_romance",
+                "av_subgenre_action_science_fiction",
+                "av_subgenre_action_superheroes",
+                "av_subgenre_action_suspense",
+                "av_subgenre_action_tokusatsu",
+                "av_subgenre_action_western"
+            ],
+            "field_name": "oly_amazonSecondaryGenres"
+        }
+    ]
+}
+
+Amazon-PrimaryGenre-Adventure
+{
+    "fields": [
+        {
+            "keys": [
+                "av_genre_adventure"
+            ],
+            "field_name": "oly_amazonPrimaryGenre"
+        },
+        {
+            "keys": [
+                "av_subgenre_adventure_comedy",
+                "av_subgenre_adventure_eastern",
+                "av_subgenre_adventure_epic",
+                "av_subgenre_adventure_fantasy",
+                "av_subgenre_adventure_historical",
+                "av_subgenre_adventure_peplum_sword_and_sandal",
+                "av_subgenre_adventure_romance"
+            ],
+            "field_name": "oly_amazonSecondaryGenres"
+        }
+    ]
+}
+
+Amazon-PrimaryGenre-Animation
+{
+    "fields": [
+        {
+            "keys": [
+                "av_genre_animation_adult_interest"
+            ],
+            "field_name": "oly_amazonPrimaryGenre"
+        },
+        {
+            "keys": [
+                "av_subgenre_animation_action",
+                "av_subgenre_animation_adventure",
+                "av_subgenre_animation_comedy",
+                "av_subgenre_animation_drama",
+                "av_subgenre_animation_fantasy",
+                "av_subgenre_animation_horror",
+                "av_subgenre_animation_romance",
+                "av_subgenre_animation_science_fiction",
+                "av_subgenre_animation_surreal"
+            ],
+            "field_name": "oly_amazonSecondaryGenres"
+        }
+    ]
+}
+
+Amazon-PrimaryGenre-Anime
+{
+    "fields": [
+        {
+            "keys": [
+                "av_genre_anime"
+            ],
+            "field_name": "oly_amazonPrimaryGenre"
+        },
+        {
+            "keys": [
+                "av_subgenre_anime_action",
+                "av_subgenre_anime_adventure",
+                "av_subgenre_anime_comedy",
+                "av_subgenre_anime_drama",
+                "av_subgenre_anime_ecchi_erotic",
+                "av_subgenre_anime_fantasy",
+                "av_subgenre_anime_harem",
+                "av_subgenre_anime_historical",
+                "av_subgenre_anime_horror",
+                "av_subgenre_anime_kids",
+                "av_subgenre_anime_mecha",
+                "av_subgenre_anime_music",
+                "av_subgenre_anime_mystery",
+                "av_subgenre_anime_romance",
+                "av_subgenre_anime_school",
+                "av_subgenre_anime_science_fiction",
+                "av_subgenre_anime_shoujo",
+                "av_subgenre_anime_shounen",
+                "av_subgenre_anime_slice_of_life",
+                "av_subgenre_anime_sports",
+                "av_subgenre_anime_supernatural",
+                "av_subgenre_anime_war",
+                "av_subgenre_anime_yaoi",
+                "av_subgenre_anime_yuri"
+            ],
+            "field_name": "oly_amazonSecondaryGenres"
+        }
+    ]
+}
+
+Amazon-PrimaryGenre-Arthouse
+{
+    "fields": [
+        {
+            "keys": [
+                "av_genre_arthouse"
+            ],
+            "field_name": "oly_amazonPrimaryGenre"
+        },
+        {
+            "keys": [
+                "av_subgenre_arthouse_avant_garde",
+                "av_subgenre_arthouse_erotic",
+                "av_subgenre_arthouse_experimental",
+                "av_subgenre_arthouse_surrealist",
+                "av_subgenre_arthouse_non_narrative_ambient"
+            ],
+            "field_name": "oly_amazonSecondaryGenres"
+        }
+    ]
+}
+
+Amazon-PrimaryGenre-Arts_Entertainment_Culture
+{
+    "fields": [
+        {
+            "keys": [
+                "av_genre_arts_entertainment_and_culture"
+            ],
+            "field_name": "oly_amazonPrimaryGenre"
+        },
+        {
+            "keys": [
+                "av_subgenre_arts_entertainment_and_culture_dance",
+                "av_subgenre_arts_entertainment_and_culture_musical",
+                "av_subgenre_arts_entertainment_and_culture_opera",
+                "av_subgenre_arts_entertainment_and_culture_standup_comedy",
+                "av_subgenre_arts_entertainment_and_culture_theater"
+            ],
+            "field_name": "oly_amazonSecondaryGenres"
+        }
+    ]
+}
+
+Amazon-PrimaryGenre-Comedy
+{
+    "fields": [
+        {
+            "keys": [
+                "av_genre_comedy"
+            ],
+            "field_name": "oly_amazonPrimaryGenre"
+        },
+        {
+            "keys": [
+                "av_subgenre_comedy_action",
+                "av_subgenre_comedy_adventure",
+                "av_subgenre_comedy_crime",
+                "av_subgenre_comedy_dark",
+                "av_subgenre_comedy_drama",
+                "av_subgenre_comedy_fantasy",
+                "av_subgenre_comedy_heimatfilm",
+                "av_subgenre_comedy_high_school",
+                "av_subgenre_comedy_horror",
+                "av_subgenre_comedy_romance",
+                "av_subgenre_comedy_political",
+                "av_subgenre_comedy_satire",
+                "av_subgenre_comedy_science_fiction",
+                "av_subgenre_comedy_sitcom"
+            ],
+            "field_name": "oly_amazonSecondaryGenres"
+        }
+    ]
+}
+
+Amazon-PrimaryGenre-Documentary
+{
+    "fields": [
+        {
+            "keys": [
+                "av_genre_documentary"
+            ],
+            "field_name": "oly_amazonPrimaryGenre"
+        },
+        {
+            "keys": [
+                "av_subgenre_documentary_art_entertainment_and_culture",
+                "av_subgenre_documentary_biography",
+                "av_subgenre_documentary_crime",
+                "av_subgenre_documentary_food_drinks",
+                "av_subgenre_documentary_history",
+                "av_subgenre_documentary_hobby",
+                "av_subgenre_documentary_military_and_war",
+                "av_subgenre_documentary_music",
+                "av_subgenre_documentary_nature_wildlife",
+                "av_subgenre_documentary_politics",
+                "av_subgenre_documentary_religion",
+                "av_subgenre_documentary_science_technology",
+                "av_subgenre_documentary_sports",
+                "av_subgenre_documentary_transportation",
+                "av_subgenre_documentary_travel"
+            ],
+            "field_name": "oly_amazonSecondaryGenres"
+        }
+    ]
+}
+
+Amazon-PrimaryGenre-Drama
+{
+    "fields": [
+        {
+            "keys": [
+                "av_genre_drama"
+            ],
+            "field_name": "oly_amazonPrimaryGenre"
+        },
+        {
+            "keys": [
+                "av_subgenre_drama_biopic",
+                "av_subgenre_drama_comedy",
+                "av_subgenre_drama_costume_drama",
+                "av_subgenre_drama_crime",
+                "av_subgenre_drama_family_drama",
+                "av_subgenre_drama_heimatfilm",
+                "av_subgenre_drama_high_school",
+                "av_subgenre_drama_historical",
+                "av_subgenre_drama_korean_drama",
+                "av_subgenre_drama_medical",
+                "av_subgenre_drama_melodrama",
+                "av_subgenre_drama_military_and_war",
+                "av_subgenre_drama_political",
+                "av_subgenre_drama_psychological",
+                "av_subgenre_drama_romance",
+                "av_subgenre_drama_soap_opera",
+                "av_subgenre_drama_suspense",
+                "av_subgenre_drama_tear_jerker"
+            ],
+            "field_name": "oly_amazonSecondaryGenres"
+        }
+    ]
+}
+
+Amazon-PrimaryGenre-Erotic
+{
+    "fields": [
+        {
+            "keys": [
+                "av_genre_erotic"
+            ],
+            "field_name": "oly_amazonPrimaryGenre"
+        },
+        {
+            "keys": [
+                "av_subgenre_erotic_anime",
+                "av_subgenre_erotic_comedy",
+                "av_subgenre_erotic_documentary",
+                "av_subgenre_erotic_drama",
+                "av_subgenre_erotic_fantasy",
+                "av_subgenre_erotic_horror",
+                "av_subgenre_erotic_lgbtq",
+                "av_subgenre_erotic_romance",
+                "av_subgenre_erotic_thriller"
+            ],
+            "field_name": "oly_amazonSecondaryGenres"
+        }
+    ]
+}
+
+Amazon-PrimaryGenre-Faith_Spirituality
+{
+    "fields": [
+        {
+            "keys": [
+                "av_genre_faith_and_spirituality"
+            ],
+            "field_name": "oly_amazonPrimaryGenre"
+        },
+        {
+            "keys": [
+                "av_subgenre_faith_spirituality_buddhism",
+                "av_subgenre_faith_spirituality_christianity",
+                "av_subgenre_faith_spirituality_hinduism",
+                "av_subgenre_faith_spirituality_islam",
+                "av_subgenre_faith_spirituality_judaism",
+                "av_subgenre_faith_spirituality_new_age",
+                "av_subgenre_faith_spirituality_other",
+                "av_subgenre_faith_spirituality_sikhism"
+            ],
+            "field_name": "oly_amazonSecondaryGenres"
+        }
+    ]
+}
+
+Amazon-PrimaryGenre-Fantasy
+{
+    "fields": [
+        {
+            "keys": [
+                "av_genre_fantasy"
+            ],
+            "field_name": "oly_amazonPrimaryGenre"
+        },
+        {
+            "keys": [
+                "av_subgenre_fantasy_action",
+                "av_subgenre_fantasy_adventure",
+                "av_subgenre_fantasy_comedy",
+                "av_subgenre_fantasy_dark",
+                "av_subgenre_fantasy_drama",
+                "av_subgenre_fantasy_epic",
+                "av_subgenre_fantasy_horror",
+                "av_subgenre_fantasy_mythology",
+                "av_subgenre_fantasy_romance",
+                "av_subgenre_fantasy_science_fantasy",
+                "av_subgenre_fantasy_sword_sorcery"
+            ],
+            "field_name": "oly_amazonSecondaryGenres"
+        }
+    ]
+}
+
+Amazon-PrimaryGenre-Fitness
+{
+    "fields": [
+        {
+            "keys": [
+                "av_genre_fitness"
+            ],
+            "field_name": "oly_amazonPrimaryGenre"
+        },
+        {
+            "keys": [
+                "av_subgenre_fitness_barre",
+                "av_subgenre_fitness_dance",
+                "av_subgenre_fitness_interval_training",
+                "av_subgenre_fitness_martial_arts_boxing",
+                "av_subgenre_fitness_pilates",
+                "av_subgenre_fitness_spin",
+                "av_subgenre_fitness_strength_training",
+                "av_subgenre_fitness_yoga"
+            ],
+            "field_name": "oly_amazonSecondaryGenres"
+        }
+    ]
+}
+
+Amazon-PrimaryGenre-Historical
+{
+    "fields": [
+        {
+            "keys": [
+                "av_genre_historical"
+            ],
+            "field_name": "oly_amazonPrimaryGenre"
+        },
+        {
+            "keys": [
+                "av_subgenre_historical_action",
+                "av_subgenre_historical_adventure",
+                "av_subgenre_historical_comedy",
+                "av_subgenre_historical_drama",
+                "av_subgenre_historical_epic",
+                "av_subgenre_historical_fantasy",
+                "av_subgenre_historical_peplum_sword_and_sandal",
+                "av_subgenre_historical_romance",
+                "av_subgenre_historical_swashbuckler"
+            ],
+            "field_name": "oly_amazonSecondaryGenres"
+        }
+    ]
+}
+
+Amazon-PrimaryGenre-Horror
+{
+    "fields": [
+        {
+            "keys": [
+                "av_genre_horror"
+            ],
+            "field_name": "oly_amazonPrimaryGenre"
+        },
+        {
+            "keys": [
+                "av_subgenre_horror_action",
+                "av_subgenre_horror_adventure",
+                "av_subgenre_horror_comedy",
+                "av_subgenre_horror_demons_exorcisms",
+                "av_subgenre_horror_fantasy",
+                "av_subgenre_horror_monsters",
+                "av_subgenre_horror_mystery",
+                "av_subgenre_horror_psychological",
+                "av_subgenre_horror_science_fiction",
+                "av_subgenre_horror_slasher",
+                "av_subgenre_horror_supernatural_ghosts",
+                "av_subgenre_horror_suspense"
+            ],
+            "field_name": "oly_amazonSecondaryGenres"
+        }
+    ]
+}
+
+Amazon-PrimaryGenre-Idols
+{
+    "fields": [
+        {
+            "keys": [
+                "av_genre_idols"
+            ],
+            "field_name": "oly_amazonPrimaryGenre"
+        },
+        {
+            "keys": [
+                "av_subgenre_idol_male_idol",
+                "av_subgenre_idol_female_idol"
+            ],
+            "field_name": "oly_amazonSecondaryGenres"
+        }
+    ]
+}
+
+Amazon-PrimaryGenre-International
+{
+    "fields": [
+        {
+            "keys": [
+                "av_genre_international"
+            ],
+            "field_name": "oly_amazonPrimaryGenre"
+        },
+        {
+            "keys": [
+                "av_subgenre_international_australia_and_new_zealand",
+                "av_subgenre_international_canada",
+                "av_subgenre_international_caribbean",
+                "av_subgenre_international_central_africa",
+                "av_subgenre_international_central_america",
+                "av_subgenre_international_central_asia",
+                "av_subgenre_international_china",
+                "av_subgenre_international_east_africa",
+                "av_subgenre_international_east_southeast_asia",
+                "av_subgenre_international_eastern_europe",
+                "av_subgenre_international_france",
+                "av_subgenre_international_germany",
+                "av_subgenre_international_india",
+                "av_subgenre_international_israel",
+                "av_subgenre_international_japan",
+                "av_subgenre_international_korea",
+                "av_subgenre_international_mexico",
+                "av_subgenre_international_middle_east",
+                "av_subgenre_international_north_africa",
+                "av_subgenre_international_russia",
+                "av_subgenre_international_scandinavia",
+                "av_subgenre_international_south_america",
+                "av_subgenre_international_southern_africa",
+                "av_subgenre_international_southern_europe",
+                "av_subgenre_international_turkey",
+                "av_subgenre_international_uk",
+                "av_subgenre_international_west_africa",
+                "av_subgenre_international_western_europe"
+            ],
+            "field_name": "oly_amazonSecondaryGenres"
+        }
+    ]
+}
+
+Amazon-PrimaryGenre-Kids
+{
+    "fields": [
+        {
+            "keys": [
+                "av_genre_kids"
+            ],
+            "field_name": "oly_amazonPrimaryGenre"
+        },
+        {
+            "keys": [
+                "av_subgenre_kids_action",
+                "av_subgenre_kids_adventure",
+                "av_subgenre_kids_animation",
+                "av_subgenre_kids_anime",
+                "av_subgenre_kids_comedy",
+                "av_subgenre_kids_competition_game_shows",
+                "av_subgenre_kids_documentary",
+                "av_subgenre_kids_edutainment",
+                "av_subgenre_kids_family",
+                "av_subgenre_kids_fantasy",
+                "av_subgenre_kids_how_to",
+                "av_subgenre_kids_lets_play",
+                "av_subgenre_kids_musical",
+                "av_subgenre_kids_mystery",
+                "av_subgenre_kids_performance",
+                "av_subgenre_kids_romance",
+                "av_subgenre_kids_science_fiction",
+                "av_subgenre_kids_spooky",
+                "av_subgenre_kids_unscripted_reality_tv",
+                "av_subgenre_kids_variety"
+            ],
+            "field_name": "oly_amazonSecondaryGenres"
+        }
+    ]
+}
+
+Amazon-PrimaryGenre-LGBTQ
+{
+    "fields": [
+        {
+            "keys": [
+                "av_genre_lgbtq"
+            ],
+            "field_name": "oly_amazonPrimaryGenre"
+        },
+        {
+            "keys": [
+                "av_subgenre_lgbtq_asexual",
+                "av_subgenre_lgbtq_bisexual",
+                "av_subgenre_lgbtq_erotic",
+                "av_subgenre_lgbtq_gay",
+                "av_subgenre_lgbtq_gender_queer_and_nonbinary",
+                "av_subgenre_lgbtq_lesbian",
+                "av_subgenre_lgbtq_trans"
+            ],
+            "field_name": "oly_amazonSecondaryGenres"
+        }
+    ]
+}
+
+Amazon-PrimaryGenre-Military_War
+{
+    "fields": [
+        {
+            "keys": [
+                "av_genre_military_and_war"
+            ],
+            "field_name": "oly_amazonPrimaryGenre"
+        },
+        {
+            "keys": [
+                "av_subgenre_military_and_war_action",
+                "av_subgenre_military_and_war_adventure",
+                "av_subgenre_military_and_war_biopic",
+                "av_subgenre_military_and_war_comedy",
+                "av_subgenre_military_and_war_drama",
+                "av_subgenre_military_and_war_epic",
+                "av_subgenre_military_and_war_pre_1800",
+                "av_subgenre_military_and_war_1800_to_1850",
+                "av_subgenre_military_and_war_1850_to_1900",
+                "av_subgenre_military_and_war_1900_to_1939",
+                "av_subgenre_military_and_war_1939_to_1955",
+                "av_subgenre_military_and_war_1955_to_1975",
+                "av_subgenre_military_and_war_1975_to_1992",
+                "av_subgenre_military_and_war_1992_to_2001",
+                "av_subgenre_military_and_war_2001_to_present",
+                "av_subgenre_military_and_war_romance",
+                "av_subgenre_military_and_war_science_fiction"
+            ],
+            "field_name": "oly_amazonSecondaryGenres"
+        }
+    ]
+}
+
+Amazon-PrimaryGenre-Music_Video_Concerts
+{
+    "fields": [
+        {
+            "keys": [
+                "av_genre_music_videos_and_concerts"
+            ],
+            "field_name": "oly_amazonPrimaryGenre"
+        },
+        {
+            "keys": [
+                "av_subgenre_music_videos_and_concerts_african",
+                "av_subgenre_music_videos_and_concerts_afro_pop",
+                "av_subgenre_music_videos_and_concerts_blues",
+                "av_subgenre_music_videos_and_concerts_caribbean",
+                "av_subgenre_music_videos_and_concerts_country",
+                "av_subgenre_music_videos_and_concerts_east_asian",
+                "av_subgenre_music_videos_and_concerts_east_asian_jpop",
+                "av_subgenre_music_videos_and_concerts_east_asian_kpop",
+                "av_subgenre_music_videos_and_concerts_easy_listening",
+                "av_subgenre_music_videos_and_concerts_electronica",
+                "av_subgenre_music_videos_and_concerts_folk",
+                "av_subgenre_music_videos_and_concerts_funk",
+                "av_subgenre_music_videos_and_concerts_gospel",
+                "av_subgenre_music_videos_and_concerts_hip_hop",
+                "av_subgenre_music_videos_and_concerts_indian",
+                "av_subgenre_music_videos_and_concerts_indian_classical",
+                "av_subgenre_music_videos_and_concerts_indian_filmi",
+                "av_subgenre_music_videos_and_concerts_jazz",
+                "av_subgenre_music_videos_and_concerts_klezmer",
+                "av_subgenre_music_videos_and_concerts_latin",
+                "av_subgenre_music_videos_and_concerts_latin__banda",
+                "av_subgenre_music_videos_and_concerts_latin__merengue",
+                "av_subgenre_music_videos_and_concerts_latin_salsa",
+                "av_subgenre_music_videos_and_concerts_latin_sertanejo",
+                "av_subgenre_music_videos_and_concerts_middle_eastern",
+                "av_subgenre_music_videos_and_concerts_new_age",
+                "av_subgenre_music_videos_and_concerts_opera_operette",
+                "av_subgenre_music_videos_and_concerts_pop",
+                "av_subgenre_music_videos_and_concerts_pop_folk",
+                "av_subgenre_music_videos_and_concerts_rb_and_soul",
+                "av_subgenre_music_videos_and_concerts_rap",
+                "av_subgenre_music_videos_and_concerts_religious",
+                "av_subgenre_music_videos_and_concerts_rock",
+                "av_subgenre_music_videos_and_concerts_western_classical"
+            ],
+            "field_name": "oly_amazonSecondaryGenres"
+        }
+    ]
+}
+
+Amazon-PrimaryGenre-Romance
+{
+    "fields": [
+        {
+            "keys": [
+                "av_genre_romance"
+            ],
+            "field_name": "oly_amazonPrimaryGenre"
+        },
+        {
+            "keys": [
+                "av_subgenre_romance_action",
+                "av_subgenre_romance_comedy",
+                "av_subgenre_romance_drama_and_melodrama",
+                "av_subgenre_romance_fantasy",
+                "av_subgenre_romance_historical",
+                "av_subgenre_romance_suspense",
+                "av_subgenre_romance_tragedy"
+            ],
+            "field_name": "oly_amazonSecondaryGenres"
+        }
+    ]
+}
+
+Amazon-PrimaryGenre-Science_Fiction
+{
+    "fields": [
+        {
+            "keys": [
+                "av_genre_science_fiction"
+            ],
+            "field_name": "oly_amazonPrimaryGenre"
+        },
+        {
+            "keys": [
+                "av_subgenre_science_fiction_action",
+                "av_subgenre_science_fiction_adventure",
+                "av_subgenre_science_fiction_aliens",
+                "av_subgenre_science_fiction_apocalyptic_postapocalyptic",
+                "av_subgenre_science_fiction_cyberpunk",
+                "av_subgenre_science_fiction_comedy",
+                "av_subgenre_science_fiction_drama",
+                "av_subgenre_science_fiction_dystopian",
+                "av_subgenre_science_fiction_horror",
+                "av_subgenre_science_fiction_monsters_and_mutants",
+                "av_subgenre_science_fiction_psychological",
+                "av_subgenre_science_fiction_robots_and_cyborgs",
+                "av_subgenre_science_fiction_romance",
+                "av_subgenre_science_fiction_suspense",
+                "av_subgenre_science_fiction_time_travel_and_alternate_history"
+            ],
+            "field_name": "oly_amazonSecondaryGenres"
+        }
+    ]
+}
+
+Amazon-PrimaryGenre-Special_Interest
+{
+    "fields": [
+        {
+            "keys": [
+                "av_genre_special_interest"
+            ],
+            "field_name": "oly_amazonPrimaryGenre"
+        },
+        {
+            "keys": [
+                "av_subgenre_special_interest_ambiance_meditation_and_screensavers",
+                "av_subgenre_special_interest_art",
+                "av_subgenre_special_interest_beauty_fashion",
+                "av_subgenre_special_interest_business_finance",
+                "av_subgenre_special_interest_clip",
+                "av_subgenre_special_interest_crafts_hobbies",
+                "av_subgenre_special_interest_educational_and_instructional",
+                "av_subgenre_special_interest_food_drinks_and_cooking",
+                "av_subgenre_special_interest_health",
+                "av_subgenre_special_interest_home_garden",
+                "av_subgenre_special_interest_parenting_childcare",
+                "av_subgenre_special_interest_politics",
+                "av_subgenre_special_interest_product_review",
+                "av_subgenre_special_interest_sports",
+                "av_subgenre_special_interest_technology",
+                "av_subgenre_special_interest_film_trailer",
+                "av_subgenre_special_interest_travel"
+            ],
+            "field_name": "oly_amazonSecondaryGenres"
+        }
+    ]
+}
+
+Amazon-PrimaryGenre-Sports
+{
+    "fields": [
+        {
+            "keys": [
+                "av_genre_sports"
+            ],
+            "field_name": "oly_amazonPrimaryGenre"
+        },
+        {
+            "keys": [
+                "av_subgenre_sports_american_football",
+                "av_subgenre_sports_aquatic_sports",
+                "av_subgenre_sports_auto_racing_and_formula_one",
+                "av_subgenre_sports_badminton",
+                "av_subgenre_sports_baseball",
+                "av_subgenre_sports_basketball",
+                "av_subgenre_sports_billiards_snooker",
+                "av_subgenre_sports_combat_sports",
+                "av_subgenre_sports_cricket",
+                "av_subgenre_sports_curling",
+                "av_subgenre_sports_cycling",
+                "av_subgenre_sports_esports",
+                "av_subgenre_sports_extreme_sports",
+                "av_subgenre_sports_football_soccer",
+                "av_subgenre_sports_games",
+                "av_subgenre_sports_golf",
+                "av_subgenre_sports_gymnastics",
+                "av_subgenre_sports_handball",
+                "av_subgenre_sports_hockey",
+                "av_subgenre_sports_horse",
+                "av_subgenre_sports_hunting_and_fishing",
+                "av_subgenre_sports_lacrosse",
+                "av_subgenre_sports_motorsports",
+                "av_subgenre_sports_rugby",
+                "av_subgenre_sports_skiing",
+                "av_subgenre_sports_swimming",
+                "av_subgenre_sports_table_tennis",
+                "av_subgenre_sports_tennis",
+                "av_subgenre_sports_volleyball",
+                "av_subgenre_sports_winter_sports"
+            ],
+            "field_name": "oly_amazonSecondaryGenres"
+        }
+    ]
+}
+
+Amazon-PrimaryGenre-Suspense
+{
+    "fields": [
+        {
+            "keys": [
+                "av_genre_suspense"
+            ],
+            "field_name": "oly_amazonPrimaryGenre"
+        },
+        {
+            "keys": [
+                "av_subgenre_suspense_action",
+                "av_subgenre_suspense_comedy",
+                "av_subgenre_suspense_crime",
+                "av_subgenre_suspense_drama",
+                "av_subgenre_suspense_espionage",
+                "av_subgenre_suspense_giallo",
+                "av_subgenre_suspense_horror",
+                "av_subgenre_suspense_legal",
+                "av_subgenre_suspense_medical",
+                "av_subgenre_suspense_mystery",
+                "av_subgenre_suspense_political",
+                "av_subgenre_suspense_psychological",
+                "av_subgenre_suspense_romance",
+                "av_subgenre_suspense_science_fiction"
+            ],
+            "field_name": "oly_amazonSecondaryGenres"
+        }
+    ]
+}
+
+Amazon-PrimaryGenre-Talk_Show_and_Variety
+{
+    "fields": [
+        {
+            "keys": [
+                "av_genre_talk_show_and_variety"
+            ],
+            "field_name": "oly_amazonPrimaryGenre"
+        },
+        {
+            "keys": [
+                "av_subgenre_talk_show_variety_comedy",
+                "av_subgenre_talk_show_variety_daytime_talk_show",
+                "av_subgenre_talk_show_variety_entertainment_and_celebrity",
+                "av_subgenre_talk_show_variety_morning_talk_show",
+                "av_subgenre_talk_show_variety_news",
+                "av_subgenre_talk_show_variety_political_talk_show",
+                "av_subgenre_talk_show_variety_primetime_and_late_night_talk_show",
+                "av_subgenre_talk_show_variety_travel_variety",
+                "av_subgenre_talk_show_variety_variety",
+                "av_subgenre_talk_show_variety_self_help_lifestyle"
+            ],
+            "field_name": "oly_amazonSecondaryGenres"
+        }
+    ]
+}
+
+Amazon-PrimaryGenre-Unscripted
+{
+    "fields": [
+        {
+            "keys": [
+                "av_genre_unscripted"
+            ],
+            "field_name": "oly_amazonPrimaryGenre"
+        },
+        {
+            "keys": [
+                "av_subgenre_unscripted_competition",
+                "av_subgenre_unscripted_crime",
+                "av_subgenre_unscripted_dating_romance",
+                "av_subgenre_unscripted_docusoap",
+                "av_subgenre_unscripted_hidden_camera",
+                "av_subgenre_unscripted_makeover",
+                "av_subgenre_unscripted_music_performance",
+                "av_subgenre_unscripted_sport",
+                "av_subgenre_unscripted_supernatural",
+                "av_subgenre_unscripted_travel",
+                "av_subgenre_unscripted_business_and_occupation"
+            ],
+            "field_name": "oly_amazonSecondaryGenres"
+        }
+    ]
+}
+
+Amazon-PrimaryGenre-Western
+{
+    "fields": [
+        {
+            "keys": [
+                "av_genre_western"
+            ],
+            "field_name": "oly_amazonPrimaryGenre"
+        },
+        {
+            "keys": [
+                "av_subgenre_western_action",
+                "av_subgenre_western_adventure",
+                "av_subgenre_western_comedy",
+                "av_subgenre_western_crime",
+                "av_subgenre_western_drama",
+                "av_subgenre_western_horror",
+                "av_subgenre_western_military_and_war",
+                "av_subgenre_western_modern",
+                "av_subgenre_western_romance",
+                "av_subgenre_western_science_fiction"
+            ],
+            "field_name": "oly_amazonSecondaryGenres"
+        }
+    ]
+}
+
+Amazon-PrimaryGenre-Young_Adult_Audience
+{
+    "fields": [
+        {
+            "keys": [
+                "av_genre_young_adult_audience"
+            ],
+            "field_name": "oly_amazonPrimaryGenre"
+        },
+        {
+            "keys": [
+                "av_subgenre_young_adult_action",
+                "av_subgenre_young_adult_adventure",
+                "av_subgenre_young_adult_comedy",
+                "av_subgenre_young_adult_drama",
+                "av_subgenre_young_adult_fantasy",
+                "av_subgenre_young_adult_horror",
+                "av_subgenre_young_adult_lgbtq",
+                "av_subgenre_young_adult_romance",
+                "av_subgenre_young_adult_science_fiction"
+            ],
+            "field_name": "oly_amazonSecondaryGenres"
+        }
+    ]
+}

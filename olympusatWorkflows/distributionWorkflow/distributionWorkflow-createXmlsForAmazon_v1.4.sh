@@ -326,10 +326,10 @@ then
 			<md:Summary400>$itemShortDescriptionEn</md:Summary400>
 			<md:Summary4000>$itemDescriptionEn</md:Summary4000>" >> "$mecFileDestination"
         # Preparing Genre Info for LocalizedInfo in English Block
-        itemPrimaryGenre=$(filterVidispineItemMetadata $itemId "metadata" "oly_primaryGenre")
-        urlGetItemSecondaryGenres="http://10.1.1.34:8080/API/item/$itemId/metadata?field=oly_secondaryGenres&terse=yes"
-	    httpResponseSecondaryGenres=$(curl --location --request GET $urlGetItemSecondaryGenres  --header 'Accept: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=Tkb9vkSC8v4SceB8CHUyB3iaMPjvgoHrzhLrvo36agG3wqv0jHc7nsOtdTo9JEyM')
-        subGenreItemCount=$(echo $httpResponseSecondaryGenres | awk -F '</oly_secondaryGenres>' '{print NF}')
+        itemAmazonPrimaryGenre=$(filterVidispineItemMetadata $itemId "metadata" "oly_amazonPrimaryGenre")
+        urlGetItemAmazonSecondaryGenres="http://10.1.1.34:8080/API/item/$itemId/metadata?field=oly_amazonSecondaryGenres&terse=yes"
+	    httpResponseAmazonSecondaryGenres=$(curl --location --request GET $urlGetItemAmazonSecondaryGenres  --header 'Accept: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=Tkb9vkSC8v4SceB8CHUyB3iaMPjvgoHrzhLrvo36agG3wqv0jHc7nsOtdTo9JEyM')
+        subGenreItemCount=$(echo $httpResponseAmazonSecondaryGenres | awk -F '</oly_amazonSecondaryGenres>' '{print NF}')
         subGenreItemCount=$(($subGenreItemCount - 1))
         if [[ $subGenreItemCount -lt 2 ]];
         then
@@ -338,20 +338,7 @@ then
             occurenceCount=2
         fi
         ## Get item's primary genre and add information into genre xml
-        case "$itemPrimaryGenre" in
-            "action")
-                echo "            <md:Genre id=\"av_genre_action\"></md:Genre>" >> "$mecFileDestinationGenre"
-            ;;
-            "adventure")
-                echo "            <md:Genre id=\"av_genre_adventure\"></md:Genre>" >> "$mecFileDestinationGenre"
-            ;;
-            "comedy")
-                echo "            <md:Genre id=\"av_genre_comedy\"></md:Genre>" >> "$mecFileDestinationGenre"
-            ;;
-            *)
-                # Do nothing for now - might add logging later
-            ;;
-        esac
+        echo "            <md:Genre id=\"$itemAmazonPrimaryGenre\"></md:Genre>" >> "$mecFileDestinationGenre"
         ## Get item's secondary genres and iterate through each and add information into genre xml with appropriate genre/subgenre for Amazon
         for (( j=1 ; j<=$occurenceCount ; j++ ));
         do
@@ -362,53 +349,7 @@ then
                 k=2
             fi
             currentValue=$(echo "$httpResponseSecondaryGenres" | awk -F '</oly_secondaryGenres>' '{print $'$j'}' | awk -F '/vidispine">' '{print $'$k'}' )
-            case "$currentValue" in
-                "adventure")
-                    case "$itemPrimaryGenre" in
-                        "action")
-                            echo "            <md:Genre id=\"av_subgenre_action_adventure\"></md:Genre>" >> "$mecFileDestinationGenre"
-                        ;;
-                    esac
-                ;;
-                "comedy")
-                    case "$itemPrimaryGenre" in
-                        "action")
-                            echo "            <md:Genre id=\"av_subgenre_action_comedy\"></md:Genre>" >> "$mecFileDestinationGenre"
-                        ;;
-                    esac
-                ;;
-                "crime")
-                    case "$itemPrimaryGenre" in
-                        "action")
-                            echo "            <md:Genre id=\"av_subgenre_action_crime\"></md:Genre>" >> "$mecFileDestinationGenre"
-                        ;;
-                    esac
-                ;;
-                "fantasy")
-                    case "$itemPrimaryGenre" in
-                        "action")
-                            echo "            <md:Genre id=\"av_subgenre_action_fantasy\"></md:Genre>" >> "$mecFileDestinationGenre"
-                        ;;
-                    esac
-                ;;
-                "romance")
-                    case "$itemPrimaryGenre" in
-                        "action")
-                            echo "            <md:Genre id=\"av_subgenre_action_romance\"></md:Genre>" >> "$mecFileDestinationGenre"
-                        ;;
-                    esac
-                ;;
-                "suspense")
-                    case "$itemPrimaryGenre" in
-                        "action")
-                            echo "            <md:Genre id=\"av_subgenre_action_suspense\"></md:Genre>" >> "$mecFileDestinationGenre"
-                        ;;
-                    esac
-                ;;
-                *)
-                    # Do nothing for now - might add logging later
-                ;;
-            esac
+            echo "            <md:Genre id=\"$currentValue\"></md:Genre>" >> "$mecFileDestinationGenre"
         done
         # Adding LocalizedInfo in English Block - Genre
 		echo "            <!-- Genres must be submitted using the AV Genre codes, such as below. -->
@@ -946,10 +887,10 @@ then
 			<md:Summary400>$itemShortDescriptionEn</md:Summary400>
 			<md:Summary4000>$itemDescriptionEn</md:Summary4000>" >> "$mecSeasonFileDestination"
             # Preparing Genre Info for LocalizedInfo in English Block
-            itemPrimaryGenre=$(filterVidispineItemMetadata $itemId "metadata" "oly_primaryGenre")
-            urlGetItemSecondaryGenres="http://10.1.1.34:8080/API/item/$itemId/metadata?field=oly_secondaryGenres&terse=yes"
-            httpResponseSecondaryGenres=$(curl --location --request GET $urlGetItemSecondaryGenres  --header 'Accept: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=Tkb9vkSC8v4SceB8CHUyB3iaMPjvgoHrzhLrvo36agG3wqv0jHc7nsOtdTo9JEyM')
-            subGenreItemCount=$(echo $httpResponseSecondaryGenres | awk -F '</oly_secondaryGenres>' '{print NF}')
+            itemAmazonPrimaryGenre=$(filterVidispineItemMetadata $itemId "metadata" "oly_amazonPrimaryGenre")
+            urlGetItemAmazonSecondaryGenres="http://10.1.1.34:8080/API/item/$itemId/metadata?field=oly_amazonSecondaryGenres&terse=yes"
+            httpResponseAmazonSecondaryGenres=$(curl --location --request GET $urlGetItemAmazonSecondaryGenres  --header 'Accept: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=Tkb9vkSC8v4SceB8CHUyB3iaMPjvgoHrzhLrvo36agG3wqv0jHc7nsOtdTo9JEyM')
+            subGenreItemCount=$(echo $httpResponseAmazonSecondaryGenres | awk -F '</oly_amazonSecondaryGenres>' '{print NF}')
             subGenreItemCount=$(($subGenreItemCount - 1))
             if [[ $subGenreItemCount -lt 2 ]];
             then
@@ -958,77 +899,18 @@ then
                 occurenceCount=2
             fi
             ## Get item's primary genre and add information into genre xml
-            case "$itemPrimaryGenre" in
-                "action")
-                    echo "            <md:Genre id=\"av_genre_action\"></md:Genre>" >> "$mecSeasonFileDestinationGenre"
-                ;;
-                "adventure")
-                    echo "            <md:Genre id=\"av_genre_adventure\"></md:Genre>" >> "$mecSeasonFileDestinationGenre"
-                ;;
-                "comedy")
-                    echo "            <md:Genre id=\"av_genre_comedy\"></md:Genre>" >> "$mecSeasonFileDestinationGenre"
-                ;;
-                *)
-                    # Do nothing for now - might add logging later
-                ;;
-            esac
+            echo "            <md:Genre id=\"$itemAmazonPrimaryGenre\"></md:Genre>" >> "$mecFileDestinationGenre"
             ## Get item's secondary genres and iterate through each and add information into genre xml with appropriate genre/subgenre for Amazon
-            for (( w=1 ; w<=$occurenceCount ; w++ ));
+            for (( j=1 ; j<=$occurenceCount ; j++ ));
             do
-                if [[ $w -eq 1 ]];
+                if [[ $j -eq 1 ]];
                 then
-                    x=3
+                    k=3
                 else
-                    x=2
+                    k=2
                 fi
-                currentValue=$(echo "$httpResponseSecondaryGenres" | awk -F '</oly_secondaryGenres>' '{print $'$w'}' | awk -F '/vidispine">' '{print $'$x'}' )
-                case "$currentValue" in
-                    "adventure")
-                        case "$itemPrimaryGenre" in
-                            "action")
-                                echo "            <md:Genre id=\"av_subgenre_action_adventure\"></md:Genre>" >> "$mecSeasonFileDestinationGenre"
-                            ;;
-                        esac
-                    ;;
-                    "comedy")
-                        case "$itemPrimaryGenre" in
-                            "action")
-                                echo "            <md:Genre id=\"av_subgenre_action_comedy\"></md:Genre>" >> "$mecSeasonFileDestinationGenre"
-                            ;;
-                        esac
-                    ;;
-                    "crime")
-                        case "$itemPrimaryGenre" in
-                            "action")
-                                echo "            <md:Genre id=\"av_subgenre_action_crime\"></md:Genre>" >> "$mecSeasonFileDestinationGenre"
-                            ;;
-                        esac
-                    ;;
-                    "fantasy")
-                        case "$itemPrimaryGenre" in
-                            "action")
-                                echo "            <md:Genre id=\"av_subgenre_action_fantasy\"></md:Genre>" >> "$mecSeasonFileDestinationGenre"
-                            ;;
-                        esac
-                    ;;
-                    "romance")
-                        case "$itemPrimaryGenre" in
-                            "action")
-                                echo "            <md:Genre id=\"av_subgenre_action_romance\"></md:Genre>" >> "$mecSeasonFileDestinationGenre"
-                            ;;
-                        esac
-                    ;;
-                    "suspense")
-                        case "$itemPrimaryGenre" in
-                            "action")
-                                echo "            <md:Genre id=\"av_subgenre_action_suspense\"></md:Genre>" >> "$mecSeasonFileDestinationGenre"
-                            ;;
-                        esac
-                    ;;
-                    *)
-                        # Do nothing for now - might add logging later
-                    ;;
-                esac
+                currentValue=$(echo "$httpResponseSecondaryGenres" | awk -F '</oly_secondaryGenres>' '{print $'$j'}' | awk -F '/vidispine">' '{print $'$k'}' )
+                echo "            <md:Genre id=\"$currentValue\"></md:Genre>" >> "$mecFileDestinationGenre"
             done
             # Adding LocalizedInfo in English Block - Genre
             echo "            <!-- Genres must be submitted using the AV Genre codes, such as below. -->
@@ -1355,10 +1237,10 @@ then
 			<md:Summary400>$itemShortDescriptionEn</md:Summary400>
 			<md:Summary4000>$itemDescriptionEn</md:Summary4000>" >> "$mecSeriesFileDestination"
             # Preparing Genre Info for LocalizedInfo in English Block
-            itemPrimaryGenre=$(filterVidispineItemMetadata $itemId "metadata" "oly_primaryGenre")
-            urlGetItemSecondaryGenres="http://10.1.1.34:8080/API/item/$itemId/metadata?field=oly_secondaryGenres&terse=yes"
-            httpResponseSecondaryGenres=$(curl --location --request GET $urlGetItemSecondaryGenres  --header 'Accept: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=Tkb9vkSC8v4SceB8CHUyB3iaMPjvgoHrzhLrvo36agG3wqv0jHc7nsOtdTo9JEyM')
-            subGenreItemCount=$(echo $httpResponseSecondaryGenres | awk -F '</oly_secondaryGenres>' '{print NF}')
+            itemAmazonPrimaryGenre=$(filterVidispineItemMetadata $itemId "metadata" "oly_amazonPrimaryGenre")
+            urlGetItemAmazonSecondaryGenres="http://10.1.1.34:8080/API/item/$itemId/metadata?field=oly_amazonSecondaryGenres&terse=yes"
+            httpResponseAmazonSecondaryGenres=$(curl --location --request GET $urlGetItemAmazonSecondaryGenres  --header 'Accept: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=Tkb9vkSC8v4SceB8CHUyB3iaMPjvgoHrzhLrvo36agG3wqv0jHc7nsOtdTo9JEyM')
+            subGenreItemCount=$(echo $httpResponseAmazonSecondaryGenres | awk -F '</oly_amazonSecondaryGenres>' '{print NF}')
             subGenreItemCount=$(($subGenreItemCount - 1))
             if [[ $subGenreItemCount -lt 2 ]];
             then
@@ -1367,77 +1249,18 @@ then
                 occurenceCount=2
             fi
             ## Get item's primary genre and add information into genre xml
-            case "$itemPrimaryGenre" in
-                "action")
-                    echo "            <md:Genre id=\"av_genre_action\"></md:Genre>" >> "$mecSeriesFileDestinationGenre"
-                ;;
-                "adventure")
-                    echo "            <md:Genre id=\"av_genre_adventure\"></md:Genre>" >> "$mecSeriesFileDestinationGenre"
-                ;;
-                "comedy")
-                    echo "            <md:Genre id=\"av_genre_comedy\"></md:Genre>" >> "$mecSeriesFileDestinationGenre"
-                ;;
-                *)
-                    # Do nothing for now - might add logging later
-                ;;
-            esac
+            echo "            <md:Genre id=\"$itemAmazonPrimaryGenre\"></md:Genre>" >> "$mecFileDestinationGenre"
             ## Get item's secondary genres and iterate through each and add information into genre xml with appropriate genre/subgenre for Amazon
-            for (( y=1 ; y<=$occurenceCount ; y++ ));
+            for (( j=1 ; j<=$occurenceCount ; j++ ));
             do
-                if [[ $y -eq 1 ]];
+                if [[ $j -eq 1 ]];
                 then
-                    z=3
+                    k=3
                 else
-                    z=2
+                    k=2
                 fi
-                currentValue=$(echo "$httpResponseSecondaryGenres" | awk -F '</oly_secondaryGenres>' '{print $'$y'}' | awk -F '/vidispine">' '{print $'$z'}' )
-                case "$currentValue" in
-                    "adventure")
-                        case "$itemPrimaryGenre" in
-                            "action")
-                                echo "            <md:Genre id=\"av_subgenre_action_adventure\"></md:Genre>" >> "$mecSeriesFileDestinationGenre"
-                            ;;
-                        esac
-                    ;;
-                    "comedy")
-                        case "$itemPrimaryGenre" in
-                            "action")
-                                echo "            <md:Genre id=\"av_subgenre_action_comedy\"></md:Genre>" >> "$mecSeriesFileDestinationGenre"
-                            ;;
-                        esac
-                    ;;
-                    "crime")
-                        case "$itemPrimaryGenre" in
-                            "action")
-                                echo "            <md:Genre id=\"av_subgenre_action_crime\"></md:Genre>" >> "$mecSeriesFileDestinationGenre"
-                            ;;
-                        esac
-                    ;;
-                    "fantasy")
-                        case "$itemPrimaryGenre" in
-                            "action")
-                                echo "            <md:Genre id=\"av_subgenre_action_fantasy\"></md:Genre>" >> "$mecSeriesFileDestinationGenre"
-                            ;;
-                        esac
-                    ;;
-                    "romance")
-                        case "$itemPrimaryGenre" in
-                            "action")
-                                echo "            <md:Genre id=\"av_subgenre_action_romance\"></md:Genre>" >> "$mecSeriesFileDestinationGenre"
-                            ;;
-                        esac
-                    ;;
-                    "suspense")
-                        case "$itemPrimaryGenre" in
-                            "action")
-                                echo "            <md:Genre id=\"av_subgenre_action_suspense\"></md:Genre>" >> "$mecSeriesFileDestinationGenre"
-                            ;;
-                        esac
-                    ;;
-                    *)
-                        # Do nothing for now - might add logging later
-                    ;;
-                esac
+                currentValue=$(echo "$httpResponseSecondaryGenres" | awk -F '</oly_secondaryGenres>' '{print $'$j'}' | awk -F '/vidispine">' '{print $'$k'}' )
+                echo "            <md:Genre id=\"$currentValue\"></md:Genre>" >> "$mecFileDestinationGenre"
             done
             # Adding LocalizedInfo in English Block - Genre
             echo "            <!-- Genres must be submitted using the AV Genre codes, such as below. -->
