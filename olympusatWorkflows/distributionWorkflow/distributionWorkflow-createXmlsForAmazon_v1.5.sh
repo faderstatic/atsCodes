@@ -287,10 +287,10 @@ then
         relatedItemsCount=$(echo $httpResponseRelatedItems | awk -F '</relation>' '{print NF}')
         relatedItemsCount=$(($relatedItemsCount - 1))
         ## Get related items and iterate through each to check cs_type is forDistribution & get target id
-        for (( r=1 ; r<=$relatedItemsCount ; r++ ));
+        for (( a=1 ; a<=$relatedItemsCount ; a++ ));
         do
-            s=2
-            currentRelationValue=$(echo "$httpResponseRelatedItems" | awk -F '</relation>' '{print $'$r'}' | awk -F '<relation>' '{print $'$s'}' )
+            b=2
+            currentRelationValue=$(echo "$httpResponseRelatedItems" | awk -F '</relation>' '{print $'$a'}' | awk -F '<relation>' '{print $'$b'}' )
             currentRelationCsTypeValue=$(echo "$currentRelationValue" | awk -F '<value key="cs_type">' '{print $2}' | awk -F '</value>' '{print $1}')
             if [[ "$currentRelationCsTypeValue" == "forDistribution" ]];
             then
@@ -350,16 +350,16 @@ then
         ## Get item's primary genre and add information into genre xml
         echo "            <md:Genre id=\"$itemAmazonPrimaryGenre\"></md:Genre>" >> "$mecFileDestinationGenre"
         ## Get item's secondary genres and iterate through each and add information into genre xml with appropriate genre/subgenre for Amazon
-        for (( j=1 ; j<=$occurenceCount ; j++ ));
+        for (( c=1 ; c<=$occurenceCount ; c++ ));
         do
-            if [[ $j -eq 1 ]];
+            if [[ $c -eq 1 ]];
             then
-                k=3
+                d=3
             else
-                k=2
+                d=2
             fi
             #k=2
-            currentValue=$(echo "$httpResponseAmazonSecondaryGenres" | awk -F '</oly_amazonSecondaryGenres>' '{print $'$j'}' | awk -F '/vidispine">' '{print $'$k'}' )
+            currentValue=$(echo "$httpResponseAmazonSecondaryGenres" | awk -F '</oly_amazonSecondaryGenres>' '{print $'$c'}' | awk -F '/vidispine">' '{print $'$d'}' )
             echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - currentValue - [$currentValue]" >> "$logfile"
             echo "            <md:Genre id=\"$currentValue\"></md:Genre>" >> "$mecFileDestinationGenre"
         done
@@ -632,15 +632,15 @@ then
             occurenceCount=6
         fi
         ## Get item's cast metadata and iterate through each and add information into actor xml with people-actor for Amazon
-        for (( l=1 ; l<=$occurenceCount ; l++ ));
+        for (( e=1 ; e<=$occurenceCount ; e++ ));
         do
-            if [[ $l -eq 1 ]];
+            if [[ $e -eq 1 ]];
             then
-                m=3
+                f=3
             else
-                m=2
+                f=2
             fi
-            currentValue=$(echo "$httpResponseCast" | awk -F '</oly_cast>' '{print $'$l'}' | awk -F '/vidispine">' '{print $'$m'}' )
+            currentValue=$(echo "$httpResponseCast" | awk -F '</oly_cast>' '{print $'$e'}' | awk -F '/vidispine">' '{print $'$f'}' )
             echo "        <md:People>
 			<md:Job>
 				<md:JobFunction>Actor</md:JobFunction>
@@ -664,15 +664,15 @@ then
             occurenceCount=3
         fi
         ## Get item's director metadata and iterate through each and add information into director xml with people-director for Amazon
-        for (( n=1 ; n<=$occurenceCount ; n++ ));
+        for (( g=1 ; g<=$occurenceCount ; g++ ));
         do
-            if [[ $n -eq 1 ]];
+            if [[ $g -eq 1 ]];
             then
-                o=3
+                h=3
             else
-                o=2
+                h=2
             fi
-            currentValue=$(echo "$httpResponseDirector" | awk -F '</oly_director>' '{print $'$n'}' | awk -F '/vidispine">' '{print $'$o'}' )
+            currentValue=$(echo "$httpResponseDirector" | awk -F '</oly_director>' '{print $'$g'}' | awk -F '/vidispine">' '{print $'$h'}' )
             echo "        <md:People>
 			<md:Job>
 				<md:JobFunction>Director</md:JobFunction>
@@ -696,15 +696,15 @@ then
             occurenceCount=3
         fi
         ## Get item's producer metadata and iterate through each and add information into producer xml with people-producer for Amazon
-        for (( p=1 ; p<=$occurenceCount ; p++ ));
+        for (( i=1 ; i<=$occurenceCount ; i++ ));
         do
-            if [[ $p -eq 1 ]];
+            if [[ $i -eq 1 ]];
             then
-                q=3
+                j=3
             else
-                q=2
+                j=2
             fi
-            currentValue=$(echo "$httpResponseProducer" | awk -F '</oly_producer>' '{print $'$p'}' | awk -F '/vidispine">' '{print $'$q'}' )
+            currentValue=$(echo "$httpResponseProducer" | awk -F '</oly_producer>' '{print $'$i'}' | awk -F '/vidispine">' '{print $'$j'}' )
             echo "        <md:People>
 			<md:Job>
 				<md:JobFunction>Producer</md:JobFunction>
@@ -750,10 +750,10 @@ then
             relatedItemsCount=$(echo $httpResponseRelatedItems | awk -F '</relation>' '{print NF}')
             relatedItemsCount=$(($relatedItemsCount - 1))
             ## Get related items and iterate through each to check cs_type is forDistribution & get target id
-            for (( r=1 ; r<=$relatedItemsCount ; r++ ));
+            for (( k=1 ; k<=$relatedItemsCount ; k++ ));
             do
-                s=2
-                currentRelationValue=$(echo "$httpResponseRelatedItems" | awk -F '</relation>' '{print $'$r'}' | awk -F '<relation>' '{print $'$s'}' )
+                l=2
+                currentRelationValue=$(echo "$httpResponseRelatedItems" | awk -F '</relation>' '{print $'$k'}' | awk -F '<relation>' '{print $'$l'}' )
                 currentRelationCsTypeValue=$(echo "$currentRelationValue" | awk -F '<value key="cs_type">' '{print $2}' | awk -F '</value>' '{print $1}')
                 if [[ "$currentRelationCsTypeValue" == "season" ]];
                 then
@@ -900,10 +900,10 @@ then
             relatedItemsCount=$(echo $httpResponseRelatedItems | awk -F '</relation>' '{print NF}')
             relatedItemsCount=$(($relatedItemsCount - 1))
             ## Get related items and iterate through each to check cs_type is forDistribution & get target id
-            for (( t=1 ; t<=$relatedItemsCount ; t++ ));
+            for (( m=1 ; m<=$relatedItemsCount ; m++ ));
             do
-                u=2
-                currentRelationValue=$(echo "$httpResponseRelatedItems" | awk -F '</relation>' '{print $'$t'}' | awk -F '<relation>' '{print $'$u'}' )
+                n=2
+                currentRelationValue=$(echo "$httpResponseRelatedItems" | awk -F '</relation>' '{print $'$m'}' | awk -F '<relation>' '{print $'$n'}' )
                 currentRelationCsTypeValue=$(echo "$currentRelationValue" | awk -F '<value key="cs_type">' '{print $2}' | awk -F '</value>' '{print $1}')
                 if [[ "$currentRelationCsTypeValue" == "forDistribution" ]];
                 then
@@ -956,20 +956,20 @@ then
                 occurenceCount=2
             fi
             ## Get item's primary genre and add information into genre xml
-            echo "            <md:Genre id=\"$itemAmazonPrimaryGenre\"></md:Genre>" >> "$mecFileDestinationGenre"
+            echo "            <md:Genre id=\"$itemAmazonPrimaryGenre\"></md:Genre>" >> "$mecSeasonFileDestinationGenre"
             ## Get item's secondary genres and iterate through each and add information into genre xml with appropriate genre/subgenre for Amazon
-            for (( j=1 ; j<=$occurenceCount ; j++ ));
+            for (( o=1 ; o<=$occurenceCount ; o++ ));
             do
-                if [[ $j -eq 1 ]];
+                if [[ $o -eq 1 ]];
                 then
-                    k=3
+                    p=3
                 else
-                    k=2
+                    p=2
                 fi
                 #k=2
-                currentValue=$(echo "$httpResponseAmazonSecondaryGenres" | awk -F '</oly_amazonSecondaryGenres>' '{print $'$j'}' | awk -F '/vidispine">' '{print $'$k'}' )
+                currentValue=$(echo "$httpResponseAmazonSecondaryGenres" | awk -F '</oly_amazonSecondaryGenres>' '{print $'$o'}' | awk -F '/vidispine">' '{print $'$p'}' )
                 echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - currentValue - [$currentValue]" >> "$logfile"
-                echo "            <md:Genre id=\"$currentValue\"></md:Genre>" >> "$mecFileDestinationGenre"
+                echo "            <md:Genre id=\"$currentValue\"></md:Genre>" >> "$mecSeasonFileDestinationGenre"
             done
             # Adding LocalizedInfo in English Block - Genre
             echo "            <!-- Genres must be submitted using the AV Genre codes, such as below. -->
@@ -1089,15 +1089,15 @@ then
                 occurenceCount=6
             fi
             ## Get item's cast metadata and iterate through each and add information into actor xml with people-actor for Amazon
-            for (( l=1 ; l<=$occurenceCount ; l++ ));
+            for (( q=1 ; q<=$occurenceCount ; q++ ));
             do
-                if [[ $l -eq 1 ]];
+                if [[ $q -eq 1 ]];
                 then
-                    m=3
+                    r=3
                 else
-                    m=2
+                    r=2
                 fi
-                currentValue=$(echo "$httpResponseCast" | awk -F '</oly_cast>' '{print $'$l'}' | awk -F '/vidispine">' '{print $'$m'}' )    
+                currentValue=$(echo "$httpResponseCast" | awk -F '</oly_cast>' '{print $'$q'}' | awk -F '/vidispine">' '{print $'$r'}' )    
                 echo "        <md:People>
 			<md:Job>
 				<md:JobFunction>Actor</md:JobFunction>
@@ -1121,15 +1121,15 @@ then
                 occurenceCount=3
             fi
             ## Get item's director metadata and iterate through each and add information into director xml with people-director for Amazon
-            for (( n=1 ; n<=$occurenceCount ; n++ ));
+            for (( s=1 ; s<=$occurenceCount ; s++ ));
             do
-                if [[ $n -eq 1 ]];
+                if [[ $s -eq 1 ]];
                 then
-                    o=3
+                    t=3
                 else
-                    o=2
+                    t=2
                 fi
-                currentValue=$(echo "$httpResponseDirector" | awk -F '</oly_director>' '{print $'$n'}' | awk -F '/vidispine">' '{print $'$o'}' )            
+                currentValue=$(echo "$httpResponseDirector" | awk -F '</oly_director>' '{print $'$s'}' | awk -F '/vidispine">' '{print $'$t'}' )
                 echo "        <md:People>
 			<md:Job>
 				<md:JobFunction>Director</md:JobFunction>
@@ -1153,15 +1153,15 @@ then
                 occurenceCount=3
             fi
             ## Get item's producer metadata and iterate through each and add information into producer xml with people-producer for Amazon
-            for (( p=1 ; p<=$occurenceCount ; p++ ));
+            for (( u=1 ; u<=$occurenceCount ; u++ ));
             do
-                if [[ $p -eq 1 ]];
+                if [[ $u -eq 1 ]];
                 then
-                    q=3
+                    v=3
                 else
-                    q=2
+                    v=2
                 fi
-                currentValue=$(echo "$httpResponseProducer" | awk -F '</oly_producer>' '{print $'$p'}' | awk -F '/vidispine">' '{print $'$q'}' )
+                currentValue=$(echo "$httpResponseProducer" | awk -F '</oly_producer>' '{print $'$u'}' | awk -F '/vidispine">' '{print $'$v'}' )
                 echo "        <md:People>
 			<md:Job>
 				<md:JobFunction>Producer</md:JobFunction>
@@ -1194,10 +1194,10 @@ then
                 relatedItemsCount=$(echo $httpResponseRelatedItems | awk -F '</relation>' '{print NF}')
                 relatedItemsCount=$(($relatedItemsCount - 1))
                 ## Get related items and iterate through each to check cs_type is forDistribution & get target id
-                for (( r=1 ; r<=$relatedItemsCount ; r++ ));
+                for (( w=1 ; w<=$relatedItemsCount ; w++ ));
                 do
-                    s=2
-                    currentRelationValue=$(echo "$httpResponseRelatedItems" | awk -F '</relation>' '{print $'$r'}' | awk -F '<relation>' '{print $'$s'}' )
+                    x=2
+                    currentRelationValue=$(echo "$httpResponseRelatedItems" | awk -F '</relation>' '{print $'$w'}' | awk -F '<relation>' '{print $'$x'}' )
                     currentRelationCsTypeValue=$(echo "$currentRelationValue" | awk -F '<value key="cs_type">' '{print $2}' | awk -F '</value>' '{print $1}')
                     if [[ "$currentRelationCsTypeValue" == "series" ]];
                     then
@@ -1355,20 +1355,20 @@ then
                 occurenceCount=2
             fi
             ## Get item's primary genre and add information into genre xml
-            echo "            <md:Genre id=\"$itemAmazonPrimaryGenre\"></md:Genre>" >> "$mecFileDestinationGenre"
+            echo "            <md:Genre id=\"$itemAmazonPrimaryGenre\"></md:Genre>" >> "$mecSeriesFileDestinationGenre"
             ## Get item's secondary genres and iterate through each and add information into genre xml with appropriate genre/subgenre for Amazon
-            for (( j=1 ; j<=$occurenceCount ; j++ ));
+            for (( y=1 ; y<=$occurenceCount ; y++ ));
             do
-                if [[ $j -eq 1 ]];
+                if [[ $y -eq 1 ]];
                 then
-                    k=3
+                    z=3
                 else
-                    k=2
+                    z=2
                 fi
                 #k=2
-                currentValue=$(echo "$httpResponseAmazonSecondaryGenres" | awk -F '</oly_amazonSecondaryGenres>' '{print $'$j'}' | awk -F '/vidispine">' '{print $'$k'}' )
+                currentValue=$(echo "$httpResponseAmazonSecondaryGenres" | awk -F '</oly_amazonSecondaryGenres>' '{print $'$y'}' | awk -F '/vidispine">' '{print $'$z'}' )
                 echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - currentValue - [$currentValue]" >> "$logfile"
-                echo "            <md:Genre id=\"$currentValue\"></md:Genre>" >> "$mecFileDestinationGenre"
+                echo "            <md:Genre id=\"$currentValue\"></md:Genre>" >> "$mecSeriesFileDestinationGenre"
             done
             # Adding LocalizedInfo in English Block - Genre
             echo "            <!-- Genres must be submitted using the AV Genre codes, such as below. -->
