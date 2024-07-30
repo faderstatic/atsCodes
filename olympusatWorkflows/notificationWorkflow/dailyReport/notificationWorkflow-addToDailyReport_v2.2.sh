@@ -230,26 +230,24 @@ else
                     then
                         echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-rtcMexicoQcPending) - ($itemId) - rtcMexicoQcPendingFileDestination file NOT FOUND - creating new file with headers" >> "$logfile"
 
-                        sleep 2
-
                         echo "ItemId,Title,RTCMexicoQCStatus" >> "$rtcMexicoQcPendingFileDestination"
 
                         echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-rtcMexicoQcPending) - ($itemId) - New File created - [$rtcMexicoQcPendingFileDestination]" >> "$logfile"
                         
-                        sleep 5
+                        sleep 2
                     fi
 
                     echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-rtcMexicoQcPending) - ($itemId) - Gathering item metadata from Cantemo" >> "$logfile"
                     itemTitle=$(filterVidispineItemMetadata $itemId "metadata" "title")
                     itemRtcMexicoQcStatus=$(filterVidispineItemSubgroupMetadata $itemId "metadata" "oly_rtcMexicoQCStatus" "RTC%20Mexico%20QC")
 
-                    sleep 2
+                    sleep 1
 
                     echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-rtcMexicoQcPending) - ($itemId) - Adding item metadata to rtcMexicoQcPending csv" >> "$logfile"
 
                     echo "$itemId,$itemTitle,$itemRtcMexicoQcStatus" >> "$rtcMexicoQcPendingFileDestination"
 
-                    sleep 2
+                    sleep 1
 
                     echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-rtcMexicoQcPending) - ($itemId) - Process completed" >> "$logfile"
 

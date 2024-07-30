@@ -433,7 +433,7 @@ MAM Notify"
 
                         echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-rtcMexicoQcPending) - Moving rtcMexicoQcPending csv to zCompleted folder" >> "$logfile"
 
-                        mv "$rtcMexicoQcPendingFileDestination" "/opt/olympusat/resources/emailNotificationWorkflow/zCompleted/"
+                        #mv "$rtcMexicoQcPendingFileDestination" "/opt/olympusat/resources/emailNotificationWorkflow/zCompleted/"
 
                         sleep 2
 
