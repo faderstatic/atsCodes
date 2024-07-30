@@ -245,6 +245,21 @@ then
         # Adding MediaManifest Block Close
         echo "</manifest:MediaManifest>" >> "$mmcFileDestination"
         sleep 2
+        # Check to see if mmcFileDestination file exists
+        if [[ -e "$mmcFileDestination" ]];
+        then
+            # mmcFileDestination file exists-moving to volumes/creative/cs13/distribution/amazon_staging/metadata folder
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - Moving MMC File to creative Volume" >> "$logfile"
+            mv -f "$mmcFileDestination" "/Volumes/creative/CS13/Distribution/Amazon_Staging/metadata/"
+            sleep 1
+            mmcFile="MMC-$itemTitle.xml"
+            mmcFinalDestination="/Volumes/creative/CS13/Distribution/Amazon_Staging/metadata/$mmcFile"
+            if [[ -e "$mmcFinalDestination" ]];
+            then
+                rm -f "/opt/olympusat/xmlsForDistribution/amazon/MMC-$itemTitle.xml"
+                sleep 1
+            fi
+        fi
         echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - Create MMC XML COMPLETED" >> "$logfile"
         sleep 2
         # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -329,8 +344,10 @@ then
         itemAmazonPrimaryGenre=$(filterVidispineItemMetadata $itemId "metadata" "oly_amazonPrimaryGenre")
         urlGetItemAmazonSecondaryGenres="http://10.1.1.34:8080/API/item/$itemId/metadata?field=oly_amazonSecondaryGenres&terse=yes"
 	    httpResponseAmazonSecondaryGenres=$(curl --location --request GET $urlGetItemAmazonSecondaryGenres  --header 'Accept: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=Tkb9vkSC8v4SceB8CHUyB3iaMPjvgoHrzhLrvo36agG3wqv0jHc7nsOtdTo9JEyM')
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - Secondary Genres [$httpResponseAmazonSecondaryGenres]" >> "$logfile"
         subGenreItemCount=$(echo $httpResponseAmazonSecondaryGenres | awk -F '</oly_amazonSecondaryGenres>' '{print NF}')
         subGenreItemCount=$(($subGenreItemCount - 1))
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - subGenreItemCount - [$subGenreItemCount]" >> "$logfile"
         if [[ $subGenreItemCount -lt 2 ]];
         then
             occurenceCount=$subGenreItemCount
@@ -348,7 +365,9 @@ then
             else
                 k=2
             fi
-            currentValue=$(echo "$httpResponseSecondaryGenres" | awk -F '</oly_secondaryGenres>' '{print $'$j'}' | awk -F '/vidispine">' '{print $'$k'}' )
+            #k=2
+            currentValue=$(echo "$httpResponseAmazonSecondaryGenres" | awk -F '</oly_amazonSecondaryGenres>' '{print $'$j'}' | awk -F '/vidispine">' '{print $'$k'}' )
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - currentValue - [$currentValue]" >> "$logfile"
             echo "            <md:Genre id=\"$currentValue\"></md:Genre>" >> "$mecFileDestinationGenre"
         done
         # Adding LocalizedInfo in English Block - Genre
@@ -774,8 +793,59 @@ then
         # Adding CoreMetadata Block Close
         echo "</mdmec:CoreMetadata>" >> "$mecFileDestination"
         sleep 2
-    
+        # Check to see if mecFileDestination file exists
+        if [[ -e "$mecFileDestination" ]];
+        then
+            # mecFileDestination file exists-moving to volumes/creative/cs13/distribution/amazon_staging/metadata folder
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - Moving MEC File to creative Volume" >> "$logfile"
+            mv -f "$mecFileDestination" "/Volumes/creative/CS13/Distribution/Amazon_Staging/metadata/"
+            sleep 3
+            mecFile="MEC-$itemTitle.xml"
+            mecFinalDestination="/Volumes/creative/CS13/Distribution/Amazon_Staging/metadata/$mecFile"
+            if [[ -e "$mecFinalDestination" ]];
+            then
+                rm -f "/opt/olympusat/xmlsForDistribution/amazon/MEC-$itemTitle.xml"
+                sleep 1
+                # Check to see if mecFileDestinationArt file exists
+                if [[ -e "$mecFileDestinationArt" ]];
+                then
+                    # mecFileDestinationArt file exists-deleting file
+                    rm -f "/opt/olympusat/xmlsForDistribution/amazon/_miscFiles/ArtForMEC-$itemTitle.xml"
+                fi
+                # Check to see if mecFileDestinationGenre file exists
+                if [[ -e "$mecFileDestinationGenre" ]];
+                then
+                    # mecFileDestinationGenre file exists-deleting file
+                    rm -f "/opt/olympusat/xmlsForDistribution/amazon/_miscFiles/GenreForMEC-$itemTitle.xml"
+                fi
+                # Check to see if mecFileDestinationRating file exists
+                if [[ -e "$mecFileDestinationRating" ]];
+                then
+                    # mecFileDestinationRating file exists-deleting file
+                    rm -f "/opt/olympusat/xmlsForDistribution/amazon/_miscFiles/RatingForMEC-$itemTitle.xml"
+                fi
+                # Check to see if mecFileDestinationActor file exists
+                if [[ -e "$mecFileDestinationActor" ]];
+                then
+                    # mecFileDestinationActor file exists-deleting file
+                    rm -f "/opt/olympusat/xmlsForDistribution/amazon/_miscFiles/ActorForMEC-$itemTitle.xml"
+                fi
+                # Check to see if mecFileDestinationDirector file exists
+                if [[ -e "$mecFileDestinationDirector" ]];
+                then
+                    # mecFileDestinationDirector file exists-deleting file
+                    rm -f "/opt/olympusat/xmlsForDistribution/amazon/_miscFiles/DirectorForMEC-$itemTitle.xml"
+                fi
+                # Check to see if mecFileDestinationProducer file exists
+                if [[ -e "$mecFileDestinationProducer" ]];
+                then
+                    # mecFileDestinationProducer file exists-deleting file
+                    rm -f "/opt/olympusat/xmlsForDistribution/amazon/_miscFiles/ProducerForMEC-$itemTitle.xml"
+                fi
+            fi
+        fi
         echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - Create MEC XML COMPLETED" >> "$logfile"
+        sleep 2
         # ----------------------------------------------------------------------
     else
         # contentType is NOT supported-exiting script
@@ -890,8 +960,10 @@ then
             itemAmazonPrimaryGenre=$(filterVidispineItemMetadata $itemId "metadata" "oly_amazonPrimaryGenre")
             urlGetItemAmazonSecondaryGenres="http://10.1.1.34:8080/API/item/$itemId/metadata?field=oly_amazonSecondaryGenres&terse=yes"
             httpResponseAmazonSecondaryGenres=$(curl --location --request GET $urlGetItemAmazonSecondaryGenres  --header 'Accept: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=Tkb9vkSC8v4SceB8CHUyB3iaMPjvgoHrzhLrvo36agG3wqv0jHc7nsOtdTo9JEyM')
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - Secondary Genres [$httpResponseAmazonSecondaryGenres]" >> "$logfile"
             subGenreItemCount=$(echo $httpResponseAmazonSecondaryGenres | awk -F '</oly_amazonSecondaryGenres>' '{print NF}')
             subGenreItemCount=$(($subGenreItemCount - 1))
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - subGenreItemCount - [$subGenreItemCount]" >> "$logfile"
             if [[ $subGenreItemCount -lt 2 ]];
             then
                 occurenceCount=$subGenreItemCount
@@ -909,7 +981,9 @@ then
                 else
                     k=2
                 fi
-                currentValue=$(echo "$httpResponseSecondaryGenres" | awk -F '</oly_secondaryGenres>' '{print $'$j'}' | awk -F '/vidispine">' '{print $'$k'}' )
+                #k=2
+                currentValue=$(echo "$httpResponseAmazonSecondaryGenres" | awk -F '</oly_amazonSecondaryGenres>' '{print $'$j'}' | awk -F '/vidispine">' '{print $'$k'}' )
+                echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - currentValue - [$currentValue]" >> "$logfile"
                 echo "            <md:Genre id=\"$currentValue\"></md:Genre>" >> "$mecFileDestinationGenre"
             done
             # Adding LocalizedInfo in English Block - Genre
@@ -1169,7 +1243,66 @@ then
             # Adding CoreMetadata Block Close
             echo "</mdmec:CoreMetadata>" >> "$mecSeasonFileDestination"
             sleep 2
+            # Check to see if mecSeasonFileDestination file exists
+            if [[ -e "$mecSeasonFileDestination" ]];
+            then
+                # mecSeasonFileDestination file exists-moving to volumes/creative/cs13/distribution/amazon_staging/metadata folder
+                echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - Moving Season MEC File to creative Volume" >> "$logfile"
+                mv -f "$mecSeasonFileDestination" "/Volumes/creative/CS13/Distribution/Amazon_Staging/metadata/"
+                sleep 3
+                mecSeasonFile="MEC-$seasonItemTitle.xml"
+                mecSeasonFinalDestination="/Volumes/creative/CS13/Distribution/Amazon_Staging/metadata/$mecSeasonFile"
+                
+                mecSeasonFileDestinationArt="/opt/olympusat/xmlsForDistribution/$distributionTo/_miscFiles/ArtForMEC-$seasonItemTitle.xml"
+                mecSeasonFileDestinationGenre="/opt/olympusat/xmlsForDistribution/$distributionTo/_miscFiles/GenreForMEC-$seasonItemTitle.xml"
+                mecSeasonFileDestinationRating="/opt/olympusat/xmlsForDistribution/$distributionTo/_miscFiles/RatingForMEC-$seasonItemTitle.xml"
+                mecSeasonFileDestinationActor="/opt/olympusat/xmlsForDistribution/$distributionTo/_miscFiles/ActorForMEC-$seasonItemTitle.xml"
+                mecSeasonFileDestinationDirector="/opt/olympusat/xmlsForDistribution/$distributionTo/_miscFiles/DirectorForMEC-$seasonItemTitle.xml"
+                mecSeasonFileDestinationProducer="/opt/olympusat/xmlsForDistribution/$distributionTo/_miscFiles/ProducerForMEC-$seasonItemTitle.xml"
+                if [[ -e "$mecSeasonFinalDestination" ]];
+                then
+                    rm -f "/opt/olympusat/xmlsForDistribution/amazon/MEC-$seasonItemTitle.xml"
+                    sleep 1
+                    # Check to see if mecSeasonFileDestinationArt file exists
+                    if [[ -e "$mecSeasonFileDestinationArt" ]];
+                    then
+                        # mecSeasonFileDestinationArt file exists-deleting file
+                        rm -f "/opt/olympusat/xmlsForDistribution/amazon/_miscFiles/ArtForMEC-$seasonItemTitle.xml"
+                    fi
+                    # Check to see if mecSeasonFileDestinationGenre file exists
+                    if [[ -e "$mecSeasonFileDestinationGenre" ]];
+                    then
+                        # mecSeasonFileDestinationGenre file exists-deleting file
+                        rm -f "/opt/olympusat/xmlsForDistribution/amazon/_miscFiles/GenreForMEC-$seasonItemTitle.xml"
+                    fi
+                    # Check to see if mecSeasonFileDestinationRating file exists
+                    if [[ -e "$mecSeasonFileDestinationRating" ]];
+                    then
+                        # mecSeasonFileDestinationRating file exists-deleting file
+                        rm -f "/opt/olympusat/xmlsForDistribution/amazon/_miscFiles/RatingForMEC-$seasonItemTitle.xml"
+                    fi
+                    # Check to see if mecSeasonFileDestinationActor file exists
+                    if [[ -e "$mecSeasonFileDestinationActor" ]];
+                    then
+                        # mecSeasonFileDestinationActor file exists-deleting file
+                        rm -f "/opt/olympusat/xmlsForDistribution/amazon/_miscFiles/ActorForMEC-$seasonItemTitle.xml"
+                    fi
+                    # Check to see if mecSeasonFileDestinationDirector file exists
+                    if [[ -e "$mecSeasonFileDestinationDirector" ]];
+                    then
+                        # mecSeasonFileDestinationDirector file exists-deleting file
+                        rm -f "/opt/olympusat/xmlsForDistribution/amazon/_miscFiles/DirectorForMEC-$seasonItemTitle.xml"
+                    fi
+                    # Check to see if mecSeasonFileDestinationProducer file exists
+                    if [[ -e "$mecSeasonFileDestinationProducer" ]];
+                    then
+                        # mecSeasonFileDestinationProducer file exists-deleting file
+                        rm -f "/opt/olympusat/xmlsForDistribution/amazon/_miscFiles/ProducerForMEC-$seasonItemTitle.xml"
+                    fi
+                fi
+            fi
             echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - Create Season MEC XML COMPLETED" >> "$logfile"
+            sleep 2
             # ----------------------------------------------------------------------
         fi
 
@@ -1240,8 +1373,10 @@ then
             itemAmazonPrimaryGenre=$(filterVidispineItemMetadata $itemId "metadata" "oly_amazonPrimaryGenre")
             urlGetItemAmazonSecondaryGenres="http://10.1.1.34:8080/API/item/$itemId/metadata?field=oly_amazonSecondaryGenres&terse=yes"
             httpResponseAmazonSecondaryGenres=$(curl --location --request GET $urlGetItemAmazonSecondaryGenres  --header 'Accept: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=Tkb9vkSC8v4SceB8CHUyB3iaMPjvgoHrzhLrvo36agG3wqv0jHc7nsOtdTo9JEyM')
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - Secondary Genres [$httpResponseAmazonSecondaryGenres]" >> "$logfile"
             subGenreItemCount=$(echo $httpResponseAmazonSecondaryGenres | awk -F '</oly_amazonSecondaryGenres>' '{print NF}')
             subGenreItemCount=$(($subGenreItemCount - 1))
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - subGenreItemCount - [$subGenreItemCount]" >> "$logfile"
             if [[ $subGenreItemCount -lt 2 ]];
             then
                 occurenceCount=$subGenreItemCount
@@ -1259,7 +1394,9 @@ then
                 else
                     k=2
                 fi
-                currentValue=$(echo "$httpResponseSecondaryGenres" | awk -F '</oly_secondaryGenres>' '{print $'$j'}' | awk -F '/vidispine">' '{print $'$k'}' )
+                #k=2
+                currentValue=$(echo "$httpResponseAmazonSecondaryGenres" | awk -F '</oly_amazonSecondaryGenres>' '{print $'$j'}' | awk -F '/vidispine">' '{print $'$k'}' )
+                echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - currentValue - [$currentValue]" >> "$logfile"
                 echo "            <md:Genre id=\"$currentValue\"></md:Genre>" >> "$mecFileDestinationGenre"
             done
             # Adding LocalizedInfo in English Block - Genre
