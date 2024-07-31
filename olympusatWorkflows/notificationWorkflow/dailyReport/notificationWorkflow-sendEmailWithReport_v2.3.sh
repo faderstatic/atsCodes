@@ -444,8 +444,93 @@ MAM Notify"
                         echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow) - rtcMexicoQcPendingFileDestination file DOES NOT exist - exiting script/workflow" >> "$logfile"
                     fi
                 else
-                    # notificationType is NOT supported-exiting script/workflow
-                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow) - notificationType is NOT supported - exiting script/workflow" >> "$logfile"
+                    if [[ "$notificationType" == "rtcMexicoQc" ]];
+                    then
+                        # notificationType is 'rtcMexicoQc'-continue with workflow
+                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-rtcMexicoQc) - RTC Mexico QC Approved/Rejected Workflow Triggered - Check for List to Send Email" >> "$logfile"
+
+                        rtcMexicoQcFileDestination="/opt/olympusat/resources/emailNotificationWorkflow/rtcMexicoQc/rtcMexicoQc-$mydate.csv"
+
+                        # Check rtcMexicoQcFileDestination Variable
+                        if [[ -e "$rtcMexicoQcFileDestination" ]];
+                        then
+                            # rtcMexicoQcFileDestination file exists - continuing with script/workflow
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-rtcMexicoQc) - rtcMexicoQcFileDestination file exists - continuing with script/workflow" >> "$logfile"
+
+                            # Recipient email addresses
+                            export recipient1=dsenderowicz@olympusat.com
+                            export recipient2=mamAdmin@olympusat.com
+                            export recipient3=rsims@olympusat.com
+                            export recipient4=kkanjanapitak@olympusat.com
+
+                            # Sending email address
+                            export emailFrom=notify@olympusat.com
+
+                            # Email Body
+                            subject="MAM - RTC Mexico QC - Approved/Rejected - $mydate"
+                            body="Hi,
+                
+The following attached list of content items have been QC'd by RTC Mexico and have either been Approved or Rejected.
+
+You can find all of the items in one of the following Saved Searches in Cantemo Web Portal
+
+Saved Search Name - 'RTC Mexico QC-Approved'
+Link to Saved Search - https://cantemo.olympusat.com/search/#/savedsearch/OLY-363/?search_id=1585
+
+Saved Search Name - 'RTC Mexico QC-Rejected'
+Link to Saved Search - https://cantemo.olympusat.com/search/#/savedsearch/OLY-362/?search_id=1584
+
+***NOTE***: You must be on the Olympusat Office Network, either via VPN or remoting into a machine on the Network, in order to access Cantemo Web Portal
+        
+Please login to the system & review these items.
+    
+Thanks
+        
+MAM Notify"
+
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-rtcMexicoQc) - Sending Email for New Items Ingested into Cantemo Today" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-rtcMexicoQc) - To - $recipient1, $recipient2, $recipient3, $recipient4, $recipient5" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-rtcMexicoQc) - From - $emailFrom" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-rtcMexicoQc) - Subject - $subject" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-rtcMexicoQc) - Body - [$(echo $body)]" >> "$logfile"
+
+                            # Setup to send email with attachment
+                            sesSubject=$(echo $subject) 
+                            sesMessage=$body
+                            sesFile=$(echo $rtcMexicoQcFileDestination)
+                            sesMIMEType=`file --mime-type "$sesFile" | sed 's/.*: //'`
+
+                            curl --url 'smtp://smtp-mail.outlook.com:587' \
+                            --ssl-reqd  \
+                            --mail-from $emailFrom \
+                            --mail-rcpt $recipient2 \
+                            --user 'notify@olympusat.com:6bOblVsLg9bPQ8WG7JC7f8Zump' \
+                            -F '=(;type=multipart/mixed' \
+                            -F "=$sesMessage;type=text/plain" \
+                            -F "file=@$sesFile;type=$sesMIMEType;encoder=base64" \
+                            -F '=)' \
+                            -H "Subject: $sesSubject"
+
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-rtcMexicoQc) - Email Sent Successfully" >> "$logfile"
+
+                            sleep 2
+
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-rtcMexicoQc) - Moving rtcMexicoQc csv to zCompleted folder" >> "$logfile"
+
+                            mv "$rtcMexicoQcFileDestination" "/opt/olympusat/resources/emailNotificationWorkflow/zCompleted/"
+
+                            sleep 2
+
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-rtcMexicoQc) - Marked to be Deleted Email Notification Process Completed" >> "$logfile"
+
+                        else
+                            # rtcMexicoQcFileDestination file DOES NOT exist-exiting script/workflow
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow) - rtcMexicoQcFileDestination file DOES NOT exist - exiting script/workflow" >> "$logfile"
+                        fi
+                    else
+                        # notificationType is NOT supported-exiting script/workflow
+                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow) - notificationType is NOT supported - exiting script/workflow" >> "$logfile"
+                    fi
                 fi
             fi
         fi

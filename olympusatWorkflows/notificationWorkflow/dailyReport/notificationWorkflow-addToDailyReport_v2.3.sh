@@ -252,8 +252,43 @@ else
                     echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-rtcMexicoQcPending) - ($itemId) - Process completed" >> "$logfile"
 
                 else
-                    # emailNotificationWorkflow variable is not supported
-                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow) - ($itemId) - emailNotificationWorkflow variable is not supported" >> "$logfile"
+                    if [[ "$emailNotificationWorkflow" == "rtcMexicoQcApproved" || "$emailNotificationWorkflow" == "rtcMexicoQcRejected" ]];
+                    then
+                        # emailNotificationWorkflow varialbe is set to rtcMexicoQcApproved or rtcMexicoQcRejected
+                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-rtcMexicoQc) - ($itemId) - Checking for rtcMexicoQcFileDestination file" >> "$logfile"
+                        rtcMexicoQcFileDestination="/opt/olympusat/resources/emailNotificationWorkflow/rtcMexicoQc/rtcMexicoQc-$mydate.csv"
+                        if [[ ! -e "$rtcMexicoQcFileDestination" ]];
+                        then
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-rtcMexicoQc) - ($itemId) - rtcMexicoQcFileDestination file NOT FOUND - creating new file with headers" >> "$logfile"
+
+                            echo "ItemId,Title,RTC Mexico QC Status,RTC Mexico QC By,RTC Mexico QC Date,RTC Mexico QC Notes" >> "$rtcMexicoQcFileDestination"
+
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-rtcMexicoQc) - ($itemId) - New File created - [$rtcMexicoQcFileDestination]" >> "$logfile"
+                            
+                            sleep 2
+                        fi
+
+                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-rtcMexicoQc) - ($itemId) - Gathering item metadata from Cantemo" >> "$logfile"
+                        itemTitle=$(filterVidispineItemMetadata $itemId "metadata" "title")
+                        itemRtcMexicoQcStatus=$(filterVidispineItemSubgroupMetadata $itemId "metadata" "oly_rtcMexicoQCStatus" "RTC%20Mexico%20QC")
+                        itemRtcMexicoQcBy=$(filterVidispineItemSubgroupMetadata $itemId "metadata" "oly_rtcMexicoQCBy" "RTC%20Mexico%20QC")
+                        itemRtcMexicoQcDate=$(filterVidispineItemSubgroupMetadata $itemId "metadata" "oly_rtcMexicoQCDate" "RTC%20Mexico%20QC")
+                        itemRtcMexicoQcNotes=$(filterVidispineItemMetadata $itemId "metadata" "oly_rtcMexicoQCNotes")
+
+                        sleep 1
+
+                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-rtcMexicoQc) - ($itemId) - Adding item metadata to rtcMexicoQc csv" >> "$logfile"
+
+                        echo "$itemId,$itemTitle,$itemRtcMexicoQcStatus,$itemRtcMexicoQcBy,$itemRtcMexicoQcDate,$itemRtcMexicoQcNotes" >> "$rtcMexicoQcFileDestination"
+
+                        sleep 1
+
+                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-rtcMexicoQc) - ($itemId) - Process completed" >> "$logfile"
+
+                    else
+                        # emailNotificationWorkflow variable is not supported
+                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow) - ($itemId) - emailNotificationWorkflow variable is not supported" >> "$logfile"
+                    fi
                 fi
             fi
         fi

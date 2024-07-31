@@ -37,12 +37,6 @@ export emailFrom=notify@olympusat.com
 export itemId=$1
 export user=$2
 export title=$(filterVidispineItemMetadata $itemId "metadata" "title")
-export titleEs=$(filterVidispineItemMetadata $itemId "metadata" "oly_titleEs")
-export titleEn=$(filterVidispineItemMetadata $itemId "metadata" "oly_titleEn")
-export contentType=$(filterVidispineItemMetadata $itemId "metadata" "oly_contentType")
-export contentType=$(filterVidispineItemMetadata $itemId "metadata" "oly_contentType" | sed 's/.*/\u&/')
-export rtcMexicoQCNotes=$(filterVidispineItemMetadata $itemId "metadata" "oly_rtcMexicoQCNotes")
-export linkToClip=http://cantemo.olympusat.com/item/$itemId/
 
 export url="http://10.1.1.34:8080/API/item/$itemId/metadata/"
 export qcStatus=$3
@@ -85,95 +79,19 @@ curl -s -o /dev/null --location --request DELETE $removePermissionUrl --header '
 
 sleep 3
 
-if [[ $titleEs != "" && $titleEn != "" ]];
-  then
-    titleLanguage="Title-English: $titleEn
-Title-Spanish: $titleEs"
-  else
-    if [[ $titleEs != "" && $titleEn == "" ]];
-      then
-        titleLanguage="Title-Spanish: $titleEs"
-      else
-        if [[ $titleEs == "" && $titleEn != "" ]];
-          then
-            titleLanguage="Title-English: $titleEn"
-          else
-            if [[ $titleEs == "" && $titleEn == "" ]];
-              then
-                titleLanguage=""
-              else
-                titleLanguage=""
-            fi
-        fi
-    fi
+echo "$(date +%Y/%m/%d_%H:%M:%S) - (rtcMexicoQC) - ($itemId) - Triggering workflow to add item to daily report" >> "$logfile"
+
+if [[ "$qcStatus" == "approved" ]];
+then
+  scriptVar="rtcMexicoQcApproved"
+elif [[ "$qcStatus" == "rejected" ]];
+then
+  scriptVar="rtcMexicoQcRejected"
 fi
 
-#Email Body
+bash -c "sudo /opt/olympusat/scriptsActive/notificationWorkflow-addToDailyReport_v2.3.sh $itemId $scriptVar > /dev/null 2>&1 &"
 
-case "$qcStatus" in
-
-  "approved")
-
-subject="MAM - RTC Mexico QC - $qcStatusUCase - $title"
-body="Hi,
-
-The title, [$title], has been $qcStatusUCase by [$qcBy] for RTC Mexico QC.
-
-Title: $title
-$titleLanguage
-Content Type: $contentType
-Link To Clip: $linkToClip
-
-Please login to the system and view this item.
-
-Thanks
-
-MAM Notify"
-
-  ;;
-
-  "rejected")
-
-subject="MAM - RTC Mexico QC - $qcStatusUCase - $title"
-body="Hi,
-
-The title, [$title], has been $qcStatusUCase by [$qcBy] for RTC Mexico QC.
-
-Title: $title
-$titleLanguage
-Content Type: $contentType
-RTC QC Notes: $rtcMexicoQCNotes
-Link To Clip: $linkToClip
-
-Please login to the system and view this item.
-
-Thanks
-
-MAM Notify"
-
-  ;;
-esac
-
-#Email Message
-message="Subject: $subject\n\n$body"
-
-echo "$datetime - (rtcMexicoQC) - Sending Email" >> "$logfile"
-echo "$datetime - (rtcMexicoQC) - To - $recipient1, $recipient2, $recipient3, $recipient4, $recipient5" >> "$logfile"
-echo "$datetime - (rtcMexicoQC) - From - $emailFrom" >> "$logfile"
-echo "$datetime - (rtcMexicoQC) - Subject - $subject" >> "$logfile"
-echo "$datetime - (rtcMexicoQC) - Body - [$body]" >> "$logfile"
-
-curl --url 'smtp://smtp-mail.outlook.com:587' \
- --ssl-reqd \
-  --mail-from $emailFrom \
-  --mail-rcpt $recipient2 \
-  --user 'notify@olympusat.com:6bOblVsLg9bPQ8WG7JC7f8Zump' \
-  --tlsv1.2 \
-  -T <(echo -e "$message")
-
-echo "$datetime - (rtcMexicoQC) - Email Sent" >> "$logfile"
-
-IFS=$saveIFS
+sleep 2
 
 echo "$datetime - (rtcMexicoQC) - Update Metadata Completed" >> "$logfile"
 
