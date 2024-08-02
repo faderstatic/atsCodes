@@ -390,23 +390,31 @@ then
         # Checking if itemContentType is movie or episode to set the proper ReleaseType
         if [[ "$itemContentType" == "movie" ]];
         then
-            echo "            <md:ReleaseType>Theatrical</md:ReleaseType>" >> "$mecFileDestination"
+            itemOriginalReleaseType=$(filterVidispineItemMetadata $itemId "metadata" "oly_originalReleaseType")
+            if [[ "$itemOriginalReleaseType" == "theatrical" ]];
+            then
+                echo "            <md:ReleaseType>Theatrical</md:ReleaseType>" >> "$mecFileDestination"
+            elif [[ "$itemOriginalReleaseType" == "svod" ]];
+            then
+                echo "            <md:ReleaseType>SVOD</md:ReleaseType>" >> "$mecFileDestination"
+            elif [[ "$itemOriginalReleaseType" == "" ]];
+            then
+                itemOriginalMpaaRating=$(filterVidispineItemMetadata $itemId "metadata" "oly_originalMpaaRating")
+                if [[ "$itemOriginalMpaaRating" == "notRated" || "$itemOriginalMpaaRating" == "" ]];
+                then
+                    echo "            <md:ReleaseType>SVOD</md:ReleaseType>" >> "$mecFileDestination"
+                else
+                    echo "            <md:ReleaseType>Theatrical</md:ReleaseType>" >> "$mecFileDestination"
+                    itemOriginalReleaseType="theatrical"
+                fi
+            fi
         elif [[ "$itemContentType" == "episode" ]];
         then
             echo "            <md:ReleaseType>SVOD</md:ReleaseType>" >> "$mecFileDestination"
         fi
         # Adding ReleaseHistory Remaining Block
-        itemCountryOfOrigin=$(filterVidispineItemMetadata $itemId "metadata" "oly_countryOfOrigin")
-        case "$itemCountryOfOrigin" in
-            "mexico")
-                itemCountryOfOriginCode="MX"
-            ;;
-            "unitedStates"|"unitedStatesOfAmerica")
-                itemCountryOfOriginCode="US"
-            ;;
-        esac
         echo "            <md:DistrTerritory>
-				<md:country>$itemCountryOfOriginCode</md:country>
+				<md:country>US</md:country>
 			</md:DistrTerritory>
 			<md:Date>$itemProductionYear-01-01</md:Date>" >> "$mecFileDestination"
         # Adding ReleaseHistory Block Close
@@ -432,126 +440,128 @@ then
         # Preparing Rating Block
         if [[ "$itemContentType" == "movie" ]];
         then
-            itemOriginalMpaaRating=$(filterVidispineItemMetadata $itemId "metadata" "oly_originalMpaaRating")
-            case "$itemOriginalMpaaRating" in
-                "g")
-                    echo "            <md:Rating>
+            if [[ "$itemOriginalReleaseType" == "theatrical" ]];
+            then
+                itemOriginalMpaaRating=$(filterVidispineItemMetadata $itemId "metadata" "oly_originalMpaaRating")
+                case "$itemOriginalMpaaRating" in
+                    "g")
+                        echo "            <md:Rating>
 				<md:Region>
 					<md:country>US</md:country>
 				</md:Region>
 				<md:System>MPAA</md:System>
 				<md:Value>G</md:Value>
 			</md:Rating>" >> "$mecFileDestinationRating"
-                ;;
-                "nc-17")
-                    echo "            <md:Rating>
+                    ;;
+                    "nc-17")
+                        echo "            <md:Rating>
 				<md:Region>
 					<md:country>US</md:country>
 				</md:Region>
 				<md:System>MPAA</md:System>
 				<md:Value>NC-17</md:Value>
 			</md:Rating>" >> "$mecFileDestinationRating"
-                ;;
-                "pg")
-                    echo "            <md:Rating>
+                    ;;
+                    "pg")
+                        echo "            <md:Rating>
 				<md:Region>
 					<md:country>US</md:country>
 				</md:Region>
 				<md:System>MPAA</md:System>
 				<md:Value>PG</md:Value>
 			</md:Rating>" >> "$mecFileDestinationRating"
-                ;;
-                "pg-13")
-                    echo "            <md:Rating>
+                    ;;
+                    "pg-13")
+                        echo "            <md:Rating>
 				<md:Region>
 					<md:country>US</md:country>
 				</md:Region>
 				<md:System>MPAA</md:System>
 				<md:Value>PG-13</md:Value>
 			</md:Rating>" >> "$mecFileDestinationRating"
-                ;;
-                "r")
-                    echo "            <md:Rating>
+                    ;;
+                    "r")
+                        echo "            <md:Rating>
 				<md:Region>
 					<md:country>US</md:country>
 				</md:Region>
 				<md:System>MPAA</md:System>
 				<md:Value>R</md:Value>
 			</md:Rating>" >> "$mecFileDestinationRating"
-                ;;
-                "notRated")
-                    echo "            <md:Rating>
-				<md:Region>
-					<md:country>US</md:country>
-				</md:Region>
-				<md:System>MPAA</md:System>
-				<md:NotRated>true</md:NotRated>
-			</md:Rating>" >> "$mecFileDestinationRating"
-                    itemOriginalRating=$(filterVidispineItemMetadata $itemId "metadata" "oly_originalRating")
-                    case "$itemOriginalRating" in
-                        "tv-14")
-                            echo "            <md:Rating>
+                    ;;
+                    "notRated")
+                        echo "            <md:NotRated>true</md:NotRated>" >> "$mecFileDestinationRating"
+                    ;;
+                    *)
+                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - Movie Does NOT have MPAA Rating Set in Cantemo-setting as Not Rated in XML" >> "$logfile"
+                        echo "            <md:NotRated>true</md:NotRated>" >> "$mecFileDestinationRating"
+                    ;;
+                esac
+            elif [[ "$itemOriginalReleaseType" == "svod" || "$itemOriginalReleaseType" == "" ]];
+            then
+                itemOriginalRating=$(filterVidispineItemMetadata $itemId "metadata" "oly_originalRating")
+                case "$itemOriginalRating" in
+                    "tv-14")
+                        echo "            <md:Rating>
 				<md:Region>
 					<md:country>US</md:country>
 				</md:Region>
 				<md:System>TVPG</md:System>
 				<md:Value>TV-14</md:Value>
 			</md:Rating>" >> "$mecFileDestinationRating"
-                        ;;
-                        "tv-g")
-                            echo "            <md:Rating>
+                    ;;
+                    "tv-g")
+                        echo "            <md:Rating>
 				<md:Region>
 					<md:country>US</md:country>
 				</md:Region>
 				<md:System>TVPG</md:System>
 				<md:Value>TV-G</md:Value>
 			</md:Rating>" >> "$mecFileDestinationRating"
-                        ;;
-                        "tv-ma")
-                            echo "            <md:Rating>
+                    ;;
+                    "tv-ma")
+                        echo "            <md:Rating>
 				<md:Region>
 					<md:country>US</md:country>
 				</md:Region>
 				<md:System>TVPG</md:System>
 				<md:Value>TV-MA</md:Value>
 			</md:Rating>" >> "$mecFileDestinationRating"
-                        ;;
-                        "tv-nr")
-                            echo "            <md:Rating>
+                    ;;
+                    "tv-nr")
+                        #echo "            <md:NotRated>true</md:NotRated>" >> "$mecFileDestinationRating"
+                        echo "            <md:Rating>
 				<md:Region>
 					<md:country>US</md:country>
 				</md:Region>
 				<md:System>TVPG</md:System>
 				<md:NotRated>true</md:NotRated>
 			</md:Rating>" >> "$mecFileDestinationRating"
-                        ;;
-                        "tv-pg")
-                            echo "            <md:Rating>
+                    ;;
+                    "tv-pg")
+                        echo "            <md:Rating>
 				<md:Region>
 					<md:country>US</md:country>
 				</md:Region>
 				<md:System>TVPG</md:System>
 				<md:Value>TV-PG</md:Value>
 			</md:Rating>" >> "$mecFileDestinationRating"
-                        ;;
-                        "tv-y")
-                            echo "            <md:Rating>
+                    ;;
+                    "tv-y")
+                        echo "            <md:Rating>
 				<md:Region>
 					<md:country>US</md:country>
 				</md:Region>
 				<md:System>TVPG</md:System>
 				<md:Value>TV-Y</md:Value>
 			</md:Rating>" >> "$mecFileDestinationRating"
-                        ;;
-                        *)
-                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - Episode Does NOT have Original Rating Set in Cantemo" >> "$logfile"
-                        ;;
-                    esac
-                ;;
-                *)
-                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - Movie Does NOT have MPAA Rating Set in Cantemo" >> "$logfile"
-                ;;
-            esac
+                    ;;
+                    *)
+                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow) - ($itemId) - Episode Does NOT have Original Rating Set in Cantemo-setting as Not Rated in XML" >> "$logfile"
+                        echo "            <md:NotRated>true</md:NotRated>" >> "$mecFileDestinationRating"
+                    ;;
+                esac
+            fi
         else
             itemOriginalRating=$(filterVidispineItemMetadata $itemId "metadata" "oly_originalRating")
             case "$itemOriginalRating" in
