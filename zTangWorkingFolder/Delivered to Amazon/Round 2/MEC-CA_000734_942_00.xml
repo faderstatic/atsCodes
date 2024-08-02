@@ -47,9 +47,9 @@
 		
 		<!-- Provide as much release history as possible.  -->
 		<md:ReleaseHistory>
-			<md:ReleaseType>Theatrical</md:ReleaseType>
+			<md:ReleaseType>SVOD</md:ReleaseType>
 			<md:DistrTerritory>
-				<md:country>MX</md:country>
+				<md:country>US</md:country>
 			</md:DistrTerritory>
 			<md:Date>1981-01-01</md:Date>
 		</md:ReleaseHistory>
@@ -71,13 +71,6 @@
 			<!-- each rating specifies exactly one country, system and value -->
 			<!-- At least one rating is required. If the work is not rated, use <md:notrated>true</md:notrated>  -->
 			<!-- see http://www.movielabs.com/md/ratings/current.html for ratings -->
-			<md:Rating>
-				<md:Region>
-					<md:country>US</md:country>
-				</md:Region>
-				<md:System>MPAA</md:System>
-				<md:NotRated>true</md:NotRated>
-			</md:Rating>
 			<md:Rating>
 				<md:Region>
 					<md:country>US</md:country>
