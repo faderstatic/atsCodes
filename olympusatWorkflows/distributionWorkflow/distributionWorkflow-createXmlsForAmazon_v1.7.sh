@@ -15,6 +15,7 @@ IFS=$(echo -e "\n\b")
 #--------------------------------------------------
 # External funtions to include
 . /opt/olympusat/scriptsLibrary/olympusatCantemo.lib
+. /opt/olympusat/scriptsLibrary/olympusatAmazon.lib
 #--------------------------------------------------
 
 # --------------------------------------------------
@@ -654,7 +655,7 @@ then
             echo "        <md:People>
 			<md:Job>
 				<md:JobFunction>Actor</md:JobFunction>
-				<md:BillingBlockOrder>$l</md:BillingBlockOrder>
+				<md:BillingBlockOrder>$e</md:BillingBlockOrder>
 			</md:Job>
 			<md:Name>
 				<md:DisplayName language=\"en-US\">$currentValue</md:DisplayName>
@@ -686,7 +687,7 @@ then
             echo "        <md:People>
 			<md:Job>
 				<md:JobFunction>Director</md:JobFunction>
-				<md:BillingBlockOrder>$n</md:BillingBlockOrder>
+				<md:BillingBlockOrder>$g</md:BillingBlockOrder>
 			</md:Job>
 			<md:Name>
 				<md:DisplayName language=\"en-US\">$currentValue</md:DisplayName>
@@ -718,7 +719,7 @@ then
             echo "        <md:People>
 			<md:Job>
 				<md:JobFunction>Producer</md:JobFunction>
-				<md:BillingBlockOrder>$p</md:BillingBlockOrder>
+				<md:BillingBlockOrder>$i</md:BillingBlockOrder>
 			</md:Job>
 			<md:Name>
 				<md:DisplayName language=\"en-US\">$currentValue</md:DisplayName>
@@ -1102,7 +1103,7 @@ then
                 echo "        <md:People>
 			<md:Job>
 				<md:JobFunction>Actor</md:JobFunction>
-				<md:BillingBlockOrder>$l</md:BillingBlockOrder>
+				<md:BillingBlockOrder>$q</md:BillingBlockOrder>
 			</md:Job>
 			<md:Name>
 				<md:DisplayName language=\"en-US\">$currentValue</md:DisplayName>
@@ -1134,7 +1135,7 @@ then
                 echo "        <md:People>
 			<md:Job>
 				<md:JobFunction>Director</md:JobFunction>
-				<md:BillingBlockOrder>$n</md:BillingBlockOrder>
+				<md:BillingBlockOrder>$s</md:BillingBlockOrder>
 			</md:Job>
 			<md:Name>
 				<md:DisplayName language=\"en-US\">$currentValue</md:DisplayName>
@@ -1166,7 +1167,7 @@ then
                 echo "        <md:People>
 			<md:Job>
 				<md:JobFunction>Producer</md:JobFunction>
-				<md:BillingBlockOrder>$p</md:BillingBlockOrder>
+				<md:BillingBlockOrder>$u</md:BillingBlockOrder>
 			</md:Job>
 			<md:Name>
 				<md:DisplayName language=\"en-US\">$currentValue</md:DisplayName>

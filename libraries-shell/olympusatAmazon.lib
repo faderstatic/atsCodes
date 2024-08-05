@@ -14,7 +14,6 @@ translateItemOriginalLanguageToCode ()
 {
 	itemOriginalLanguage="$1"
 	itemCountryOfOrigin="$2"
-	
 	case "$itemOriginalLanguage" in
 		"abkhazian")
 			export itemOriginalLanguageCode="az-AZ"
@@ -241,10 +240,259 @@ translateItemOriginalLanguageToCode ()
 		"greek")
 			export itemOriginalLanguageCode="el-GR"
 		;;
+		"gujarati")
+			export itemOriginalLanguageCode="gu-IN"
+		;;
+		"hebrew")
+			export itemOriginalLanguageCode="he-IL"
+		;;
+		"hindi")
+			case "$itemCountryOfOrigin" in
+				"japan")
+					export itemOriginalLanguageCode="hi-JP"
+				;;
+				"india")
+					export itemOriginalLanguageCode="hi-IN"
+				;;
+			esac
+		;;
+		"hungarian")
+			export itemOriginalLanguageCode="hu-HU"
+		;;
+		"icelandic")
+			export itemOriginalLanguageCode="is-IS"
+		;;
+		"indonesian")
+			export itemOriginalLanguageCode="id-ID"
+		;;
+		"irish")
+			export itemOriginalLanguageCode="ga-IE"
+		;;
+		"italian")
+			case "$itemCountryOfOrigin" in
+				"italy")
+					export itemOriginalLanguageCode="it-IT"
+				;;
+				"switzerland")
+					export itemOriginalLanguageCode="it-CH"
+				;;
+			esac
+		;;
+		"japanese")
+			export itemOriginalLanguageCode="ja-JP"
+		;;
+		"kannada")
+			export itemOriginalLanguageCode="kn-IN"
+		;;
+		"kazakh")
+			export itemOriginalLanguageCode="kk-KZ"
+		;;
+		"korean")
+			export itemOriginalLanguageCode="ko-KR"
+		;;
+		"latvian")
+			export itemOriginalLanguageCode="lv-LV"
+		;;
+		"lithuanian")
+			export itemOriginalLanguageCode="lt-LT"
+		;;
+		"luxembourgish")
+			export itemOriginalLanguageCode="lb-LU"
+		;;
+		"macedonian")
+			export itemOriginalLanguageCode="mk-MK"
+		;;
+		"malay")
+			case "$itemCountryOfOrigin" in
+				"brunei")
+					export itemOriginalLanguageCode="ms-BN"
+				;;
+				"malaysia")
+					export itemOriginalLanguageCode="ms-MY"
+				;;
+			esac
+		;;
+		"marathi")
+			export itemOriginalLanguageCode="mr-IN"
+		;;
+		"marshallese")
+			export itemOriginalLanguageCode="mh-MH"
+		;;
+		"mongolian")
+			export itemOriginalLanguageCode="mn-MN"
+		;;
+		"nauruan")
+			export itemOriginalLanguageCode="na-NR"
+		;;
+		"nepali")
+			export itemOriginalLanguageCode="ne-NP"
+		;;
+		"norwegian")
+			export itemOriginalLanguageCode="nb-NO"
+		;;
+		"norwegianNynorsk")
+			export itemOriginalLanguageCode="nn-NO"
+		;;
+		"oriya")
+			export itemOriginalLanguageCode="or-IN"
+		;;
+		"persian")
+			export itemOriginalLanguageCode="fa-IR"
+		;;
+		"polish")
+			export itemOriginalLanguageCode="pl-PL"
+		;;
+		"portuguese")
+			case "$itemCountryOfOrigin" in
+				"brazil")
+					export itemOriginalLanguageCode="pt-BR"
+				;;
+				"portugal")
+					export itemOriginalLanguageCode="pt-PT"
+				;;
+			esac
+		;;
+		"romanian")
+			export itemOriginalLanguageCode="ro-RO"
+		;;
+		"russian")
+			export itemOriginalLanguageCode="ru-RU"
+		;;
+		"samoan")
+			export itemOriginalLanguageCode="sm-WS"
+		;;
+		"sanskrit")
+			export itemOriginalLanguageCode="sa-IN"
+		;;
+		"serbian")
+			export itemOriginalLanguageCode="sr-RS"
+		;;
+		"shona")
+			export itemOriginalLanguageCode="sn-ZW"
+		;;
+		"sinhalese")
+			export itemOriginalLanguageCode="si-LK"
+		;;
+		"slovak")
+			export itemOriginalLanguageCode="sk-SK"
+		;;
+		"slovenian")
+			export itemOriginalLanguageCode="sl-SI"
+		;;
+		"somalia")
+			export itemOriginalLanguageCode="so-SO"
+		;;
 		"spanish")
-			export itemOriginalLanguageCode="es-MX"
+			case "$itemCountryOfOrigin" in
+				"argentina")
+					export itemOriginalLanguageCode="es-AR"
+				;;
+				"bolivia")
+					export itemOriginalLanguageCode="es-BO"
+				;;
+				"chile")
+					export itemOriginalLanguageCode="es-CL"
+				;;
+				"colombia")
+					export itemOriginalLanguageCode="es-CO"
+				;;
+				"costaRica")
+					export itemOriginalLanguageCode="es-CR"
+				;;
+				"dominicanRepublic")
+					export itemOriginalLanguageCode="es-DO"
+				;;
+				"ecuador")
+					export itemOriginalLanguageCode="es-EC"
+				;;
+				"spain")
+					export itemOriginalLanguageCode="es-ES"
+				;;
+				"guatemala")
+					export itemOriginalLanguageCode="es-GT"
+				;;
+				"honduras")
+					export itemOriginalLanguageCode="es-HN"
+				;;
+				"mexico")
+					export itemOriginalLanguageCode="es-MX"
+				;;
+				"nicaragua")
+					export itemOriginalLanguageCode="es-NI"
+				;;
+				"panama")
+					export itemOriginalLanguageCode="es-PA"
+				;;
+				"peru")
+					export itemOriginalLanguageCode="es-PE"
+				;;
+				"puertoRico")
+					export itemOriginalLanguageCode="es-PR"
+				;;
+				"paraguay")
+					export itemOriginalLanguageCode="es-PY"
+				;;
+				"elSalvador")
+					export itemOriginalLanguageCode="es-SV"
+				;;
+				"uruguay")
+					export itemOriginalLanguageCode="es-UY"
+				;;
+				"venezuela")
+					export itemOriginalLanguageCode="es-VE"
+				;;
+			esac
+		;;
+		"swahili")
+			export itemOriginalLanguageCode="sw-KE"
+		;;
+		"swedish")
+			case "$itemCountryOfOrigin" in
+				"finland")
+					export itemOriginalLanguageCode="sv-FI"
+				;;
+				"sweden")
+					export itemOriginalLanguageCode="sv-SE"
+				;;
+			esac
+		;;
+		"tajik")
+			export itemOriginalLanguageCode="tg-TJ"
+		;;
+		"tamil")
+			export itemOriginalLanguageCode="ta-IN"
+		;;
+		"tatar")
+			export itemOriginalLanguageCode="tt-RU"
+		;;
+		"telugu")
+			export itemOriginalLanguageCode="te-IN"
+		;;
+		"thai")
+			export itemOriginalLanguageCode="th-TH"
+		;;
+		"tigrinya")
+			export itemOriginalLanguageCode="ti-ER"
+		;;
+		"turkish")
+			export itemOriginalLanguageCode="tr-TR"
+		;;
+		"turkmen")
+			export itemOriginalLanguageCode="tk-TM"
+		;;
+		"ukrainian")
+			export itemOriginalLanguageCode="uk-UA"
+		;;
+		"urdu")
+			export itemOriginalLanguageCode="ur-PK"
+		;;
+		"uzbek")
+			export itemOriginalLanguageCode="uz-UZ"
+		;;
+		"vietnamese")
+			export itemOriginalLanguageCode="vi-VN"
 		;;
 	esac
-	echo $filteredResponse
+	echo $itemOriginalLanguageCode
 }
 #--------- END FUNCTION ----------#
