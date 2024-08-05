@@ -1,0 +1,250 @@
+#---- Library of Functions for Amazon ----#
+#  Make sure this library is included in your shell script
+
+
+
+#---- translateItemOriginalLanguageToCode ----#
+# This function makes API call to Vidispine for metadata and filter for a specific tag value
+# Then it will translate the Original Language from Cantemo to Code per Amazon specifications
+#       Usage: translateItemOriginalLanguageToCode [Item Original Language] [Item Country of Origin]
+#
+# System requirements: This script will only run in LINUX and MacOS
+
+translateItemOriginalLanguageToCode ()
+{
+	itemOriginalLanguage="$1"
+	itemCountryOfOrigin="$2"
+	
+	case "$itemOriginalLanguage" in
+		"abkhazian")
+			export itemOriginalLanguageCode="az-AZ"
+		;;
+		"afrikaans")
+			export itemOriginalLanguageCode="af-ZA"
+		;;
+
+		"albanian")
+			export itemOriginalLanguageCode="sq-AL"
+		;;
+		"amharic")
+			export itemOriginalLanguageCode="am-ET"
+		;;
+		"arabic")
+			case "$itemCountryOfOrigin" in
+				"algeria")
+					export itemOriginalLanguageCode="ar-DZ"
+				;;
+				"bahrain")
+					export itemOriginalLanguageCode="ar-BH"
+				;;
+				"egypt")
+					export itemOriginalLanguageCode="ar-EG"
+				;;
+				"iraq")
+					export itemOriginalLanguageCode="ar-IQ"
+				;;
+				"jordan")
+					export itemOriginalLanguageCode="ar-JO"
+				;;
+				"kuwait")
+					export itemOriginalLanguageCode="ar-KW"
+				;;
+				"lebanon")
+					export itemOriginalLanguageCode="ar-LB"
+				;;
+				"libya")
+					export itemOriginalLanguageCode="ar-LY"
+				;;
+				"morocco")
+					export itemOriginalLanguageCode="ar-MA"
+				;;
+				"oman")
+					export itemOriginalLanguageCode="ar-OM"
+				;;
+				"qatar")
+					export itemOriginalLanguageCode="ar-QA"
+				;;
+				"saudiArabia")
+					export itemOriginalLanguageCode="ar-SA"
+				;;
+				"syria")
+					export itemOriginalLanguageCode="ar-SY"
+				;;
+				"tunisia")
+					export itemOriginalLanguageCode="ar-TN"
+				;;
+				"unitedArabEmirates")
+					export itemOriginalLanguageCode="ar-AE"
+				;;
+				"yemen")
+					export itemOriginalLanguageCode="ar-YE"
+				;;
+			esac
+		;;
+		"armenian")
+			export itemOriginalLanguageCode="hy-AM"
+		;;
+		"azerbaijani")
+			export itemOriginalLanguageCode="az-AZ"
+		;;
+		"basque")
+			export itemOriginalLanguageCode="eu-ES"
+		;;
+		"belarusian")
+			export itemOriginalLanguageCode="be-BY"
+		;;
+		"bengali")
+			export itemOriginalLanguageCode="bn-BD"
+		;;
+		"bihari")
+			export itemOriginalLanguageCode="bh-IN"
+		;;
+		"bislama")
+			export itemOriginalLanguageCode="bi-VU"
+		;;
+		"bulgarian")
+			export itemOriginalLanguageCode="bg-BG"
+		;;
+		"burmese")
+			export itemOriginalLanguageCode="my-MM"
+		;;
+		"cambodian")
+			export itemOriginalLanguageCode="km-KH"
+		;;
+		"catalan")
+			export itemOriginalLanguageCode="ca-ES"
+		;;
+		"chinese")
+			export itemOriginalLanguageCode="zh-CH"
+		;;
+		"croatian")
+			export itemOriginalLanguageCode="hr-HR"
+		;;
+		"czech")
+			export itemOriginalLanguageCode="cs-CZ"
+		;;
+		"danish")
+			export itemOriginalLanguageCode="da-DK"
+		;;
+		"divehi")
+			export itemOriginalLanguageCode="dv-MV"
+		;;
+		"dutch")
+			case "$itemCountryOfOrigin" in
+				"belgium")
+					export itemOriginalLanguageCode="nl-BE"
+				;;
+				"netherlands")
+					export itemOriginalLanguageCode="nl-NL"
+				;;
+			esac
+		;;
+		"english")
+			case "$itemCountryOfOrigin" in
+				"australia")
+					export itemOriginalLanguageCode="en-AU"
+				;;
+				"belize")
+					export itemOriginalLanguageCode="en-BZ"
+				;;
+				"canada")
+					export itemOriginalLanguageCode="en-CA"
+				;;
+				"ireland")
+					export itemOriginalLanguageCode="en-IE"
+				;;
+				"india")
+					export itemOriginalLanguageCode="en-IN"
+				;;
+				"jamaica")
+					export itemOriginalLanguageCode="en-JM"
+				;;
+				"newZealand")
+					export itemOriginalLanguageCode="en-NZ"
+				;;
+				"philippines")
+					export itemOriginalLanguageCode="en-PH"
+				;;
+				"southAfrica")
+					export itemOriginalLanguageCode="en-ZA"
+				;;
+				"trinidad-tobago")
+					export itemOriginalLanguageCode="en-TT"
+				;;
+				"unitedKingdom")
+					export itemOriginalLanguageCode="en-GB"
+				;;
+				"unitedStates")
+					export itemOriginalLanguageCode="en-US"
+				;;
+				"zimbabwe")
+					export itemOriginalLanguageCode="en-ZW"
+				;;
+			esac
+		;;
+		"estonian")
+			export itemOriginalLanguageCode="et-EE"
+		;;
+		"faroese")
+			export itemOriginalLanguageCode="fo-FO"
+		;;
+		"finnish")
+			export itemOriginalLanguageCode="fi-FI"
+		;;
+		"french")
+			case "$itemCountryOfOrigin" in
+				"belgium")
+					export itemOriginalLanguageCode="fr-BE"
+				;;
+				"canada")
+					export itemOriginalLanguageCode="fr-CA"
+				;;
+				"switzerland")
+					export itemOriginalLanguageCode="fr-CH"
+				;;
+				"france")
+					export itemOriginalLanguageCode="fr-FR"
+				;;
+				"luxembourg")
+					export itemOriginalLanguageCode="fr-LU"
+				;;
+				"monaco")
+					export itemOriginalLanguageCode="fr-MC"
+				;;
+			esac
+		;;
+		"galician")
+			export itemOriginalLanguageCode="gl-ES"
+		;;
+		"georgian")
+			export itemOriginalLanguageCode="ka-GE"
+		;;
+		"german")
+			case "$itemCountryOfOrigin" in
+				"austria")
+					export itemOriginalLanguageCode="de-AT"
+				;;
+				"germany")
+					export itemOriginalLanguageCode="de-DE"
+				;;
+				"liechtenstein")
+					export itemOriginalLanguageCode="de-LI"
+				;;
+				"luxembourg")
+					export itemOriginalLanguageCode="de-LU"
+				;;
+				"switzerland")
+					export itemOriginalLanguageCode="de-CH"
+				;;
+			esac
+		;;
+		"greek")
+			export itemOriginalLanguageCode="el-GR"
+		;;
+		"spanish")
+			export itemOriginalLanguageCode="es-MX"
+		;;
+	esac
+	echo $filteredResponse
+}
+#--------- END FUNCTION ----------#
