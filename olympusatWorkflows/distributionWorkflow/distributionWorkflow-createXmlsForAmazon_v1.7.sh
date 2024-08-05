@@ -732,18 +732,9 @@ then
         cat "$mecFileDestinationProducer" >> "$mecFileDestination"
         # Adding OriginalLanguage Block
         itemOriginalLanguage=$(filterVidispineItemSubgroupMetadata $itemId "metadata" "oly_originalLanguage")
-        # Check originalLangugae to create proper originalLanguageCode for XMLs
-        case "$itemOriginalLanguage" in
-            "chinese")
-                export itemOriginalLanguageCode="zh-CH"
-            ;;
-            "english")
-                export itemOriginalLanguageCode="en-US"
-            ;;
-            "spanish")
-                export itemOriginalLanguageCode="es-MX"
-            ;;
-        esac
+        itemCountryOfOrigin=$(filterVidispineItemSubgroupMetadata $itemId "metadata" "oly_countryOfOrigin")
+        # Translate originalLangugae to proper originalLanguageCode for XMLs
+        itemOriginalLanguageCode=$(translateItemOriginalLanguageToCode "$itemOriginalLanguage" "$itemCountryOfOrigin")
         echo "        <!-- OriginalLanguage is required by Amazon -->
 		<md:OriginalLanguage>$itemOriginalLanguageCode</md:OriginalLanguage>" >> "$mecFileDestination"
         # Adding AssociatedOrg Block
