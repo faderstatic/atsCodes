@@ -387,21 +387,21 @@ MAM Notify"
 
                         # Email Body
                         subject="MAM - RTC Mexico QC - Pending - $mydate"
-                        body="Hi,
-            
-The following attached list of content items are Pending RTC Mexico QC.
+                        body="Hola,
 
-You can find all of the items in the following Saved Search in Cantemo Web Portal
+Adjunto se encuentra la lista de elementos de contenido que está pendiente de QC para RTC México.
 
-Saved Search Name - 'RTC Mexico QC-Pending'
-Link to Saved Search - https://cantemo.olympusat.com/search/#/savedsearch/OLY-364/?search_id=1586
+Puede encontrar todos los elementos en la siguiente Búsqueda Guardada en el Portal Web de Cantemo
 
-***NOTE***: You must be on the Olympusat Office Network, either via VPN or remoting into a machine on the Network, in order to access Cantemo Web Portal
-        
-Please login to the system, review & QC these items.
-       
-Thanks
-        
+Nombre de la Búsqueda Guardada - 'RTC Mexico QC-Pending'
+Enlace a la Búsqueda Guardada - https://cantemo.olympusat.com/search/#/savedsearch/OLY-364/?search_id=1586
+
+***NOTA***: Debe estar en la Red de Oficina de Olympusat, ya sea a través de VPN o conectándose de forma remota a una máquina en la Red, para poder acceder al Portal Web de Cantemo.
+
+Por favor, inicie sesión en el sistema, revise y haga el QC de estos elementos.
+
+Gracias,
+
 MAM Notify"
 
                         echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-rtcMexicoQcPending) - Sending Email for New Items Ingested into Cantemo Today" >> "$logfile"
