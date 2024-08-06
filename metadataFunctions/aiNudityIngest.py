@@ -67,7 +67,7 @@ try:
     'Accept': 'application/json'
   }
   payload = {}
-  urlGetNuditySegments = f"https://apis.prod.vionlabs.com/results/nudity/v1/framess/{cantemoItemId}?&key=kt8cyimHXxUzFNGyhd7c7g"
+  urlGetNuditySegments = f"https://apis.prod.vionlabs.com/results/nudity/v1/frames/{cantemoItemId}?&key=kt8cyimHXxUzFNGyhd7c7g"
   httpApiResponse = requests.request("GET", urlGetNuditySegments, headers=headers, data=payload)
   httpApiResponse.raise_for_status()
   #------------------------------
