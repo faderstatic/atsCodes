@@ -79,7 +79,7 @@ try:
   for nuditySegment in responseJson:
     nudityScore = nuditySegment["score"]
     nudityScore *= 100
-    nudityScore = int(round(nudityScore, 0))
+    nudityScore = round(nudityScore, 2)
     if nudityScore >= nudityThreshold:
       if segmentCompletion == "close":
         nudityStartFrame = int(nuditySegment["frame_number"])
@@ -87,9 +87,6 @@ try:
       nudityLabel = nuditySegment["label"]
     elif segmentCompletion == "open":
       nudityEndFrame = int(nuditySegment["frame_number"])
-      # startingTimecode = int(individualSegment["start"] * timebaseMultiplier)
-      # endingTimecode = int(individualSegment["end"] * timebaseMultiplier)
-      # segmentPayload = '{"comment": "Profanity level '+str(profanityScore)+' of 100", "start_tc": "'+str(startingTimecode)+f"@{itemTimebase}"+'", "end_tc": "'+str(endingTimecode)+f"@{itemTimebase}"+'"}'
       segmentPayload = json.dumps([
         {
           "start": {
@@ -123,18 +120,17 @@ try:
       segmentCompletion = "close"
       #------------------------------
       # Update Cantemo metadata
-      # headers = {
-      #   'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
-      #   'Cookie': 'csrftoken=obqpl1uZPs93ldSOFjsRbk2bL25JxPgBOb8t1zUH20fP0tUEdXNNjrYO8kzeOSah',
-      #   'Content-Type': 'application/json'
-      # }
-      # urlPutProfanityInfo = f"http://10.1.1.34/AVAPI/asset/{cantemoItemId}/timespan/bulk"
-      # httpApiResponse = requests.request("PUT", urlPutProfanityInfo, headers=headers, data=segmentPayload)
-      # httpApiResponse.raise_for_status()
+      headers = {
+        'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
+        'Cookie': 'csrftoken=obqpl1uZPs93ldSOFjsRbk2bL25JxPgBOb8t1zUH20fP0tUEdXNNjrYO8kzeOSah',
+        'Content-Type': 'application/json'
+      }
+      urlPutProfanityInfo = f"http://10.1.1.34/AVAPI/asset/{cantemoItemId}/timespan/bulk"
+      httpApiResponse = requests.request("PUT", urlPutProfanityInfo, headers=headers, data=segmentPayload)
+      httpApiResponse.raise_for_status()
       # print(httpApiResponse.text)
-      # time.sleep(5)
+      time.sleep(3)
       #------------------------------
-      print(segmentPayload)
 
   headers = {
   'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
