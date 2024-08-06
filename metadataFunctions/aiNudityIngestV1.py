@@ -121,6 +121,7 @@ try:
         }
       ])
       segmentCompletion = "close"
+      nudityLevel = 0
       #------------------------------
       # Update Cantemo metadata
       headers = {
