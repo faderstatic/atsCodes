@@ -25,6 +25,7 @@ try:
   # cantemoItemId = os.environ.get("portal_itemId")
   errorReport = ''
   nudityThreshold = 90
+  nudityLevel = 0
   segmentCompletion = "close"
 
   #------------------------------
@@ -83,6 +84,7 @@ try:
     if nudityScore >= nudityThreshold:
       if segmentCompletion == "close":
         nudityStartFrame = int(nuditySegment["frame_number"])
+      if nudityLevel < nudityScore:
         nudityLevel = nudityScore
       segmentCompletion = "open"
       nudityLabel = nuditySegment["label"]
@@ -104,7 +106,7 @@ try:
           "metadata": [
             {
               "key": "av_marker_description",
-              "value": '"Nudity level '+str(nudityLevel)+' of 100 - '+nudityLabel+'"'
+              "value": '"'+str(nudityLevel)+'% Nudity Probability - '+nudityLabel+'"'
             },
             {
               "key": "title",
