@@ -79,10 +79,11 @@ try:
   for nuditySegment in responseJson:
     nudityScore = nuditySegment["score"]
     nudityScore *= 100
-    nudityLevel = round(nudityScore, 2)
+    nudityScore = round(nudityScore, 2)
     if nudityScore >= nudityThreshold:
       if segmentCompletion == "close":
         nudityStartFrame = int(nuditySegment["frame_number"])
+        nudityLevel = nudityScore
       segmentCompletion = "open"
       nudityLabel = nuditySegment["label"]
     elif segmentCompletion == "open":
