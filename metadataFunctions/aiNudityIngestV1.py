@@ -79,7 +79,7 @@ try:
   for nuditySegment in responseJson:
     nudityScore = nuditySegment["score"]
     nudityScore *= 100
-    nudityScore = round(nudityScore, 2)
+    nudityLevel = round(nudityScore, 2)
     if nudityScore >= nudityThreshold:
       if segmentCompletion == "close":
         nudityStartFrame = int(nuditySegment["frame_number"])
@@ -103,7 +103,7 @@ try:
           "metadata": [
             {
               "key": "av_marker_description",
-              "value": '"Nudity level '+str(nudityScore)+' of 100 - '+nudityLabel+'"'
+              "value": '"Nudity level '+str(nudityLevel)+' of 100 - '+nudityLabel+'"'
             },
             {
               "key": "title",
