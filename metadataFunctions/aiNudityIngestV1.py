@@ -128,7 +128,7 @@ try:
       urlPutProfanityInfo = f"http://10.1.1.34/AVAPI/asset/{cantemoItemId}/timespan/bulk"
       httpApiResponse = requests.request("PUT", urlPutProfanityInfo, headers=headers, data=segmentPayload)
       httpApiResponse.raise_for_status()
-      print(httpApiResponse.text)
+      # print(httpApiResponse.text)
       time.sleep(3)
       #------------------------------
 
