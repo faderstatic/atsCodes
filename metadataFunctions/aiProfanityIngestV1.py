@@ -125,7 +125,7 @@ try:
       httpApiResponse = requests.request("PUT", urlPutProfanityInfo, headers=headers, data=segmentPayload)
       httpApiResponse.raise_for_status()
       print(httpApiResponse.text)
-      time.sleep(5)
+      time.sleep(3)
       #------------------------------
 
   headers = {
