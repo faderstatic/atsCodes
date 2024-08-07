@@ -437,7 +437,7 @@ MAM Notify"
 
                         sleep 2
 
-                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-rtcMexicoQcPending) - Marked to be Deleted Email Notification Process Completed" >> "$logfile"
+                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-rtcMexicoQcPending) - RTC Mexico QC Pending Email Notification Process Completed" >> "$logfile"
 
                     else
                         # rtcMexicoQcPendingFileDestination file DOES NOT exist-exiting script/workflow
@@ -503,7 +503,7 @@ MAM Notify"
                             curl --url 'smtp://smtp-mail.outlook.com:587' \
                             --ssl-reqd  \
                             --mail-from $emailFrom \
-                            --mail-rcpt $recipient2 \
+                            --mail-rcpt $recipient1 --mail-rcpt $recipient2 \
                             --user 'notify@olympusat.com:6bOblVsLg9bPQ8WG7JC7f8Zump' \
                             -F '=(;type=multipart/mixed' \
                             -F "=$sesMessage;type=text/plain" \
@@ -521,7 +521,7 @@ MAM Notify"
 
                             sleep 2
 
-                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-rtcMexicoQc) - Marked to be Deleted Email Notification Process Completed" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-rtcMexicoQc) - RTC Mexico QC Approved/Rejected Email Notification Process Completed" >> "$logfile"
 
                         else
                             # rtcMexicoQcFileDestination file DOES NOT exist-exiting script/workflow
