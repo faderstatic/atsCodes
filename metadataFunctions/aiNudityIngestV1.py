@@ -26,6 +26,9 @@ try:
   errorReport = ''
   nudityThreshold = 90
   nudityLevel = 0
+  nuditySceneCount = 0
+  holdForNextSegment = "true"
+  gapThr
   segmentCompletion = "close"
 
   #------------------------------
@@ -82,6 +85,7 @@ try:
     nudityScore *= 100
     nudityScore = round(nudityScore, 2)
     if nudityScore >= nudityThreshold:
+      nuditySceneCount += 1
       if segmentCompletion == "close":
         nudityStartFrame = int(nuditySegment["frame_number"])
       if nudityLevel < nudityScore:
