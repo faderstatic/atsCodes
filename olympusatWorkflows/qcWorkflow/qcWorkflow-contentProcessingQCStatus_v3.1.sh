@@ -86,7 +86,7 @@ else
                 ;;
             esac
         ;;
-        "seasonTrailer" | "movieTrailer" | "promo" | "image" | "audio" | "m-e" | "script" | "subtitle" | "closedCaption" | "project" | "marketingContent")
+        "series" | "season" | "seasonTrailer" | "movieTrailer" | "promo" | "image" | "audio" | "m-e" | "script" | "subtitle" | "closedCaption" | "project" | "marketingContent")
             bodyData=$(echo "<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><group><name>Original Content</name><field><name>oly_originalContentQCStatus</name><value>$qcStatus</value></field><field><name>oly_originalContentQCBy</name><value>$qcBy</value></field><field><name>oly_originalContentQCDate</name><value>$qcDate</value></field></group></timespan></MetadataDocument>")
         ;;
     esac
