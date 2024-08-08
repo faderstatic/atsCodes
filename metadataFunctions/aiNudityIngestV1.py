@@ -81,7 +81,7 @@ try:
   nudityLevelPrev = 0
   nuditySceneCount = 0
   segmentCompletion = "close"
-  updateCantemoFlag = "false"
+  updateCantemoFlag = "true"
 
   #------------------------------
   # Making API to Vidispine to get timebase
