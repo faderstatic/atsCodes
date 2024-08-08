@@ -20,16 +20,65 @@ import json
 from requests.exceptions import HTTPError
 #------------------------------
 
+#------------------------------
+# Internal Functions
+
+def updateCantemoMarkers(ucmId, ucmStartFrame, ucmEndFrame, ucmTbNumerator, ucmTbDenominator, ucmNudeLevel, ucmNudeLabel):
+  ucmSegmentPayload = json.dumps([
+    {
+      "start": {
+      "frame": ucmStartFrame,
+      "numerator": ucmTbNumerator,
+      "denominator": ucmTbDenominator
+      },
+      "end": {
+      "frame": ucmEndFrame,
+      "numerator": ucmTbNumerator,
+      "denominator": ucmTbDenominator
+      },
+      "type": "AvMarker",
+      "metadata": [
+        {
+          "key": "av_marker_description",
+          "value": '"'+str(ucmNudeLevel)+'% Nudity Probability - '+ucmNudeLabel+'"'
+        },
+        {
+          "key": "title",
+          "value": "Nudity"
+        },
+        {
+          "key": "av_marker_track_id",
+          "value": "av:track:video:issues"
+        }
+      ],
+      "assetId": '"'+ucmId+'"'
+    }
+  ])
+  #------------------------------
+  # Update Cantemo metadata
+  ucmHeaders = {
+    'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
+    'Cookie': 'csrftoken=obqpl1uZPs93ldSOFjsRbk2bL25JxPgBOb8t1zUH20fP0tUEdXNNjrYO8kzeOSah',
+    'Content-Type': 'application/json'
+  }
+  ucmUrlPutNudityInfo = f"http://10.1.1.34/AVAPI/asset/{ucmId}/timespan/bulk"
+  httpApiResponse = requests.request("PUT", ucmUrlPutNudityInfo, headers=ucmHeaders, data=ucmSegmentPayload)
+  httpApiResponse.raise_for_status()
+  # print(httpApiResponse.text)
+  #------------------------------
+
 try:
   cantemoItemId = sys.argv[1]
   # cantemoItemId = os.environ.get("portal_itemId")
   errorReport = ''
   nudityThreshold = 90
+  gapThresholdDesignation = sys.argv[2]
+  gapThreshold = int(gapThresholdDesignation)
   nudityLevel = 0
   nuditySceneCount = 0
   holdForNextSegment = "true"
-  gapThr
   segmentCompletion = "close"
+  updateCantemoFlag = "false"
 
   #------------------------------
   # Making API to Vidispine to get timebase
@@ -79,15 +128,18 @@ try:
   #------------------------------
   # Parsing and POST JSON data
   responseJson = httpApiResponse.json()
-  # profanitySegment = responseJson["profanity"]
   for nuditySegment in responseJson:
     nudityScore = nuditySegment["score"]
     nudityScore *= 100
     nudityScore = round(nudityScore, 2)
     if nudityScore >= nudityThreshold:
-      nuditySceneCount += 1
+      segmentStartFrame = int(nuditySegment["frame_number"])
+      gapDuration = (segmentStartFrame - nudityEndFrame)
+      if gapDuration > gapThreshold and nuditySceneCount:
+        segmentCompletion == "open"
+        nuditySceneCount += 1
       if segmentCompletion == "close":
-        nudityStartFrame = int(nuditySegment["frame_number"])
+        nudityStartFrame = segmentStartFrame
       if nudityLevel < nudityScore:
         nudityLevel = nudityScore
       segmentCompletion = "open"
@@ -126,6 +178,7 @@ try:
       ])
       segmentCompletion = "close"
       nudityLevel = 0
+      nuditySceneCount += 1
       #------------------------------
       # Update Cantemo metadata
       headers = {
