@@ -3,7 +3,7 @@
 
 # This application ingests metadata from an XML API response into Cantemo
 # PREREQUISITE: -none-
-# 	Usage: aiProfanityIngest.py [full file path of the XML file
+# 	Usage: aiNudityIngest.py [cantemo ID] [acceptable gap between clips in frames]
 
 #------------------------------
 # Libraries
