@@ -64,6 +64,7 @@ def updateCantemoMarkers(ucmId, ucmStartFrame, ucmEndFrame, ucmTbNumerator, ucmT
   ucmUrlPutNudityInfo = f"http://10.1.1.34/AVAPI/asset/{ucmId}/timespan/bulk"
   httpApiResponse = requests.request("PUT", ucmUrlPutNudityInfo, headers=ucmHeaders, data=ucmSegmentPayload)
   httpApiResponse.raise_for_status()
+  time.sleep(3)
   # print(httpApiResponse.text)
   #------------------------------
 
@@ -76,7 +77,6 @@ try:
   gapThreshold = int(gapThresholdDesignation)
   nudityLevel = 0
   nuditySceneCount = 0
-  holdForNextSegment = "true"
   segmentCompletion = "close"
   updateCantemoFlag = "false"
 
@@ -135,9 +135,9 @@ try:
     if nudityScore >= nudityThreshold:
       segmentStartFrame = int(nuditySegment["frame_number"])
       gapDuration = (segmentStartFrame - nudityEndFrame)
-      if gapDuration > gapThreshold and nuditySceneCount:
-        segmentCompletion == "open"
-        nuditySceneCount += 1
+      # if gapDuration > gapThreshold and nuditySceneCount:
+        # segmentCompletion == "open"
+        # nuditySceneCount += 1
       if segmentCompletion == "close":
         nudityStartFrame = segmentStartFrame
       if nudityLevel < nudityScore:
@@ -146,63 +146,25 @@ try:
       nudityLabel = nuditySegment["label"]
     elif segmentCompletion == "open":
       nudityEndFrame = int(nuditySegment["frame_number"])
-      segmentPayload = json.dumps([
-        {
-          "start": {
-          "frame": nudityStartFrame,
-          "numerator": timebaseNumerator,
-          "denominator": timebaseDenominator
-          },
-          "end": {
-          "frame": nudityEndFrame,
-          "numerator": timebaseNumerator,
-          "denominator": timebaseDenominator
-          },
-          "type": "AvMarker",
-          "metadata": [
-            {
-              "key": "av_marker_description",
-              "value": '"'+str(nudityLevel)+'% Nudity Probability - '+nudityLabel+'"'
-            },
-            {
-              "key": "title",
-              "value": "Nudity"
-            },
-            {
-              "key": "av_marker_track_id",
-              "value": "av:track:video:issues"
-            }
-          ],
-          "assetId": '"'+cantemoItemId+'"'
-        }
-      ])
-      segmentCompletion = "close"
-      nudityLevel = 0
-      nuditySceneCount += 1
-      #------------------------------
-      # Update Cantemo metadata
-      headers = {
-        'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
-        'Cookie': 'csrftoken=obqpl1uZPs93ldSOFjsRbk2bL25JxPgBOb8t1zUH20fP0tUEdXNNjrYO8kzeOSah',
-        'Content-Type': 'application/json'
-      }
-      urlPutProfanityInfo = f"http://10.1.1.34/AVAPI/asset/{cantemoItemId}/timespan/bulk"
-      httpApiResponse = requests.request("PUT", urlPutProfanityInfo, headers=headers, data=segmentPayload)
-      httpApiResponse.raise_for_status()
-      # print(httpApiResponse.text)
-      time.sleep(3)
-      #------------------------------
+      if updateCantemoFlag == "true":
+        updateCantemoMarkers(cantemoItemId, nudityStartFrame, nudityEndFrame, timebaseNumerator, timebaseDenominator, nudityLevel, nudityLabel)
+        segmentCompletion = "close"
+        nudityLevel = 0
+        nuditySceneCount += 1
+      else:
+        print(f"Segment info: {nudityStartFrame}, {nudityEndFrame}, {gapDuration} - {nudityLevel}")
 
-  headers = {
-  'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
-  'Cookie': 'csrftoken=HFOqrbk9cGt3qnc6WBIxWPjvCFX0udBdbJnzCv9jECumOjfyG7SS2lgVbFcaHBCc',
-  'Content-Type': 'application/xml'
-  }
-  urlPutAnalysisStatusInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata/"
-  statusRawPayload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_analysisStatus</name><value>completed - last request - nudity</value></field></timespan></MetadataDocument>"
-  parsedStatusPayload = xml.dom.minidom.parseString(statusRawPayload)
-  statusPayload = parsedStatusPayload.toprettyxml()
-  httpApiResponse = requests.request("PUT", urlPutAnalysisStatusInfo, headers=headers, data=statusPayload)
+  if updateCantemoFlag == "true":
+    headers = {
+    'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
+    'Cookie': 'csrftoken=HFOqrbk9cGt3qnc6WBIxWPjvCFX0udBdbJnzCv9jECumOjfyG7SS2lgVbFcaHBCc',
+    'Content-Type': 'application/xml'
+    }
+    urlPutAnalysisStatusInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata/"
+    statusRawPayload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_analysisStatus</name><value>completed - last request - nudity</value></field></timespan></MetadataDocument>"
+    parsedStatusPayload = xml.dom.minidom.parseString(statusRawPayload)
+    statusPayload = parsedStatusPayload.toprettyxml()
+    httpApiResponse = requests.request("PUT", urlPutAnalysisStatusInfo, headers=headers, data=statusPayload)
   
   #------------------------------
 
