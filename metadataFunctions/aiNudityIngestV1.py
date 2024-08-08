@@ -151,7 +151,6 @@ try:
             updateCantemoMarkers(cantemoItemId, nudityStartFramePrev, nudityEndFramePrev, timebaseNumerator, timebaseDenominator, nudityLevel, nudityLabel)
           else:
             print(f"Segment info: {nudityStartFramePrev}, {nudityEndFramePrev}, {gapDuration} - {nudityLevel}/{nudityLabel}")
-          nuditySceneCount += 1
         elif nuditySceneCount:
           nudityStartFrame = nudityStartFramePrev
       segmentCompletion = "open"
@@ -175,6 +174,11 @@ try:
     parsedStatusPayload = xml.dom.minidom.parseString(statusRawPayload)
     statusPayload = parsedStatusPayload.toprettyxml()
     httpApiResponse = requests.request("PUT", urlPutAnalysisStatusInfo, headers=headers, data=statusPayload)
+
+  if updateCantemoFlag == "true":
+    updateCantemoMarkers(cantemoItemId, nudityStartFramePrev, nudityEndFramePrev, timebaseNumerator, timebaseDenominator, nudityLevelPrev, nudityLabel)
+  else:
+    print(f"Segment info: {nudityStartFramePrev}, {nudityEndFramePrev}, {gapDuration} - {nudityLevelPrev}/{nudityLabel}")
   
   #------------------------------
 
