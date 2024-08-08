@@ -73,9 +73,12 @@ try:
   # cantemoItemId = os.environ.get("portal_itemId")
   errorReport = ''
   nudityThreshold = 90
+  nudityEndFramePrev = 0
+  nudityStartFramePrev = 0
   gapThresholdDesignation = sys.argv[2]
   gapThreshold = int(gapThresholdDesignation)
   nudityLevel = 0
+  nudityLevelPrev = 0
   nuditySceneCount = 0
   segmentCompletion = "close"
   updateCantemoFlag = "false"
@@ -134,25 +137,32 @@ try:
     nudityScore = round(nudityScore, 2)
     if nudityScore >= nudityThreshold:
       segmentStartFrame = int(nuditySegment["frame_number"])
-      gapDuration = (segmentStartFrame - nudityEndFrame)
-      # if gapDuration > gapThreshold and nuditySceneCount:
-        # segmentCompletion == "open"
-        # nuditySceneCount += 1
-      if segmentCompletion == "close":
-        nudityStartFrame = segmentStartFrame
+      nudityLabel = nuditySegment["label"]
       if nudityLevel < nudityScore:
         nudityLevel = nudityScore
+      if segmentCompletion == "close":
+        nudityStartFrame = segmentStartFrame
+        gapDuration = (nudityStartFrame - nudityEndFramePrev)
+        if gapDuration > gapThreshold and nuditySceneCount:
+          if nudityLevelPrev > nudityLevel:
+            nudityLevel = nudityLevelPrev
+            nudityLevelPrev = 0
+          if updateCantemoFlag == "true":
+            updateCantemoMarkers(cantemoItemId, nudityStartFramePrev, nudityEndFramePrev, timebaseNumerator, timebaseDenominator, nudityLevel, nudityLabel)
+          else:
+            print(f"Segment info: {nudityStartFramePrev}, {nudityEndFramePrev}, {gapDuration} - {nudityLevel}/{nudityLabel}")
+          nuditySceneCount += 1
+        elif nuditySceneCount:
+          nudityStartFrame = nudityStartFramePrev
       segmentCompletion = "open"
-      nudityLabel = nuditySegment["label"]
     elif segmentCompletion == "open":
       nudityEndFrame = int(nuditySegment["frame_number"])
-      if updateCantemoFlag == "true":
-        updateCantemoMarkers(cantemoItemId, nudityStartFrame, nudityEndFrame, timebaseNumerator, timebaseDenominator, nudityLevel, nudityLabel)
-        segmentCompletion = "close"
-        nudityLevel = 0
-        nuditySceneCount += 1
-      else:
-        print(f"Segment info: {nudityStartFrame}, {nudityEndFrame}, {gapDuration} - {nudityLevel}")
+      segmentCompletion = "close"
+      nudityStartFramePrev = nudityStartFrame
+      nudityEndFramePrev = nudityEndFrame
+      nudityLevelPrev = nudityLevel
+      nudityLevel = 0
+      nuditySceneCount += 1
 
   if updateCantemoFlag == "true":
     headers = {
