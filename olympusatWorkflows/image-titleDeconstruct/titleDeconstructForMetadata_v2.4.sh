@@ -307,6 +307,17 @@ else
                             echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
                         fi
                     ;;
+                    "6" | "5" | "4")
+                        seasonEpisodeCheck=$(echo $blockFour | sed -E 's/.*(.....)/\1/')
+                        if [[ "$seasonEpisodeCheck" =~ ^S[0-9]E[0-9] || "$seasonEpisodeCheck" =~ ^S[0-9]E[0-9][0-9]  || "$seasonEpisodeCheck" =~ ^S[0-9][0-9]E[0-9][0-9] ]];
+                        then
+                            seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                            episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
+                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                        fi
+                    ;;
                     *)
                         if [[ "$titleByLanguage" == "" ]];
                         then
