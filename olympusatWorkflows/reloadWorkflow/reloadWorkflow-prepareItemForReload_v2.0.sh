@@ -34,18 +34,38 @@ logfile="/opt/olympusat/logs/olympusatWorkflow-$mydate.log"
 # Set Variable to check before continuing with script
 export itemId=$1
 export userName=$2
-export passcodeFromUser=$3
+
+userReloadPasscode=$(filterVidispineItemMetadata $itemId "metadata" "oly_reloadPasscode")
 
 # Read the stored hashed passcode
 storedHashPasscode=$(cat /opt/olympusat/resources/reloadWorkflow/hashedPasscode.txt)
 
 # Hash the passcode provided by user
-userHashPasscode=$(hashPasscode "$passcodeFromUser")
+userHashPasscode=$(hashPasscode "$userReloadPasscode")
 
 if [[ "$userHashPasscode" != "$storedHashPasscode" ]];
 then
     # Users passcode does NOT match stored passcode-exiting script
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (reloadWorkflow) - [$itemId] - Users Passcode does NOT match the Stored Passcode - NOT Preparing item for Reload" >> "$logfile"
+    # Update the reloadLogDetail field in Cantemo with timestamp, user and status
+    newReloadLogDetail="$(date +%Y/%m/%d_%H:%M:%S)-Prepare for Reload FAILED-{$userName}-Passcode does NOT match"
+    itemReloadLogDetail=$(filterVidispineItemMetadata $itemId "metadata" "oly_reloadLogDetail")
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (reloadWorkflow) - [$itemId] - itemReloadLogDetail - [$itemReloadLogDetail]" >> "$logfile"
+    if [[ "$itemReloadLogDetail" == "" ]];
+    then
+        #updateVidispineMetadata $itemId oly_reloadLogDetail "$newReloadLogDetail"
+        export url="http://10.1.1.34:8080/API/item/$itemId/metadata/"
+        bodyData="<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_reloadLogDetail</name><value>$newReloadLogDetail</value></field><field><name>oly_reloadPasscode</name><value></value></field></timespan></MetadataDocument>"
+        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (reloadWorkflow) - [$itemId] - BodyData - [$bodyData]" >> "$logfile"
+        httpResponse=$(curl --location --request PUT $url --header 'Content-Type: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=QNywVlUaFfG0jc0UgFYvbSf0tKWtIeLQMfpUloBlTHMIXz9IJT11Xuqxlb3e5rcZ' --data $bodyData)
+        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (reloadWorkflow) - [$itemId] - HttpResponse - [$httpResponse]" >> "$logfile"
+    else
+        export url="http://10.1.1.34:8080/API/item/$itemId/metadata/"
+        bodyData="<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_reloadLogDetail</name><value>$newReloadLogDetail \n $itemReloadLogDetail</value></field><field><name>oly_reloadPasscode</name><value></value></field></timespan></MetadataDocument>"
+        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (reloadWorkflow) - [$itemId] - BodyData - [$bodyData]" >> "$logfile"
+        httpResponse=$(curl --location --request PUT $url --header 'Content-Type: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=QNywVlUaFfG0jc0UgFYvbSf0tKWtIeLQMfpUloBlTHMIXz9IJT11Xuqxlb3e5rcZ' --data $bodyData)
+        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (reloadWorkflow) - [$itemId] - HttpResponse - [$httpResponse]" >> "$logfile"
+    fi
 else
     # Users passcode DOES match stored passcode-continuing with script
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (reloadWorkflow) - [$itemId] - Users Passcode DOES match the Stored Passcode - Continuing with Process" >> "$logfile"
@@ -190,7 +210,25 @@ else
         fi
 
         #---------------------------------------------------------------------------------------
-
+        # Update the reloadLogDetail field in Cantemo with timestamp, user and status
+        newReloadLogDetail="$(date +%Y/%m/%d_%H:%M:%S)-Prepare for Reload FAILED-{$userName}-Passcode does NOT match"
+        itemReloadLogDetail=$(filterVidispineItemMetadata $itemId "metadata" "oly_reloadLogDetail")
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (reloadWorkflow) - [$itemId] - itemReloadLogDetail - [$itemReloadLogDetail]" >> "$logfile"
+        if [[ "$itemReloadLogDetail" == "" ]];
+        then
+            #updateVidispineMetadata $itemId oly_reloadLogDetail "$newReloadLogDetail"
+            export url="http://10.1.1.34:8080/API/item/$itemId/metadata/"
+            bodyData="<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_reloadLogDetail</name><value>$newReloadLogDetail</value></field><field><name>oly_reloadPasscode</name><value></value></field></timespan></MetadataDocument>"
+            #echo "$(date +%Y/%m/%d_%H:%M:%S) - (reloadWorkflow) - [$itemId] - BodyData - [$bodyData]" >> "$logfile"
+            httpResponse=$(curl --location --request PUT $url --header 'Content-Type: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=QNywVlUaFfG0jc0UgFYvbSf0tKWtIeLQMfpUloBlTHMIXz9IJT11Xuqxlb3e5rcZ' --data $bodyData)
+            #echo "$(date +%Y/%m/%d_%H:%M:%S) - (reloadWorkflow) - [$itemId] - HttpResponse - [$httpResponse]" >> "$logfile"
+        else
+            export url="http://10.1.1.34:8080/API/item/$itemId/metadata/"
+            bodyData="<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_reloadLogDetail</name><value>$newReloadLogDetail \n $itemReloadLogDetail</value></field><field><name>oly_reloadPasscode</name><value></value></field></timespan></MetadataDocument>"
+            #echo "$(date +%Y/%m/%d_%H:%M:%S) - (reloadWorkflow) - [$itemId] - BodyData - [$bodyData]" >> "$logfile"
+            httpResponse=$(curl --location --request PUT $url --header 'Content-Type: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=QNywVlUaFfG0jc0UgFYvbSf0tKWtIeLQMfpUloBlTHMIXz9IJT11Xuqxlb3e5rcZ' --data $bodyData)
+            #echo "$(date +%Y/%m/%d_%H:%M:%S) - (reloadWorkflow) - [$itemId] - HttpResponse - [$httpResponse]" >> "$logfile"
+        fi
     else
         # versionType IS NOT 'originalFile, 'conformFile' nor 'censoredFile'-skip process
         echo "$(date +%Y/%m/%d_%H:%M:%S) - (reloadWorkflow) - [$itemId] - Version Type is NOT 'originalFile', 'conformFile' nor 'censoredFile'" >> "$logfile"
