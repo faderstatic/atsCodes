@@ -48,9 +48,9 @@ then
     # Users passcode does NOT match stored passcode-exiting script
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (reloadWorkflow) - [$itemId] - Users Passcode does NOT match the Stored Passcode - NOT Preparing item for Reload" >> "$logfile"
     # Update the reloadLogDetail field in Cantemo with timestamp, user and status
-    newReloadLogDetail="$(date +%Y/%m/%d_%H:%M:%S)-Prepare for Reload FAILED-{$userName}-Passcode does NOT match"
+    newReloadLogDetail="$(date +%Y/%m/%d_%H:%M)-FAILED-{$userName}-Passcode does NOT match"
     itemReloadLogDetail=$(filterVidispineItemMetadata $itemId "metadata" "oly_reloadLogDetail")
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (reloadWorkflow) - [$itemId] - itemReloadLogDetail - [$itemReloadLogDetail]" >> "$logfile"
+    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (reloadWorkflow) - [$itemId] - itemReloadLogDetail - [$itemReloadLogDetail]" >> "$logfile"
     if [[ "$itemReloadLogDetail" == "" ]];
     then
         #updateVidispineMetadata $itemId oly_reloadLogDetail "$newReloadLogDetail"
@@ -60,8 +60,10 @@ then
         httpResponse=$(curl --location --request PUT $url --header 'Content-Type: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=QNywVlUaFfG0jc0UgFYvbSf0tKWtIeLQMfpUloBlTHMIXz9IJT11Xuqxlb3e5rcZ' --data $bodyData)
         #echo "$(date +%Y/%m/%d_%H:%M:%S) - (reloadWorkflow) - [$itemId] - HttpResponse - [$httpResponse]" >> "$logfile"
     else
+        itemReloadLogDetailReplace=$(echo "$itemReloadLogDetail" | sed -e 's/\ 20/\&#xA;20/g')
+        newReloadLogDetail="$newReloadLogDetail&#xA;$itemReloadLogDetailReplace"
         export url="http://10.1.1.34:8080/API/item/$itemId/metadata/"
-        bodyData="<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_reloadLogDetail</name><value>$newReloadLogDetail \n $itemReloadLogDetail</value></field><field><name>oly_reloadPasscode</name><value></value></field></timespan></MetadataDocument>"
+        bodyData="<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_reloadLogDetail</name><value>$newReloadLogDetail</value></field><field><name>oly_reloadPasscode</name><value></value></field></timespan></MetadataDocument>"
         #echo "$(date +%Y/%m/%d_%H:%M:%S) - (reloadWorkflow) - [$itemId] - BodyData - [$bodyData]" >> "$logfile"
         httpResponse=$(curl --location --request PUT $url --header 'Content-Type: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=QNywVlUaFfG0jc0UgFYvbSf0tKWtIeLQMfpUloBlTHMIXz9IJT11Xuqxlb3e5rcZ' --data $bodyData)
         #echo "$(date +%Y/%m/%d_%H:%M:%S) - (reloadWorkflow) - [$itemId] - HttpResponse - [$httpResponse]" >> "$logfile"
@@ -211,9 +213,9 @@ else
 
         #---------------------------------------------------------------------------------------
         # Update the reloadLogDetail field in Cantemo with timestamp, user and status
-        newReloadLogDetail="$(date +%Y/%m/%d_%H:%M:%S)-Prepare for Reload FAILED-{$userName}-Passcode does NOT match"
+        newReloadLogDetail="$(date +%Y/%m/%d_%H:%M)-COMPLETED-{$userName}"
         itemReloadLogDetail=$(filterVidispineItemMetadata $itemId "metadata" "oly_reloadLogDetail")
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (reloadWorkflow) - [$itemId] - itemReloadLogDetail - [$itemReloadLogDetail]" >> "$logfile"
+        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (reloadWorkflow) - [$itemId] - itemReloadLogDetail - [$itemReloadLogDetail]" >> "$logfile"
         if [[ "$itemReloadLogDetail" == "" ]];
         then
             #updateVidispineMetadata $itemId oly_reloadLogDetail "$newReloadLogDetail"
@@ -223,8 +225,10 @@ else
             httpResponse=$(curl --location --request PUT $url --header 'Content-Type: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=QNywVlUaFfG0jc0UgFYvbSf0tKWtIeLQMfpUloBlTHMIXz9IJT11Xuqxlb3e5rcZ' --data $bodyData)
             #echo "$(date +%Y/%m/%d_%H:%M:%S) - (reloadWorkflow) - [$itemId] - HttpResponse - [$httpResponse]" >> "$logfile"
         else
+            itemReloadLogDetailReplace=$(echo "$itemReloadLogDetail" | sed -e 's/\ 20/\&#xA;20/g')
+            newReloadLogDetail="$newReloadLogDetail&#xA;$itemReloadLogDetailReplace"
             export url="http://10.1.1.34:8080/API/item/$itemId/metadata/"
-            bodyData="<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_reloadLogDetail</name><value>$newReloadLogDetail \n $itemReloadLogDetail</value></field><field><name>oly_reloadPasscode</name><value></value></field></timespan></MetadataDocument>"
+            bodyData="<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_reloadLogDetail</name><value>$newReloadLogDetail</value></field><field><name>oly_reloadPasscode</name><value></value></field></timespan></MetadataDocument>"
             #echo "$(date +%Y/%m/%d_%H:%M:%S) - (reloadWorkflow) - [$itemId] - BodyData - [$bodyData]" >> "$logfile"
             httpResponse=$(curl --location --request PUT $url --header 'Content-Type: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=QNywVlUaFfG0jc0UgFYvbSf0tKWtIeLQMfpUloBlTHMIXz9IJT11Xuqxlb3e5rcZ' --data $bodyData)
             #echo "$(date +%Y/%m/%d_%H:%M:%S) - (reloadWorkflow) - [$itemId] - HttpResponse - [$httpResponse]" >> "$logfile"
