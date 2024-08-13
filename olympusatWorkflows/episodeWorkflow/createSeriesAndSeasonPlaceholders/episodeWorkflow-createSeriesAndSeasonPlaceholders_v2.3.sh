@@ -22,37 +22,34 @@ export datetime=$(date +%Y/%m/%d_%H:%M)
 
 logfile="/opt/olympusat/logs/olympusatWorkflow-$mydate.log"
 
-#Set Variable to check before continuing with script
+# Set Variable to check before continuing with script
 export itemId=$1
 itemContentType=$(filterVidispineItemMetadata $itemId "metadata" "oly_contentType")
 
-#Check Variable
+# Check Variable
 if [[ "$itemContentType" != "episode" ]];
 then
-    #contentType is NOT 'episode'-skip process
+    # contentType is NOT 'episode'-skip process
 
     echo "$datetime - (episodeWorkflow) - [$itemId] - Content Type is NOT 'episode'" >> "$logfile"
     echo "$datetime - (episodeWorkflow) - [$itemId] - Content Type is [$itemContentType] - Skipping Episode Workflow" >> "$logfile"
 else
-    #contentType IS episode-continue with process
-    #Variables to be passed from Cantemo to shell script
+    # contentType IS episode-continue with process
+    # Variables to be passed from Cantemo to shell script
 
     echo "$datetime - (episodeWorkflow) - [$itemId] - Content Type is [$itemContentType]" >> "$logfile"
 
     itemSeriesName=$(filterVidispineItemMetadata $itemId "metadata" "oly_seriesName")
     itemSeasonNumber=$(filterVidispineItemMetadata $itemId "metadata" "oly_seasonNumber")
     checkForSeriesItem="$itemSeriesName"
-    if [[ "$checkForSeriesItem" == *:* ]];
-    then
-        checkForSeriesItem=$(echo $itemSeriesName | sed -e 's/:/\\\\:/g')
-    fi
+
     checkForSeasonItem="$checkForSeriesItem | Season $itemSeasonNumber"
     setForSeriesName="$itemSeriesName"
     setForSeasonName="$itemSeriesName | Season $itemSeasonNumber"
 
     if [[ (-z "$itemSeriesName") || (-z "$itemSeasonNumber") ]];
     then
-        #Metadata is missinging-skip process
+        # Metadata is missinging-skip process
         echo "$datetime - (episodeWorkflow) - [$itemId] - Series Name [$itemSeriesName] - Season Number [$itemSeasonNumber]" >> "$logfile"
         echo "$datetime - (episodeWorkflow) - [$itemId] - Item is Missing Metadata - Skipping Episode Workflow" >> "$logfile"
     else
@@ -69,47 +66,117 @@ else
             contentFlagsValue=""
         fi
 
-        #API Call to Search if Series already exists
+        # API Call to Search if Series already exists
 
         echo "$datetime - (episodeWorkflow) - [$itemId] - Checking if Series item exists - [$checkForSeriesItem]" >> "$logfile"
 
         seriesCheckBody="{ \"filter\": { \"operator\": \"AND\",\"terms\": [{ \"name\": \"title\", \"value\": \"$checkForSeriesItem\", \"exact\": true },{ \"name\": \"oly_contentType\", \"value\": \"series\" }]}}"
         seriesCheckHttpResponse=$(curl --location --request PUT $searchUrl --header 'Content-Type: application/json' --header 'Accept: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=VDa9RP3Y9rgomyzNWvRxbu7WdTMetVYBlLg6pGMIJ6oyVABsjJiiEK9JCWVA1HYd' --data $seriesCheckBody)
+        echo "$datetime - (episodeWorkflow) - [$itemId] - Search for Series Response - [$seriesCheckHttpResponse]" >> "$logfile"
 
         if [[ "$seriesCheckHttpResponse" != *"<id>OLY-"* ]];
         then
-            #Series placeholder does not exists, API Call to create new Series placeholder with metadata
+            # Series placeholder does not exists, if Series Name contains : API Call to Search with a modified Series Name
+            if [[ "$checkForSeriesItem" == *:* ]];
+            then
+                checkForSeriesItem=$(echo $itemSeriesName | sed -e 's/:/\\\\:/g')
+                echo "$datetime - (episodeWorkflow) - [$itemId] - Checking if Series item exists - [$checkForSeriesItem]" >> "$logfile"
+                seriesCheckBody="{ \"filter\": { \"operator\": \"AND\",\"terms\": [{ \"name\": \"title\", \"value\": \"$checkForSeriesItem\", \"exact\": true },{ \"name\": \"oly_contentType\", \"value\": \"series\" }]}}"
+                seriesCheckHttpResponse=$(curl --location --request PUT $searchUrl --header 'Content-Type: application/json' --header 'Accept: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=VDa9RP3Y9rgomyzNWvRxbu7WdTMetVYBlLg6pGMIJ6oyVABsjJiiEK9JCWVA1HYd' --data $seriesCheckBody)
+                echo "$datetime - (episodeWorkflow) - [$itemId] - Search for Series Response - [$seriesCheckHttpResponse]" >> "$logfile"
+                if [[ "$seriesCheckHttpResponse" != *"<id>OLY-"* ]];
+                then
+                    # Series placeholder does not exists, API Call to create new Series placeholder with metadata
 
-            echo "$datetime - (episodeWorkflow) - [$itemId] - Creating new Series placeholder - [$setForSeriesName]" >> "$logfile"
+                    echo "$datetime - (episodeWorkflow) - [$itemId] - Creating new Series placeholder - [$setForSeriesName]" >> "$logfile"
 
-            itemLicensor=$(filterVidispineItemMetadata $itemId "metadata" "oly_licensor")
-            seriesCreateBody="{ \"metadata\": { \"group_name\": \"Olympusat\", \"fields\": [ { \"name\": \"title\", \"value\": \"$setForSeriesName\" }, { \"name\": \"oly_titleEn\", \"value\": \"$setForSeriesName\" }, { \"name\": \"oly_contentType\", \"value\": \"series\" }, { \"name\": \"oly_licensor\", \"value\": \"$itemLicensor\" }, { \"name\": \"oly_contentFlags\", \"value\": \"$contentFlagsValue\" } ] }}"
-            seriesCreateHttpResponse=$(curl --location --request POST $createUrl --header 'Content-Type: application/json' --header 'Accept: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=CRbBvVEFSfR5lHoQebsbQemRRas2MUyo53CsO5ixtkSrzvC9H7NffcuaXkIJvr1V' --data $seriesCreateBody)
-            seriesItemId=$(echo $seriesCreateHttpResponse | awk -F "<id>" '{print $2}' | awk -F "</id>" '{print $1}')
-            echo "$datetime - (episodeWorkflow) - [$itemId] - Series Item ID - [$seriesItemId]" >> "$logfile"
+                    itemLicensor=$(filterVidispineItemMetadata $itemId "metadata" "oly_licensor")
+                    seriesCreateBody="{ \"metadata\": { \"group_name\": \"Olympusat\", \"fields\": [ { \"name\": \"title\", \"value\": \"$setForSeriesName\" }, { \"name\": \"oly_titleEn\", \"value\": \"$setForSeriesName\" }, { \"name\": \"oly_contentType\", \"value\": \"series\" }, { \"name\": \"oly_licensor\", \"value\": \"$itemLicensor\" }, { \"name\": \"oly_contentFlags\", \"value\": \"$contentFlagsValue\" } ] }}"
+                    seriesCreateHttpResponse=$(curl --location --request POST $createUrl --header 'Content-Type: application/json' --header 'Accept: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=CRbBvVEFSfR5lHoQebsbQemRRas2MUyo53CsO5ixtkSrzvC9H7NffcuaXkIJvr1V' --data $seriesCreateBody)
+                    seriesItemId=$(echo $seriesCreateHttpResponse | awk -F "<id>" '{print $2}' | awk -F "</id>" '{print $1}')
+                    echo "$datetime - (episodeWorkflow) - [$itemId] - Series Item ID - [$seriesItemId]" >> "$logfile"
 
-            echo "$datetime - (episodeWorkflow) - [$itemId] - Adding Relationship for Series - [$seriesItemId]" >> "$logfile"
-            
-            sleep 1
-            
-            createRelationUrl="http://10.1.1.34:8080/API/relation?allowDuplicate=false"
-            createSeriesRelationBody="{\"relation\": [{\"direction\": {\"source\": \"$itemId\",\"target\": \"$seriesItemId\",\"type\": \"U\"},\"value\": [{\"key\": \"type\",\"value\": \"portal_undirectional\"},{\"key\": \"cs_type\",\"value\": \"series\"}]}]}"
-            createSeriesRelationHttpResponse=$(curl --location $createRelationUrl --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=izsJxc40uxUMKwzH4JavShE11i6wz9rKlTg2pavusNjK0gLTqstgxD8kgRLgSiL4' --data $createSeriesRelationBody)
-            
-            #curl --location 'http://10.1.1.34:8080/API/relation?allowDuplicate=false' --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=izsJxc40uxUMKwzH4JavShE11i6wz9rKlTg2pavusNjK0gLTqstgxD8kgRLgSiL4' --data '{"relation": [{"direction": {"source": "'$itemId'","target": "'$seriesItemId'","type": "U"},"value": [{"key": "type","value": "portal_undirectional"},{"key": "cs_type","value": "series"}]}]}'
+                    echo "$datetime - (episodeWorkflow) - [$itemId] - Adding Relationship for Series - [$seriesItemId]" >> "$logfile"
+                    
+                    sleep 1
+                    
+                    createRelationUrl="http://10.1.1.34:8080/API/relation?allowDuplicate=false"
+                    createSeriesRelationBody="{\"relation\": [{\"direction\": {\"source\": \"$itemId\",\"target\": \"$seriesItemId\",\"type\": \"U\"},\"value\": [{\"key\": \"type\",\"value\": \"portal_undirectional\"},{\"key\": \"cs_type\",\"value\": \"series\"}]}]}"
+                    createSeriesRelationHttpResponse=$(curl --location $createRelationUrl --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=izsJxc40uxUMKwzH4JavShE11i6wz9rKlTg2pavusNjK0gLTqstgxD8kgRLgSiL4' --data $createSeriesRelationBody)
+                    
+                    #curl --location 'http://10.1.1.34:8080/API/relation?allowDuplicate=false' --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=izsJxc40uxUMKwzH4JavShE11i6wz9rKlTg2pavusNjK0gLTqstgxD8kgRLgSiL4' --data '{"relation": [{"direction": {"source": "'$itemId'","target": "'$seriesItemId'","type": "U"},"value": [{"key": "type","value": "portal_undirectional"},{"key": "cs_type","value": "series"}]}]}'
 
-            echo "$datetime - (episodeWorkflow) - [$itemId] - Sent API Call to Create Series Item - [$createSeriesRelationHttpResponse]" >> "$logfile"
-            
-            sleep 2
-            
-            reindexItemUrl="http://10.1.1.34/API/v2/reindex/"
-            reindexItemBody="{ \"items\": [\"$itemId\", \"$seriesItemId\"] }"
-            reindexItemHttpResponse=$(curl --location --request PUT $reindexItemUrl --header 'Content-Type: application/json' --header 'Accept: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=VDa9RP3Y9rgomyzNWvRxbu7WdTMetVYBlLg6pGMIJ6oyVABsjJiiEK9JCWVA1HYd' --data $reindexItemBody)
+                    echo "$datetime - (episodeWorkflow) - [$itemId] - Sent API Call to Create Series Item - [$createSeriesRelationHttpResponse]" >> "$logfile"
+                    
+                    sleep 2
+                    
+                    reindexItemUrl="http://10.1.1.34/API/v2/reindex/"
+                    reindexItemBody="{ \"items\": [\"$itemId\", \"$seriesItemId\"] }"
+                    reindexItemHttpResponse=$(curl --location --request PUT $reindexItemUrl --header 'Content-Type: application/json' --header 'Accept: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=VDa9RP3Y9rgomyzNWvRxbu7WdTMetVYBlLg6pGMIJ6oyVABsjJiiEK9JCWVA1HYd' --data $reindexItemBody)
 
-            echo "$datetime - (episodeWorkflow) - [$itemId] - Sent API Call to ReIndex Item - [$reindexItemHttpResponse]" >> "$logfile"
+                    echo "$datetime - (episodeWorkflow) - [$itemId] - Sent API Call to ReIndex Item - [$reindexItemHttpResponse]" >> "$logfile"
+                else
+                    # Series placeholder already exists
+                    seriesHitResults=$(echo $seriesCheckHttpResponse | awk -F "<hits>" '{print $2}' | awk -F "</hits>" '{print $1}')
+                    echo "$datetime - (episodeWorkflow) - [$itemId] - Series placeholder already exists - [$setForSeriesName] - Number of Items in Results {$seriesHitResults}" >> "$logfile"
+                    seriesItemId=$(echo $seriesCheckHttpResponse | awk -F "<id>" '{print $2}' | awk -F "</id>" '{print $1}')
+                    echo "$datetime - (episodeWorkflow) - [$itemId] - Series Item ID - [$seriesItemId]" >> "$logfile"
 
+                    echo "$datetime - (episodeWorkflow) - [$itemId] - Adding Relationship for Series - [$seriesItemId]" >> "$logfile"
+                    
+                    sleep 1
+                    
+                    createRelationUrl="http://10.1.1.34:8080/API/relation?allowDuplicate=false"
+                    createSeriesRelationBody="{\"relation\": [{\"direction\": {\"source\": \"$itemId\",\"target\": \"$seriesItemId\",\"type\": \"U\"},\"value\": [{\"key\": \"type\",\"value\": \"portal_undirectional\"},{\"key\": \"cs_type\",\"value\": \"series\"}]}]}"
+                    createSeriesRelationHttpResponse=$(curl --location $createRelationUrl --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=izsJxc40uxUMKwzH4JavShE11i6wz9rKlTg2pavusNjK0gLTqstgxD8kgRLgSiL4' --data $createSeriesRelationBody)
+                    
+                    #curl --location 'http://10.1.1.34:8080/API/relation?allowDuplicate=false' --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=izsJxc40uxUMKwzH4JavShE11i6wz9rKlTg2pavusNjK0gLTqstgxD8kgRLgSiL4' --data '{"relation": [{"direction": {"source": "'$itemId'","target": "'$seriesItemId'","type": "U"},"value": [{"key": "type","value": "portal_undirectional"},{"key": "cs_type","value": "series"}]}]}'
+
+                    echo "$datetime - (episodeWorkflow) - [$itemId] - Sent API Call to Create Series Item - [$createSeriesRelationHttpResponse]" >> "$logfile"
+                    
+                    sleep 2
+                    
+                    reindexItemUrl="http://10.1.1.34/API/v2/reindex/"
+                    reindexItemBody="{ \"items\": [\"$itemId\", \"$seriesItemId\"] }"
+                    reindexItemHttpResponse=$(curl --location --request PUT $reindexItemUrl --header 'Content-Type: application/json' --header 'Accept: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=VDa9RP3Y9rgomyzNWvRxbu7WdTMetVYBlLg6pGMIJ6oyVABsjJiiEK9JCWVA1HYd' --data $reindexItemBody)
+
+                    echo "$datetime - (episodeWorkflow) - [$itemId] - Sent API Call to ReIndex Item - [$reindexItemHttpResponse]" >> "$logfile"
+
+                fi
+            else
+
+                # Series placeholder does not exists, API Call to create new Series placeholder with metadata
+
+                echo "$datetime - (episodeWorkflow) - [$itemId] - Creating new Series placeholder - [$setForSeriesName]" >> "$logfile"
+
+                #itemLicensor=$(filterVidispineItemMetadata $itemId "metadata" "oly_licensor")
+                #seriesCreateBody="{ \"metadata\": { \"group_name\": \"Olympusat\", \"fields\": [ { \"name\": \"title\", \"value\": \"$setForSeriesName\" }, { \"name\": \"oly_titleEn\", \"value\": \"$setForSeriesName\" }, { \"name\": \"oly_contentType\", \"value\": \"series\" }, { \"name\": \"oly_licensor\", \"value\": \"$itemLicensor\" }, { \"name\": \"oly_contentFlags\", \"value\": \"$contentFlagsValue\" } ] }}"
+                #seriesCreateHttpResponse=$(curl --location --request POST $createUrl --header 'Content-Type: application/json' --header 'Accept: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=CRbBvVEFSfR5lHoQebsbQemRRas2MUyo53CsO5ixtkSrzvC9H7NffcuaXkIJvr1V' --data $seriesCreateBody)
+                #seriesItemId=$(echo $seriesCreateHttpResponse | awk -F "<id>" '{print $2}' | awk -F "</id>" '{print $1}')
+                echo "$datetime - (episodeWorkflow) - [$itemId] - Series Item ID - [$seriesItemId]" >> "$logfile"
+
+                echo "$datetime - (episodeWorkflow) - [$itemId] - Adding Relationship for Series - [$seriesItemId]" >> "$logfile"
+                
+                sleep 1
+                
+                #createRelationUrl="http://10.1.1.34:8080/API/relation?allowDuplicate=false"
+                #createSeriesRelationBody="{\"relation\": [{\"direction\": {\"source\": \"$itemId\",\"target\": \"$seriesItemId\",\"type\": \"U\"},\"value\": [{\"key\": \"type\",\"value\": \"portal_undirectional\"},{\"key\": \"cs_type\",\"value\": \"series\"}]}]}"
+                #createSeriesRelationHttpResponse=$(curl --location $createRelationUrl --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=izsJxc40uxUMKwzH4JavShE11i6wz9rKlTg2pavusNjK0gLTqstgxD8kgRLgSiL4' --data $createSeriesRelationBody)
+                
+                #curl --location 'http://10.1.1.34:8080/API/relation?allowDuplicate=false' --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=izsJxc40uxUMKwzH4JavShE11i6wz9rKlTg2pavusNjK0gLTqstgxD8kgRLgSiL4' --data '{"relation": [{"direction": {"source": "'$itemId'","target": "'$seriesItemId'","type": "U"},"value": [{"key": "type","value": "portal_undirectional"},{"key": "cs_type","value": "series"}]}]}'
+
+                echo "$datetime - (episodeWorkflow) - [$itemId] - Sent API Call to Create Series Item - [$createSeriesRelationHttpResponse]" >> "$logfile"
+                
+                sleep 2
+                
+                #reindexItemUrl="http://10.1.1.34/API/v2/reindex/"
+                #reindexItemBody="{ \"items\": [\"$itemId\", \"$seriesItemId\"] }"
+                #reindexItemHttpResponse=$(curl --location --request PUT $reindexItemUrl --header 'Content-Type: application/json' --header 'Accept: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=VDa9RP3Y9rgomyzNWvRxbu7WdTMetVYBlLg6pGMIJ6oyVABsjJiiEK9JCWVA1HYd' --data $reindexItemBody)
+
+                echo "$datetime - (episodeWorkflow) - [$itemId] - Sent API Call to ReIndex Item - [$reindexItemHttpResponse]" >> "$logfile"
+            fi
         else
-            #Series placeholder already exists
+            # Series placeholder already exists
             seriesHitResults=$(echo $seriesCheckHttpResponse | awk -F "<hits>" '{print $2}' | awk -F "</hits>" '{print $1}')
             echo "$datetime - (episodeWorkflow) - [$itemId] - Series placeholder already exists - [$setForSeriesName] - Number of Items in Results {$seriesHitResults}" >> "$logfile"
             seriesItemId=$(echo $seriesCheckHttpResponse | awk -F "<id>" '{print $2}' | awk -F "</id>" '{print $1}')
@@ -139,16 +206,17 @@ else
 
         sleep 2
 
-        #API Call to Search if Season already exists
+        # API Call to Search if Season already exists
 
         echo "$datetime - (episodeWorkflow) - [$itemId] - Checking if Season item exists - [$checkForSeasonItem]" >> "$logfile"
 
         seasonCheckBody="{ \"filter\": { \"operator\": \"AND\",\"terms\": [{ \"name\": \"title\", \"value\": \"$checkForSeasonItem\", \"exact\": true },{ \"name\": \"oly_contentType\", \"value\": \"season\" }]}}"
         seasonCheckHttpResponse=$(curl --location --request PUT $searchUrl --header 'Content-Type: application/json' --header 'Accept: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=VDa9RP3Y9rgomyzNWvRxbu7WdTMetVYBlLg6pGMIJ6oyVABsjJiiEK9JCWVA1HYd' --data $seasonCheckBody)
+        echo "$datetime - (episodeWorkflow) - [$itemId] - Search for Season Response - [$seasonCheckHttpResponse]" >> "$logfile"
 
         if [[ "$seasonCheckHttpResponse" != *"<id>OLY-"* ]];
         then
-            #Season placeholder does not exist, API Call to create new Season placeholder with metadata
+            # Season placeholder does not exist, API Call to create new Season placeholder with metadata
 
             echo "$datetime - (episodeWorkflow) - [$itemId] - Creating new Season placeholder - [$setForSeasonName]" >> "$logfile"
 
@@ -175,10 +243,22 @@ else
             reindexItemHttpResponse=$(curl --location --request PUT $reindexItemUrl --header 'Content-Type: application/json' --header 'Accept: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=VDa9RP3Y9rgomyzNWvRxbu7WdTMetVYBlLg6pGMIJ6oyVABsjJiiEK9JCWVA1HYd' --data $reindexItemBody)
 
             echo "$datetime - (episodeWorkflow) - [$itemId] - Sent API Call to ReIndex Item - [$reindexItemHttpResponse]" >> "$logfile"
+            sleep 2
+            echo "$datetime - (episodeWorkflow) - [$seasonItemId] - On Season - Adding Relationship for Series - [$seriesItemId]" >> "$logfile"
+            createRelationOnSeasonUrl="http://10.1.1.34:8080/API/relation?allowDuplicate=false"
+            createSeriesRelationOnSeasonBody="{\"relation\": [{\"direction\": {\"source\": \"$seasonItemId\",\"target\": \"$seriesItemId\",\"type\": \"U\"},\"value\": [{\"key\": \"type\",\"value\": \"portal_undirectional\"},{\"key\": \"cs_type\",\"value\": \"series\"}]}]}"
+            createSeriesRelationOnSeasonHttpResponse=$(curl --location $createRelationOnSeasonUrl --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=izsJxc40uxUMKwzH4JavShE11i6wz9rKlTg2pavusNjK0gLTqstgxD8kgRLgSiL4' --data $createSeriesRelationOnSeasonBody)
+            sleep 2
+            reindexItemUrl="http://10.1.1.34/API/v2/reindex/"
+            reindexItemBody="{ \"items\": [\"$seasonItemId\", \"$seriesItemId\"] }"
+            reindexItemHttpResponse=$(curl --location --request PUT $reindexItemUrl --header 'Content-Type: application/json' --header 'Accept: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=VDa9RP3Y9rgomyzNWvRxbu7WdTMetVYBlLg6pGMIJ6oyVABsjJiiEK9JCWVA1HYd' --data $reindexItemBody)
+
+            echo "$datetime - (episodeWorkflow) - [$itemId] - Sent API Call to ReIndex Item - [$reindexItemHttpResponse]" >> "$logfile"
+            
             echo "$datetime - (episodeWorkflow) - [$itemId] - Create Series, Season & Add Relationship Workflow Completed!!" >> "$logfile"
 
         else
-            #Season placeholder already exists
+            # Season placeholder already exists
             seasonHitResults=$(echo $seasonCheckHttpResponse | awk -F "<hits>" '{print $2}' | awk -F "</hits>" '{print $1}')
             echo "$datetime - (episodeWorkflow) - [$itemId] - Season placeholder already exists - [$setForSeasonName] - Number of Items in Results {$seasonHitResults}" >> "$logfile"
             seasonItemId=$(echo $seasonCheckHttpResponse | awk -F "<id>" '{print $2}' | awk -F "</id>" '{print $1}')
@@ -201,6 +281,18 @@ else
             reindexItemHttpResponse=$(curl --location --request PUT $reindexItemUrl --header 'Content-Type: application/json' --header 'Accept: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=VDa9RP3Y9rgomyzNWvRxbu7WdTMetVYBlLg6pGMIJ6oyVABsjJiiEK9JCWVA1HYd' --data $reindexItemBody)
 
             echo "$datetime - (episodeWorkflow) - [$itemId] - Sent API Call to ReIndex Item - [$reindexItemHttpResponse]" >> "$logfile"
+            sleep 2
+            echo "$datetime - (episodeWorkflow) - [$seasonItemId] - On Season - Adding Relationship for Series - [$seriesItemId]" >> "$logfile"
+            createRelationOnSeasonUrl="http://10.1.1.34:8080/API/relation?allowDuplicate=false"
+            createSeriesRelationOnSeasonBody="{\"relation\": [{\"direction\": {\"source\": \"$seasonItemId\",\"target\": \"$seriesItemId\",\"type\": \"U\"},\"value\": [{\"key\": \"type\",\"value\": \"portal_undirectional\"},{\"key\": \"cs_type\",\"value\": \"series\"}]}]}"
+            createSeriesRelationOnSeasonHttpResponse=$(curl --location $createRelationOnSeasonUrl --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=izsJxc40uxUMKwzH4JavShE11i6wz9rKlTg2pavusNjK0gLTqstgxD8kgRLgSiL4' --data $createSeriesRelationOnSeasonBody)
+            sleep 2
+            reindexItemUrl="http://10.1.1.34/API/v2/reindex/"
+            reindexItemBody="{ \"items\": [\"$seasonItemId\", \"$seriesItemId\"] }"
+            reindexItemHttpResponse=$(curl --location --request PUT $reindexItemUrl --header 'Content-Type: application/json' --header 'Accept: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=VDa9RP3Y9rgomyzNWvRxbu7WdTMetVYBlLg6pGMIJ6oyVABsjJiiEK9JCWVA1HYd' --data $reindexItemBody)
+
+            echo "$datetime - (episodeWorkflow) - [$itemId] - Sent API Call to ReIndex Item - [$reindexItemHttpResponse]" >> "$logfile"
+            
             echo "$datetime - (episodeWorkflow) - [$itemId] - Create Series, Season & Add Relationship Workflow Completed!!" >> "$logfile"
 
         fi
