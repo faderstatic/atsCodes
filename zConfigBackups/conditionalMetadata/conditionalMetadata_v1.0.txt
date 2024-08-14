@@ -908,3 +908,56 @@ Amazon-PrimaryGenre-Young_Adult_Audience
         }
     ]
 }
+
+
+SP-Filter-ContentDescriptors-BasedOn-ParentalRating-US
+{
+    "fields": [
+        {
+            "keys": [
+                "tv-14",
+                "tv-g",
+                "tv-ma",
+                "tv-nr",
+                "tv-pg",
+                "tv-y"
+            ],
+            "field_name": "sp_parentalRating"
+        },
+        {
+            "keys": [
+                "d",
+                "l",
+                "s",
+                "v"
+            ],
+            "field_name": "sp_contentDescriptors"
+        }
+    ]
+}
+
+SP-Filter-ContentDescriptors-BasedOn-ParentalRating-MX
+{
+    "fields": [
+        {
+            "keys": [
+                "a",
+                "aa",
+                "b",
+                "b15",
+                "c",
+                "d"
+            ],
+            "field_name": "sp_parentalRating"
+        },
+        {
+            "keys": [
+                "violencia",
+                "sexualidad",
+                "adicciones",
+                "lenguaje"
+            ],
+            "field_name": "sp_contentDescriptors"
+        }
+    ]
+}
