@@ -81,19 +81,19 @@ elif [[ "$reviewStatus" == "finalReviewCompleted" ]];
 then
     echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" >> $logfile
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (rtcReview) - ($itemId) - Triggering API to Update rtcReviewStatus Metadata - [$reviewStatus] - by [$user]" >> "$logfile"
-    bodyData=$(echo "<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><group><name>RTC Review</name><field><name>oly_rtcReviewStatus</name><value>$reviewStatus</value></field><field><name>oly_rtcFinalReviewDate</name><value>$reviewDate</value></field><field><name>oly_rtcFinalReviewBy</name><value>$user</value></field></group></timespan></MetadataDocument>")
     curl -s -o /dev/null --location --request PUT $url --header 'Content-Type: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=xZqBrKBPBOUANsWFnMC3aF90S52Ip3tgXdUHwWZvhNnu9aLl9j4rdrxRhV9nSQx9' --data $bodyData
     sleep 1
     #Set Permissions on Item to give 'RTC Mexico - Access' group NONE Access
     getPermissionUrl="http://10.1.1.34/API/v2/items/$itemId/acl/?group=RTC%20Mexico%20-%20Access"
-    echo "(date +%Y/%m/%d_%H:%M:%S) - (rtcReview) - ($itemId) - Sending API Call to Cantemo to Set ACLs" >> "$logfile"
-    echo "(date +%Y/%m/%d_%H:%M:%S) - (rtcReview) - ($itemId) - $permissionUrl" >> "$logfile"
-    echo "(date +%Y/%m/%d_%H:%M:%S) - (rtcReview) - ($itemId) - $permissionBodyData" >> "$logfile"
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (rtcReview) - ($itemId) - Sending API Call to Cantemo to Set ACLs" >> "$logfile"
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (rtcReview) - ($itemId) - $getPermissionUrl" >> "$logfile"
     httpResponse=$(curl --location --request GET $getPermissionUrl --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=fHDUyZ7wk6BVS1aMcV7MazrjpRODBxThM3pnmrWGlqw98SbE6g6wt19Dg1Q4GUio' --data '')
     aclId=$(echo "$httpResponse" | awk -F '"id":"' '{print $2}' | awk -F '"' '{print $1}')
+    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (rtcReview) - ($itemId) - ACL ID - $aclId" >> "$logfile"
     sleep 2
     removePermissionUrl="http://10.1.1.34/API/v2/items/$itemId/acl/$aclId"
-    curl -s -o /dev/null --location --request DELETE $removePermissionUrl --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=zxleguMwvKqz1wS1Q4F9U4vGo54eUXQAQwstEkVB7xokFrQYTFqmtdHxkZf4PW7B' --data ''
+    removeAclHttpResponse=$(curl -s -o /dev/null --location --request DELETE $removePermissionUrl --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=zxleguMwvKqz1wS1Q4F9U4vGo54eUXQAQwstEkVB7xokFrQYTFqmtdHxkZf4PW7B' --data '')
+    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (rtcReview) - ($itemId) - Remove ACL HTTP Response - [$removeAclHttpResponse]" >> "$logfile"
     sleep 1
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (rtcReview) - ($itemId) - Triggering workflow to add item to daily report" >> "$logfile"
     bash -c "sudo /opt/olympusat/scriptsActive/notificationWorkflow-addToDailyReport_v2.4.sh $itemId rtcReviewCompleted > /dev/null 2>&1 &"
