@@ -264,7 +264,7 @@ else
                         then
                             echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-rtcReviewCompleted) - ($itemId) - rtcReviewCompletedFileDestination file NOT FOUND - creating new file with headers" >> "$logfile"
 
-                            echo "ItemId,Title,RTC Review Status,RTC Review By,RTC Review Date,RTC Review Notes" >> "$rtcReviewCompletedFileDestination"
+                            echo "ItemId,Title,Spanish Title,English Title,Content Type,RTC Review Status,RTC Review By,RTC Review Date,RTC Review Notes" >> "$rtcReviewCompletedFileDestination"
 
                             echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-rtcReviewCompleted) - ($itemId) - New File created - [$rtcReviewCompletedFileDestination]" >> "$logfile"
                             
