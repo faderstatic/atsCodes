@@ -72,7 +72,7 @@ try:
   cantemoItemId = sys.argv[1]
   # cantemoItemId = os.environ.get("portal_itemId")
   errorReport = ''
-  nudityThreshold = 90
+  nudityThreshold = 49
   nudityEndFramePrev = 0
   nudityStartFramePrev = 0
   gapThresholdDesignation = sys.argv[2]

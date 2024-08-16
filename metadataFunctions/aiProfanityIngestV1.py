@@ -24,6 +24,7 @@ try:
   cantemoItemId = sys.argv[1]
   # cantemoItemId = os.environ.get("portal_itemId")
   errorReport = ''
+  profanityThreshold = 72
 
   #------------------------------
   # Making API to Vidispine to get timebase
@@ -79,7 +80,7 @@ try:
     profanityScore = individualSegment["score"]
     profanityScore *= 100
     profanityScore = round(profanityScore, 2)
-    if profanityScore >= 79:
+    if profanityScore >= profanityThreshold:
       startingTimecode = int(individualSegment["start"] * timebaseMultiplier)
       endingTimecode = int(individualSegment["end"] * timebaseMultiplier)
       # segmentPayload = '{"comment": "Profanity level '+str(profanityScore)+' of 100", "start_tc": "'+str(startingTimecode)+f"@{itemTimebase}"+'", "end_tc": "'+str(endingTimecode)+f"@{itemTimebase}"+'"}'
