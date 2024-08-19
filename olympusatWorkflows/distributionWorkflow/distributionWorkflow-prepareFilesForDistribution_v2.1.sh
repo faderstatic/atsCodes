@@ -1040,7 +1040,7 @@ then
 		</md:AltIdentifier -->" >> "$mecSeasonFileDestination"
             # Adding RatingSet Block Start
             echo "        <md:RatingSet>
-                <!-- each rating specifies exactly one country, system and value -->
+            <!-- each rating specifies exactly one country, system and value -->
 			<!-- At least one rating is required. If the work is not rated, use <md:notrated>true</md:notrated>  -->
 			<!-- see http://www.movielabs.com/md/ratings/current.html for ratings -->" >> "$mecSeasonFileDestination"
             # Preparing Rating Block
