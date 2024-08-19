@@ -212,9 +212,11 @@ Parental Rating - $collectionParentalRatingValues
 Content Descriptors - $collectionContentDescriptorsValues
 
 List of items
+
 $listOfItemsForEmail
 
 Body of Report
+
 $collectionBodyOfReport
 
 Legal Language
