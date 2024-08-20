@@ -94,22 +94,17 @@ then
     fi
     getCollectionItemsUrl="http://10.1.1.34:8080/API/collection/$collectionId/item/"
     getCollectionItemsHttpResponse=$(curl --location $getCollectionItemsUrl --header 'Content-Type: application/xml' --header 'Accept: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=ejrWOMvoMPINrazmUw2klDRGMwdXQ5ndB8JzAGf23nKjXD8Ig1r2qxakwAX5OjUx')
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (spWorkflow) - ($collectionId) - HTTP Response - [$getCollectionItemsHttpResponse]" >> "$logfile"
     occurrenceCount=$(echo $getCollectionItemsHttpResponse | awk -F '<item id="' '{print NF}')
     occurrenceCount=$(($occurrenceCount - 1))
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (spWorkflow) - ($collectionId) - Occurrence Count - [$occurrenceCount]" >> "$logfile"
     for (( b=1 ; b<=$occurrenceCount ; b++ ));
     do
         c=2
         currentValue=$(echo "$getCollectionItemsHttpResponse" | awk -F '"/>' '{print $'$b'}' | awk -F '<item id="' '{print $'$c'}') 
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (spWorkflow) - ($collectionId) - Item ID of Item in Collection - [$currentValue]" >> "$logfile"
         collectionItemTitle=$(filterVidispineItemMetadata $currentValue "metadata" "title")
         # Get Item's Marker Info
         getItemMarkersURL="http://10.1.1.34/AVAPI/asset/$currentValue/?type=AvMarker&content=marker"
         getItemMarkersHttpResponse=$(curl --location $getItemMarkersURL --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=ejrWOMvoMPINrazmUw2klDRGMwdXQ5ndB8JzAGf23nKjXD8Ig1r2qxakwAX5OjUx')
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (spWorkflow) - ($currentValue) - Get Item Markers HTTP Response [$getItemMarkersHttpResponse]" >> "$logfile"
         itemMarkersCleanedUp=$(echo "$getItemMarkersHttpResponse" | jq '[.timespans[] | select(.type == "AvMarker")]')
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (spWorkflow) - ($currentValue) - Item Markers Cleaned Up [$itemMarkersCleanedUp]" >> "$logfile"
         itemMarkersExtractedInfo=$(echo "$itemMarkersCleanedUp" | jq -r '[.[] | 
             {
                 title: (.metadata[]? | select(.key == "title") | .value // "N/A"),
@@ -118,9 +113,7 @@ then
                 end_frame: (.end.frame // "N/A")
             }
             ]')
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (spWorkflow) - ($currentValue) - Item Markers Extracted Info [$itemMarkersExtractedInfo]" >> "$logfile"
         fps=$(echo "scale=8; 30000 / 1001" | bc)
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (spWorkflow) - ($currentValue) - FPS [$fps]" >> "$logfile"
         itemMarkersExtractedInfoCleaned=$(echo "$itemMarkersExtractedInfo" | jq -c '.[]' | while read -r line; do
             title=$(echo "$line" | jq -r '.title')
             description=$(echo "$line" | jq -r '.description')
@@ -131,7 +124,6 @@ then
             jq -n --arg title "$title" --arg description "$description" --arg start_time "$start_time" --arg end_time "$end_time" \
                 '{Title: $title, Description: $description, InPoint: $start_time, OutPoint: $end_time}'
             done)
-        echo "$(date +%Y/%m/%d_%H:%M:%S) - (spWorkflow) - ($currentValue) - Item Markers Extracted Info Cleaned [$itemMarkersExtractedInfoCleaned]" >> "$logfile"
         if [[ "$itemMarkersExtractedInfoCleaned" == "" ]];
         then
             itemMarkersExtractedInfoCleaned="NONE"
@@ -279,6 +271,7 @@ then
         listOfItemsForEmail=$(<"$collectionItemsInfo")
         # Email Body
         collectionBodyOfReport=$(echo "$collectionBodyOfReport" | sed 's/\/n/\n/g')
+        collectionBodyOfReport=$(echo "$collectionBodyOfReport" | sed 's/&amp;/\&/g')
         subject="MAM - S&P Report - $collectionReportTitle"
         body="Hi,
 
