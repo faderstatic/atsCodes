@@ -42,6 +42,29 @@ createCommaSeperatedList ()
     echo "$outputVariable"
     #echo "$(date +%Y/%m/%d_%H:%M:%S) - (spWorkflow) - ($itemId) - [$currentFieldName] - Final Output Variable - [$outputVariable]" >> "$logfile"
 }
+
+convertToTimecode() {
+  local frame=$1
+  local fps=$2
+  
+  # Calculate total seconds as a floating-point number
+  local total_seconds=$(echo "scale=4; $frame / $fps" | bc)
+  
+  # Extract integer part of seconds
+  local int_seconds=$(echo "$total_seconds / 1" | bc)
+  
+  # Extract fractional part and calculate frames
+  local fractional_seconds=$(echo "$total_seconds - $int_seconds" | bc)
+  local frames=$(echo "scale=0; $fractional_seconds * $fps + 0.5" | bc)  # Adding 0.5 for rounding
+  
+  # Calculate hours, minutes, and seconds
+  local hours=$(echo "$int_seconds / 3600" | bc)
+  local minutes=$(echo "($int_seconds % 3600) / 60" | bc)
+  local seconds=$(echo "$int_seconds % 60" | bc)
+
+  # Format output as HH:MM:SS:FF
+  printf "%02d:%02d:%02d:%02d\n" "$hours" "$minutes" "$seconds" "$frames"
+}
 #--------------------------------------------------
 
 saveIFS=$IFS
@@ -58,19 +81,44 @@ if [[ "$spProcess" == "prepareBodyOfReportInfo" ]];
 then
     echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" >> $logfile
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (spWorkflow) - ($itemId) - Prepare Body of Report Info IN PROGRESS - Triggered by [$user]" >> "$logfile"
+    getItemMarkersURL="http://10.1.1.34/AVAPI/asset/$itemId/?type=AvMarker&content=marker"
+    getItemMarkersHttpResponse=$(curl --location $getItemMarkersURL --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=ejrWOMvoMPINrazmUw2klDRGMwdXQ5ndB8JzAGf23nKjXD8Ig1r2qxakwAX5OjUx')
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (spWorkflow) - ($itemId) - Get Item Markers HTTP Response [$getItemMarkersHttpResponse]" >> "$logfile"
+    itemMarkersCleanedUp=$(echo "$getItemMarkersHttpResponse" | jq '[.timespans[] | select(.type == "AvMarker")]')
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (spWorkflow) - ($itemId) - Item Markers Cleaned Up [$itemMarkersCleanedUp]" >> "$logfile"
+    itemMarkersExtractedInfo=$(echo "$itemMarkersCleanedUp" | jq -r '[.[] | 
+  {
+    title: (.metadata[]? | select(.key == "title") | .value // "N/A"),
+    description: (.metadata[]? | select(.key == "av_marker_description") | .value // "N/A"),
+    start_frame: (.start.frame // "N/A"),
+    end_frame: (.end.frame // "N/A")
+  }
+]')
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (spWorkflow) - ($itemId) - Item Markers Extracted Info [$itemMarkersExtractedInfo]" >> "$logfile"
+    fps=$(echo "scale=8; 30000 / 1001" | bc)
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (spWorkflow) - ($itemId) - FPS [$fps]" >> "$logfile"
+    itemMarkersExtractedInfoCleaned=$(echo "$itemMarkersExtractedInfo" | jq -c '.[]' | while read -r line; do
+  title=$(echo "$line" | jq -r '.title')
+  description=$(echo "$line" | jq -r '.description')
+  start_frame=$(echo "$line" | jq -r '.start_frame')
+  end_frame=$(echo "$line" | jq -r '.end_frame')
+  start_time=$(convertToTimecode "$start_frame" "$fps")
+  end_time=$(convertToTimecode "$end_frame" "$fps")
+  jq -n --arg title "$title" --arg description "$description" --arg start_time "$start_time" --arg end_time "$end_time" \
+    '{title: $title, description: $description, start_time: $start_time, end_time: $end_time}'
+done)
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (spWorkflow) - ($itemId) - Item Markers Extracted Info Cleaned [$itemMarkersExtractedInfoCleaned]" >> "$logfile"
 elif [[ "$spProcess" == "prepareDraftOfReport" ]];
 then
     echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" >> $logfile
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (spWorkflow) - ($itemId) - Prepare Draft of Report IN PROGRESS - Triggered by [$user]" >> "$logfile"
     getCollectionIdUrl="http://10.1.1.34:8080/API/item/$itemId/metadata?null=null&terse=yes"
     getCollectionIdHttpResponse=$(curl --location $getCollectionIdUrl --header 'Accept: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=TXPkx4KSJvkqcV8CthE8QObxXHgHryV4bRqabWH9QxO3Hr4F3hgzzbcAg7AMVxet')
-    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (spWorkflow) - ($itemId) - HTTP Response - [$getCollectionIdHttpResponse]" >> "$logfile"
     collectionId=$(echo "$getCollectionIdHttpResponse" | awk -F '</__collection>' '{print $1}' | awk -F '/vidispine">' '{print $5}')
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (spWorkflow) - ($itemId) - Collection ID - [$collectionId]" >> "$logfile"
     getCollectionInfoUrl="http://10.1.1.34/API/v2/collections/$collectionId/"
     getCollectionInfoHttpResponse=$(curl --location $getCollectionInfoUrl --header 'accept: application/xml' --header 'X-CSRFToken: kiSHDG0urLwlI6c6oK6wDSaGF1fw2faui23YCyW7yhgME70nZv8l5EaPIbJtXoWa' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=DCceQb19jageOtbw7oHdoOuwOSFfUeFjhEZxAGiIU7eShnNsrbUvvFcRCrdty5vt')
     getCollectionInfoHttpResponse=$(echo "$getCollectionInfoHttpResponse" | sed ':a;N;$!ba;s/\r/\/r/g;s/\n/\/n/g')
-    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (spWorkflow) - ($collectionId) - Collection Info - [$getCollectionInfoHttpResponse]" >> "$logfile"
     collectionTitle=$(echo "$getCollectionInfoHttpResponse" | awk -F '<title>|</title>' '{print $2}')
     collectionProject=$(echo "$getCollectionInfoHttpResponse" | awk -F '<f_sp_project_str>|</f_sp_project_str>' '{print $2}')
     collectionReportTitle=$(echo "$getCollectionInfoHttpResponse" | awk -F '<f_sp_reportTitle_str>|</f_sp_reportTitle_str>' '{print $2}')
@@ -82,17 +130,6 @@ then
     collectionContentDescriptors=$(echo "$getCollectionInfoHttpResponse" | awk -F '<f_sp_contentDescriptors__values__str>|</f_sp_contentDescriptors__values__str>' '{print $2}')
     collectionReportEmailTo=$(echo "$getCollectionInfoHttpResponse" | awk -F '<f_sp_reportEmailTo_str>|</f_sp_reportEmailTo_str>' '{print $2}')
     collectionBodyOfReport=$(echo "$getCollectionInfoHttpResponse" | awk -F '<f_sp_bodyOfReport_str>|</f_sp_bodyOfReport_str>' '{print $2}')
-    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (spWorkflow) - ($collectionId) - Collection Title - [$collectionTitle]" >> "$logfile"
-    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (spWorkflow) - ($collectionId) - Collection Project - [$collectionProject]" >> "$logfile"
-    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (spWorkflow) - ($collectionId) - Collection Report Title - [$collectionReportTitle]" >> "$logfile"
-    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (spWorkflow) - ($collectionId) - Collection Report Status - [$collectionReportStatus]" >> "$logfile"
-    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (spWorkflow) - ($collectionId) - Collection Report Owner - [$collectionReportOwner]" >> "$logfile"
-    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (spWorkflow) - ($collectionId) - Collection Episode - [$collectionEpisode]" >> "$logfile"
-    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (spWorkflow) - ($collectionId) - Collection Season - [$collectionSeason]" >> "$logfile"
-    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (spWorkflow) - ($collectionId) - Collection Parental Rating - [$collectionParentalRating]" >> "$logfile"
-    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (spWorkflow) - ($collectionId) - Collection Content Descriptors - [$collectionContentDescriptors]" >> "$logfile"
-    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (spWorkflow) - ($collectionId) - Collection Report Email To - [$collectionReportEmailTo]" >> "$logfile"
-    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (spWorkflow) - ($collectionId) - Collection Body of Report - [$collectionBodyOfReport]" >> "$logfile"
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (spWorkflow) - ($itemId) - Collection Report Status - [$collectionReportStatus]" >> "$logfile"
     if [[ "$collectionReportStatus" == "draft" || "$collectionReportStatus" == "sent" ]];
     then
@@ -193,7 +230,6 @@ then
         listOfItemsForEmail=$(<"$collectionItemsInfo")
         # Email Body
         collectionBodyOfReport=$(echo "$collectionBodyOfReport" | sed 's/\/n/\n/g')
-        #collectionBodyOfReport=$(echo "$collectionBodyOfReport" | tr '/n' '\n')
         subject="MAM - S&P Report - $collectionReportTitle"
         body="Hi,
 
@@ -247,7 +283,6 @@ MAM Notify"
         updateCollectionMetadataUrl="http://10.1.1.34:8080/API/collection/$collectionId/metadata/"
         updateCollectionMetadataBody="<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>sp_reportOwner</name><value>$collectionReportOwnerValues</value></field><field><name>sp_reportStatus</name><value>sent</value></field><field><name>sp_titleCutDate</name><value>$collectionTitleCutDate</value></field></timespan></MetadataDocument>"
         updateCollectionMetadataResponse=$(curl --location --request PUT $updateCollectionMetadataUrl --header 'Content-Type: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=GFMXXpksyiWoOP5GUln9bwwOxTfNLX9XHeNyAPhUF5h0sUWTLKk3FvEdvjsVVziw' --data $updateCollectionMetadataBody)
-        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (spWorkflow) - ($collectionId) - Response - [$updateCollectionMetadataResponse]" >> "$logfile"
         if [[ -e "$collectionItemsInfo" ]];
         then
             mv -f "$collectionItemsInfo" "/opt/olympusat/zMisc/spReports/zCompleted/"
