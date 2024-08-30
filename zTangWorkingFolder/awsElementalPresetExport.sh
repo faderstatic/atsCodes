@@ -13,7 +13,7 @@ saveIFS=$IFS
 IFS=$(echo -e "\n\b")
 
 export apiKey="FbABGpvsgGDkTKUZchLv"
-export authExpire=date -v +7d +"%s"
+export authExpire=$(date -v +7d +"%s")
 
 for i in {1..10}
     do
