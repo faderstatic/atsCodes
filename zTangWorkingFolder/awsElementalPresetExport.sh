@@ -12,6 +12,8 @@
 saveIFS=$IFS
 IFS=$(echo -e "\n\b")
 
+export apiKey="FbABGpvsgGDkTKUZchLv"
+
 for i in {1..10}
     do
         curl -s -o preset_${i}.xml -f http://172.16.1.120/api/presets/${i}.xml?clean=true
