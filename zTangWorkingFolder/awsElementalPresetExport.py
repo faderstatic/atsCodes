@@ -39,16 +39,20 @@ try:
         authExpirationMd5 = hashlib.md5(authExpirationEncoded).hexdigest()
         # print(f"{apiUserKeyMd5} - {authExpirationMd5}")
         apiParameter="/" + eventUrl + "/" + str(i) + authUser + apiUserKey + authExpirationStr
+        # print(apiParameter)
         apiParameterEncoded = apiParameter.encode("utf-8")
         apiParameterMd5 = hashlib.md5(apiParameterEncoded).hexdigest()
-        fullParameterMd5 = hex(int(apiUserKeyMd5, 16) + int(apiParameterMd5, 16))[2:]
+        fullParameter = apiUserKey + apiParameterMd5
+        fullParameterEncoded = fullParameter.encode("utf-8")
+        fullParameterMd5 = hashlib.md5(fullParameterEncoded).hexdigest()
+        # fullParameterMd5 = hex(int(apiUserKeyMd5, 16) + int(apiParameterMd5, 16))[2:]
         # print(fullParameterMd5)
         #------------------------------
         # Making API to AWS directory to xml files
         headers = {
             'X-Auth-User': 'admin',
             'X-Auth-Expires': f'{authExpirationUnix}',
-            'X-AuthKey': f'{fullParameterMd5}',
+            'X-Auth-Key': f'{fullParameterMd5}',
             'Accept': 'application/xml'
         }
         urlGetElement = f"http://172.16.1.120/{eventUrl}/{i}.xml?clean=true"
