@@ -229,7 +229,7 @@ then
         collectionReportEmailTo=$(echo "$getCollectionInfoHttpResponse" | awk -F '<f_sp_reportEmailTo_str>|</f_sp_reportEmailTo_str>' '{print $2}')
         collectionBodyOfReport=$(echo "$getCollectionInfoHttpResponse" | awk -F '<f_sp_bodyOfReport_str>|</f_sp_bodyOfReport_str>' '{print $2}')
         echo "$(date +%Y/%m/%d_%H:%M:%S) - (spWorkflow) - ($itemId) - Collection Report Status - [$collectionReportStatus]" >> "$logfile"
-        if [[ "$collectionReportStatus" == "draft" || "$collectionReportStatus" == "sent" ]];
+        if [[ "$collectionReportStatus" == "" || "$collectionReportStatus" == "draft" || "$collectionReportStatus" == "sent" ]];
         then
             if [[ "$collectionEpisode" == *list-item* ]];
             then
