@@ -21,7 +21,7 @@ import hashlib
 authUser = sys.argv[1]
 eventUrl = sys.argv[2]
 maxPresets = int(sys.argv[3]) + 1
-destinationFolder = sys.argv[4]
+# destinationFolder = sys.argv[4]
 timeOffset = 30
 apiUserKey = "FbABGpvsgGDkTKUZchLv"
 apiUserKeyEncoded = apiUserKey.encode('utf-8')
