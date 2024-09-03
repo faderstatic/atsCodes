@@ -319,11 +319,12 @@ then
                 user="censorship"
             fi
             export recipient1="$user@olympusat.com"
-            export recipient2=mamAdmin@olympusat.com
-            export recipient3=dbassett@olympusat.com
-            export recipient4=amorales@olympusat.com
-            export recipient5=rsims@olympusat.com
-            export recipient6=kkanjanapitak@olympusat.com
+            export recipient2=censorship@olympusat.com
+            export recipient3=mamAdmin@olympusat.com
+            export recipient4=dbassett@olympusat.com
+            export recipient5=amorales@olympusat.com
+            export recipient6=rsims@olympusat.com
+            export recipient7=kkanjanapitak@olympusat.com
             # Sending email address
             export emailFrom=notify@olympusat.com
             # Set variable with timestamp
@@ -375,7 +376,7 @@ MAM Notify"
             curl --url 'smtp://smtp-mail.outlook.com:587' \
                 --ssl-reqd  \
                 --mail-from $emailFrom \
-                --mail-rcpt $recipient1 --mail-rcpt $recipient2 \
+                --mail-rcpt $recipient1 --mail-rcpt $recipient2 --mail-rcpt $recipient3 \
                 --user 'notify@olympusat.com:6bOblVsLg9bPQ8WG7JC7f8Zump' \
                 -F '=(;type=multipart/mixed' \
                 -F "=$sesMessage;type=text/plain" \
