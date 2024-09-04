@@ -54,17 +54,25 @@ try:
         #------------------------------
         # Making API to AWS directory to xml files
         headersAWSElemental = {
-            'X-Auth-User': 'admin',
+            'X-Auth-User': f'{authUser}',
             'X-Auth-Expires': f'{authExpirationUnix}',
             'X-Auth-Key': f'{fullParameterMd5}',
             'Accept': 'application/xml'
         }
         urlGetElement = f"http://172.16.1.120/{eventUrl}/{i}.xml?clean=true"
         payload = {}
-        print(f"""URL - {urlGetElement}\n
-        headers - {headersAWSElemental}\n
-        Partial Auth-Key string - {apiParameter}\n
-        Auth-Key string - {fullParameter}""")
+        print(f"""\n\
+        UTC time - {executionTimeUTC}\n\
+        Expiration time - {authExpiration}\n\
+        Expiration timestamp - {authExpirationStr}\n\
+        Partial parameter string - {apiParameter}\n\
+        Hashed partial parameter - {apiParameterMd5}\n\
+        Full parameter string - {fullParameter}\n\
+        Hashed full parameter - {fullParameterMd5}\n\
+        \n\
+        API URL - {urlGetElement}\n\
+        API headers - {headersAWSElemental}\n""")
+        # print(f"""URL - {urlGetElement}\nheaders - {headersAWSElemental}\nPartial Auth-Key string - {apiParameter}\nAuth-Key string - {fullParameter}""")
         httpApiResponse = requests.request("GET", urlGetElement, headers=headersAWSElemental, data=payload)
         httpApiResponse.raise_for_status()
         #------------------------------
