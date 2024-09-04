@@ -11,6 +11,7 @@ import os
 import glob
 import sys
 import datetime
+from datetime import timezone
 import time
 import subprocess
 import requests
@@ -24,19 +25,21 @@ maxPresets = int(sys.argv[3]) + 1
 # destinationFolder = sys.argv[4]
 timeOffset = 30
 apiUserKey = "FbABGpvsgGDkTKUZchLv"
-apiUserKeyEncoded = apiUserKey.encode('utf-8')
-apiUserKeyMd5 = hashlib.md5(apiUserKeyEncoded).hexdigest()
+# apiUserKeyEncoded = apiUserKey.encode('utf-8')
+# apiUserKeyMd5 = hashlib.md5(apiUserKeyEncoded).hexdigest()
 
 try:
     for i in range(1,maxPresets):
-        executionTime = datetime.datetime.now()
-        # executionTimeUnix = int(round(executionTime.timestamp()))
-        authExpiration = executionTime + datetime.timedelta(seconds=timeOffset)
+        # executionTime = datetime.datetime.now()
+        executionTime = datetime.datetime.now(timezone.utc)
+        executionTimeUTC = executionTime.replace(tzinfo=timezone.utc)
+        # executionTimestampUTC = int(round(executionTimeUTC.timestamp()))
+        authExpiration = executionTimeUTC + datetime.timedelta(seconds=timeOffset)
         authExpirationUnix = int(round(authExpiration.timestamp()))
-        # print(f"{executionTimeUnix} - {authExpirationUnix}")
+        # print(f"{executionTimeUTC} - {authExpirationUnix}")
         authExpirationStr = str(authExpirationUnix)
-        authExpirationEncoded = authExpirationStr.encode("utf-8")
-        authExpirationMd5 = hashlib.md5(authExpirationEncoded).hexdigest()
+        # authExpirationEncoded = authExpirationStr.encode("utf-8")
+        # authExpirationMd5 = hashlib.md5(authExpirationEncoded).hexdigest()
         # print(f"{apiUserKeyMd5} - {authExpirationMd5}")
         apiParameter="/" + eventUrl + "/" + str(i) + authUser + apiUserKey + authExpirationStr
         # print(apiParameter)
@@ -46,10 +49,11 @@ try:
         fullParameterEncoded = fullParameter.encode("utf-8")
         fullParameterMd5 = hashlib.md5(fullParameterEncoded).hexdigest()
         # fullParameterMd5 = hex(int(apiUserKeyMd5, 16) + int(apiParameterMd5, 16))[2:]
+        # print(authExpirationUnix)
         # print(fullParameterMd5)
         #------------------------------
         # Making API to AWS directory to xml files
-        headers = {
+        headersAWSElemental = {
             'X-Auth-User': 'admin',
             'X-Auth-Expires': f'{authExpirationUnix}',
             'X-Auth-Key': f'{fullParameterMd5}',
@@ -57,7 +61,11 @@ try:
         }
         urlGetElement = f"http://172.16.1.120/{eventUrl}/{i}.xml?clean=true"
         payload = {}
-        httpApiResponse = requests.request("GET", urlGetElement, headers=headers, data=payload)
+        print(f"""URL - {urlGetElement}\n
+        headers - {headersAWSElemental}\n
+        Partial Auth-Key string - {apiParameter}\n
+        Auth-Key string - {fullParameter}""")
+        httpApiResponse = requests.request("GET", urlGetElement, headers=headersAWSElemental, data=payload)
         httpApiResponse.raise_for_status()
         #------------------------------
 
