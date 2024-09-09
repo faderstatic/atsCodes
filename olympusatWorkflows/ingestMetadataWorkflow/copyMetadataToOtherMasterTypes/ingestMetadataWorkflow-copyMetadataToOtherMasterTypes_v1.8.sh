@@ -61,10 +61,52 @@ then
                     charCount=$(echo -n $blockValue | wc -c)
                     echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Number of Characters in Block - [$charCount]" >> "$logfile"
                     case $charCount in
+                        "4")
+                            titleCode=$(echo $blockValue)
+                            seasonEpisodeCheck=$(echo $blockValue | sed -E 's/.*(....)/\1/')
+                            searchTitle2="$(echo $seasonEpisodeCheck)_"
+                            if [[ "$seasonEpisodeCheck" =~ ^S[0-9]E[0-9] ]];
+                            then
+                                seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                                episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
+                                #echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - ($itemId) - titleCode - $titleCode" >> "$logfile"
+                                #echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                #echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                #echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                            fi
+                        ;;
+                        "5")
+                            titleCode=$(echo $blockValue)
+                            seasonEpisodeCheck=$(echo $blockValue | sed -E 's/.*(....)/\1/')
+                            searchTitle2="$(echo $seasonEpisodeCheck)_"
+                            if [[ "$seasonEpisodeCheck" =~ ^S[0-9]E[0-9] ]];
+                            then
+                                seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                                episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
+                                #echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - ($itemId) - titleCode - $titleCode" >> "$logfile"
+                                #echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                #echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                #echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                            fi
+                        ;;
+                        "6")
+                            titleCode=$(echo $blockValue)
+                            seasonEpisodeCheck=$(echo $blockValue | sed -E 's/.*(....)/\1/')
+                            searchTitle2="$(echo $seasonEpisodeCheck)_"
+                            if [[ "$seasonEpisodeCheck" =~ ^S[0-9]E[0-9] ]];
+                            then
+                                seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                                episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
+                                #echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - ($itemId) - titleCode - $titleCode" >> "$logfile"
+                                #echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                #echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                #echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                            fi
+                        ;;
                         "11")
                             titleCode=$(echo $blockValue)
                             seasonEpisodeCheck=$(echo $blockValue | sed -E 's/.*(....)/\1/')
-                            searchTitle2=$(echo $seasonEpisodeCheck)
+                            searchTitle2="$(echo $seasonEpisodeCheck)_"
                             if [[ "$seasonEpisodeCheck" =~ ^S[0-9]E[0-9] ]];
                             then
                                 seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
@@ -78,7 +120,7 @@ then
                         "12")
                             titleCode=$(echo $blockValue)
                             seasonEpisodeCheck=$(echo $blockValue | sed -E 's/.*(.....)/\1/')
-                            searchTitle2=$(echo $seasonEpisodeCheck)
+                            searchTitle2="$(echo $seasonEpisodeCheck)_"
                             if [[ "$seasonEpisodeCheck" =~ ^S[0-9][0-9]E[0-9] || "$seasonEpisodeCheck" =~ ^S[0-9]E[0-9][0-9] ]];
                             then
                                 seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
@@ -92,7 +134,7 @@ then
                         "13")
                             titleCode=$(echo $blockValue)
                             seasonEpisodeCheck=$(echo $blockValue | sed -E 's/.*(......)/\1/')
-                            searchTitle2=$(echo $seasonEpisodeCheck)
+                            searchTitle2="$(echo $seasonEpisodeCheck)_"
                             if [[ "$seasonEpisodeCheck" =~ ^S[0-9][0-9]E[0-9][0-9] ]];
                             then
                                 seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
@@ -127,10 +169,52 @@ then
                     charCount=$(echo -n $blockValue | wc -c)
                     echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Number of Characters in Block - [$charCount]" >> "$logfile"
                     case $charCount in
+                        "4")
+                            titleCode=$(echo $blockValue)
+                            seasonEpisodeCheck=$(echo $blockValue | sed -E 's/.*(....)/\1/')
+                            searchTitle2="$(echo $seasonEpisodeCheck)_"
+                            if [[ "$seasonEpisodeCheck" =~ ^S[0-9]E[0-9] ]];
+                            then
+                                seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                                episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
+                                #echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleCode - $titleCode" >> "$logfile"
+                                #echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                #echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                #echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                            fi
+                        ;;
+                        "5")
+                            titleCode=$(echo $blockValue)
+                            seasonEpisodeCheck=$(echo $blockValue | sed -E 's/.*(....)/\1/')
+                            searchTitle2="$(echo $seasonEpisodeCheck)_"
+                            if [[ "$seasonEpisodeCheck" =~ ^S[0-9]E[0-9] ]];
+                            then
+                                seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                                episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
+                                #echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleCode - $titleCode" >> "$logfile"
+                                #echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                #echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                #echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                            fi
+                        ;;
+                        "6")
+                            titleCode=$(echo $blockValue)
+                            seasonEpisodeCheck=$(echo $blockValue | sed -E 's/.*(....)/\1/')
+                            searchTitle2="$(echo $seasonEpisodeCheck)_"
+                            if [[ "$seasonEpisodeCheck" =~ ^S[0-9]E[0-9] ]];
+                            then
+                                seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
+                                episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
+                                #echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleCode - $titleCode" >> "$logfile"
+                                #echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                #echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                #echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                            fi
+                        ;;
                         "11")
                             titleCode=$(echo $blockValue)
                             seasonEpisodeCheck=$(echo $blockValue | sed -E 's/.*(....)/\1/')
-                            searchTitle2=$(echo $seasonEpisodeCheck)
+                            searchTitle2="$(echo $seasonEpisodeCheck)_"
                             if [[ "$seasonEpisodeCheck" =~ ^S[0-9]E[0-9] ]];
                             then
                                 seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
@@ -144,7 +228,7 @@ then
                         "12")
                             titleCode=$(echo $blockValue)
                             seasonEpisodeCheck=$(echo $blockValue | sed -E 's/.*(.....)/\1/')
-                            searchTitle2=$(echo $seasonEpisodeCheck)
+                            searchTitle2="$(echo $seasonEpisodeCheck)_"
                             if [[ "$seasonEpisodeCheck" =~ ^S[0-9][0-9]E[0-9] || "$seasonEpisodeCheck" =~ ^S[0-9]E[0-9][0-9] ]];
                             then
                                 seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
@@ -158,7 +242,7 @@ then
                         "13")
                             titleCode=$(echo $blockValue)
                             seasonEpisodeCheck=$(echo $blockValue | sed -E 's/.*(......)/\1/')
-                            searchTitle2=$(echo $seasonEpisodeCheck)
+                            searchTitle2="$(echo $seasonEpisodeCheck)_"
                             if [[ "$seasonEpisodeCheck" =~ ^S[0-9][0-9]E[0-9][0-9] ]];
                             then
                                 seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
@@ -303,107 +387,213 @@ then
             fi
         fi
         sleep 2
-        #API Call to Search for Dubbed Master
-        echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Searching for Dubbed Master - [$originalSearchTitle]" >> "$logfile"
+        #API Call to Search for Dubbed Master ES
+        echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Searching for Dubbed Master ES - [$originalSearchTitle]" >> "$logfile"
         export searchUrl="http://10.1.1.34/API/v2/search/"
-        dubbedCheckBody="{ \"filter\": { \"operator\": \"AND\",\"terms\": [{ \"name\": \"title\", \"value\": \"$originalSearchTitle\" },{ \"name\": \"oly_originalFileFlags\", \"value\": \"dubbedmaster*\" }]}}"        
-        echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master Check Body - [$dubbedCheckBody]" >> "$logfile"        
-        dubbedCheckHttpResponse=$(curl --location --request PUT $searchUrl --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=VDa9RP3Y9rgomyzNWvRxbu7WdTMetVYBlLg6pGMIJ6oyVABsjJiiEK9JCWVA1HYd' --data $dubbedCheckBody)
-        dubbedCheckHitResults=$(echo $dubbedCheckHttpResponse | awk -F '"hits":' '{print $2}' | awk -F ',' '{print $1}')
-        echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master Check HTTP Response - [$dubbedCheckHttpResponse]" >> "$logfile"
-        echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master Check Hit Results - [$dubbedCheckHitResults]" >> "$logfile"
-        if [ "$dubbedCheckHitResults" -gt 1 ];
+        dubbedEsCheckBody="{ \"filter\": { \"operator\": \"AND\",\"terms\": [{ \"name\": \"title\", \"value\": \"$originalSearchTitle\" },{ \"name\": \"oly_originalFileFlags\", \"value\": \"dubbedmasteres\" }]}}"        
+        echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master ES Check Body - [$dubbedEsCheckBody]" >> "$logfile"        
+        dubbedEsCheckHttpResponse=$(curl --location --request PUT $searchUrl --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=VDa9RP3Y9rgomyzNWvRxbu7WdTMetVYBlLg6pGMIJ6oyVABsjJiiEK9JCWVA1HYd' --data $dubbedEsCheckBody)
+        dubbedEsCheckHitResults=$(echo $dubbedEsCheckHttpResponse | awk -F '"hits":' '{print $2}' | awk -F ',' '{print $1}')
+        echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master ES Check HTTP Response - [$dubbedEsCheckHttpResponse]" >> "$logfile"
+        echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master ES Check Hit Results - [$dubbedEsCheckHitResults]" >> "$logfile"
+        if [ "$dubbedEsCheckHitResults" -gt 1 ];
         then
-            echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master Search Results Returned MORE THAN 1 Hit - Trying different search" >> "$logfile"
-            #Dubbed Master does not exist - trying different search
-            echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master does not exist - Trying different search" >> "$logfile"
+            echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master ES Search Results Returned MORE THAN 1 Hit - Trying different search" >> "$logfile"
+            #Dubbed Master ES does not exist - trying different search
+            echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master ES does not exist - Trying different search" >> "$logfile"
             searchTitle=$(echo $searchTitle1 "*_S"$itemSeasonNumber"E"$itemEpisodeNumber"_*")
             export searchUrl="http://10.1.1.34/API/v2/search/"
-            dubbedCheckBody="{ \"filter\": { \"operator\": \"AND\",\"terms\": [{ \"name\": \"title\", \"value\": \"$searchTitle\" },{ \"name\": \"oly_originalFileFlags\", \"value\": \"dubbedmaster*\" }]}}"                
-            echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Second Dubbed Master Check Body - [$dubbedCheckBody]" >> "$logfile"                
-            dubbedCheckHttpResponse=$(curl --location --request PUT $searchUrl --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=VDa9RP3Y9rgomyzNWvRxbu7WdTMetVYBlLg6pGMIJ6oyVABsjJiiEK9JCWVA1HYd' --data $dubbedCheckBody)
-            dubbedCheckHitResults=$(echo $dubbedCheckHttpResponse | awk -F '"hits":' '{print $2}' | awk -F ',' '{print $1}')
-            echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Second Dubbed Master Check HTTP Response - [$dubbedCheckHttpResponse]" >> "$logfile"
-            echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Second Dubbed Master Check Hit Results - [$dubbedCheckHitResults]" >> "$logfile"
-            if [ "$dubbedCheckHitResults" -gt 1 ];
+            dubbedEsCheckBody="{ \"filter\": { \"operator\": \"AND\",\"terms\": [{ \"name\": \"title\", \"value\": \"$searchTitle\" },{ \"name\": \"oly_originalFileFlags\", \"value\": \"dubbedmasteres\" }]}}"
+            echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Second Dubbed Master ES Check Body - [$dubbedEsCheckBody]" >> "$logfile"                
+            dubbedEsCheckHttpResponse=$(curl --location --request PUT $searchUrl --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=VDa9RP3Y9rgomyzNWvRxbu7WdTMetVYBlLg6pGMIJ6oyVABsjJiiEK9JCWVA1HYd' --data $dubbedEsCheckBody)
+            dubbedEsCheckHitResults=$(echo $dubbedEsCheckHttpResponse | awk -F '"hits":' '{print $2}' | awk -F ',' '{print $1}')
+            echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Second Dubbed Master ES Check HTTP Response - [$dubbedEsCheckHttpResponse]" >> "$logfile"
+            echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Second Dubbed Master ES Check Hit Results - [$dubbedEsCheckHitResults]" >> "$logfile"
+            if [ "$dubbedEsCheckHitResults" -gt 1 ];
             then
-                echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master Search Results Returned MORE THAN 1 Hit-skipping process" >> "$logfile"
+                echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master ES Search Results Returned MORE THAN 1 Hit-skipping process" >> "$logfile"
             else
-                if [[ "$dubbedCheckHttpResponse" == *'"id":"OLY-'* ]];
+                if [[ "$dubbedEsCheckHttpResponse" == *'"id":"OLY-'* ]];
                 then
-                    #Dubbed Master does exist, updating metadata
-                    dubbedItemId=$(echo "$dubbedCheckHttpResponse" | awk -F '"id":"' '{print $2}' | awk -F '"' '{print $1}')
-                    echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master Item ID - [$dubbedItemId]" >> "$logfile"
-                    #Updating metadata on Dubbed Master Item
-                    echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Updating Metadata on Dubbed Master Item - [$dubbedItemId]" >> "$logfile"
-                    updateVidispineMetadata $dubbedItemId "oly_titleEs" "$itemTitleEs"
-                    updateVidispineMetadata $dubbedItemId "oly_titleEn" "$itemTitleEn"
-                    updateVidispineMetadata $dubbedItemId "oly_originalTitle" "$itemOriginalTitle"
-                    updateVidispineMetadata $dubbedItemId "oly_seriesName" "$itemSeriesName"
-                    updateVidispineMetadata $dubbedItemId "oly_seasonNumber" "$itemSeasonNumber"
-                    updateVidispineMetadata $dubbedItemId "oly_episodeNumber" "$itemEpisodeNumber"
-                    updateVidispineMetadata $dubbedItemId "oly_licensor" "$itemLicensor"
-                    updateVidispineMetadata $dubbedItemId "oly_titleCode" "$itemTitleCode"
-                    updateVidispineMetadata $dubbedItemId "oly_contractCode" "$itemContractCode"
-                    updateVidispineMetadata $dubbedItemId "oly_originalLanguage" "$itemOriginalLanguage"                
+                    #Dubbed Master ES does exist, updating metadata
+                    dubbedEsItemId=$(echo "$dubbedEsCheckHttpResponse" | awk -F '"id":"' '{print $2}' | awk -F '"' '{print $1}')
+                    echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master ES Item ID - [$dubbedEsItemId]" >> "$logfile"
+                    #Updating metadata on Dubbed Master ES Item
+                    echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Updating Metadata on Dubbed Master ES Item - [$dubbedEsItemId]" >> "$logfile"
+                    updateVidispineMetadata $dubbedEsItemId "oly_titleEs" "$itemTitleEs"
+                    updateVidispineMetadata $dubbedEsItemId "oly_titleEn" "$itemTitleEn"
+                    updateVidispineMetadata $dubbedEsItemId "oly_originalTitle" "$itemOriginalTitle"
+                    updateVidispineMetadata $dubbedEsItemId "oly_seriesName" "$itemSeriesName"
+                    updateVidispineMetadata $dubbedEsItemId "oly_seasonNumber" "$itemSeasonNumber"
+                    updateVidispineMetadata $dubbedEsItemId "oly_episodeNumber" "$itemEpisodeNumber"
+                    updateVidispineMetadata $dubbedEsItemId "oly_licensor" "$itemLicensor"
+                    updateVidispineMetadata $dubbedEsItemId "oly_titleCode" "$itemTitleCode"
+                    updateVidispineMetadata $dubbedEsItemId "oly_contractCode" "$itemContractCode"
+                    updateVidispineMetadata $dubbedEsItemId "oly_originalLanguage" "$itemOriginalLanguage"                
                 else
-                    #Dubbed Master does not exist
-                    echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master does not exist" >> "$logfile"
+                    #Dubbed Master ES does not exist
+                    echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master ES does not exist" >> "$logfile"
                 fi
             fi
         else
-            if [[ "$dubbedCheckHttpResponse" == *'"id":"OLY-'* ]];
+            if [[ "$dubbedEsCheckHttpResponse" == *'"id":"OLY-'* ]];
             then
-                #Dubbed Master does exist, updating metadata
-                dubbedItemId=$(echo "$dubbedCheckHttpResponse" | awk -F '"id":"' '{print $2}' | awk -F '"' '{print $1}')
-                echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master Item ID - [$dubbedItemId]" >> "$logfile"
-                #Updating metadata on Dubbed Master Item
-                echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Updating Metadata on Dubbed Master Item - [$dubbedItemId]" >> "$logfile"
-                updateVidispineMetadata $dubbedItemId "oly_titleEs" "$itemTitleEs"
-                updateVidispineMetadata $dubbedItemId "oly_titleEn" "$itemTitleEn"
-                updateVidispineMetadata $dubbedItemId "oly_originalTitle" "$itemOriginalTitle"
-                updateVidispineMetadata $dubbedItemId "oly_seriesName" "$itemSeriesName"
-                updateVidispineMetadata $dubbedItemId "oly_seasonNumber" "$itemSeasonNumber"
-                updateVidispineMetadata $dubbedItemId "oly_episodeNumber" "$itemEpisodeNumber"
-                updateVidispineMetadata $dubbedItemId "oly_licensor" "$itemLicensor"
-                updateVidispineMetadata $dubbedItemId "oly_titleCode" "$itemTitleCode"
-                updateVidispineMetadata $dubbedItemId "oly_contractCode" "$itemContractCode"
-                updateVidispineMetadata $dubbedItemId "oly_originalLanguage" "$itemOriginalLanguage"
+                #Dubbed Master ES does exist, updating metadata
+                dubbedEsItemId=$(echo "$dubbedEsCheckHttpResponse" | awk -F '"id":"' '{print $2}' | awk -F '"' '{print $1}')
+                echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master ES Item ID - [$dubbedEsItemId]" >> "$logfile"
+                #Updating metadata on Dubbed Master ES Item
+                echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Updating Metadata on Dubbed Master ES Item - [$dubbedEsItemId]" >> "$logfile"
+                updateVidispineMetadata $dubbedEsItemId "oly_titleEs" "$itemTitleEs"
+                updateVidispineMetadata $dubbedEsItemId "oly_titleEn" "$itemTitleEn"
+                updateVidispineMetadata $dubbedEsItemId "oly_originalTitle" "$itemOriginalTitle"
+                updateVidispineMetadata $dubbedEsItemId "oly_seriesName" "$itemSeriesName"
+                updateVidispineMetadata $dubbedEsItemId "oly_seasonNumber" "$itemSeasonNumber"
+                updateVidispineMetadata $dubbedEsItemId "oly_episodeNumber" "$itemEpisodeNumber"
+                updateVidispineMetadata $dubbedEsItemId "oly_licensor" "$itemLicensor"
+                updateVidispineMetadata $dubbedEsItemId "oly_titleCode" "$itemTitleCode"
+                updateVidispineMetadata $dubbedEsItemId "oly_contractCode" "$itemContractCode"
+                updateVidispineMetadata $dubbedEsItemId "oly_originalLanguage" "$itemOriginalLanguage"
             else
-                #Dubbed Master does not exist - trying different search
-                echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master does not exist - Trying different search" >> "$logfile"
+                #Dubbed Master ES does not exist - trying different search
+                echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master ES does not exist - Trying different search" >> "$logfile"
                 searchTitle=$(echo $searchTitle1 "*_S"$itemSeasonNumber"E"$itemEpisodeNumber"_*")
                 export searchUrl="http://10.1.1.34/API/v2/search/"
-                dubbedCheckBody="{ \"filter\": { \"operator\": \"AND\",\"terms\": [{ \"name\": \"title\", \"value\": \"$searchTitle\" },{ \"name\": \"oly_originalFileFlags\", \"value\": \"dubbedmaster*\" }]}}"                
-                echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Second Dubbed Master Check Body - [$dubbedCheckBody]" >> "$logfile"                
-                dubbedCheckHttpResponse=$(curl --location --request PUT $searchUrl --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=VDa9RP3Y9rgomyzNWvRxbu7WdTMetVYBlLg6pGMIJ6oyVABsjJiiEK9JCWVA1HYd' --data $dubbedCheckBody)
-                dubbedCheckHitResults=$(echo $dubbedCheckHttpResponse | awk -F '"hits":' '{print $2}' | awk -F ',' '{print $1}')
-                echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Second Dubbed Master Check HTTP Response - [$dubbedCheckHttpResponse]" >> "$logfile"
-                echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Second Dubbed Master Check Hit Results - [$dubbedCheckHitResults]" >> "$logfile"
-                if [ "$dubbedCheckHitResults" -gt 1 ];
+                dubbedEsCheckBody="{ \"filter\": { \"operator\": \"AND\",\"terms\": [{ \"name\": \"title\", \"value\": \"$searchTitle\" },{ \"name\": \"oly_originalFileFlags\", \"value\": \"dubbedmasteres\" }]}}"
+                echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Second Dubbed Master ES Check Body - [$dubbedEsCheckBody]" >> "$logfile"                
+                dubbedEsCheckHttpResponse=$(curl --location --request PUT $searchUrl --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=VDa9RP3Y9rgomyzNWvRxbu7WdTMetVYBlLg6pGMIJ6oyVABsjJiiEK9JCWVA1HYd' --data $dubbedEsCheckBody)
+                dubbedEsCheckHitResults=$(echo $dubbedEsCheckHttpResponse | awk -F '"hits":' '{print $2}' | awk -F ',' '{print $1}')
+                echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Second Dubbed Master ES Check HTTP Response - [$dubbedEsCheckHttpResponse]" >> "$logfile"
+                echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Second Dubbed Master ES Check Hit Results - [$dubbedEsCheckHitResults]" >> "$logfile"
+                if [ "$dubbedEsCheckHitResults" -gt 1 ];
                 then
-                    echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master Search Results Returned MORE THAN 1 Hit-skipping process" >> "$logfile"
+                    echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master ES Search Results Returned MORE THAN 1 Hit-skipping process" >> "$logfile"
                 else
-                    if [[ "$dubbedCheckHttpResponse" == *'"id":"OLY-'* ]];
+                    if [[ "$dubbedEsCheckHttpResponse" == *'"id":"OLY-'* ]];
                     then
-                        #Dubbed Master does exist, updating metadata
-                        dubbedItemId=$(echo "$dubbedCheckHttpResponse" | awk -F '"id":"' '{print $2}' | awk -F '"' '{print $1}')
-                        echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master Item ID - [$dubbedItemId]" >> "$logfile"
-                        #Updating metadata on Dubbed Master Item
-                        echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Updating Metadata on Dubbed Master Item - [$dubbedItemId]" >> "$logfile"
-                        updateVidispineMetadata $dubbedItemId "oly_titleEs" "$itemTitleEs"
-                        updateVidispineMetadata $dubbedItemId "oly_titleEn" "$itemTitleEn"
-                        updateVidispineMetadata $dubbedItemId "oly_originalTitle" "$itemOriginalTitle"
-                        updateVidispineMetadata $dubbedItemId "oly_seriesName" "$itemSeriesName"
-                        updateVidispineMetadata $dubbedItemId "oly_seasonNumber" "$itemSeasonNumber"
-                        updateVidispineMetadata $dubbedItemId "oly_episodeNumber" "$itemEpisodeNumber"
-                        updateVidispineMetadata $dubbedItemId "oly_licensor" "$itemLicensor"
-                        updateVidispineMetadata $dubbedItemId "oly_titleCode" "$itemTitleCode"
-                        updateVidispineMetadata $dubbedItemId "oly_contractCode" "$itemContractCode"
-                        updateVidispineMetadata $dubbedItemId "oly_originalLanguage" "$itemOriginalLanguage"                
+                        #Dubbed Master ES does exist, updating metadata
+                        dubbedEsItemId=$(echo "$dubbedEsCheckHttpResponse" | awk -F '"id":"' '{print $2}' | awk -F '"' '{print $1}')
+                        echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master ES Item ID - [$dubbedEsItemId]" >> "$logfile"
+                        #Updating metadata on Dubbed Master ES Item
+                        echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Updating Metadata on Dubbed Master ES Item - [$dubbedEsItemId]" >> "$logfile"
+                        updateVidispineMetadata $dubbedEsItemId "oly_titleEs" "$itemTitleEs"
+                        updateVidispineMetadata $dubbedEsItemId "oly_titleEn" "$itemTitleEn"
+                        updateVidispineMetadata $dubbedEsItemId "oly_originalTitle" "$itemOriginalTitle"
+                        updateVidispineMetadata $dubbedEsItemId "oly_seriesName" "$itemSeriesName"
+                        updateVidispineMetadata $dubbedEsItemId "oly_seasonNumber" "$itemSeasonNumber"
+                        updateVidispineMetadata $dubbedEsItemId "oly_episodeNumber" "$itemEpisodeNumber"
+                        updateVidispineMetadata $dubbedEsItemId "oly_licensor" "$itemLicensor"
+                        updateVidispineMetadata $dubbedEsItemId "oly_titleCode" "$itemTitleCode"
+                        updateVidispineMetadata $dubbedEsItemId "oly_contractCode" "$itemContractCode"
+                        updateVidispineMetadata $dubbedEsItemId "oly_originalLanguage" "$itemOriginalLanguage"                
                     else
-                        #Dubbed Master does not exist
-                        echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master does not exist" >> "$logfile"
+                        #Dubbed Master ES does not exist
+                        echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master ES does not exist" >> "$logfile"
+                    fi
+                fi
+            fi
+        fi
+        sleep 2
+        #API Call to Search for Dubbed Master EN
+        echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Searching for Dubbed Master EN - [$originalSearchTitle]" >> "$logfile"
+        export searchUrl="http://10.1.1.34/API/v2/search/"
+        dubbedEnCheckBody="{ \"filter\": { \"operator\": \"AND\",\"terms\": [{ \"name\": \"title\", \"value\": \"$originalSearchTitle\" },{ \"name\": \"oly_originalFileFlags\", \"value\": \"dubbedmasteren\" }]}}"        
+        echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master EN Check Body - [$dubbedEnCheckBody]" >> "$logfile"        
+        dubbedEnCheckHttpResponse=$(curl --location --request PUT $searchUrl --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=VDa9RP3Y9rgomyzNWvRxbu7WdTMetVYBlLg6pGMIJ6oyVABsjJiiEK9JCWVA1HYd' --data $dubbedEnCheckBody)
+        dubbedEnCheckHitResults=$(echo $dubbedEnCheckHttpResponse | awk -F '"hits":' '{print $2}' | awk -F ',' '{print $1}')
+        echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master EN Check HTTP Response - [$dubbedEnCheckHttpResponse]" >> "$logfile"
+        echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master EN Check Hit Results - [$dubbedEnCheckHitResults]" >> "$logfile"
+        if [ "$dubbedEnCheckHitResults" -gt 1 ];
+        then
+            echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master EN Search Results Returned MORE THAN 1 Hit - Trying different search" >> "$logfile"
+            #Dubbed Master EN does not exist - trying different search
+            echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master EN does not exist - Trying different search" >> "$logfile"
+            searchTitle=$(echo $searchTitle1 "*_S"$itemSeasonNumber"E"$itemEpisodeNumber"_*")
+            export searchUrl="http://10.1.1.34/API/v2/search/"
+            dubbedEnCheckBody="{ \"filter\": { \"operator\": \"AND\",\"terms\": [{ \"name\": \"title\", \"value\": \"$searchTitle\" },{ \"name\": \"oly_originalFileFlags\", \"value\": \"dubbedmasteren\" }]}}"                
+            echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Second Dubbed Master EN Check Body - [$dubbedEnCheckBody]" >> "$logfile"                
+            dubbedEnCheckHttpResponse=$(curl --location --request PUT $searchUrl --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=VDa9RP3Y9rgomyzNWvRxbu7WdTMetVYBlLg6pGMIJ6oyVABsjJiiEK9JCWVA1HYd' --data $dubbedEnCheckBody)
+            dubbedEnCheckHitResults=$(echo $dubbedEnCheckHttpResponse | awk -F '"hits":' '{print $2}' | awk -F ',' '{print $1}')
+            echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Second Dubbed Master EN Check HTTP Response - [$dubbedEnCheckHttpResponse]" >> "$logfile"
+            echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Second Dubbed Master EN Check Hit Results - [$dubbedEnCheckHitResults]" >> "$logfile"
+            if [ "$dubbedEnCheckHitResults" -gt 1 ];
+            then
+                echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master EN Search Results Returned MORE THAN 1 Hit-skipping process" >> "$logfile"
+            else
+                if [[ "$dubbedEnCheckHttpResponse" == *'"id":"OLY-'* ]];
+                then
+                    #Dubbed Master EN does exist, updating metadata
+                    dubbedEnItemId=$(echo "$dubbedEnCheckHttpResponse" | awk -F '"id":"' '{print $2}' | awk -F '"' '{print $1}')
+                    echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master EN Item ID - [$dubbedEnItemId]" >> "$logfile"
+                    #Updating metadata on Dubbed Master EN Item
+                    echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Updating Metadata on Dubbed Master EN Item - [$dubbedEnItemId]" >> "$logfile"
+                    updateVidispineMetadata $dubbedEnItemId "oly_titleEs" "$itemTitleEs"
+                    updateVidispineMetadata $dubbedEnItemId "oly_titleEn" "$itemTitleEn"
+                    updateVidispineMetadata $dubbedEnItemId "oly_originalTitle" "$itemOriginalTitle"
+                    updateVidispineMetadata $dubbedEnItemId "oly_seriesName" "$itemSeriesName"
+                    updateVidispineMetadata $dubbedEnItemId "oly_seasonNumber" "$itemSeasonNumber"
+                    updateVidispineMetadata $dubbedEnItemId "oly_episodeNumber" "$itemEpisodeNumber"
+                    updateVidispineMetadata $dubbedEnItemId "oly_licensor" "$itemLicensor"
+                    updateVidispineMetadata $dubbedEnItemId "oly_titleCode" "$itemTitleCode"
+                    updateVidispineMetadata $dubbedEnItemId "oly_contractCode" "$itemContractCode"
+                    updateVidispineMetadata $dubbedEnItemId "oly_originalLanguage" "$itemOriginalLanguage"                
+                else
+                    #Dubbed Master EN does not exist
+                    echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master EN does not exist" >> "$logfile"
+                fi
+            fi
+        else
+            if [[ "$dubbedEnCheckHttpResponse" == *'"id":"OLY-'* ]];
+            then
+                #Dubbed Master EN does exist, updating metadata
+                dubbedEnItemId=$(echo "$dubbedEnCheckHttpResponse" | awk -F '"id":"' '{print $2}' | awk -F '"' '{print $1}')
+                echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master EN Item ID - [$dubbedEnItemId]" >> "$logfile"
+                #Updating metadata on Dubbed Master EN Item
+                echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Updating Metadata on Dubbed Master EN Item - [$dubbedEnItemId]" >> "$logfile"
+                updateVidispineMetadata $dubbedEnItemId "oly_titleEs" "$itemTitleEs"
+                updateVidispineMetadata $dubbedEnItemId "oly_titleEn" "$itemTitleEn"
+                updateVidispineMetadata $dubbedEnItemId "oly_originalTitle" "$itemOriginalTitle"
+                updateVidispineMetadata $dubbedEnItemId "oly_seriesName" "$itemSeriesName"
+                updateVidispineMetadata $dubbedEnItemId "oly_seasonNumber" "$itemSeasonNumber"
+                updateVidispineMetadata $dubbedEnItemId "oly_episodeNumber" "$itemEpisodeNumber"
+                updateVidispineMetadata $dubbedEnItemId "oly_licensor" "$itemLicensor"
+                updateVidispineMetadata $dubbedEnItemId "oly_titleCode" "$itemTitleCode"
+                updateVidispineMetadata $dubbedEnItemId "oly_contractCode" "$itemContractCode"
+                updateVidispineMetadata $dubbedEnItemId "oly_originalLanguage" "$itemOriginalLanguage"
+            else
+                #Dubbed Master EN does not exist - trying different search
+                echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master EN does not exist - Trying different search" >> "$logfile"
+                searchTitle=$(echo $searchTitle1 "*_S"$itemSeasonNumber"E"$itemEpisodeNumber"_*")
+                export searchUrl="http://10.1.1.34/API/v2/search/"
+                dubbedEnCheckBody="{ \"filter\": { \"operator\": \"AND\",\"terms\": [{ \"name\": \"title\", \"value\": \"$searchTitle\" },{ \"name\": \"oly_originalFileFlags\", \"value\": \"dubbedmasteren\" }]}}"                
+                echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Second Dubbed Master EN Check Body - [$dubbedEnCheckBody]" >> "$logfile"                
+                dubbedEnCheckHttpResponse=$(curl --location --request PUT $searchUrl --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=VDa9RP3Y9rgomyzNWvRxbu7WdTMetVYBlLg6pGMIJ6oyVABsjJiiEK9JCWVA1HYd' --data $dubbedEnCheckBody)
+                dubbedEnCheckHitResults=$(echo $dubbedEnCheckHttpResponse | awk -F '"hits":' '{print $2}' | awk -F ',' '{print $1}')
+                echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Second Dubbed Master EN Check HTTP Response - [$dubbedEnCheckHttpResponse]" >> "$logfile"
+                echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Second Dubbed Master EN Check Hit Results - [$dubbedEnCheckHitResults]" >> "$logfile"
+                if [ "$dubbedEnCheckHitResults" -gt 1 ];
+                then
+                    echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master EN Search Results Returned MORE THAN 1 Hit-skipping process" >> "$logfile"
+                else
+                    if [[ "$dubbedEnCheckHttpResponse" == *'"id":"OLY-'* ]];
+                    then
+                        #Dubbed Master EN does exist, updating metadata
+                        dubbedEnItemId=$(echo "$dubbedEnCheckHttpResponse" | awk -F '"id":"' '{print $2}' | awk -F '"' '{print $1}')
+                        echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master EN Item ID - [$dubbedEnItemId]" >> "$logfile"
+                        #Updating metadata on Dubbed Master EN Item
+                        echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Updating Metadata on Dubbed Master EN Item - [$dubbedEnItemId]" >> "$logfile"
+                        updateVidispineMetadata $dubbedEnItemId "oly_titleEs" "$itemTitleEs"
+                        updateVidispineMetadata $dubbedEnItemId "oly_titleEn" "$itemTitleEn"
+                        updateVidispineMetadata $dubbedEnItemId "oly_originalTitle" "$itemOriginalTitle"
+                        updateVidispineMetadata $dubbedEnItemId "oly_seriesName" "$itemSeriesName"
+                        updateVidispineMetadata $dubbedEnItemId "oly_seasonNumber" "$itemSeasonNumber"
+                        updateVidispineMetadata $dubbedEnItemId "oly_episodeNumber" "$itemEpisodeNumber"
+                        updateVidispineMetadata $dubbedEnItemId "oly_licensor" "$itemLicensor"
+                        updateVidispineMetadata $dubbedEnItemId "oly_titleCode" "$itemTitleCode"
+                        updateVidispineMetadata $dubbedEnItemId "oly_contractCode" "$itemContractCode"
+                        updateVidispineMetadata $dubbedEnItemId "oly_originalLanguage" "$itemOriginalLanguage"                
+                    else
+                        #Dubbed Master EN does not exist
+                        echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master EN does not exist" >> "$logfile"
                     fi
                 fi
             fi
@@ -582,36 +772,69 @@ else
                 fi
             fi
             sleep 2
-            #API Call to Search for Dubbed Master
-            echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Searching for Dubbed Master - [$searchTitle]" >> "$logfile"
+            #API Call to Search for Dubbed Master ES
+            echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Searching for Dubbed Master ES - [$searchTitle]" >> "$logfile"
             export searchUrl="http://10.1.1.34/API/v2/search/"
-            dubbedCheckBody="{ \"filter\": { \"operator\": \"AND\",\"terms\": [{ \"name\": \"title\", \"value\": \"$searchTitle\" },{ \"name\": \"oly_contentType\", \"value\": \"movie\" },{ \"name\": \"oly_originalFileFlags\", \"value\": \"dubbedmaster*\" }]}}"
-            echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master Check Body - [$dubbedCheckBody]" >> "$logfile"            
-            dubbedCheckHttpResponse=$(curl --location --request PUT $searchUrl --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=VDa9RP3Y9rgomyzNWvRxbu7WdTMetVYBlLg6pGMIJ6oyVABsjJiiEK9JCWVA1HYd' --data $dubbedCheckBody)
-            dubbedCheckHitResults=$(echo $dubbedCheckHttpResponse | awk -F '"hits":' '{print $2}' | awk -F ',' '{print $1}')
-            echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master Check HTTP Response - [$dubbedCheckHttpResponse]" >> "$logfile"
-            echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master Check Hit Results - [$dubbedCheckHitResults]" >> "$logfile"
-            if [ "$dubbedCheckHitResults" -gt 1 ];
+            dubbedEsCheckBody="{ \"filter\": { \"operator\": \"AND\",\"terms\": [{ \"name\": \"title\", \"value\": \"$searchTitle\" },{ \"name\": \"oly_contentType\", \"value\": \"movie\" },{ \"name\": \"oly_originalFileFlags\", \"value\": \"dubbedmasteres\" }]}}"
+            echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master ES Check Body - [$dubbedEsCheckBody]" >> "$logfile"            
+            dubbedEsCheckHttpResponse=$(curl --location --request PUT $searchUrl --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=VDa9RP3Y9rgomyzNWvRxbu7WdTMetVYBlLg6pGMIJ6oyVABsjJiiEK9JCWVA1HYd' --data $dubbedEsCheckBody)
+            dubbedEsCheckHitResults=$(echo $dubbedEsCheckHttpResponse | awk -F '"hits":' '{print $2}' | awk -F ',' '{print $1}')
+            echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master ES Check HTTP Response - [$dubbedEsCheckHttpResponse]" >> "$logfile"
+            echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master ES Check Hit Results - [$dubbedEsCheckHitResults]" >> "$logfile"
+            if [ "$dubbedEsCheckHitResults" -gt 1 ];
             then
-                echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master Search Results Returned MORE THAN 1 Hit-skipping process" >> "$logfile"
+                echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master ES Search Results Returned MORE THAN 1 Hit-skipping process" >> "$logfile"
             else
-                if [[ "$dubbedCheckHttpResponse" == *'"id":"OLY-'* ]];
+                if [[ "$dubbedEsCheckHttpResponse" == *'"id":"OLY-'* ]];
                 then
-                    #Dubbed Master does exist, updating metadata
-                    dubbedItemId=$(echo "$dubbedCheckHttpResponse" | awk -F '"id":"' '{print $2}' | awk -F '"' '{print $1}')
-                    echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master Item ID - [$dubbedItemId]" >> "$logfile"
-                    #Updating metadata on Dubbed Master Item
-                    echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Updating Metadata on Dubbed Master Item - [$dubbedItemId]" >> "$logfile"
-                    updateVidispineMetadata $dubbedItemId "oly_titleEs" "$itemTitleEs"
-                    updateVidispineMetadata $dubbedItemId "oly_titleEn" "$itemTitleEn"
-                    updateVidispineMetadata $dubbedItemId "oly_originalTitle" "$itemOriginalTitle"
-                    updateVidispineMetadata $dubbedItemId "oly_licensor" "$itemLicensor"
-                    updateVidispineMetadata $dubbedItemId "oly_titleCode" "$itemTitleCode"
-                    updateVidispineMetadata $dubbedItemId "oly_contractCode" "$itemContractCode"
-                    updateVidispineMetadata $dubbedItemId "oly_originalLanguage" "$itemOriginalLanguage"
+                    #Dubbed Master ES does exist, updating metadata
+                    dubbedEsItemId=$(echo "$dubbedEsCheckHttpResponse" | awk -F '"id":"' '{print $2}' | awk -F '"' '{print $1}')
+                    echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master ES Item ID - [$dubbedEsItemId]" >> "$logfile"
+                    #Updating metadata on Dubbed Master ES Item
+                    echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Updating Metadata on Dubbed Master ES Item - [$dubbedEsItemId]" >> "$logfile"
+                    updateVidispineMetadata $dubbedEsItemId "oly_titleEs" "$itemTitleEs"
+                    updateVidispineMetadata $dubbedEsItemId "oly_titleEn" "$itemTitleEn"
+                    updateVidispineMetadata $dubbedEsItemId "oly_originalTitle" "$itemOriginalTitle"
+                    updateVidispineMetadata $dubbedEsItemId "oly_licensor" "$itemLicensor"
+                    updateVidispineMetadata $dubbedEsItemId "oly_titleCode" "$itemTitleCode"
+                    updateVidispineMetadata $dubbedEsItemId "oly_contractCode" "$itemContractCode"
+                    updateVidispineMetadata $dubbedEsItemId "oly_originalLanguage" "$itemOriginalLanguage"
                 else
-                    #Dubbed Master does not exist
-                    echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master does not exist" >> "$logfile"
+                    #Dubbed Master ES does not exist
+                    echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master ES does not exist" >> "$logfile"
+                fi
+            fi
+            sleep 2
+            #API Call to Search for Dubbed Master EN
+            echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Searching for Dubbed Master EN - [$searchTitle]" >> "$logfile"
+            export searchUrl="http://10.1.1.34/API/v2/search/"
+            dubbedEnCheckBody="{ \"filter\": { \"operator\": \"AND\",\"terms\": [{ \"name\": \"title\", \"value\": \"$searchTitle\" },{ \"name\": \"oly_contentType\", \"value\": \"movie\" },{ \"name\": \"oly_originalFileFlags\", \"value\": \"dubbedmasteren\" }]}}"
+            echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master EN Check Body - [$dubbedEnCheckBody]" >> "$logfile"            
+            dubbedEnCheckHttpResponse=$(curl --location --request PUT $searchUrl --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=VDa9RP3Y9rgomyzNWvRxbu7WdTMetVYBlLg6pGMIJ6oyVABsjJiiEK9JCWVA1HYd' --data $dubbedEnCheckBody)
+            dubbedEnCheckHitResults=$(echo $dubbedEnCheckHttpResponse | awk -F '"hits":' '{print $2}' | awk -F ',' '{print $1}')
+            echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master EN Check HTTP Response - [$dubbedEnCheckHttpResponse]" >> "$logfile"
+            echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master EN Check Hit Results - [$dubbedEnCheckHitResults]" >> "$logfile"
+            if [ "$dubbedEnCheckHitResults" -gt 1 ];
+            then
+                echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master EN Search Results Returned MORE THAN 1 Hit-skipping process" >> "$logfile"
+            else
+                if [[ "$dubbedEnCheckHttpResponse" == *'"id":"OLY-'* ]];
+                then
+                    #Dubbed Master EN does exist, updating metadata
+                    dubbedEnItemId=$(echo "$dubbedEnCheckHttpResponse" | awk -F '"id":"' '{print $2}' | awk -F '"' '{print $1}')
+                    echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master EN Item ID - [$dubbedEnItemId]" >> "$logfile"
+                    #Updating metadata on Dubbed Master EN Item
+                    echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Updating Metadata on Dubbed Master EN Item - [$dubbedEnItemId]" >> "$logfile"
+                    updateVidispineMetadata $dubbedEnItemId "oly_titleEs" "$itemTitleEs"
+                    updateVidispineMetadata $dubbedEnItemId "oly_titleEn" "$itemTitleEn"
+                    updateVidispineMetadata $dubbedEnItemId "oly_originalTitle" "$itemOriginalTitle"
+                    updateVidispineMetadata $dubbedEnItemId "oly_licensor" "$itemLicensor"
+                    updateVidispineMetadata $dubbedEnItemId "oly_titleCode" "$itemTitleCode"
+                    updateVidispineMetadata $dubbedEnItemId "oly_contractCode" "$itemContractCode"
+                    updateVidispineMetadata $dubbedEnItemId "oly_originalLanguage" "$itemOriginalLanguage"
+                else
+                    #Dubbed Master EN does not exist
+                    echo "$(date +%Y/%m/%d_%H:%M) - (copyMetadataToOtherMasters) - [$itemId] - Dubbed Master EN does not exist" >> "$logfile"
                 fi
             fi
             sleep 2
