@@ -5,7 +5,7 @@
 #	vault-name olympusatMamGlacier
 # PREREQUISITE: This script must receive upload ID as an argument and source file location.
 # It splits source files into 512 MiB chunks then gather SHA256HASH key for each 1 MiB chunk.
-# 	Usage: glacierMultiArch.sh [filepath with the filename being item ID] [folder of actively working file "token"]
+# 	Usage: glacierMultiArch.sh [filepath with the filename being item ID] [folder of actively working file "token"] [path to temporary folder]
 
 # System requirements: This script will only run in LINUX but not MacOS (because hash openssl)
 
@@ -28,7 +28,9 @@ export awsCustomerId="500844647317"
 export awsVaultName="olympusatMamGlacier"
 export logFile="/opt/olympusat/logs/glacier-$myDate.log"
 export urlMetadata=$(echo "http://10.1.1.34:8080/API/item/$uploadId/metadata/")
-export temporaryFolder="/Volumes/Temp/glacierStage"
+# export temporaryFolder="/Volumes/Temp/glacierStage"
+export temporaryFolder=$3
+# export renameFolder="/proxies/portal-rename"
 export chunkSizeExponential=19
 #--------------------------------------------------
 sourceFile=$(filterVidispineFileInfo $uploadId "uri" "tag=original" | sed -e 's/%20/ /g' | sed -e 's/%23/\#/g')
@@ -36,6 +38,8 @@ sourceTitle=$(filterVidispineItemMetadata $uploadId "metadata" "title")
 chunksCount=0
 chunkByteSize=$((1024*(2**$chunkSizeExponential)))
 sourceFileName=$(basename "$sourceFile")
+sourceFileExtension=$(echo $sourceFileName | awk -F "." '{print $2}')
+destinationTempFile="$temporaryFolder/$uploadId/$uploadId.$sourceFileExtension"
 sourceFilePath=$(dirname "$sourceFile")
 sourceFileSize=$(stat -c%s "$sourceFile")
 archiveDescription=$(echo $sourceTitle,,$uploadId)
@@ -43,14 +47,33 @@ archiveDescription=$(echo $sourceTitle,,$uploadId)
 
 mv -f $tokenFile $activeArchiveFolder
 
+#-------------------------------------------------- Copy file into temporary folder
+mkdir -p "$temporaryFolder"/"$uploadId"
+mkdir -p "$temporaryFolder"/"$uploadId"/Chunk_all
+cp -f "$sourceFile" "$destinationTempFile"
+sleep 10
+sourceFileSize=$(stat -c%s "$destinationTempFile")
+#-------------------------------------------------- End copying file to temporary folder
+
 if [ $sourceFileSize -lt $chunkByteSize ];
 then
 	echo "$(date "+%H:%M:%S") (glacierSingleArch) - ($uploadId) Start processing $sourceFile ($sourceFileSize bytes) as a single upload" >> "$logFile"
 	updateValue=$(date "+%Y-%m-%dT%H:%M:%S")
 	updateVidispineMetadata $uploadId "oly_archiveDateAWS" $updateValue
 	updateVidispineMetadata $uploadId "oly_archiveStatusAWS" "in progress - archiving as a single upload"
-	httpResponse=$(/usr/local/aws-cli/v2/current/dist/aws glacier upload-archive --account-id "$awsCustomerId" --vault-name "$awsVaultName" --body "$sourceFile" --archive-description "$archiveDescription")
+	httpResponse=$(/usr/local/aws-cli/v2/current/dist/aws glacier upload-archive --account-id "$awsCustomerId" --vault-name "$awsVaultName" --body "$destinationTempFile" --archive-description "$archiveDescription")
 	awsArchiveId=$(echo "$httpResponse" | awk -F " " '{print $1}')
+	if [ -z $awsArchiveId ];
+	then
+		echo "$(date "+%H:%M:%S") (glacierMultiArch) - ($uploadId)   Archive session cannot be created - re-trying with new file name" >> "$logFile"
+		cp -f "$sourceFile" "$destinationTempFile"
+		echo "$(date "+%H:%M:%S") (glacierSingleArch) - ($uploadId) Start processing $sourceFile ($sourceFileSize bytes) as a single upload" >> "$logFile"
+		updateValue=$(date "+%Y-%m-%dT%H:%M:%S")
+		updateVidispineMetadata $uploadId "oly_archiveDateAWS" $updateValue
+		updateVidispineMetadata $uploadId "oly_archiveStatusAWS" "in progress - archiving as a single upload with new file name"
+		httpResponse=$(/usr/local/aws-cli/v2/current/dist/aws glacier upload-archive --account-id "$awsCustomerId" --vault-name "$awsVaultName" --body "$destinationTempFile" --archive-description "$archiveDescription")
+		awsArchiveId=$(echo "$httpResponse" | awk -F " " '{print $1}')
+	fi
 	echo "$(date "+%H:%M:%S") (glacierSingleArch) - ($uploadId)   Completing single upload process." >> "$logFile"
 else
 	totalChunkCount=$(( $sourceFileSize/$chunkByteSize ))
@@ -64,8 +87,10 @@ else
 	# echo "$(date "+%H:%M:%S") (glacierMultiArch) - ($uploadId)   /usr/local/aws-cli/v2/current/dist/aws glacier initiate-multipart-upload --account-id $awsCustomerId --archive-description $uploadId --part-size $chunkByteSize --vault-name $awsVaultName" >> "$logFile"
 	if [ -z $awsJobId ];
 	then
-		echo "$(date "+%H:%M:%S") (glacierMultiArch) - ($uploadId)   Archive session cannot be created - no job ID" >> "$logFile"
-		awsArchiveId=""
+		echo "$(date "+%H:%M:%S") (glacierMultiArch) - ($uploadId)   FAILED - Archive session cannot be created - please check source file" >> "$logFile"
+		cp -f "$sourceFile" "$destinationTempFile"
+		sourceFile="$destinationTempFile"
+		httpResponse=$(/usr/local/aws-cli/v2/current/dist/aws glacier initiate-multipart-upload --account-id "$awsCustomerId" --archive-description "$archiveDescription" --part-size $chunkByteSize --vault-name "$awsVaultName")
 	else
 		updateVidispineMetadata $uploadId "oly_archiveIdAWS" $awsJobId
 		echo "$(date "+%H:%M:%S") (glacierMultiArch) - ($uploadId)   Archive session has been created with ID $awsJobId" >> "$logFile"
@@ -84,7 +109,7 @@ else
 
 		cd "$temporaryFolder"/"$uploadId"
 		chunkList=$(echo "$temporaryFolder"/"$uploadId"/"$uploadId"_list.txt)
-		split -d -a 3 --byte=$chunkByteSize --verbose "$sourceFile" "$uploadId"_ > "$chunkList"
+		split -d -a 3 --byte=$chunkByteSize --verbose "$destinationTempFile" "$uploadId"_ > "$chunkList"
 		iCounter=0
 		chunkTreeHash="none"
 
