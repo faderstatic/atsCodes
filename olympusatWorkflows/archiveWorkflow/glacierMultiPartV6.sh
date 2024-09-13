@@ -29,7 +29,7 @@ export awsVaultName="olympusatMamGlacier"
 export logFile="/opt/olympusat/logs/glacier-$myDate.log"
 export urlMetadata=$(echo "http://10.1.1.34:8080/API/item/$uploadId/metadata/")
 # export temporaryFolder="/Volumes/Temp/glacierStage"
-export temporaryFolder="proxies/portal-glacierTemp"
+export temporaryFolder="/proxies/portal-glacierTemp"
 # export renameFolder="/proxies/portal-rename"
 export chunkSizeExponential=19
 #--------------------------------------------------
