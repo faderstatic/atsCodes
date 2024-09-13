@@ -3,7 +3,7 @@
 
 # This application ingests metadata from an XML API response into Cantemo
 # PREREQUISITE: -none-
-# 	Usage: aiNudityIngest.py [cantemo ID] [acceptable gap between clips in frames]
+# 	Usage: aiNudityIngest.py [cantemo ID] [nudity level 1-100] [acceptable gap between clips in frames]
 
 #------------------------------
 # Libraries
@@ -72,10 +72,11 @@ try:
   cantemoItemId = sys.argv[1]
   # cantemoItemId = os.environ.get("portal_itemId")
   errorReport = ''
-  nudityThreshold = 49
+  nudityThresholdDesignation = sys.argv[2]
+  nudityThreshold = int(nudityThresholdDesignation)
   nudityEndFramePrev = 0
   nudityStartFramePrev = 0
-  gapThresholdDesignation = sys.argv[2]
+  gapThresholdDesignation = sys.argv[3]
   gapThreshold = int(gapThresholdDesignation)
   nudityLevel = 0
   nudityLevelPrev = 0
