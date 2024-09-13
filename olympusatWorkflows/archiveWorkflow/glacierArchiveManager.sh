@@ -20,7 +20,7 @@ IFS=$(echo -e "\n\b")
 # Set some parameters
 export jobQueueFolder=$1
 export jobActiveFolder=$2
-export concurrentLimit=2
+export concurrentLimit=3
 export checkInterval=1800
 export myDate=$(date "+%Y-%m-%d")
 export logArchiveDate=$(date "+%Y-%m-%d" -d "14 day ago")
@@ -54,7 +54,7 @@ do
 			archiveProcessId=$(ps awx | grep "/opt/olympusat/scriptsActive/glacierQueue" | grep "/opt/olympusat/scriptsActive/glacierMultiPart" | grep "/bin/bash" | awk '{ print $5 }')
 			if [ "$archiveProcessId" == "" ];
 			then
-				/opt/olympusat/scriptsActive/glacierQueueWorker.sh /opt/olympusat/scriptsActive/glacierMultiPartV4.sh "$jobQueueFolder" "$jobActiveFolder" glacierArchive $concurrentLimit
+				/opt/olympusat/scriptsActive/glacierQueueWorker.sh /opt/olympusat/scriptsActive/glacierMultiPartV6.sh "$jobQueueFolder" "$jobActiveFolder" glacierArchive $concurrentLimit
 				sleep 60
 			fi
 		done
