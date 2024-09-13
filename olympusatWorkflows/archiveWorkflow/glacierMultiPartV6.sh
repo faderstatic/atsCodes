@@ -42,7 +42,8 @@ sourceFileExtension=$(echo $sourceFileName | awk -F "." '{print $2}')
 destinationTempFile="$temporaryFolder/$uploadId/$uploadId.$sourceFileExtension"
 # sourceFilePath=$(dirname "$sourceFile")
 # sourceFileSize=$(stat -c%s "$sourceFile")
-archiveDescription=$(echo $sourceTitle,,$uploadId)
+archiveDescription=$(echo $sourceTitle,,$uploadId )
+archiveDescriptionTrunc=$(echo "$archiveDescription" | tr -dc '[:alnum:]_ ,\n\r')
 #--------------------------------------------------
 
 mv -f $tokenFile $activeArchiveFolder
@@ -61,7 +62,7 @@ then
 	updateValue=$(date "+%Y-%m-%dT%H:%M:%S")
 	updateVidispineMetadata $uploadId "oly_archiveDateAWS" $updateValue
 	updateVidispineMetadata $uploadId "oly_archiveStatusAWS" "in progress - archiving as a single upload"
-	httpResponse=$(/usr/local/aws-cli/v2/current/dist/aws glacier upload-archive --account-id "$awsCustomerId" --vault-name "$awsVaultName" --body "$destinationTempFile" --archive-description "$archiveDescription")
+	httpResponse=$(/usr/local/aws-cli/v2/current/dist/aws glacier upload-archive --account-id "$awsCustomerId" --vault-name "$awsVaultName" --body "$destinationTempFile" --archive-description "$archiveDescriptionTrunc")
 	awsArchiveId=$(echo "$httpResponse" | awk -F " " '{print $1}')
 	echo "$(date "+%H:%M:%S") (glacierSingleArch) - ($uploadId)   Completing single upload process." >> "$logFile"
 else
@@ -69,7 +70,7 @@ else
 	echo "$(date "+%H:%M:%S") (glacierMultiArch) - ($uploadId) Start processing $sourceFile ($sourceFileSize bytes) with $chunkByteSize byte chunks" >> "$logFile"
 
 	#-------------------------------------------------- Get Job ID from AWS and set it in Cantemo oly_archiveIdAWS
-	httpResponse=$(/usr/local/aws-cli/v2/current/dist/aws glacier initiate-multipart-upload --account-id "$awsCustomerId" --archive-description "$archiveDescription" --part-size $chunkByteSize --vault-name "$awsVaultName")
+	httpResponse=$(/usr/local/aws-cli/v2/current/dist/aws glacier initiate-multipart-upload --account-id "$awsCustomerId" --archive-description "$archiveDescriptionTrunc" --part-size $chunkByteSize --vault-name "$awsVaultName")
 	# echo "$(date "+%H:%M:%S") (glacierMultiArch) - ($uploadId)   AWS Initiate Response is $httpResponse" >> "$logFile"
 	awsJobId=$(echo $httpResponse | awk -F " " '{print $2}')
 	# awsJobId="Z0vF67TUjlqj9D5bhhF7U3UMEhZmm8ymWZ_EXj7iMGZqKTRkvLc9ab9Z-5xKOA1W-pvcl1whXvtsvrqcs-KNiWBUstni"
