@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<package xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <video>
+    <!-- If item is an Episode, this is the related Season's Title -->
+    <isEpisodeOf_title>{{ isEpisodeOf_title }}</isEpisodeOf_title>
+    <!-- If item is an Episode, this is the related Season's Rightsline Item ID -->
+    <isEpisodeOf_rightslineItemId>{{ isEpisodeOf_rightslineItemId }}</isEpisodeOf_rightslineItemId>
+    <!-- If item is an Episode, this is the related Season's Title Code -->
+    <isEpisodeOf_titleCode>{{ isEpisodeOf_titleCode }}</isEpisodeOf_titleCode>
+    <!-- IDs from new MAM system - Maybe need new property in Mira to map this info to -->
+    <mamId>{{ itemId }}</mamId>
+    <!-- Map to Mira - Name Field -->
+    <name>{{ oly_titleEn }}</name>
+    <!-- Map to Mira - Programme Name - Original Title -->
+    <originalTitle>{{ oly_originalTitle }}</originalTitle>
+    <!-- Map to Mira - Programme Name - Title English -->
+    <titleEn>{{ oly_titleEn }}</titleEn>
+    <!-- Map to Mira - Programme Name - Title Spanish -->
+    <titleEs>{{ oly_titleEs }}</titleEs>
+    <!-- To Identify Content Type - movie, series, season or episode -->
+    <contentType>{{ oly_contentType }}</contentType>
+    <!-- New House ID to be mapped to Mira - Programme Number -->
+    <programmeNumber>{{ oly_rightslineItemId }}</programmeNumber>
+    <!-- Old House ID used to be mapped to Mira - Programme Number - Maybe need new property in Mira to map this info to while its still being used -->
+    <titleCode>{{ oly_titleCode }}</titleCode>
+    <!-- Contract IDs from new workflow process - map to Mira - Licence -->
+    <licence>{{ oly_rightslineContractId }}</licence>
+    <!-- Old Contract Code used to be mapped to Mira - Licence - Maybe need new property in Mira to map this info to while its still being used -->
+    <contractCode>{{ oly_contractCode }}</contractCode>
+    <!-- Map to Mira - Valid From -->
+    <validFrom>{{ oly_termStartDate }}</validFrom>
+    <!-- Map to Mira - Valid To -->
+    <validTo>{{ oly_termEndDate }}</validTo>
+    <!-- Map to Mira - Length -->
+    <length>{{ durationTimeCode }}</length>
+    <!-- Map to Mira - Episodes if contentType is Series - we could send <totalEpisodes> and set with appropriate value based on if its a series or season -->
+    <totalEpisodesBySeries>{{ oly_totalEpisodesBySeries }}</totalEpisodesBySeries>
+    <!-- Map to Mira - Episodes if contentType is Season -->
+    <totalEpisodesBySeason>{{ oly_totalEpisodesBySeason }}</totalEpisodesBySeason>
+    <!-- Map to Mira - Season -->
+    <seasonNumber>{{ oly_seasonNumber }}</seasonNumber>
+    <!-- Map to Mira - Episode -->
+    <episodeNumber>{{ oly_episodeNumber }}</episodeNumber>
+    <!-- Map to Mira - Year -->
+    <year>{{ oly_productionYear }}</year>
+    <!-- Map to Mira - Country -->
+    <country>{{ oly_countryOfOrigin }}</country>
+    <!-- Map to Mira - Genre -->
+    <primaryGenre>{{ oly_primaryGenre }}</primaryGenre>
+    <!-- Map to Mira - Genre - we could send <genre> and set with the appropriate value(s) for both primary and secondary -->
+    <secondaryGenres>{{ oly_secondaryGenres }}</secondaryGenres>
+    <!-- Map to Mira - Language -->
+    <language>{{ oly_originalLanguage }}</language>
+    <!-- Map to Mira - Content Rating Systems - TvUS -->
+    <tvUsRating>{{ oly_originalRating }}</tvUsRating>
+    <!-- Map to Mira - Content Rating Systems - MPAA -->
+    <mpaaRating>{{ oly_originalMpaaRating }}</mpaaRating>
+    <!-- Map to Mira - Content Rating Systems - RTC -->
+    <rtcRating>{{ oly_originalRtcRating }}</rtcRating>
+    <!-- Map to Mira - Cast and crew - Actor -->
+    <actor>{{ oly_cast }}</actor>
+    <!-- Map to Mira - Cast and crew - Director -->
+    <director>{{ oly_director }}</director>
+    <!-- Map to Mira - Cast and crew - Producer -->
+    <producer>{{ oly_producer }}</producer>
+    <!-- Map to Mira - Synopsis - Short English -->
+    <synopsisShortEn>{{ oly_shortDescriptionEn }}</synopsisShortEn>
+    <!-- Map to Mira - Synopsis - Long English -->
+    <synopsisLongEn>{{ oly_longDescriptionEn }}</synopsisLongEn>
+    <!-- Map to Mira - Synopsis - LogLine English -->
+    <synopsisLogLineEn>{{ oly_logLineEn }}</synopsisLogLineEn>
+    <!-- Map to Mira - Synopsis - Short Spanish -->
+    <synopsisShortEs>{{ oly_shortDescriptionEs }}</synopsisShortEs>
+    <!-- Map to Mira - Synopsis - Long Spanish -->
+    <synopsisLongEs>{{ oly_longDescriptionEs }}</synopsisLongEs>
+    <!-- Map to Mira - Synopsis - LogLine Spanish -->
+    <synopsisLogLineEs>{{ oly_logLineEs }}</synopsisLogLineEs>
+  </video>
+</package>
