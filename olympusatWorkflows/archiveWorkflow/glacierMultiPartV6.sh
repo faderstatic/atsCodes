@@ -43,7 +43,7 @@ destinationTempFile="$temporaryFolder/$uploadId/$uploadId.$sourceFileExtension"
 # sourceFilePath=$(dirname "$sourceFile")
 # sourceFileSize=$(stat -c%s "$sourceFile")
 archiveDescription=$(echo $sourceTitle,,$uploadId )
-archiveDescriptionTrunc=$(echo "$archiveDescription" | tr -dc '[:alnum:]_ ,\n\r')
+archiveDescriptionTrunc=$(echo "$archiveDescription" | tr -dc '[:alnum:]-_ ,\n\r')
 #--------------------------------------------------
 
 mv -f $tokenFile $activeArchiveFolder
