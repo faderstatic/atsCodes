@@ -164,9 +164,11 @@ else
 	awsArchiveId=$(echo "$httpResponse" | awk -F " " '{print $1}')
 	#------------------------------ Log and update Cantemo Metadata
 	echo "$(date "+%H:%M:%S") (glacierMultiArch) - ($uploadId)   Completing multi-part upload process with hash $completeTreeHash" >> "$logFile"
-	cd "$temporaryFolder"
-	rm -fR "$temporaryFolder"/"$uploadId"
+	# cd "$temporaryFolder"
+	# rm -fR "$temporaryFolder"/"$uploadId"
 fi
+cd "$temporaryFolder"
+rm -fR "$temporaryFolder"/"$uploadId"
 
 #------------------------------ Update Cantemo Metadata
 updateValue=$(date "+%Y-%m-%dT%H:%M:%S")
