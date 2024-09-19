@@ -41,7 +41,7 @@ sleep 1
 # Acquire the lock by waiting if another job is running
 while [ -f "$lockFile" ];
 do
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (itemValidation) - [$itemId] - Waiting for the previous job to finish..." >> "$logfile"
+    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (itemValidation) - [$itemId] - Waiting for the previous job to finish..." >> "$logfile"
     sleep 2
 done
 
@@ -60,7 +60,7 @@ if [[ "$itemVersionType" == "originalFile" ]];
 then
     urlGetItemOriginalFileFlagsInfo="http://10.1.1.34:8080/API/item/$itemId/metadata?field=oly_originalFileFlags&terse=yes"
     httpResponse=$(curl --location --request GET $urlGetItemOriginalFileFlagsInfo --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=Tkb9vkSC8v4SceB8CHUyB3iaMPjvgoHrzhLrvo36agG3wqv0jHc7nsOtdTo9JEyM')
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (itemValidation) - [$itemId] - Original File Flags [$httpResponse]" >> "$logfile"
+    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (itemValidation) - [$itemId] - Original File Flags [$httpResponse]" >> "$logfile"
     if [[ "$httpResponse" == *originalrawmaster* ]];
     then
         itemRightslineItemId=$(filterVidispineItemMetadata $itemId "metadata" "oly_rightslineItemId")
