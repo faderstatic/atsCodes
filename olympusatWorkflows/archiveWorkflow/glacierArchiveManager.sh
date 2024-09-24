@@ -20,7 +20,7 @@ IFS=$(echo -e "\n\b")
 # Set some parameters
 export jobQueueFolder=$1
 export jobActiveFolder=$2
-export concurrentLimit=3
+export concurrentLimit=5
 export checkInterval=1800
 export myDate=$(date "+%Y-%m-%d")
 export logArchiveDate=$(date "+%Y-%m-%d" -d "14 day ago")
