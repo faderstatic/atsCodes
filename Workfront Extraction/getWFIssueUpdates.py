@@ -42,11 +42,12 @@ try:
         httpApiResponse.raise_for_status()
         responseJson = httpApiResponse.json() if httpApiResponse and httpApiResponse.status_code == 200 else None
         resultData = responseJson['data']
-        print(f"Clip name: {resultData['name']}")
+        print(f"Item name: {resultData['name']}")
         if not resultData['updates']:
             print(' -- skipping --')
         else:
             uniqueUpdateFile = f"{resultData['name']}_{issueIdNew}.txt"
+            uniqueUpdateFile = uniqueUpdateFile.replace('/', '')
             print(f"Writing updates to file {uniqueUpdateFile}")
             issueWithUpdatesFile = open(uniqueUpdateFile, 'a')
             # print(resultData['updates'])
