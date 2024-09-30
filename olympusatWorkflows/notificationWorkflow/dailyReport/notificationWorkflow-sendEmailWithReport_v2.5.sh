@@ -42,8 +42,10 @@ then
         export recipient1=mamAdmin@olympusat.com
         export recipient2=amorales@olympusat.com
         export recipient3=srusso@olympusat.com
-        export recipient4=rsims@olympusat.com
-        export recipient5=kkanjanapitak@olympusat.com
+        export recipient4=hflores@olympusat.com
+        export recipient5=echavez@olympusat.com
+        export recipient6=rsims@olympusat.com
+        export recipient7=kkanjanapitak@olympusat.com
 
         # Sending email address
         export emailFrom=notify@olympusat.com
@@ -89,7 +91,7 @@ MAM Notify"
         curl --url 'smtp://smtp-mail.outlook.com:587' \
         --ssl-reqd  \
         --mail-from $emailFrom \
-        --mail-rcpt $recipient1 --mail-rcpt $recipient2 --mail-rcpt $recipient3 \
+        --mail-rcpt $recipient1 --mail-rcpt $recipient3 --mail-rcpt $recipient4 --mail-rcpt $recipient5 \
         --user 'notify@olympusat.com:6bOblVsLg9bPQ8WG7JC7f8Zump' \
         -F '=(;type=multipart/mixed' \
         -F "=$sesMessage;type=text/plain" \
@@ -130,9 +132,10 @@ else
             # Recipient email addresses
             export recipient1=qcmanagement@olympusat.com
             export recipient2=srusso@olympusat.com
-            export recipient3=mamAdmin@olympusat.com
-            export recipient4=rsims@olympusat.com
-            export recipient5=kkanjanapitak@olympusat.com
+            export recipient3=echavez@olympusat.com
+            export recipient4=mamAdmin@olympusat.com
+            export recipient5=rsims@olympusat.com
+            export recipient6=kkanjanapitak@olympusat.com
 
             # Sending email address
             export emailFrom=notify@olympusat.com
@@ -176,7 +179,7 @@ MAM Notify"
             curl --url 'smtp://smtp-mail.outlook.com:587' \
             --ssl-reqd  \
             --mail-from $emailFrom \
-            --mail-rcpt $recipient1 --mail-rcpt $recipient2 --mail-rcpt $recipient3 \
+            --mail-rcpt $recipient1 --mail-rcpt $recipient2 --mail-rcpt $recipient3 --mail-rcpt $recipient4 \
             --user 'notify@olympusat.com:6bOblVsLg9bPQ8WG7JC7f8Zump' \
             -F '=(;type=multipart/mixed' \
             -F "=$sesMessage;type=text/plain" \
@@ -217,9 +220,10 @@ MAM Notify"
                 # Recipient email addresses
                 export recipient1=qcmanagement@olympusat.com
                 export recipient2=srusso@olympusat.com
-                export recipient3=mamAdmin@olympusat.com
-                export recipient4=rsims@olympusat.com
-                export recipient5=kkanjanapitak@olympusat.com
+                export recipient3=echavez@olympusat.com
+                export recipient4=mamAdmin@olympusat.com
+                export recipient5=rsims@olympusat.com
+                export recipient6=kkanjanapitak@olympusat.com
 
                 # Sending email address
                 export emailFrom=notify@olympusat.com
@@ -258,7 +262,7 @@ MAM Notify"
                 curl --url 'smtp://smtp-mail.outlook.com:587' \
                 --ssl-reqd  \
                 --mail-from $emailFrom \
-                --mail-rcpt $recipient1 --mail-rcpt $recipient2 --mail-rcpt $recipient3 \
+                --mail-rcpt $recipient1 --mail-rcpt $recipient2 --mail-rcpt $recipient3 --mail-rcpt $recipient4 \
                 --user 'notify@olympusat.com:6bOblVsLg9bPQ8WG7JC7f8Zump' \
                 -F '=(;type=multipart/mixed' \
                 -F "=$sesMessage;type=text/plain" \
