@@ -103,7 +103,7 @@ then
     sleep 1
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (deliveryWorkflow) - [$itemId] - Triggering Vantage_Submit Transcode Job" >> "$logfile"
     triggerTranscodeUrl="https://cantemo.olympusat.com/vs/items/transcode/"
-    triggerTranscodeBody="csrfmiddlewaretoken=mJ44H4eZ0QxMh9GrnVN5tRGYCn263XidhundnIxKicVIp9fWEMvcM1FnWesWSsv6&format=Vantage_Submit&search_id_selected=&selected_collection=&selected_items=OLY-55&ignored_items="
+    triggerTranscodeBody="csrfmiddlewaretoken=mJ44H4eZ0QxMh9GrnVN5tRGYCn263XidhundnIxKicVIp9fWEMvcM1FnWesWSsv6&format=Vantage_Submit&search_id_selected=&selected_collection=&selected_items=$itemId&ignored_items="
     triggerTranscodeReferer="Referer: https://cantemo.olympusat.com/item/$itemId/"
     triggerTranscodeHttpResponse=$(curl --location $triggerTranscodeUrl --header 'Accept: application/json, text/javascript, */*; q=0.01' --header 'Accept-Language: en-US,en;q=0.9' --header 'Connection: keep-alive' --header 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8' --header 'Cookie: sessionid=86dng5gldl4mgzmnrulciz688acn7hgr; csrftoken=uwWfUZF9yDspIiHJoEOvM9phLFIsjzKGphfoADYUQZQlQigeFvwC5joG5w8i84Xz' --header 'Origin: https://cantemo.olympusat.com' --header $triggerTranscodeReferer --header 'X-Requested-With: XMLHttpRequest' --data $triggerTranscodeBody)
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (deliveryWorkflow) - [$itemId] - Trigger Transcode HTTP Response [$triggerTranscodeHttpResponse]" >> "$logfile"

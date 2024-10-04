@@ -40,12 +40,14 @@ then
 
         # Recipient email addresses
         export recipient1=mamAdmin@olympusat.com
-        export recipient2=amorales@olympusat.com
-        export recipient3=srusso@olympusat.com
+        export recipient2=srusso@olympusat.com
+        export recipient3=echavez@olympusat.com
         export recipient4=hflores@olympusat.com
-        export recipient5=echavez@olympusat.com
-        export recipient6=rsims@olympusat.com
-        export recipient7=kkanjanapitak@olympusat.com
+        export recipient5=bgross@olympusat.com
+        export recipient6=rvanerven@olympusat.com
+        export recipient7=rsims@olympusat.com
+        export recipient8=kkanjanapitak@olympusat.com
+        export recipient9=amorales@olympusat.com
 
         # Sending email address
         export emailFrom=notify@olympusat.com
@@ -58,14 +60,14 @@ The following attached list of items have been ingested into Cantemo today and m
 
 You may find items in one of the following Saved Searches
 
-'New Content Missing Metadata'
+'New Content MISSING METADATA'
 Link to Saved Search - https://cantemo.olympusat.com/search/#/savedsearch/OLY-318/?search_id=2232
 
-'Conform Files Missing Metadata'
+'Conform Files MISSING METADATA'
 Link to Saved Search - https://cantemo.olympusat.com/search/#/savedsearch/OLY-317/?search_id=1695
 
 For Legacy Original Raw Master Content, you may need to set with Rightsline Item ID & import Rightsline Legacy Info. You may find those items in the following Saved Search
-'Legacy Original-Needs Manual Input-Rightsline IDs
+'Legacy Original-NEEDS MANUAL INPUT-Rightsline IDs
 Link to Saved Search - https://cantemo.olympusat.com/search/#/savedsearch/OLY-347/?search_id=2173
 
 ***NOTE***: You must be on the Office Network, either via VPN or remoting into a machine on the Network, in order to access Cantemo Web Portal
@@ -91,7 +93,7 @@ MAM Notify"
         curl --url 'smtp://smtp-mail.outlook.com:587' \
         --ssl-reqd  \
         --mail-from $emailFrom \
-        --mail-rcpt $recipient1 --mail-rcpt $recipient3 --mail-rcpt $recipient4 --mail-rcpt $recipient5 \
+        --mail-rcpt $recipient1 --mail-rcpt $recipient2 --mail-rcpt $recipient3 --mail-rcpt $recipient4 --mail-rcpt $recipient5 --mail-rcpt $recipient6 \
         --user 'notify@olympusat.com:6bOblVsLg9bPQ8WG7JC7f8Zump' \
         -F '=(;type=multipart/mixed' \
         -F "=$sesMessage;type=text/plain" \
