@@ -636,7 +636,7 @@ The following attached list of items have been ingested into Cantemo and marked 
 You can find the Ad Compliance items in the following Saved Search in Cantemo Web Portal
 
 Saved Search Name - 'Review Status-Pending'
-Link to Saved Search - https://cantemo.olympusat.com/search/#/savedsearch/OLY-425/?search_id=7747
+Link to Saved Search - https://cantemo.olympusat.com/search/#/savedsearch/OLY-432/?search_id=7747
 
 Saved Search Name - 'Ad Compliance Content'
 Link to Saved Search - https://cantemo.olympusat.com/search/#/savedsearch/OLY-423/?search_id=7735
