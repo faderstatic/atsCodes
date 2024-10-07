@@ -12,14 +12,14 @@
 #
 ###############################################################################
 
-source ./awsdocs_general.sh
+source ./awsDocsGeneral.sh
+source ./bucketOperations.sh
 
-source ./bucket_operations.sh
 {
   current_directory=$(pwd)
   cd .. || exit
 
-  source ./s3_getting_started.sh
+  source ./s3GettingStarted.sh
   cd "$current_directory" || exit
 }
 
