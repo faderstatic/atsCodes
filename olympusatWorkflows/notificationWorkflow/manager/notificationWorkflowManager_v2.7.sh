@@ -110,9 +110,12 @@ do
 					# Current hour is NOT between 23 & 24 - sleep 1 hr & trigger script again
 					echo "$(date +%Y/%m/%d_%H:%M:%S) - Current Hour is NOT between 23 (11pm) & 24 (11:59pm) - Sleep 1 hour and trigger script again"
 					echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflowManager) - Current Hour is NOT between 23 (11pm) & 24 (11:59pm) - Sleep 1 hour and trigger script again" >> "$logfile"
-					# Trigger Send Email for rtcMexicoQc Workflow
+					# Trigger Send Email for prepareForReload Workflow
 					bash -c "sudo /opt/olympusat/scriptsActive/notificationWorkflow-sendEmailWithReport_v2.6.sh prepareForReload > /dev/null 2>&1 &"
-					echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflowManager) - Triggered PrepareForReload Notification" >> "$logfile"
+					echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflowManager) - Triggered Prepare For Reload Notification" >> "$logfile"
+					# Trigger Send Email for adComplianceNewItem Workflow
+					bash -c "sudo /opt/olympusat/scriptsActive/notificationWorkflow-sendEmailWithReport_v2.6.sh adComplianceNewItem > /dev/null 2>&1 &"
+					echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflowManager) - Triggered Ad Compliance New Item Notification" >> "$logfile"
 
 					sleep $checkInterval
 				fi
