@@ -54,7 +54,7 @@ do
 			archiveProcessId=$(ps awx | grep "/opt/olympusat/scriptsActive/s3Queue" | grep "/opt/olympusat/scriptsActive/s3MultiPart" | grep "/bin/bash" | awk '{ print $5 }')
 			if [ "$archiveProcessId" == "" ];
 			then
-				/opt/olympusat/scriptsActive/s3QueueWorker.sh /opt/olympusat/scriptsActive/s3MultiPartV1.sh "$jobQueueFolder" "$jobActiveFolder" glacierArchive $concurrentLimit
+				/opt/olympusat/scriptsActive/s3QueueWorker.sh /opt/olympusat/scriptsActive/s3MultiPartV1.sh "$jobQueueFolder" "$jobActiveFolder" s3Upload $concurrentLimit
 				sleep 60
 			fi
 		done
