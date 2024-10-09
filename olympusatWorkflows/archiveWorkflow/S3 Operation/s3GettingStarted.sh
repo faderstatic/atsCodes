@@ -42,7 +42,7 @@ function s3_getting_started() {
     if [ "$BUCKET_OPERATIONS_SOURCED" != "True" ]; then
       cd bucket-lifecycle-operations || exit
 
-      source ./bucket_operations.sh
+      source ./bucketOperations.sh
       cd ..
     fi
   }
