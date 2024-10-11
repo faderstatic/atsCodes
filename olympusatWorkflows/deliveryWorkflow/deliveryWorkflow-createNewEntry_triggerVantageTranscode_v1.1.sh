@@ -84,13 +84,13 @@ then
     export bodyData="<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><group mode=\"add\"><name>Delivery</name><field><name>oly_deliveryStatus</name><value>inProgress</value></field><field><name>oly_deliveryBy</name><value>$userName</value></field><field><name>oly_deliveryDate</name><value>$deliveryDate</value></field><field><name>oly_studioName</name><value>$itemStudioName</value></field><field><name>oly_vantageWorkflowName</name><value>$itemVantageWorkflowName</value></field><field><name>oly_licensorOutputFolder</name><value>$itemLicensorOutputFolder</value></field><field><name>oly_vantageCustomFolderName</name><value>$itemVantageCustomFolderName</value></field><field><name>oly_fileNameOutput</name><value>$itemFileNameOutput</value></field><field><name>oly_van_idDistribution</name><value>$itemIdDistribution</value></field><field><name>oly_vantagePriority</name><value>$itemVantagePriority</value></field></group></timespan></MetadataDocument>"
     #echo "$(date +%Y/%m/%d_%H:%M:%S) - (deliveryWorkflow) - [$itemId] - Body Data [$bodyData]" >> "$logfile"
     createEntryHttpResponse=$(curl --location --request PUT $url --header 'Content-Type: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=KeXafYLa3CfIcRzC34r4QBx3cJStwuAC2asS2qj2miHGvBH2r2CMvIxVUQ8wuCVU' --data $bodyData)
-    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (deliveryWorkflow) - [$itemId] - Create Entry HTTP Response [$createEntryHttpResponse]" >> "$logfile"
-    sleep 3
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (deliveryWorkflow) - [$itemId] - Create Entry HTTP Response [$createEntryHttpResponse]" >> "$logfile"
+    sleep 5
     # API Call to Get the Delivery subgroup metadata for item to get group uuid to send to Vantage to update with job status
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (deliveryWorkflow) - [$itemId] - Sending API Call to Get Subgroup Metadata" >> "$logfile"
     export getMetadataUrl="http://10.1.1.34:8080/API/item/$itemId/metadata?field=oly_deliveryStatus%2Coly_deliveryBy%2Coly_deliveryDate&group=Delivery"
     getMetadataHttpResponse=$(curl --location $getMetadataUrl --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=KeXafYLa3CfIcRzC34r4QBx3cJStwuAC2asS2qj2miHGvBH2r2CMvIxVUQ8wuCVU')
-    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (deliveryWorkflow) - [$itemId] - Get Metadata HTTP Response [$getMetadataHttpResponse]" >> "$logfile"
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (deliveryWorkflow) - [$itemId] - Get Metadata HTTP Response [$getMetadataHttpResponse]" >> "$logfile"
     sleep 1
     # Extract out group uuid for new subgroup entry
     entryGroupUUID=$(echo "$getMetadataHttpResponse" | awk -F 'uuid="' '/<group / {print $2}' | cut -d '"' -f1)
@@ -103,9 +103,6 @@ then
     sleep 1
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (deliveryWorkflow) - [$itemId] - Triggering Vantage_Submit Transcode Job" >> "$logfile"
     triggerTranscodeUrl="http://10.1.1.34:8080/API/item/$itemId/transcode?tag=Vantage_Submit"
-    #triggerTranscodeBody="csrfmiddlewaretoken=mJ44H4eZ0QxMh9GrnVN5tRGYCn263XidhundnIxKicVIp9fWEMvcM1FnWesWSsv6&format=Vantage_Submit&search_id_selected=&selected_collection=&selected_items=$itemId&ignored_items="
-    #triggerTranscodeReferer="Referer: https://cantemo.olympusat.com/item/$itemId/"
-    #triggerTranscodeHttpResponse=$(curl --location $triggerTranscodeUrl --header 'Accept: application/json, text/javascript, */*; q=0.01' --header 'Accept-Language: en-US,en;q=0.9' --header 'Connection: keep-alive' --header 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8' --header 'Cookie: sessionid=86dng5gldl4mgzmnrulciz688acn7hgr; csrftoken=uwWfUZF9yDspIiHJoEOvM9phLFIsjzKGphfoADYUQZQlQigeFvwC5joG5w8i84Xz' --header 'Origin: https://cantemo.olympusat.com' --header $triggerTranscodeReferer --header 'X-Requested-With: XMLHttpRequest' --data $triggerTranscodeBody)
     triggerTranscodeHttpResponse=$(curl --location --request POST $triggerTranscodeUrl --header 'Content-Type: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=K2ujG3xyN97sp4ieVchjaSyxLFUppsYHArZra7Z5yLCtbhzlRFrXxZGYIToBpOIy' --data '')
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (deliveryWorkflow) - [$itemId] - Trigger Transcode HTTP Response [$triggerTranscodeHttpResponse]" >> "$logfile"
     sleep 5
