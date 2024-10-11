@@ -162,7 +162,7 @@ else
 	echo -en '\n  ]\n}\n' >> $s3ConstructFile
 	cd "$temporaryFolder"/"$uploadId"/Chunk_all
 	completeTreeHash=$(createTreeHash "$temporaryFolder" "$uploadId" "all" "$chunksCount" "$uploadId")
-	httpResponse=$(/usr/local/aws-cli/v2/current/dist/aws s3api complete-multipart-upload --bucket "$awsBucketName" --key "$sourceFile" --upload-id="$awsJobId")
+	httpResponse=$(/usr/local/aws-cli/v2/current/dist/aws s3api complete-multipart-upload --bucket "$awsBucketName" --key "$sourceFile" --multipart-upload "file://$s3ConstructFile" --upload-id="$awsJobId")
 	s3UploadId=$(echo "$httpResponse" | awk -F " " '{print $2}')
 	#------------------------------ Log and update Cantemo Metadata
 	echo "$(date "+%H:%M:%S") (s3MultiUpload) - ($uploadId)   Completing multi-part upload process with hash $completeTreeHash" >> "$logFile"
