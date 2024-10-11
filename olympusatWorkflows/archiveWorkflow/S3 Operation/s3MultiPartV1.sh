@@ -37,7 +37,7 @@ sourceFile=$(filterVidispineFileInfo $uploadId "uri" "tag=original" | sed -e 's/
 sourceTitle=$(filterVidispineItemMetadata $uploadId "metadata" "title")
 awsBucketName=$(filterVidispineItemMetadata $uploadId "metadata" "oly_uploadBucketAWSS3")
 chunksCount=0
-chunkByteSize=$((1024*(2**$chunkSizeExponential))
+chunkByteSize=$((1024*(2**$chunkSizeExponential)))
 sourceFileName=$(basename "$sourceFile")
 sourceFileExtension=$(echo $sourceFileName | awk -F "." '{print $2}')
 s3ConstructFile="/proxies/portal-s3Temp/$uploadId.txt"
