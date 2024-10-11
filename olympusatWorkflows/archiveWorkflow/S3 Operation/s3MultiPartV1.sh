@@ -23,10 +23,12 @@ IFS=$(echo -e "\n\b")
 export tokenFile=$1
 export activeUploadFolder=$2
 export uploadId=$(basename "$tokenFile")
-export myDate=$(date "+%Y-%m-%d")
+export myDate=$(date +"%Y-%m-%d")
+export myWeek=$(date "%Yw%U")
 export awsCustomerId="500844647317"
 # export awsBucketName="olympusatdeeparch"
 export logFile="/opt/olympusat/logs/s3-$myDate.log"
+export weeklySummaryFile="/opt/olympusat/logs/s3Summary-$myWeek.log"
 export urlMetadata=$(echo "http://10.1.1.34:8080/API/item/$uploadId/metadata/")
 # export temporaryFolder="/Volumes/Temp/glacierStage"
 export temporaryFolder="/proxies/portal-s3Temp"
@@ -60,30 +62,30 @@ sourceFileSize=$(stat -c%s "$destinationTempFile")
 
 if [ $sourceFileSize -lt $chunkByteSize ];
 then
-	echo "$(date "+%H:%M:%S") (s3SingleUpload) - ($uploadId) Start processing $sourceFile ($sourceFileSize bytes) as a single upload" >> "$logFile"
-	updateValue=$(date "+%Y-%m-%dT%H:%M:%S")
+	echo "$(date +"%H:%M:%S") (s3SingleUpload) - ($uploadId) Start processing $sourceFile ($sourceFileSize bytes) as a single upload" >> "$logFile"
+	updateValue=$(date +"%Y-%m-%dT%H:%M:%S")
 	updateVidispineMetadata $uploadId "oly_uploadDateAWSS3" $updateValue
 	updateVidispineMetadata $uploadId "oly_uploadStatusAWSS3" "in progress - processing as a single upload"
 	# aws s3api put-object --bucket "$awsBucketName" --body "$destinationTempFile" --key "$sourceFile"
 	httpResponse=$(/usr/local/aws-cli/v2/current/dist/aws s3api put-object --bucket "$awsBucketName" --body "$destinationTempFile" --key "$sourceFileName")
 	s3UploadId=$(echo "$httpResponse" | awk -F " " '{print $1}')
-	echo "$(date "+%H:%M:%S") (s3SingleUpload) - ($uploadId)   Completing single upload process." >> "$logFile"
+	echo "$(date +"%H:%M:%S") (s3SingleUpload) - ($uploadId)   Completing single upload process." >> "$logFile"
 else
 	totalChunkCount=$(( $sourceFileSize/$chunkByteSize ))
-	echo "$(date "+%H:%M:%S") (s3MultiUpload) - ($uploadId) Start processing $sourceFile ($sourceFileSize bytes) with $chunkByteSize byte chunks" >> "$logFile"
+	echo "$(date +"%H:%M:%S") (s3MultiUpload) - ($uploadId) Start processing $sourceFile ($sourceFileSize bytes) with $chunkByteSize byte chunks" >> "$logFile"
 
 	#-------------------------------------------------- Get Job ID from AWS and set it in Cantemo oly_uploadIdAWSS3
 	httpResponse=$(/usr/local/aws-cli/v2/current/dist/aws s3api create-multipart-upload --bucket "$awsBucketName" --key "$sourceFileName")
-	# echo "$(date "+%H:%M:%S") (s3MultiUpload) - ($uploadId)   AWS Initiate Response is $httpResponse" >> "$logFile"
+	# echo "$(date +"%H:%M:%S") (s3MultiUpload) - ($uploadId)   AWS Initiate Response is $httpResponse" >> "$logFile"
 	awsJobId=$(echo $httpResponse | awk -F " " '{print $NF}')
 	updateVidispineMetadata $uploadId "oly_uploadIdAWSS3" $awsJobId
-	echo "$(date "+%H:%M:%S") (s3MultiUpload) - ($uploadId)   Upload session has been created with ID $awsJobId" >> "$logFile"
+	echo "$(date +"%H:%M:%S") (s3MultiUpload) - ($uploadId)   Upload session has been created with ID $awsJobId" >> "$logFile"
 	updateVidispineMetadata $uploadId "oly_uploadStatusAWSS3" "in progress - copying to temporary folder"
 	#-------------------------------------------------- End get Job ID block
 
 	#------------------------------ Log and update Cantemo Metadata
-	echo "$(date "+%H:%M:%S") (s3MultiUpload) - ($uploadId)   Finish copying file to $temporaryFolder" >> "$logFile"
-	updateValue=$(date "+%Y-%m-%dT%H:%M:%S")
+	echo "$(date +"%H:%M:%S") (s3MultiUpload) - ($uploadId)   Finish copying file to $temporaryFolder" >> "$logFile"
+	updateValue=$(date +"%Y-%m-%dT%H:%M:%S")
 	updateVidispineMetadata $uploadId "oly_uploadDateAWSS3" $updateValue
 	#------------------------------ End log
 
@@ -103,7 +105,7 @@ else
 		#------------------------------ Moving file to the temporary folder
 		chunkToProcess=$(echo $chunkByLine | awk -F "'" '{print $2}')
 		#------------------------------ Log and update Cantemo Metadata
-		echo "$(date "+%H:%M:%S") (s3MultiUpload) - ($uploadId)   Processing $chunkToProcess" >> "$logFile"
+		echo "$(date +"%H:%M:%S") (s3MultiUpload) - ($uploadId)   Processing $chunkToProcess" >> "$logFile"
 		updateValue="in progress - chunk $iCounter of $totalChunkCount"
 		updateVidispineMetadata $uploadId "oly_uploadStatusAWSS3" $updateValue
 		#------------------------------ End log
@@ -134,8 +136,8 @@ else
 		#------------------------------ End create tree hash
 
 		#------------------------------ Log and update Cantemo Metadata
-		echo "$(date "+%H:%M:%S") (s3MultiUpload) - ($uploadId)   Uploading $chunkToProcess with hash $chunkTreeHash" >> "$logFile"
-		echo "$(date "+%H:%M:%S") (s3MultiUpload) - ($uploadId)     Chunk $iCounter of $totalChunkCount: byte range $byteStartValue-$byteEndValue" >> "$logFile"
+		echo "$(date +"%H:%M:%S") (s3MultiUpload) - ($uploadId)   Uploading $chunkToProcess with hash $chunkTreeHash" >> "$logFile"
+		echo "$(date +"%H:%M:%S") (s3MultiUpload) - ($uploadId)     Chunk $iCounter of $totalChunkCount: byte range $byteStartValue-$byteEndValue" >> "$logFile"
 		updateValue="in progress - chunk $iCounter"
 		updateVidispineMetadata $uploadId "oly_uploadStatusAWSS3" $updateValue
 		#------------------------------ End log
@@ -165,13 +167,13 @@ else
 	httpResponse=$(/usr/local/aws-cli/v2/current/dist/aws s3api complete-multipart-upload --bucket "$awsBucketName" --key "$sourceFileName" --multipart-upload "file://$s3ConstructFile" --upload-id="$awsJobId")
 	s3UploadId=$(echo "$httpResponse" | awk -F " " '{print $2}')
 	#------------------------------ Log and update Cantemo Metadata
-	echo "$(date "+%H:%M:%S") (s3MultiUpload) - ($uploadId)   Completing multi-part upload process with hash $completeTreeHash" >> "$logFile"
+	echo "$(date +"%H:%M:%S") (s3MultiUpload) - ($uploadId)   Completing multi-part upload process with hash $completeTreeHash" >> "$logFile"
 fi
 cd "$temporaryFolder"
 rm -fR "$temporaryFolder"/"$uploadId"
 
 #------------------------------ Update Cantemo Metadata
-updateValue=$(date "+%Y-%m-%dT%H:%M:%S")
+updateValue=$(date +"%Y-%m-%dT%H:%M:%S")
 updateVidispineMetadata $uploadId "oly_uploadDateAWSS3" $updateValue
 if [ "$s3UploadId" == "" ];
 then
@@ -179,9 +181,10 @@ then
 	/usr/local/aws-cli/v2/current/dist/aws s3api abort-multipart-upload --bucket "$awsBucketName" --key "$sourceFileName" --upload-id="$awsJobId"
 else
 	updateValue="completed"
+	echo -e "$updateValue - ($uploadId)\tFile Name: $sourceFileName\tFile Size: $sourceFileSize\tAWS ID: $s3UploadId" >> $weeklySummaryFile
 fi
 updateVidispineMetadata $uploadId "oly_uploadStatusAWSS3" $updateValue
-echo "$(date "+%H:%M:%S") (s3Summary) - ($uploadId)   S3 Upload ID: $s3UploadId" >> "$logFile"
+echo "$(date +"%H:%M:%S") (s3Summary) - ($uploadId)   S3 Upload ID: $s3UploadId" >> "$logFile"
 updateValue="$sourceFile,$sourceFileSize,$s3UploadId"
 updateVidispineMetadata $uploadId "oly_uploadIdAWSS3" $updateValue
 #------------------------------

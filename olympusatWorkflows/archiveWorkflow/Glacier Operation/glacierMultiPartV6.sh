@@ -23,10 +23,12 @@ IFS=$(echo -e "\n\b")
 export tokenFile=$1
 export activeArchiveFolder=$2
 export uploadId=$(basename "$tokenFile")
-export myDate=$(date "+%Y-%m-%d")
+export myDate=$(date +"%Y-%m-%d")
+export myWeek=$(date +"%Yw%U")
 export awsCustomerId="500844647317"
 export awsVaultName="olympusatMamGlacier"
 export logFile="/opt/olympusat/logs/glacier-$myDate.log"
+export weeklySummaryFile="/opt/olympusat/logs/glacierSummary-$myWeek.log"
 export urlMetadata=$(echo "http://10.1.1.34:8080/API/item/$uploadId/metadata/")
 # export temporaryFolder="/Volumes/Temp/glacierStage"
 export temporaryFolder="/proxies/portal-glacierTemp"
@@ -58,31 +60,31 @@ sourceFileSize=$(stat -c%s "$destinationTempFile")
 
 if [ $sourceFileSize -lt $chunkByteSize ];
 then
-	echo "$(date "+%H:%M:%S") (glacierSingleArch) - ($uploadId) Start processing $sourceFile ($sourceFileSize bytes) as a single upload" >> "$logFile"
-	updateValue=$(date "+%Y-%m-%dT%H:%M:%S")
+	echo "$(date +"%H:%M:%S") (glacierSingleArch) - ($uploadId) Start processing $sourceFile ($sourceFileSize bytes) as a single upload" >> "$logFile"
+	updateValue=$(date +"%Y-%m-%dT%H:%M:%S")
 	updateVidispineMetadata $uploadId "oly_archiveDateAWS" $updateValue
 	updateVidispineMetadata $uploadId "oly_archiveStatusAWS" "in progress - archiving as a single upload"
 	httpResponse=$(/usr/local/aws-cli/v2/current/dist/aws glacier upload-archive --account-id "$awsCustomerId" --vault-name "$awsVaultName" --body "$destinationTempFile" --archive-description "$archiveDescriptionTrunc")
 	awsArchiveId=$(echo "$httpResponse" | awk -F " " '{print $1}')
-	echo "$(date "+%H:%M:%S") (glacierSingleArch) - ($uploadId)   Completing single upload process." >> "$logFile"
+	echo "$(date +"%H:%M:%S") (glacierSingleArch) - ($uploadId)   Completing single upload process." >> "$logFile"
 else
 	totalChunkCount=$(( $sourceFileSize/$chunkByteSize ))
-	echo "$(date "+%H:%M:%S") (glacierMultiArch) - ($uploadId) Start processing $sourceFile ($sourceFileSize bytes) with $chunkByteSize byte chunks" >> "$logFile"
+	echo "$(date +"%H:%M:%S") (glacierMultiArch) - ($uploadId) Start processing $sourceFile ($sourceFileSize bytes) with $chunkByteSize byte chunks" >> "$logFile"
 
 	#-------------------------------------------------- Get Job ID from AWS and set it in Cantemo oly_archiveIdAWS
 	httpResponse=$(/usr/local/aws-cli/v2/current/dist/aws glacier initiate-multipart-upload --account-id "$awsCustomerId" --archive-description "$archiveDescriptionTrunc" --part-size $chunkByteSize --vault-name "$awsVaultName")
-	# echo "$(date "+%H:%M:%S") (glacierMultiArch) - ($uploadId)   AWS Initiate Response is $httpResponse" >> "$logFile"
+	# echo "$(date +"%H:%M:%S") (glacierMultiArch) - ($uploadId)   AWS Initiate Response is $httpResponse" >> "$logFile"
 	awsJobId=$(echo $httpResponse | awk -F " " '{print $2}')
 	# awsJobId="Z0vF67TUjlqj9D5bhhF7U3UMEhZmm8ymWZ_EXj7iMGZqKTRkvLc9ab9Z-5xKOA1W-pvcl1whXvtsvrqcs-KNiWBUstni"
-	# echo "$(date "+%H:%M:%S") (glacierMultiArch) - ($uploadId)   /usr/local/aws-cli/v2/current/dist/aws glacier initiate-multipart-upload --account-id $awsCustomerId --archive-description $uploadId --part-size $chunkByteSize --vault-name $awsVaultName" >> "$logFile"
+	# echo "$(date +"%H:%M:%S") (glacierMultiArch) - ($uploadId)   /usr/local/aws-cli/v2/current/dist/aws glacier initiate-multipart-upload --account-id $awsCustomerId --archive-description $uploadId --part-size $chunkByteSize --vault-name $awsVaultName" >> "$logFile"
 	updateVidispineMetadata $uploadId "oly_archiveIdAWS" $awsJobId
-	echo "$(date "+%H:%M:%S") (glacierMultiArch) - ($uploadId)   Archive session has been created with ID $awsJobId" >> "$logFile"
+	echo "$(date +"%H:%M:%S") (glacierMultiArch) - ($uploadId)   Archive session has been created with ID $awsJobId" >> "$logFile"
 	updateVidispineMetadata $uploadId "oly_archiveStatusAWS" "in progress - copying to temporary folder"
 	#-------------------------------------------------- End get Job ID block
 
 	#------------------------------ Log and update Cantemo Metadata
-	echo "$(date "+%H:%M:%S") (glacierMultiArch) - ($uploadId)   Finish copying file to $temporaryFolder" >> "$logFile"
-	updateValue=$(date "+%Y-%m-%dT%H:%M:%S")
+	echo "$(date +"%H:%M:%S") (glacierMultiArch) - ($uploadId)   Finish copying file to $temporaryFolder" >> "$logFile"
+	updateValue=$(date +"%Y-%m-%dT%H:%M:%S")
 	updateVidispineMetadata $uploadId "oly_archiveDateAWS" $updateValue
 	#------------------------------ End log
 
@@ -98,7 +100,7 @@ else
 		#------------------------------ Moving file to the temporary folder
 		chunkToProcess=$(echo $chunkByLine | awk -F "'" '{print $2}')
 		#------------------------------ Log and update Cantemo Metadata
-		echo "$(date "+%H:%M:%S") (glacierMultiArch) - ($uploadId)   Processing $chunkToProcess" >> "$logFile"
+		echo "$(date +"%H:%M:%S") (glacierMultiArch) - ($uploadId)   Processing $chunkToProcess" >> "$logFile"
 		updateValue="in progress - chunk $iCounter of $totalChunkCount"
 		updateVidispineMetadata $uploadId "oly_archiveStatusAWS" $updateValue
 		#------------------------------ End log
@@ -129,8 +131,8 @@ else
 		#------------------------------ End create tree hash
 
 		#------------------------------ Log and update Cantemo Metadata
-		echo "$(date "+%H:%M:%S") (glacierMultiArch) - ($uploadId)   Archiving $chunkToProcess with hash $chunkTreeHash" >> "$logFile"
-		echo "$(date "+%H:%M:%S") (glacierMultiArch) - ($uploadId)     Chunk $iCounter of $totalChunkCount: byte range $byteStartValue-$byteEndValue" >> "$logFile"
+		echo "$(date +"%H:%M:%S") (glacierMultiArch) - ($uploadId)   Archiving $chunkToProcess with hash $chunkTreeHash" >> "$logFile"
+		echo "$(date +"%H:%M:%S") (glacierMultiArch) - ($uploadId)     Chunk $iCounter of $totalChunkCount: byte range $byteStartValue-$byteEndValue" >> "$logFile"
 		updateValue="in progress - chunk $iCounter"
 		updateVidispineMetadata $uploadId "oly_archiveStatusAWS" $updateValue
 		#------------------------------ End log
@@ -163,7 +165,7 @@ else
 	# fi
 	awsArchiveId=$(echo "$httpResponse" | awk -F " " '{print $1}')
 	#------------------------------ Log and update Cantemo Metadata
-	echo "$(date "+%H:%M:%S") (glacierMultiArch) - ($uploadId)   Completing multi-part upload process with hash $completeTreeHash" >> "$logFile"
+	echo "$(date +"%H:%M:%S") (glacierMultiArch) - ($uploadId)   Completing multi-part upload process with hash $completeTreeHash" >> "$logFile"
 	# cd "$temporaryFolder"
 	# rm -fR "$temporaryFolder"/"$uploadId"
 fi
@@ -171,16 +173,17 @@ cd "$temporaryFolder"
 rm -fR "$temporaryFolder"/"$uploadId"
 
 #------------------------------ Update Cantemo Metadata
-updateValue=$(date "+%Y-%m-%dT%H:%M:%S")
+updateValue=$(date +"%Y-%m-%dT%H:%M:%S")
 updateVidispineMetadata $uploadId "oly_archiveDateAWS" $updateValue
 if [ "$awsArchiveId" == "" ];
 then
 	updateValue="failed"
 else
 	updateValue="completed"
+	echo -e "$updateValue - ($uploadId)\tFile Name: $sourceFileName\tFile Size: $sourceFileSize\tAWS ID: $awsArchiveId" >> $weeklySummaryFile
 fi
 updateVidispineMetadata $uploadId "oly_archiveStatusAWS" $updateValue
-echo "$(date "+%H:%M:%S") (glacierSummary) - ($uploadId)   AWS Archive ID: $awsArchiveId" >> "$logFile"
+echo "$(date +"%H:%M:%S") (glacierSummary) - ($uploadId)   AWS Archive ID: $awsArchiveId" >> "$logFile"
 updateValue="$sourceFile,$sourceFileSize,$awsArchiveId"
 updateVidispineMetadata $uploadId "oly_archiveIdAWS" $updateValue
 #------------------------------
