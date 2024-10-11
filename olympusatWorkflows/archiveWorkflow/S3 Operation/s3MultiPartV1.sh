@@ -21,32 +21,33 @@ IFS=$(echo -e "\n\b")
 #--------------------------------------------------
 # Set some parameters
 export tokenFile=$1
-export activeArchiveFolder=$2
+export activeUploadFolder=$2
 export uploadId=$(basename "$tokenFile")
 export myDate=$(date "+%Y-%m-%d")
 export awsCustomerId="500844647317"
-export awsBucketName="olympusatdeeparch"
-export logFile="/opt/olympusat/logs/glacier-$myDate.log"
+# export awsBucketName="olympusatdeeparch"
+export logFile="/opt/olympusat/logs/s3-$myDate.log"
 export urlMetadata=$(echo "http://10.1.1.34:8080/API/item/$uploadId/metadata/")
 # export temporaryFolder="/Volumes/Temp/glacierStage"
-export temporaryFolder="/proxies/portal-glacierTemp"
+export temporaryFolder="/proxies/portal-s3Temp"
 # export renameFolder="/proxies/portal-rename"
 export chunkSizeExponential=19
 #--------------------------------------------------
 sourceFile=$(filterVidispineFileInfo $uploadId "uri" "tag=original" | sed -e 's/%20/ /g' | sed -e 's/%23/\#/g')
 sourceTitle=$(filterVidispineItemMetadata $uploadId "metadata" "title")
+awsBucketName=$(filterVidispineItemMetadata $uploadId "metadata" "oly_uploadBucketAWSS3")
 chunksCount=0
 chunkByteSize=$((1024*(2**$chunkSizeExponential)))
 sourceFileName=$(basename "$sourceFile")
 sourceFileExtension=$(echo $sourceFileName | awk -F "." '{print $2}')
-destinationTempFile="$temporaryFolder/$uploadId/$uploadId.$sourceFileExtension"
+destinationTempFile="$temporaryFolder/$uploadId/$sourceFileName"
 # sourceFilePath=$(dirname "$sourceFile")
 # sourceFileSize=$(stat -c%s "$sourceFile")
 archiveDescription=$(echo $sourceTitle,,$uploadId )
 archiveDescriptionTrunc=$(echo "$archiveDescription" | tr -dc '[:alnum:]-_ ,\n\r')
 #--------------------------------------------------
 
-mv -f $tokenFile $activeArchiveFolder
+mv -f $tokenFile $activeUploadFolder
 
 #-------------------------------------------------- Copy file into temporary folder
 mkdir -p "$temporaryFolder"/"$uploadId"
@@ -58,19 +59,20 @@ sourceFileSize=$(stat -c%s "$destinationTempFile")
 
 if [ $sourceFileSize -lt $chunkByteSize ];
 then
-	echo "$(date "+%H:%M:%S") (glacierSingleArch) - ($uploadId) Start processing $sourceFile ($sourceFileSize bytes) as a single upload" >> "$logFile"
+	echo "$(date "+%H:%M:%S") (s3SingleUpload) - ($uploadId) Start processing $sourceFile ($sourceFileSize bytes) as a single upload" >> "$logFile"
 	updateValue=$(date "+%Y-%m-%dT%H:%M:%S")
-	updateVidispineMetadata $uploadId "oly_archiveDateAWS" $updateValue
-	updateVidispineMetadata $uploadId "oly_archiveStatusAWS" "in progress - archiving as a single upload"
-	httpResponse=$(/usr/local/aws-cli/v2/current/dist/aws glacier upload-archive --account-id "$awsCustomerId" --vault-name "$awsVaultName" --body "$destinationTempFile" --archive-description "$archiveDescriptionTrunc")
-	awsArchiveId=$(echo "$httpResponse" | awk -F " " '{print $1}')
-	echo "$(date "+%H:%M:%S") (glacierSingleArch) - ($uploadId)   Completing single upload process." >> "$logFile"
+	updateVidispineMetadata $uploadId "oly_uploadDateAWSS3" $updateValue
+	updateVidispineMetadata $uploadId "oly_uploadStatusAWSS3" "in progress - processing as a single upload"
+	# aws s3api put-object --bucket "$awsBucketName" --body "$destinationTempFile" --key "$sourceTitle"
+	httpResponse=$(/usr/local/aws-cli/v2/current/dist/aws s3api put-object --bucket "$awsBucketName" --body "$destinationTempFile" --key "$sourceTitle")
+	s3UploadId=$(echo "$httpResponse" | awk -F " " '{print $1}')
+	echo "$(date "+%H:%M:%S") (s3SingleUpload) - ($uploadId)   Completing single upload process." >> "$logFile"
 else
 	totalChunkCount=$(( $sourceFileSize/$chunkByteSize ))
-	echo "$(date "+%H:%M:%S") (glacierMultiArch) - ($uploadId) Start processing $sourceFile ($sourceFileSize bytes) with $chunkByteSize byte chunks" >> "$logFile"
+	echo "$(date "+%H:%M:%S") (s3MultiUpload) - ($uploadId) Start processing $sourceFile ($sourceFileSize bytes) with $chunkByteSize byte chunks" >> "$logFile"
 
-	#-------------------------------------------------- Get Job ID from AWS and set it in Cantemo oly_archiveIdAWS
-	httpResponse=$(/usr/local/aws-cli/v2/current/dist/aws glacier initiate-multipart-upload --account-id "$awsCustomerId" --archive-description "$archiveDescriptionTrunc" --part-size $chunkByteSize --vault-name "$awsVaultName")
+	#-------------------------------------------------- Get Job ID from AWS and set it in Cantemo oly_uploadIdAWSS3
+	httpResponse=$(/usr/local/aws-cli/v2/current/dist/aws s3api create-multipart-upload --bucket "$awsBucketName" --key "$sourceTitle")
 	# echo "$(date "+%H:%M:%S") (glacierMultiArch) - ($uploadId)   AWS Initiate Response is $httpResponse" >> "$logFile"
 	awsJobId=$(echo $httpResponse | awk -F " " '{print $2}')
 	# awsJobId="Z0vF67TUjlqj9D5bhhF7U3UMEhZmm8ymWZ_EXj7iMGZqKTRkvLc9ab9Z-5xKOA1W-pvcl1whXvtsvrqcs-KNiWBUstni"
@@ -161,7 +163,7 @@ else
 	# else
 	httpResponse=$(/usr/local/aws-cli/v2/current/dist/aws glacier complete-multipart-upload --upload-id="$awsJobId" --checksum $completeTreeHash --archive-size $sourceFileSize --account-id "$awsCustomerId" --vault-name "$awsVaultName")
 	# fi
-	awsArchiveId=$(echo "$httpResponse" | awk -F " " '{print $1}')
+	s3UploadId=$(echo "$httpResponse" | awk -F " " '{print $1}')
 	#------------------------------ Log and update Cantemo Metadata
 	echo "$(date "+%H:%M:%S") (glacierMultiArch) - ($uploadId)   Completing multi-part upload process with hash $completeTreeHash" >> "$logFile"
 	# cd "$temporaryFolder"
@@ -173,19 +175,19 @@ rm -fR "$temporaryFolder"/"$uploadId"
 #------------------------------ Update Cantemo Metadata
 updateValue=$(date "+%Y-%m-%dT%H:%M:%S")
 updateVidispineMetadata $uploadId "oly_archiveDateAWS" $updateValue
-if [ "$awsArchiveId" == "" ];
+if [ "$s3UploadId" == "" ];
 then
 	updateValue="failed"
 else
 	updateValue="completed"
 fi
-updateVidispineMetadata $uploadId "oly_archiveStatusAWS" $updateValue
-echo "$(date "+%H:%M:%S") (glacierSummary) - ($uploadId)   AWS Archive ID: $awsArchiveId" >> "$logFile"
-updateValue="$sourceFile,$sourceFileSize,$awsArchiveId"
-updateVidispineMetadata $uploadId "oly_archiveIdAWS" $updateValue
+updateVidispineMetadata $uploadId "oly_uploadStatusAWSS3" $updateValue
+echo "$(date "+%H:%M:%S") (glacierSummary) - ($uploadId)   S3 Upload ID: $s3UploadId" >> "$logFile"
+updateValue="$sourceFile,$sourceFileSize,$s3UploadId"
+updateVidispineMetadata $uploadId "oly_uploadIdAWSS3" $updateValue
 #------------------------------
 
 #------------------------------ Move completed token file to indicate that this archive job is done
-rm -f "$activeArchiveFolder/$uploadId"
+rm -f "$activeUploadFolder/$uploadId"
 
 exit 0
