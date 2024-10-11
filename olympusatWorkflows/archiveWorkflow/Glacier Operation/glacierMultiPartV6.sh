@@ -177,6 +177,7 @@ updateValue=$(date +"%Y-%m-%dT%H:%M:%S")
 updateVidispineMetadata $uploadId "oly_archiveDateAWS" $updateValue
 if [ "$awsArchiveId" == "" ];
 then
+	/usr/local/aws-cli/v2/current/dist/aws glacier abort-multipart-upload --upload-id="$awsJobId" --account-id "$awsCustomerId" --vault-name "$awsVaultName"
 	updateValue="failed"
 else
 	updateValue="completed"
