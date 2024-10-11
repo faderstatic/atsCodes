@@ -25,7 +25,6 @@ export checkInterval=1800
 export myDate=$(date "+%Y-%m-%d")
 export logArchiveDate=$(date "+%Y-%m-%d" -d "14 day ago")
 export awsCustomerId="500844647317"
-export awsBucketName=$3
 # export urlMetadata=$(echo "http://10.1.1.34:8080/API/item/$uploadId/metadata/")
 #--------------------------------------------------
 noProcessExit="false"
