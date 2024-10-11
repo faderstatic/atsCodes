@@ -37,7 +37,7 @@ sourceFile=$(filterVidispineFileInfo $uploadId "uri" "tag=original" | sed -e 's/
 sourceTitle=$(filterVidispineItemMetadata $uploadId "metadata" "title")
 awsBucketName=$(filterVidispineItemMetadata $uploadId "metadata" "oly_uploadBucketAWSS3")
 chunksCount=0
-chunkByteSize=$((1024*(2**$chunkSizeExponential)))
+chunkByteSize=$((1024*(2**$chunkSizeExponential))
 sourceFileName=$(basename "$sourceFile")
 sourceFileExtension=$(echo $sourceFileName | awk -F "." '{print $2}')
 s3ConstructFile="/proxies/portal-s3Temp/$uploadId.txt"
@@ -65,7 +65,7 @@ then
 	updateVidispineMetadata $uploadId "oly_uploadDateAWSS3" $updateValue
 	updateVidispineMetadata $uploadId "oly_uploadStatusAWSS3" "in progress - processing as a single upload"
 	# aws s3api put-object --bucket "$awsBucketName" --body "$destinationTempFile" --key "$sourceFile"
-	httpResponse=$(/usr/local/aws-cli/v2/current/dist/aws s3api put-object --bucket "$awsBucketName" --body "$destinationTempFile" --key "$sourceFile")
+	httpResponse=$(/usr/local/aws-cli/v2/current/dist/aws s3api put-object --bucket "$awsBucketName" --body "$destinationTempFile" --key "$sourceFileName")
 	s3UploadId=$(echo "$httpResponse" | awk -F " " '{print $1}')
 	echo "$(date "+%H:%M:%S") (s3SingleUpload) - ($uploadId)   Completing single upload process." >> "$logFile"
 else
@@ -73,7 +73,7 @@ else
 	echo "$(date "+%H:%M:%S") (s3MultiUpload) - ($uploadId) Start processing $sourceFile ($sourceFileSize bytes) with $chunkByteSize byte chunks" >> "$logFile"
 
 	#-------------------------------------------------- Get Job ID from AWS and set it in Cantemo oly_uploadIdAWSS3
-	httpResponse=$(/usr/local/aws-cli/v2/current/dist/aws s3api create-multipart-upload --bucket "$awsBucketName" --key "$sourceFile")
+	httpResponse=$(/usr/local/aws-cli/v2/current/dist/aws s3api create-multipart-upload --bucket "$awsBucketName" --key "$sourceFileName")
 	# echo "$(date "+%H:%M:%S") (s3MultiUpload) - ($uploadId)   AWS Initiate Response is $httpResponse" >> "$logFile"
 	awsJobId=$(echo $httpResponse | awk -F " " '{print $NF}')
 	updateVidispineMetadata $uploadId "oly_uploadIdAWSS3" $awsJobId
@@ -142,7 +142,7 @@ else
 
 		#------------------------------ Uploading using AWS CLI and append construct file
 		chunksCount=$((chunksCount+1))
-		httpResponse=$(/usr/local/aws-cli/v2/current/dist/aws s3api upload-part --bucket "$awsBucketName" --key "$sourceFile" --part-number $chunkCount --upload-id="$awsJobId" --body "$temporaryFolder/$uploadId/Chunk_$iCounter/$chunkToProcess")
+		httpResponse=$(/usr/local/aws-cli/v2/current/dist/aws s3api upload-part --bucket "$awsBucketName" --key "$sourceFileName" --part-number "$chunksCount" --upload-id="$awsJobId" --body "$temporaryFolder/$uploadId/Chunk_$iCounter/$chunkToProcess")
 		s3PartEtag=$(echo "$httpResponse" | awk -F " " '{print $1}')
 		if [ $chunksCount -eq 1 ];
 		then
@@ -162,7 +162,7 @@ else
 	echo -en '\n  ]\n}\n' >> $s3ConstructFile
 	cd "$temporaryFolder"/"$uploadId"/Chunk_all
 	completeTreeHash=$(createTreeHash "$temporaryFolder" "$uploadId" "all" "$chunksCount" "$uploadId")
-	httpResponse=$(/usr/local/aws-cli/v2/current/dist/aws s3api complete-multipart-upload --bucket "$awsBucketName" --key "$sourceFile" --multipart-upload "file://$s3ConstructFile" --upload-id="$awsJobId")
+	httpResponse=$(/usr/local/aws-cli/v2/current/dist/aws s3api complete-multipart-upload --bucket "$awsBucketName" --key "$sourceFileName" --multipart-upload "file://$s3ConstructFile" --upload-id="$awsJobId")
 	s3UploadId=$(echo "$httpResponse" | awk -F " " '{print $2}')
 	#------------------------------ Log and update Cantemo Metadata
 	echo "$(date "+%H:%M:%S") (s3MultiUpload) - ($uploadId)   Completing multi-part upload process with hash $completeTreeHash" >> "$logFile"
@@ -176,7 +176,7 @@ updateVidispineMetadata $uploadId "oly_uploadDateAWSS3" $updateValue
 if [ "$s3UploadId" == "" ];
 then
 	updateValue="failed"
-	/usr/local/aws-cli/v2/current/dist/aws s3api abort-multipart-upload --bucket "$awsBucketName" --key "$sourceFile" --upload-id="$awsJobId"
+	/usr/local/aws-cli/v2/current/dist/aws s3api abort-multipart-upload --bucket "$awsBucketName" --key "$sourceFileName" --upload-id="$awsJobId"
 else
 	updateValue="completed"
 fi
