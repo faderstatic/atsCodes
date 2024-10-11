@@ -38,12 +38,12 @@ uploadIdAWS=$(echo $untrimmedUploadIdAWS | awk -F "," '{print $3}')
 
 case $queueType in
 	"Upload")
-		# cantemoDateField="oly_uploadDateAWSS3"
+		cantemoDateField="oly_uploadDateAWSS3"
 		cantemoStatusField="oly_uploadStatusAWSS3"
 		queueFolder="/opt/olympusat/s3Upload/uploadJobs"
 	;;
 	"Download")
-		# cantemoDateField="oly_downloadDateAWSS3"
+		cantemoDateField="oly_downloadDateAWSS3"
 		cantemoStatusField="oly_downloadStatusAWSS3"
 		queueFolder="/opt/olympusat/s3Download/downloadJobs"
 	;;
@@ -52,7 +52,7 @@ esac
 #------------------------------
 # Let's start with some logging
 updateValue=$(date "+%Y-%m-%dT%H:%M:%S")
-# updateVidispineMetadata $cantemoItemId $cantemoDateField $updateValue
+updateVidispineMetadata $cantemoItemId $cantemoDateField $updateValue
 updateVidispineMetadata $cantemoItemId $cantemoStatusField "in progress - added to queue"
 #echo "$(date "+%H:%M:%S") (s3$queueTypeQueue) - ($itemId) $queueType process is requested in Cantemo" >> "$logFile"
 #------------------------------
