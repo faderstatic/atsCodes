@@ -106,9 +106,9 @@ try:
   genreLookupXML = f"<SimpleMetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\">"
   moodLookupXML = f"<SimpleMetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\">"
   keywordLookupXML = f"<SimpleMetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\">"
-  genreXML = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><group>Olympusat</group><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_genreAnalysis</name>"
-  moodXML = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><group>Olympusat</group><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_moodAnalysis</name>"
-  keywordXML = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><group>Olympusat</group><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_keywordAnalysis</name>"
+  genreXMLHeader = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><group>Olympusat</group><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_genreAnalysis</name>"
+  moodXMLHeader = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><group>Olympusat</group><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_moodAnalysis</name>"
+  keywordXMLHeader = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><group>Olympusat</group><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_keywordAnalysis</name>"
   #------------------------------
   # Parsing JSON and POST XML data
 
@@ -116,7 +116,7 @@ try:
   for individualGenre in genreList:
     genreLookupXML += f"<field><key>{individualGenre}</key><value>{individualGenre}</value></field>"
   for individualGenre in responseJson["genre"]:
-    genreXML += f"<value>{individualGenre}</value>"
+    genreXML = f"<value>{individualGenre}</value>" + genreXML
     if individualGenre.lower() not in genreList:
       addingGenreLookup = "true"
       genreLookupXML += f"<field><key>{individualGenre}</key><value>{individualGenre}</value></field>"
@@ -126,7 +126,7 @@ try:
     genreLookupPayload = parsedGenreLookupXML.toprettyxml()
     # print(genreLookupPayload)
     createCantimoLookup("oly_genreAnalysis", genreLookupPayload)
-  genreXML += "</field></timespan></MetadataDocument>"
+  genreXML = genreXMLHeader + genreXML + "</field></timespan></MetadataDocument>"
   parsedGenreXML = xml.dom.minidom.parseString(genreXML)
   genrePayload = parsedGenreXML.toprettyxml()
 
@@ -134,7 +134,7 @@ try:
   for individualMood in moodList:
     moodLookupXML += f"<field><key>{individualMood}</key><value>{individualMood}</value></field>"
   for individualMood in responseJson["mood_tag"]:
-    moodXML += f"<value>{individualMood}</value>"
+    moodXML = f"<value>{individualMood}</value>" + moodXML
     if individualMood.lower() not in moodList:
       addingMoodLookup = "true"
       moodLookupXML += f"<field><key>{individualMood}</key><value>{individualMood}</value></field>"
@@ -144,7 +144,7 @@ try:
     moodLookupPayload = parsedMoodLookupXML.toprettyxml()
     # print(moodLookupPayload)
     createCantimoLookup("oly_moodAnalysis", moodLookupPayload)
-  moodXML += "</field></timespan></MetadataDocument>"
+  moodXML = moodXMLHeader + moodXML + "</field></timespan></MetadataDocument>"
   parsedMoodXML = xml.dom.minidom.parseString(moodXML)
   moodPayload = parsedMoodXML.toprettyxml()
 
@@ -152,7 +152,7 @@ try:
   for individualKeyword in keywordList:
     keywordLookupXML += f"<field><key>{individualKeyword}</key><value>{individualKeyword}</value></field>"
   for individualKeyword in responseJson["keyword"]:
-    keywordXML += f"<value>{individualKeyword}</value>"
+    keywordXML = f"<value>{individualKeyword}</value>" + keywordXML
     if individualKeyword.lower() not in keywordList:
       addingKeywordLookup = "true"
       keywordLookupXML += f"<field><key>{individualKeyword}</key><value>{individualKeyword}</value></field>"
@@ -162,7 +162,7 @@ try:
     keywordLookupPayload = parsedKeywordLookupXML.toprettyxml()
     # print(keywordLookupPayload)
     createCantimoLookup("oly_keywordAnalysis", keywordLookupPayload)
-  keywordXML += "</field></timespan></MetadataDocument>"
+  keywordXML = keywordXMLHeader + keywordXML + "</field></timespan></MetadataDocument>"
   parsedKeywordXML = xml.dom.minidom.parseString(keywordXML)
   keywordPayload = parsedKeywordXML.toprettyxml()
 
