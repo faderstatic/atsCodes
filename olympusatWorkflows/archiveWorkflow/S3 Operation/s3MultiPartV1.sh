@@ -181,7 +181,7 @@ then
 	/usr/local/aws-cli/v2/current/dist/aws s3api abort-multipart-upload --bucket "$awsBucketName" --key "$sourceFileName" --upload-id="$awsJobId"
 else
 	updateValue="completed"
-	echo -e "$updateValue - ($uploadId)\tFile Name: $sourceFileName\tFile Size: $sourceFileSize\tAWS ID: $s3UploadId" >> $weeklySummaryFile
+	echo -e "$(date +"%H:%M:%S") - ($uploadId)\tFile Name: $sourceFileName\tFile Size: $sourceFileSize\tAWS ID: $s3UploadId" >> $weeklySummaryFile
 fi
 updateVidispineMetadata $uploadId "oly_uploadStatusAWSS3" $updateValue
 echo "$(date +"%H:%M:%S") (s3Summary) - ($uploadId)   S3 Upload ID: $s3UploadId" >> "$logFile"

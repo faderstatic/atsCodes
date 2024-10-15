@@ -181,7 +181,7 @@ then
 	updateValue="failed"
 else
 	updateValue="completed"
-	echo -e "$updateValue - ($uploadId)\tFile Name: $sourceFileName\tFile Size: $sourceFileSize\tAWS ID: $awsArchiveId" >> $weeklySummaryFile
+	echo -e "$(date +"%H:%M:%S") - ($uploadId)\tFile Name: $sourceFileName\tFile Size: $sourceFileSize\tAWS ID: $awsArchiveId" >> $weeklySummaryFile
 fi
 updateVidispineMetadata $uploadId "oly_archiveStatusAWS" $updateValue
 echo "$(date +"%H:%M:%S") (glacierSummary) - ($uploadId)   AWS Archive ID: $awsArchiveId" >> "$logFile"
