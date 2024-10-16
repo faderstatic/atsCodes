@@ -1,0 +1,5 @@
+# This is just a collection of commands
+
+# Get total size of a bucket
+aws s3 ls --summarize --human-readable --recursive s3://olympusatdeeparch
+
