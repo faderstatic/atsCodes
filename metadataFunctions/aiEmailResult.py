@@ -85,40 +85,40 @@ try:
       time.sleep(5)
       resultFileCreation = os.path.getctime(resultFile)
       #------------------------------
-  match cantemoUsername:
-    case "iarenas":
-      requesterEmail = "ivan@olympusat.com"
-    case "standardpractices":
-      requesterEmail = "censorship@olympusat.com"
-    case "scopenhaver"
-      requesterEmail = "shawn@olympusat.com"
-    case "ldalton":
-      requesterEmail = "larry@olympusat.com"
-    case "jdaly":
-      requesterEmail = "jasondaly@olympusat.com"
-    case "aolabarria":
-      requesterEmail = "andrea@olympusat.com"
-    case _:
-      requesterEmail = f"{cantemoUsername}@olympusat.com"
+    match cantemoUsername:
+      case "iarenas":
+        requesterEmail = "ivan@olympusat.com"
+      case "standardpractices":
+        requesterEmail = "censorship@olympusat.com"
+      case "scopenhaver"
+        requesterEmail = "shawn@olympusat.com"
+      case "ldalton":
+        requesterEmail = "larry@olympusat.com"
+      case "jdaly":
+        requesterEmail = "jasondaly@olympusat.com"
+      case "aolabarria":
+        requesterEmail = "andrea@olympusat.com"
+      case _:
+        requesterEmail = f"{cantemoUsername}@olympusat.com"
 
-  msg = f"Attachment - result file for {resultType} created on {resultFileCreation}"
-  msg['Subject'] = f"Result file for {resultType}"
-  msg['To'] = requesterEmail
-  msg['From'] = "Cantemo"
+    msg = f"Attachment - result file for {resultType} created on {resultFileCreation}"
+    msg['Subject'] = f"Result file for {resultType}"
+    msg['To'] = requesterEmail
+    msg['From'] = "Cantemo"
 
-  #------------------------------
-  # Email file to initiating user
-  s = smtplib.SMTP(smtpHost)
-  s.login(smtpUsername, smtpPassword)
-  s.send_message(msg)
-  s.quit()
-  #------------------------------
+    #------------------------------
+    # Email file to initiating user
+    s = smtplib.SMTP(smtpHost)
+    s.login(smtpUsername, smtpPassword)
+    s.send_message(msg)
+    s.quit()
+    #------------------------------
 
-  #------------------------------
-  # Update The User
-  print(f"{resutlFile} (created on {resultFileCreation}) has been emailed to {requesterEmail}")
-  #------------------------------
-  #------------------------------
+    #------------------------------
+    # Update The User
+    print(f"{resutlFile} (created on {resultFileCreation}) has been emailed to {requesterEmail}")
+    #------------------------------
+    #------------------------------
 
 except HTTPError as http_err:
     print(f'HTTP error occurred: {http_err}')
