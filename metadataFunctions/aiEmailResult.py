@@ -44,7 +44,7 @@ try:
 
   match resultType:
     case "fingerprint":
-    resultFile = f"/opt/olympusat/resources/vionlabsReports/{cantemoItemId}_FP.json"
+     resultFile = f"/opt/olympusat/resources/vionlabsReports/{cantemoItemId}_FP.json"
   
   if os.path.isfile(resultFile):
     resultFileCreation = os.path.getctime(resultFile)
