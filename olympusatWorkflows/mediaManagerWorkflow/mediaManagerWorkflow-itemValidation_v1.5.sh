@@ -30,24 +30,20 @@ releaseLock ()
 export itemId="$1"
 export lastCheckDate=$(date "+%Y-%m-%dT%H:%M:%S")
 export mydate=$(date +%Y-%m-%d)
-logfile="/opt/olympusat/logs/mediaManagerWorkflow-$mydate.log"
-
+logfile="/opt/olympusat/logs/olympusatWorkflow-$mydate.log"
+# --------------------------------------------------
 # Lock file to ensure only one job runs at a time
 lockFile="/opt/olympusat/workflowQueues/itemValidationWorkflow/jobQueue.lock"
-
 echo "$(date +%Y/%m/%d_%H:%M:%S) - (itemValidation) - [$itemId] - Item Validation Job Initiated" >> "$logfile"
 sleep 1
-
 # Acquire the lock by waiting if another job is running
 while [ -f "$lockFile" ];
 do
     #echo "$(date +%Y/%m/%d_%H:%M:%S) - (itemValidation) - [$itemId] - Waiting for the previous job to finish..." >> "$logfile"
-    sleep 2
+    sleep 3
 done
-
 # Acquire the lock for this job
 touch "$lockFile"
-
 # Ensure that the lock is released when the job finishes
 trap releaseLock EXIT
 # --------------------------------------------------
@@ -138,6 +134,10 @@ then
                                             then
                                                 echo "$(date +%Y/%m/%d_%H:%M:%S) - (itemValidation) - [$itemId] - Search Results with MORE THAN 1 Hit - skipping process" >> "$logfile"
                                             else
+                                                # Command to trigger 'Copy Metadata to Other Master Types' script
+                                                echo "$(date +%Y/%m/%d_%H:%M:%S) - (itemValidation) - [$itemId] - Trigger Copy Metadata to Other Masters Script" >> "$logfile"
+                                                bash -c "sudo /opt/olympusat/scriptsActive/ingestMetadataWorkflow-copyMetadataToOtherMasterTypes_v2.1.sh $itemId > /dev/null 2>&1"
+                                                sleep 1
                                                 # Command to trigger 'Copy Conform Metadata' script
                                                 copyConformUrl="https://cantemo.olympusat.com/cs_api/cs_script_actions/execute"
                                                 copyConformBody="{\"actionId\":\"copy_conform_metadata\",\"queryString\":\"selected_objects=$itemId\"}"
@@ -174,6 +174,10 @@ then
                                     then
                                         echo "$(date +%Y/%m/%d_%H:%M:%S) - (itemValidation) - [$itemId] - Search Results with MORE THAN 1 Hit - skipping process" >> "$logfile"
                                     else
+                                        # Command to trigger 'Copy Metadata to Other Master Types' script
+                                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (itemValidation) - [$itemId] - Trigger Copy Metadata to Other Masters Script" >> "$logfile"
+                                        bash -c "sudo /opt/olympusat/scriptsActive/ingestMetadataWorkflow-copyMetadataToOtherMasterTypes_v2.1.sh $itemId > /dev/null 2>&1"
+                                        sleep 1
                                         # Command to trigger 'Copy Conform Metadata' script
                                         copyConformUrl="https://cantemo.olympusat.com/cs_api/cs_script_actions/execute"
                                         copyConformBody="{\"actionId\":\"copy_conform_metadata\",\"queryString\":\"selected_objects=$itemId\"}"
@@ -210,6 +214,10 @@ then
                             then
                                 echo "$(date +%Y/%m/%d_%H:%M:%S) - (itemValidation) - [$itemId] - Search Results with MORE THAN 1 Hit - skipping process" >> "$logfile"
                             else
+                                # Command to trigger 'Copy Metadata to Other Master Types' script
+                                echo "$(date +%Y/%m/%d_%H:%M:%S) - (itemValidation) - [$itemId] - Trigger Copy Metadata to Other Masters Script" >> "$logfile"
+                                bash -c "sudo /opt/olympusat/scriptsActive/ingestMetadataWorkflow-copyMetadataToOtherMasterTypes_v2.1.sh $itemId > /dev/null 2>&1"
+                                sleep 1
                                 # Command to trigger 'Copy Conform Metadata' script
                                 copyConformUrl="https://cantemo.olympusat.com/cs_api/cs_script_actions/execute"
                                 copyConformBody="{\"actionId\":\"copy_conform_metadata\",\"queryString\":\"selected_objects=$itemId\"}"
@@ -241,6 +249,10 @@ then
                     then
                         echo "$(date +%Y/%m/%d_%H:%M:%S) - (itemValidation) - [$itemId] - Search Results with MORE THAN 1 Hit - skipping process" >> "$logfile"
                     else
+                        # Command to trigger 'Copy Metadata to Other Master Types' script
+                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (itemValidation) - [$itemId] - Trigger Copy Metadata to Other Masters Script" >> "$logfile"
+                        bash -c "sudo /opt/olympusat/scriptsActive/ingestMetadataWorkflow-copyMetadataToOtherMasterTypes_v2.1.sh $itemId > /dev/null 2>&1"
+                        sleep 1
                         # Command to trigger 'Copy Conform Metadata' script
                         copyConformUrl="https://cantemo.olympusat.com/cs_api/cs_script_actions/execute"
                         copyConformBody="{\"actionId\":\"copy_conform_metadata\",\"queryString\":\"selected_objects=$itemId\"}"
@@ -296,6 +308,10 @@ then
             sleep 1
             echo "$(date +%Y/%m/%d_%H:%M:%S) - (itemValidation) - [$idForOriginalItem] - Updating Original Raw Master Item's 'Item Validation' Flag" >> "$logfile"
             updateVidispineMetadata $idForOriginalItem "oly_itemValidation" "matchingconformexists"
+            sleep 1
+            # Command to trigger 'Copy Metadata to Other Master Types' script
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (itemValidation) - [$idForOriginalItem] - Trigger Copy Metadata to Other Masters Script" >> "$logfile"
+            bash -c "sudo /opt/olympusat/scriptsActive/ingestMetadataWorkflow-copyMetadataToOtherMasterTypes_v2.1.sh $idForOriginalItem > /dev/null 2>&1"
             sleep 1
             # Command to trigger 'Copy Conform Metadata' script
             copyConformUrl="https://cantemo.olympusat.com/cs_api/cs_script_actions/execute"
