@@ -36,9 +36,9 @@ try:
   cantemoUsername = sys.argv[2]
   resultType = sys.argv[3]
   customerKey = "kt8cyimHXxUzFNGyhd7c7g"
-  smtpHost = 
-  smtpUsername = 
-  smtpPassword = 
+  smtpHost = "smtp://smtp-mail.outlook.com:587"
+  smtpUsername = "notify@olympusat.com"
+  smtpPassword = "6bOblVsLg9bPQ8WG7JC7f8Zump"
   errorReport = ''
   olderFileDayLimit = 14
 
@@ -104,7 +104,7 @@ try:
     msg = f"Attachment - result file for {resultType} created on {resultFileCreation}"
     msg['Subject'] = f"Result file for {resultType}"
     msg['To'] = requesterEmail
-    msg['From'] = "Cantemo"
+    msg['From'] = "cantemo@olympusat.com"
 
     #------------------------------
     # Email file to initiating user
