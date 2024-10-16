@@ -55,7 +55,7 @@ try:
     resultFileCreation = os.path.getctime(resultFile)
     timeNow = time.time()
     fileCreationLimitOffset = timeNow - (60 * 60 * 24 * olderFileDayLimit)
-    if outputFPFileCreation > fileCreationLimitOffset:
+    if resultFileCreation > fileCreationLimitOffset:
       existingAnalysisRead = open(resultFile, "r")
       responseJson = json.loads(existingAnalysisRead.read())
       existingAnalysisRead.close()
