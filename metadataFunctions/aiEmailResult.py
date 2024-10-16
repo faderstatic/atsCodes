@@ -4,7 +4,7 @@
 
 # This application ingests metadata from an XML API response into Cantemo
 # PREREQUISITE: -none-
-# 	Usage: aiFingerprintEmailResult.py [Cantemo ItemID] [Cantemo Username]
+# 	Usage: aiEmailResult.py [Cantemo ItemID] [Cantemo Username] [analysis type]
 
 #------------------------------
 # Libraries
