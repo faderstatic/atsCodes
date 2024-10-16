@@ -34,15 +34,16 @@ try:
 
   cantemoItemId = sys.argv[1]
   cantemoUsername = sys.argv[2]
-  resultType = sys.argv[3]
+  analysisType = sys.argv[3]
   customerKey = "kt8cyimHXxUzFNGyhd7c7g"
-  smtpHost = "smtp://smtp-mail.outlook.com:587"
-  smtpUsername = "notify@olympusat.com"
-  smtpPassword = "6bOblVsLg9bPQ8WG7JC7f8Zump"
+  # smtpHost = "smtp://smtp-mail.outlook.com:587"
+  smtpHost = 'smtp-mail.outlook.com'
+  smtpUsername = 'notify@olympusat.com'
+  smtpPassword = '6bOblVsLg9bPQ8WG7JC7f8Zump'
   errorReport = ''
   olderFileDayLimit = 14
 
-  match resultType:
+  match analysisType:
     case "fingerprint":
      resultFile = f"/opt/olympusat/resources/vionlabsReports/{cantemoItemId}_FP.json"
     case "bingemarkers":
@@ -65,7 +66,7 @@ try:
         'Accept': 'application/json'
       }
       payload = {}
-      match resultType:
+      match analysisType:
         case "fingerprint":
           urlGetVionlabResult = f"https://apis.prod.vionlabs.com/results/fingerprintplus/v1/{cantemoItemId}?&key={customerKey}"
         case "bingemarkers":
@@ -90,7 +91,7 @@ try:
         requesterEmail = "ivan@olympusat.com"
       case "standardpractices":
         requesterEmail = "censorship@olympusat.com"
-      case "scopenhaver"
+      case "scopenhaver":
         requesterEmail = "shawn@olympusat.com"
       case "ldalton":
         requesterEmail = "larry@olympusat.com"
@@ -101,8 +102,8 @@ try:
       case _:
         requesterEmail = f"{cantemoUsername}@olympusat.com"
 
-    msg = f"Attachment - result file for {resultType} created on {resultFileCreation}"
-    msg['Subject'] = f"Result file for {resultType}"
+    msg = f"Attachment - result file for {analysisType} created on {resultFileCreation}"
+    msg['Subject'] = f"Result file for {analysisType}"
     msg['To'] = requesterEmail
     msg['From'] = "cantemo@olympusat.com"
 
@@ -116,7 +117,7 @@ try:
 
     #------------------------------
     # Update The User
-    print(f"{resutlFile} (created on {resultFileCreation}) has been emailed to {requesterEmail}")
+    print(f"{resultFile} (created on {resultFileCreation}) has been emailed to {requesterEmail}")
     #------------------------------
     #------------------------------
 
