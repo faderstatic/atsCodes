@@ -74,43 +74,70 @@ def createCantimoLookup(cckFieldName, cckLookupXMLPayload):
   pass
 
 #------------------------------
+
 #------------------------------
 
 try:
+  olderFileDayLimit = 14
+
   cantemoItemId = sys.argv[1]
   # cantemoItemId = os.environ.get("portal_itemId")
   errorReport = ''
   outputFPFile = f"/opt/olympusat/resources/vionlabsReports/{cantemoItemId}_FP.json"
   
-  #------------------------------
-  # Making API call to Vionlabs to get fingerprints
-  headers = {
-    'Accept': 'application/json'
-  }
-  payload = {}
-  urlGetProfanitySegments = f"https://apis.prod.vionlabs.com/results/fingerprintplus/v1/{cantemoItemId}?&key=kt8cyimHXxUzFNGyhd7c7g"
-  # urlGetProfanitySegments = f"https://apis.prod.vionlabs.com/results/fingerprintplus/v1/OLT-003?&key=kt8cyimHXxUzFNGyhd7c7g"
-  httpApiResponse = requests.request("GET", urlGetProfanitySegments, headers=headers, data=payload)
-  httpApiResponse.raise_for_status()
-  responseJson = httpApiResponse.json()
-  #------------------------------
-  apiResponseJson = json.loads(httpApiResponse.text)
-  apiResponseJsonFormat = json.dumps(apiResponseJson, indent=2)
-  responseWriting = open(outputFPFile, "w")
-  responseWriting.write(apiResponseJsonFormat)
-  responseWriting.close()
+  if not os.path.isfile(outputFPFile):
+    #------------------------------
+    # Making API call to Vionlabs to get fingerprints
+    headers = {
+      'Accept': 'application/json'
+    }
+    payload = {}
+    urlGetFingerprintPlus = f"https://apis.prod.vionlabs.com/results/fingerprintplus/v1/{cantemoItemId}?&key=kt8cyimHXxUzFNGyhd7c7g"
+    # urlGetProfanitySegments = f"https://apis.prod.vionlabs.com/results/fingerprintplus/v1/OLT-003?&key=kt8cyimHXxUzFNGyhd7c7g"
+    httpApiResponse = requests.request("GET", urlGetFingerprintPlus, headers=headers, data=payload)
+    httpApiResponse.raise_for_status()
+    responseJson = httpApiResponse.json()
+    #------------------------------
+    # Writing response data to a file
+    apiResponseJson = json.loads(httpApiResponse.text)
+    apiResponseJsonFormat = json.dumps(apiResponseJson, indent=2)
+    responseWriting = open(outputFPFile, "w")
+    responseWriting.write(apiResponseJsonFormat)
+    responseWriting.close()
+    #------------------------------
+  else:
+    outputFPFileCreation = os.path.getctime(outputFPFile)
+    timeNow = time.time()
+    fileCreationLimitOffset = timeNow - (60 * 60 * 24 * olderFileDayLimit)
+    if outputFPFileCreation > fileCreationLimitOffset:
+      existingAnalysisRead = open(outputFPFile, "r")
+      responseJson = json.loads(existingAnalysisRead.read())
+      existingAnalysisRead.close()
+    else:
+      #------------------------------
+      # Making API call to Vionlabs to get fingerprints
+      headers = {
+        'Accept': 'application/json'
+      }
+      payload = {}
+      urlGetFingerprintPlus = f"https://apis.prod.vionlabs.com/results/fingerprintplus/v1/{cantemoItemId}?&key=kt8cyimHXxUzFNGyhd7c7g"
+      # urlGetProfanitySegments = f"https://apis.prod.vionlabs.com/results/fingerprintplus/v1/OLT-003?&key=kt8cyimHXxUzFNGyhd7c7g"
+      httpApiResponse = requests.request("GET", urlGetFingerprintPlus, headers=headers, data=payload)
+      httpApiResponse.raise_for_status()
+      responseJson = httpApiResponse.json()
+      #------------------------------
+      # Writing response data to a file
+      apiResponseJson = json.loads(httpApiResponse.text)
+      apiResponseJsonFormat = json.dumps(apiResponseJson, indent=2)
+      responseWriting = open(outputFPFile, "w")
+      responseWriting.write(apiResponseJsonFormat)
+      responseWriting.close()
+      #------------------------------
 
   addingGenreLookup = "false"
-  addingMoodLookup = "false"
-  addingKeywordLookup = "false"
-  genreXML = ""
-  moodXML = ""
-  keywordXML = ""
   genreLookupXML = f"<SimpleMetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\">"
-  moodLookupXML = f"<SimpleMetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\">"
-  keywordLookupXML = f"<SimpleMetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\">"
-  genreXMLHeader = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><group>Olympusat</group><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_genreAnalysis</name>"
-  moodXMLHeader = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><group>Olympusat</group><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_moodAnalysis</name>"
+  genreXML = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><group>Olympusat</group><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_genreAnalysis</name>"
+  moodXML = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><group>Olympusat</group><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_moodAnalysis</name>"
   keywordXML = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><group>Olympusat</group><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_keywordAnalysis</name>"
   #------------------------------
   # Parsing JSON and POST XML data
@@ -119,7 +146,7 @@ try:
   for individualGenre in genreList:
     genreLookupXML += f"<field><key>{individualGenre}</key><value>{individualGenre}</value></field>"
   for individualGenre in responseJson["genre"]:
-    genreXML = f"<value>{individualGenre}</value>" + genreXML
+    genreXML += f"<value>{individualGenre}</value>"
     if individualGenre.lower() not in genreList:
       addingGenreLookup = "true"
       genreLookupXML += f"<field><key>{individualGenre}</key><value>{individualGenre}</value></field>"
@@ -127,44 +154,27 @@ try:
   if addingGenreLookup == 'true':
     parsedGenreLookupXML = xml.dom.minidom.parseString(genreLookupXML)
     genreLookupPayload = parsedGenreLookupXML.toprettyxml()
-    # print(genreLookupPayload)
     createCantimoLookup("oly_genreAnalysis", genreLookupPayload)
-  genreXML = genreXMLHeader + genreXML + "</field></timespan></MetadataDocument>"
+  genreXML += "</field></timespan></MetadataDocument>"
   parsedGenreXML = xml.dom.minidom.parseString(genreXML)
   genrePayload = parsedGenreXML.toprettyxml()
 
-  moodList = readCantimoLookup("oly_moodAnalysis")
-  for individualMood in moodList:
-    moodLookupXML += f"<field><key>{individualMood}</key><value>{individualMood}</value></field>"
   for individualMood in responseJson["mood_tag"]:
-    moodXML = f"<value>{individualMood}</value>" + moodXML
-    if individualMood.lower() not in moodList:
-      addingMoodLookup = "true"
-      moodLookupXML += f"<field><key>{individualMood}</key><value>{individualMood}</value></field>"
-  moodLookupXML += "</SimpleMetadataDocument>"
-  if addingMoodLookup == 'true':
-    parsedMoodLookupXML = xml.dom.minidom.parseString(moodLookupXML)
-    moodLookupPayload = parsedMoodLookupXML.toprettyxml()
-    # print(moodLookupPayload)
-    createCantimoLookup("oly_moodAnalysis", moodLookupPayload)
-  moodXML = moodXMLHeader + moodXML + "</field></timespan></MetadataDocument>"
+    itemValue = responseJson["mood_tag"][individualMood]
+    itemValue *= 100
+    itemValue = round(itemValue, 2)
+    moodTag = str(itemValue) + f": {individualMood}"
+    moodXML += f"<value>{moodTag}</value>"
+  moodXML += "</field></timespan></MetadataDocument>"
   parsedMoodXML = xml.dom.minidom.parseString(moodXML)
   moodPayload = parsedMoodXML.toprettyxml()
 
-  keywordList = readCantimoLookup("oly_keywordAnalysis")
-  for individualKeyword in keywordList:
-    keywordLookupXML += f"<field><key>{individualKeyword}</key><value>{individualKeyword}</value></field>"
   for individualKeyword in responseJson["keyword"]:
-    keywordXML += f"<value>{individualKeyword}</value>"
-    if individualKeyword.lower() not in keywordList:
-      addingKeywordLookup = "true"
-      keywordLookupXML += f"<field><key>{individualKeyword}</key><value>{individualKeyword}</value></field>"
-  keywordLookupXML += "</SimpleMetadataDocument>"
-  if addingKeywordLookup == 'true':
-    parsedKeywordLookupXML = xml.dom.minidom.parseString(keywordLookupXML)
-    keywordLookupPayload = parsedKeywordLookupXML.toprettyxml()
-    # print(keywordLookupPayload)
-    createCantimoLookup("oly_keywordAnalysis", keywordLookupPayload)
+    itemValue = responseJson["keyword"][individualKeyword]
+    itemValue *= 100
+    itemValue = round(itemValue, 2)
+    keywordTag = str(itemValue) + f": {individualKeyword}"
+    keywordXML += f"<value>{keywordTag}</value>"
   keywordXML += "</field></timespan></MetadataDocument>"
   parsedKeywordXML = xml.dom.minidom.parseString(keywordXML)
   keywordPayload = parsedKeywordXML.toprettyxml()
