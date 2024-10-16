@@ -45,6 +45,10 @@ try:
   match resultType:
     case "fingerprint":
      resultFile = f"/opt/olympusat/resources/vionlabsReports/{cantemoItemId}_FP.json"
+    case "bingemarkers":
+      resultFile = f"/opt/olympusat/resources/vionlabsReports/{cantemoItemId}_BM.json"
+    case "adbreaks":
+      resultFile = f"/opt/olympusat/resources/vionlabsReports/{cantemoItemId}_AB.json"
   
   if os.path.isfile(resultFile):
     resultFileCreation = os.path.getctime(resultFile)
