@@ -70,7 +70,7 @@ else
                         bodyData=$(echo "<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><group><name>Original Content</name><field><name>oly_originalContentQCStatus</name><value>$qcStatus</value></field></group></timespan></MetadataDocument>")
                         if [[ "$itemContentType" == "movie" ]];
                         then
-                            bash -c "sudo /opt/olympusat/scriptsActive/mediaManagerWorkflow-itemValidation_v1.1.sh $itemId > /dev/null 2>&1 &"
+                            bash -c "sudo /opt/olympusat/scriptsActive/mediaManagerWorkflow-itemValidation_v1.5.sh $itemId > /dev/null 2>&1 &"
                             echo "$(date +%Y/%m/%d_%H:%M:%S) - (contentProcessingQC) - [$itemId] - Trigger Item Validation COMPLETED" >> "$logfile"
                         fi
                     else

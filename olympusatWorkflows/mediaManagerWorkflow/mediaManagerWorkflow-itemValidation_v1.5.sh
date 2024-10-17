@@ -136,7 +136,7 @@ then
                                             else
                                                 # Command to trigger 'Copy Metadata to Other Master Types' script
                                                 echo "$(date +%Y/%m/%d_%H:%M:%S) - (itemValidation) - [$itemId] - Trigger Copy Metadata to Other Masters Script" >> "$logfile"
-                                                bash -c "sudo /opt/olympusat/scriptsActive/ingestMetadataWorkflow-copyMetadataToOtherMasterTypes_v2.1.sh $itemId > /dev/null 2>&1"
+                                                bash -c "sudo /opt/olympusat/scriptsActive/ingestMetadataWorkflow-copyMetadataToOtherMasterTypes_v2.2.sh $itemId > /dev/null 2>&1"
                                                 sleep 1
                                                 # Command to trigger 'Copy Conform Metadata' script
                                                 copyConformUrl="https://cantemo.olympusat.com/cs_api/cs_script_actions/execute"
@@ -176,7 +176,7 @@ then
                                     else
                                         # Command to trigger 'Copy Metadata to Other Master Types' script
                                         echo "$(date +%Y/%m/%d_%H:%M:%S) - (itemValidation) - [$itemId] - Trigger Copy Metadata to Other Masters Script" >> "$logfile"
-                                        bash -c "sudo /opt/olympusat/scriptsActive/ingestMetadataWorkflow-copyMetadataToOtherMasterTypes_v2.1.sh $itemId > /dev/null 2>&1"
+                                        bash -c "sudo /opt/olympusat/scriptsActive/ingestMetadataWorkflow-copyMetadataToOtherMasterTypes_v2.2.sh $itemId > /dev/null 2>&1"
                                         sleep 1
                                         # Command to trigger 'Copy Conform Metadata' script
                                         copyConformUrl="https://cantemo.olympusat.com/cs_api/cs_script_actions/execute"
@@ -216,7 +216,7 @@ then
                             else
                                 # Command to trigger 'Copy Metadata to Other Master Types' script
                                 echo "$(date +%Y/%m/%d_%H:%M:%S) - (itemValidation) - [$itemId] - Trigger Copy Metadata to Other Masters Script" >> "$logfile"
-                                bash -c "sudo /opt/olympusat/scriptsActive/ingestMetadataWorkflow-copyMetadataToOtherMasterTypes_v2.1.sh $itemId > /dev/null 2>&1"
+                                bash -c "sudo /opt/olympusat/scriptsActive/ingestMetadataWorkflow-copyMetadataToOtherMasterTypes_v2.2.sh $itemId > /dev/null 2>&1"
                                 sleep 1
                                 # Command to trigger 'Copy Conform Metadata' script
                                 copyConformUrl="https://cantemo.olympusat.com/cs_api/cs_script_actions/execute"
@@ -251,7 +251,7 @@ then
                     else
                         # Command to trigger 'Copy Metadata to Other Master Types' script
                         echo "$(date +%Y/%m/%d_%H:%M:%S) - (itemValidation) - [$itemId] - Trigger Copy Metadata to Other Masters Script" >> "$logfile"
-                        bash -c "sudo /opt/olympusat/scriptsActive/ingestMetadataWorkflow-copyMetadataToOtherMasterTypes_v2.1.sh $itemId > /dev/null 2>&1"
+                        bash -c "sudo /opt/olympusat/scriptsActive/ingestMetadataWorkflow-copyMetadataToOtherMasterTypes_v2.2.sh $itemId > /dev/null 2>&1"
                         sleep 1
                         # Command to trigger 'Copy Conform Metadata' script
                         copyConformUrl="https://cantemo.olympusat.com/cs_api/cs_script_actions/execute"
@@ -311,7 +311,7 @@ then
             sleep 1
             # Command to trigger 'Copy Metadata to Other Master Types' script
             echo "$(date +%Y/%m/%d_%H:%M:%S) - (itemValidation) - [$idForOriginalItem] - Trigger Copy Metadata to Other Masters Script" >> "$logfile"
-            bash -c "sudo /opt/olympusat/scriptsActive/ingestMetadataWorkflow-copyMetadataToOtherMasterTypes_v2.1.sh $idForOriginalItem > /dev/null 2>&1"
+            bash -c "sudo /opt/olympusat/scriptsActive/ingestMetadataWorkflow-copyMetadataToOtherMasterTypes_v2.2.sh $idForOriginalItem > /dev/null 2>&1"
             sleep 1
             # Command to trigger 'Copy Conform Metadata' script
             copyConformUrl="https://cantemo.olympusat.com/cs_api/cs_script_actions/execute"
