@@ -43,6 +43,7 @@ awsBucketName=$(filterVidispineItemMetadata $uploadId "metadata" "oly_uploadBuck
 if [ "$awsBucketName" == "" ];
 then
 	awsBucketName="olympusatdeeparch"
+	updateVidispineMetadata $uploadId "oly_uploadBucketAWSS3" $awsBucketName
 fi
 #--------------------------------------------------
 
