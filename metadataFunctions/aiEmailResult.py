@@ -35,7 +35,7 @@ try:
   cantemoItemId = sys.argv[1]
   cantemoUsername = sys.argv[2]
   analysisType = sys.argv[3]
-  customerKey = "kt8cyimHXxUzFNGyhd7c7g"
+  customerKey = 'kt8cyimHXxUzFNGyhd7c7g'
   # smtpHost = "smtp://smtp-mail.outlook.com:587"
   smtpHost = 'smtp-mail.outlook.com'
   smtpUsername = 'notify@olympusat.com'
@@ -43,13 +43,12 @@ try:
   errorReport = ''
   olderFileDayLimit = 14
 
-  match analysisType:
-    case "fingerprint":
-     resultFile = f"/opt/olympusat/resources/vionlabsReports/{cantemoItemId}_FP.json"
-    case "bingemarkers":
-      resultFile = f"/opt/olympusat/resources/vionlabsReports/{cantemoItemId}_BM.json"
-    case "adbreaks":
-      resultFile = f"/opt/olympusat/resources/vionlabsReports/{cantemoItemId}_AB.json"
+  if analysisType == "fingerprint":
+    resultFile = f"/opt/olympusat/resources/vionlabsReports/{cantemoItemId}_FP.json"
+  elif analysisType == "bingemarkers":
+    resultFile = f"/opt/olympusat/resources/vionlabsReports/{cantemoItemId}_BM.json"
+  elif analysisType == "adbreaks":
+    resultFile = f"/opt/olympusat/resources/vionlabsReports/{cantemoItemId}_AB.json"
   
   if os.path.isfile(resultFile):
     resultFileCreation = os.path.getctime(resultFile)
@@ -66,13 +65,12 @@ try:
         'Accept': 'application/json'
       }
       payload = {}
-      match analysisType:
-        case "fingerprint":
-          urlGetVionlabResult = f"https://apis.prod.vionlabs.com/results/fingerprintplus/v1/{cantemoItemId}?&key={customerKey}"
-        case "bingemarkers":
-          urlGetVionlabResult = f"https://apis.prod.vionlabs.com/results/markers/v1/asset/{cantemoItemId}?&key={customerKey}"
-        case "adbreaks":
-          urlGetVionlabResult = f"https://apis.prod.vionlabs.com/results/adbreaks/v2/filter/frame/{cantemoItemId}?&key={customerKey}"
+      if analysisType == "fingerprint":
+        urlGetVionlabResult = f"https://apis.prod.vionlabs.com/results/fingerprintplus/v1/{cantemoItemId}?&key={customerKey}"
+      elif analysisType == "bingemarkers":
+        urlGetVionlabResult = f"https://apis.prod.vionlabs.com/results/markers/v1/asset/{cantemoItemId}?&key={customerKey}"
+      elif analysisType == "adbreaks":
+        urlGetVionlabResult = f"https://apis.prod.vionlabs.com/results/adbreaks/v2/filter/frame/{cantemoItemId}?&key={customerKey}"
       httpApiResponse = requests.request("GET", urlGetVionlabResult, headers=headers, data=payload)
       httpApiResponse.raise_for_status()
       responseJson = httpApiResponse.json()
@@ -86,21 +84,20 @@ try:
       time.sleep(5)
       resultFileCreation = os.path.getctime(resultFile)
       #------------------------------
-    match cantemoUsername:
-      case "iarenas":
-        requesterEmail = "ivan@olympusat.com"
-      case "standardpractices":
-        requesterEmail = "censorship@olympusat.com"
-      case "scopenhaver":
-        requesterEmail = "shawn@olympusat.com"
-      case "ldalton":
-        requesterEmail = "larry@olympusat.com"
-      case "jdaly":
-        requesterEmail = "jasondaly@olympusat.com"
-      case "aolabarria":
-        requesterEmail = "andrea@olympusat.com"
-      case _:
-        requesterEmail = f"{cantemoUsername}@olympusat.com"
+    if cantemoUsername == "iarenas":
+      requesterEmail = "ivan@olympusat.com"
+    elif cantemoUsername == "standardpractices":
+      requesterEmail = "censorship@olympusat.com"
+    elif cantemoUsername == "scopenhaver":
+      requesterEmail = "shawn@olympusat.com"
+    elif cantemoUsername == "ldalton":
+      requesterEmail = "larry@olympusat.com"
+    elif cantemoUsername == "jdaly":
+      requesterEmail = "jasondaly@olympusat.com"
+    elif cantemoUsername == "aolabarria":
+      requesterEmail = "andrea@olympusat.com"
+    else:
+      requesterEmail = f"{cantemoUsername}@olympusat.com"
 
     msg = f"Attachment - result file for {analysisType} created on {resultFileCreation}"
     msg['Subject'] = f"Result file for {analysisType}"
