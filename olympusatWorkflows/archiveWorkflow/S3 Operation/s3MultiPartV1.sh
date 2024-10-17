@@ -38,6 +38,14 @@ export chunkSizeExponential=19
 sourceFile=$(filterVidispineFileInfo $uploadId "uri" "tag=original" | sed -e 's/%20/ /g' | sed -e 's/%23/\#/g')
 sourceTitle=$(filterVidispineItemMetadata $uploadId "metadata" "title")
 awsBucketName=$(filterVidispineItemMetadata $uploadId "metadata" "oly_uploadBucketAWSS3")
+
+#-------------------------------------------------- If no bucket set, set default bucket
+if [ "$awsBucketName" == "" ];
+then
+	awsBucketName="olympusatdeeparch"
+fi
+#--------------------------------------------------
+
 chunksCount=0
 chunkByteSize=$((1024*(2**$chunkSizeExponential)))
 sourceFileName=$(basename "$sourceFile")
