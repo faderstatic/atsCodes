@@ -219,7 +219,7 @@ else
         fi
         updateVidispineMetadata $itemId "oly_adminRulesFlags" "episodeprocessed"
         sleep 2
-        bash -c "sudo /opt/olympusat/scriptsActive/mediaManagerWorkflow-itemValidation_v1.4.sh $itemId > /dev/null 2>&1 &"
+        bash -c "sudo /opt/olympusat/scriptsActive/mediaManagerWorkflow-itemValidation_v1.5.sh $itemId > /dev/null 2>&1 &"
         echo "$(date +%Y/%m/%d_%H:%M:%S) - (episodeWorkflow) - [$itemId] - Trigger Item Validation COMPLETED" >> "$logfile"
     fi
 fi
