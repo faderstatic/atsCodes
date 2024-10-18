@@ -284,6 +284,7 @@ else
                                 # Set variables
                                 itemAdvertiser=$(filterVidispineItemMetadata $itemId "metadata" "ac_advertiser")
                                 itemContactEmail=$(filterVidispineItemMetadata $itemId "metadata" "ac_contactEmail")
+                                # Will have to add logic here later in case there is more than 1 Contact Email address
                                 if [[ "$itemAdvertiser" == "" || "$itemContactEmail" == "" ]];
                                 then
                                     echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-adComplianceForAdvertiser) - [$itemId] - Advertiser or Contact Email Info MISSING - NOT Adding to CSV to Send to Advertiser" >> "$logfile"
@@ -296,7 +297,7 @@ else
                                     if [[ ! -e "$adComplianceForAdvertiserFileDestination" ]];
                                     then
                                         echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-adComplianceForAdvertiser) - ($itemId) - adComplianceForAdvertiserFileDestination file NOT FOUND - creating new file with headers" >> "$logfile"
-                                        echo "$itemAdvertiser,$itemContactEmail" >> "$adComplianceForAdvertiserFileDestination"
+                                        echo "$itemContactEmail" >> "$adComplianceForAdvertiserFileDestination"
                                         echo "ItemId,Title,Media Type,Advertiser,Product,Type,ISCI Code,Review Status,Review By,Review Notes" >> "$adComplianceForAdvertiserFileDestination"
                                         echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-adComplianceForAdvertiser) - ($itemId) - New File created - [$adComplianceForAdvertiserFileDestination]" >> "$logfile"
                                         sleep 2
