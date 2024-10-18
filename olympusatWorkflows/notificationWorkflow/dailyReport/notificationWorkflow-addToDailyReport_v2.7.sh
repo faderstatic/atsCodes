@@ -106,16 +106,11 @@ else
         if [[ ! -e "$originalContentQCPendingFileDestination" ]];
         then
             echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-originalContentQCPending) - ($itemId) - originalContentQCPendingFileDestination file NOT FOUND - creating new file with headers" >> "$logfile"
-
             sleep 2
-
             echo "ItemId,Title,Licensor,ContentType,VersionType,FileExtension,ContentFlags,OriginalQCStatus" >> "$originalContentQCPendingFileDestination"
-
             echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-originalContentQCPending) - ($itemId) - New File created - [$originalContentQCPendingFileDestination]" >> "$logfile"
-            
             sleep 5
         fi 
-
         echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-originalContentQCPending) - ($itemId) - Gathering item metadata from Cantemo" >> "$logfile"
         itemTitle=$(filterVidispineItemMetadata $itemId "metadata" "title")
         itemLicensor=$(filterVidispineItemMetadata $itemId "metadata" "oly_licensor")
@@ -124,27 +119,19 @@ else
         itemOriginalFilename=$(filterVidispineItemMetadata $itemId "metadata" "originalFilename")
         itemOriginalExtension=$(echo "$itemOriginalFilename" | awk -F "." '{print $2}')
         itemOriginalContentQCStatus=$(filterVidispineItemMetadata $itemId "metadata" "oly_originalContentQCStatus")
-
         urlGetItemInfo="http://10.1.1.34:8080/API/item/$itemId/metadata?field=oly_contentFlags&terse=yes"
         httpResponse=$(curl --location --request GET $urlGetItemInfo --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=Tkb9vkSC8v4SceB8CHUyB3iaMPjvgoHrzhLrvo36agG3wqv0jHc7nsOtdTo9JEyM')
-
         if [[ "$httpResponse" == *"legacycontent"* ]];
         then
             itemContentFlags="legacyContent"
         else
             itemContentFlags=""
         fi
-
         sleep 2
-
         echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-originalContentQCPending) - ($itemId) - Adding item metadata to originalContentQCPending csv" >> "$logfile"
-
         echo "$itemId,$itemTitle,$itemLicensor,$itemContentType,$itemVersionType,$itemOriginalExtension,$itemContentFlags,$itemOriginalContentQCStatus" >> "$originalContentQCPendingFileDestination"
-
         sleep 2
-
         echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-originalContentQCPending) - ($itemId) - Process completed" >> "$logfile"
-
     else
         if [[ "$emailNotificationWorkflow" == "finalQCPending" ]];
         then
@@ -154,16 +141,11 @@ else
             if [[ ! -e "$finalQCPendingFileDestination" ]];
             then
                 echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-finalQCPending) - ($itemId) - finalQCPendingFileDestination file NOT FOUND - creating new file with headers" >> "$logfile"
-
                 sleep 2
-
                 echo "ItemId,Title,Licensor,ContentType,VersionType,FileExtension,ContentFlags,FinalQCStatus" >> "$finalQCPendingFileDestination"
-
                 echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-finalQCPending) - ($itemId) - New File created - [$finalQCPendingFileDestination]" >> "$logfile"
-                
                 sleep 5
             fi 
-
             echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-finalQCPending) - ($itemId) - Gathering item metadata from Cantemo" >> "$logfile"
             itemTitle=$(filterVidispineItemMetadata $itemId "metadata" "title")
             itemLicensor=$(filterVidispineItemMetadata $itemId "metadata" "oly_licensor")
@@ -172,27 +154,19 @@ else
             itemOriginalFilename=$(filterVidispineItemMetadata $itemId "metadata" "originalFilename")
             itemOriginalExtension=$(echo "$itemOriginalFilename" | awk -F "." '{print $2}')
             itemFinalQCStatus=$(filterVidispineItemMetadata $itemId "metadata" "oly_finalQCStatus")
-
             urlGetItemInfo="http://10.1.1.34:8080/API/item/$itemId/metadata?field=oly_contentFlags&terse=yes"
             httpResponse=$(curl --location --request GET $urlGetItemInfo --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=Tkb9vkSC8v4SceB8CHUyB3iaMPjvgoHrzhLrvo36agG3wqv0jHc7nsOtdTo9JEyM')
-
             if [[ "$httpResponse" == *"legacycontent"* ]];
             then
                 itemContentFlags="legacyContent"
             else
                 itemContentFlags=""
             fi
-
             sleep 2
-
             echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-finalQCPending) - ($itemId) - Adding item metadata to finalQCPending csv" >> "$logfile"
-
             echo "$itemId,$itemTitle,$itemLicensor,$itemContentType,$itemVersionType,$itemOriginalExtension,$itemContentFlags,$itemFinalQCStatus" >> "$finalQCPendingFileDestination"
-
             sleep 2
-
             echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-finalQCPending) - ($itemId) - Process completed" >> "$logfile"
-
         else
             if [[ "$emailNotificationWorkflow" == "markedToBeDeleted" ]];
             then
@@ -202,16 +176,11 @@ else
                 if [[ ! -e "$markedToBeDeletedFileDestination" ]];
                 then
                     echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-markedToBeDeleted) - ($itemId) - markedToBeDeletedFileDestination file NOT FOUND - creating new file with headers" >> "$logfile"
-
                     sleep 2
-
                     echo "ItemId,Title,Licensor,ContentType,VersionType,FileExtension,ContentFlags,OriginalContentQCStatus,FinalQCStatus,ArchiveStatus,ArchiveStatusAWS" >> "$markedToBeDeletedFileDestination"
-
                     echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-markedToBeDeleted) - ($itemId) - New File created - [$markedToBeDeletedFileDestination]" >> "$logfile"
-                    
                     sleep 5
                 fi
-
                 echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-markedToBeDeleted) - ($itemId) - Gathering item metadata from Cantemo" >> "$logfile"
                 itemTitle=$(filterVidispineItemMetadata $itemId "metadata" "title")
                 itemLicensor=$(filterVidispineItemMetadata $itemId "metadata" "oly_licensor")
@@ -223,27 +192,19 @@ else
                 itemFinalQCStatus=$(filterVidispineItemMetadata $itemId "metadata" "oly_finalQCStatus")
                 itemArchiveStatus=$(filterVidispineItemMetadata $itemId "metadata" "portal_archive_status")
                 itemArchiveStatusAWS=$(filterVidispineItemMetadata $itemId "metadata" "oly_archiveStatusAWS")
-
                 urlGetItemInfo="http://10.1.1.34:8080/API/item/$itemId/metadata?field=oly_contentFlags&terse=yes"
                 httpResponse=$(curl --location --request GET $urlGetItemInfo --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=Tkb9vkSC8v4SceB8CHUyB3iaMPjvgoHrzhLrvo36agG3wqv0jHc7nsOtdTo9JEyM')
-
                 if [[ "$httpResponse" == *"legacycontent"* ]];
                 then
                     itemContentFlags="legacyContent"
                 else
                     itemContentFlags=""
                 fi
-
                 sleep 2
-
                 echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-markedToBeDeleted) - ($itemId) - Adding item metadata to markedToBeDeleted csv" >> "$logfile"
-
                 echo "$itemId,$itemTitle,$itemLicensor,$itemContentType,$itemVersionType,$itemOriginalExtension,$itemContentFlags,$itemOriginalContentQCStatus,$itemFinalQCStatus,$itemArchiveStatus,$itemArchiveStatusAWS" >> "$markedToBeDeletedFileDestination"
-
                 sleep 2
-
                 echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-markedToBeDeleted) - ($itemId) - Process completed" >> "$logfile"
-
             else
                 if [[ "$emailNotificationWorkflow" == "rtcReviewPending" ]];
                 then
@@ -253,31 +214,21 @@ else
                     if [[ ! -e "$rtcReviewPendingFileDestination" ]];
                     then
                         echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-rtcReviewPending) - ($itemId) - rtcReviewPendingFileDestination file NOT FOUND - creating new file with headers" >> "$logfile"
-
                         echo "ItemId,Title,Spanish Title,English Title,Content Type,RTC Review Status" >> "$rtcReviewPendingFileDestination"
-
-                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-rtcReviewPending) - ($itemId) - New File created - [$rtcReviewPendingFileDestination]" >> "$logfile"
-                        
+                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-rtcReviewPending) - ($itemId) - New File created - [$rtcReviewPendingFileDestination]" >> "$logfile"  
                         sleep 2
                     fi
-
                     echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-rtcReviewPending) - ($itemId) - Gathering item metadata from Cantemo" >> "$logfile"
                     itemTitle=$(filterVidispineItemMetadata $itemId "metadata" "title")
                     itemTitleEs=$(filterVidispineItemMetadata $itemId "metadata" "oly_titleEs")
                     itemTitleEn=$(filterVidispineItemMetadata $itemId "metadata" "oly_titleEn")
                     itemContentType=$(filterVidispineItemMetadata $itemId "metadata" "oly_contentType")
                     itemRtcReviewStatus=$(filterVidispineItemSubgroupMetadata $itemId "metadata" "oly_rtcReviewStatus" "RTC%20Review")
-
                     sleep 1
-
                     echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-rtcReviewPending) - ($itemId) - Adding item metadata to rtcReviewPending csv" >> "$logfile"
-
                     echo "$itemId,$itemTitle,$itemTitleEs,$itemTitleEn,$itemContentType,$itemRtcReviewStatus" >> "$rtcReviewPendingFileDestination"
-
                     sleep 1
-
                     echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-rtcReviewPending) - ($itemId) - Process completed" >> "$logfile"
-
                 else
                     if [[ "$emailNotificationWorkflow" == "rtcReviewCompleted" ]];
                     then
@@ -287,14 +238,10 @@ else
                         if [[ ! -e "$rtcReviewCompletedFileDestination" ]];
                         then
                             echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-rtcReviewCompleted) - ($itemId) - rtcReviewCompletedFileDestination file NOT FOUND - creating new file with headers" >> "$logfile"
-
                             echo "ItemId,Title,Spanish Title,English Title,Content Type,RTC Review Status,RTC Review By,RTC Review Date,RTC Review Notes" >> "$rtcReviewCompletedFileDestination"
-
-                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-rtcReviewCompleted) - ($itemId) - New File created - [$rtcReviewCompletedFileDestination]" >> "$logfile"
-                            
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-rtcReviewCompleted) - ($itemId) - New File created - [$rtcReviewCompletedFileDestination]" >> "$logfile"        
                             sleep 2
                         fi
-
                         echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-rtcReviewCompleted) - ($itemId) - Gathering item metadata from Cantemo" >> "$logfile"
                         itemTitle=$(filterVidispineItemMetadata $itemId "metadata" "title")
                         itemTitleEs=$(filterVidispineItemMetadata $itemId "metadata" "oly_titleEs")
@@ -304,17 +251,11 @@ else
                         itemRtcReviewBy=$(filterVidispineItemSubgroupMetadata $itemId "metadata" "oly_rtcReviewBy" "RTC%20Review")
                         itemRtcReviewDate=$(filterVidispineItemSubgroupMetadata $itemId "metadata" "oly_rtcReviewDate" "RTC%20Review")
                         itemRtcReviewNotes=$(filterVidispineItemMetadata $itemId "metadata" "oly_rtcReviewNotes")
-
                         sleep 1
-
                         echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-rtcReviewCompleted) - ($itemId) - Adding item metadata to rtcReviewCompleted csv" >> "$logfile"
-
                         echo "$itemId,$itemTitle,$itemTitleEs,$itemTitleEn,$itemContentType,$itemRtcReviewStatus,$itemRtcReviewBy,$itemRtcReviewDate,$itemRtcReviewNotes" >> "$rtcReviewCompletedFileDestination"
-
                         sleep 1
-
                         echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-rtcReviewCompleted) - ($itemId) - Process completed" >> "$logfile"
-
                     else
                         if [[ "$emailNotificationWorkflow" == "adComplianceNewItem" ]];
                         then
@@ -324,28 +265,18 @@ else
                             if [[ ! -e "$adComplianceNewItemFileDestination" ]];
                             then
                                 echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-adComplianceNewItem) - ($itemId) - adComplianceNewItemFileDestination file NOT FOUND - creating new file with headers" >> "$logfile"
-
                                 echo "ItemId,Title,Media Type" >> "$adComplianceNewItemFileDestination"
-
                                 echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-adComplianceNewItem) - ($itemId) - New File created - [$adComplianceNewItemFileDestination]" >> "$logfile"
-                                
                                 sleep 2
                             fi
-
                             echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-adComplianceNewItem) - ($itemId) - Gathering item metadata from Cantemo" >> "$logfile"
                             itemTitle=$(filterVidispineItemMetadata $itemId "metadata" "title")
                             itemMediaType=$(filterVidispineItemMetadata $itemId "metadata" "mediaType")
-
                             sleep 1
-
                             echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-adComplianceNewItem) - ($itemId) - Adding item metadata to adComplianceNewItem csv" >> "$logfile"
-
                             echo "$itemId,$itemTitle,$itemMediaType" >> "$adComplianceNewItemFileDestination"
-
                             sleep 1
-
                             echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-adComplianceNewItem) - ($itemId) - Process completed" >> "$logfile"
-
                         else
                             if [[ "$emailNotificationWorkflow" == "adComplianceForAdvertiser" ]];
                             then
@@ -362,7 +293,7 @@ else
                                 then
                                     echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-adComplianceForAdvertiser) - ($itemId) - adComplianceForAdvertiserFileDestination file NOT FOUND - creating new file with headers" >> "$logfile"
                                     echo "$itemAdvertiser,$itemContactEmail" >> "$adComplianceForAdvertiserFileDestination"
-                                    echo "ItemId,Title,Media Type,Advertiser,Product,Type,ISCI Code" >> "$adComplianceForAdvertiserFileDestination"
+                                    echo "ItemId,Title,Media Type,Advertiser,Product,Type,ISCI Code,Review Status,Review By,Review Notes" >> "$adComplianceForAdvertiserFileDestination"
                                     echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-adComplianceForAdvertiser) - ($itemId) - New File created - [$adComplianceForAdvertiserFileDestination]" >> "$logfile"
                                     sleep 2
                                 fi
@@ -377,7 +308,7 @@ else
                                 itemReviewNotes=$(filterVidispineItemMetadata $itemId "metadata" "ac_reviewNotes")
                                 sleep 1
                                 echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-adComplianceForAdvertiser) - ($itemId) - Adding item metadata to adComplianceForAdvertiser csv" >> "$logfile"
-                                echo "$itemId,$itemTitle,$itemMediaType,$itemAdvertiser,$itemProduct,$itemType,$itemIsciCode" >> "$adComplianceForAdvertiserFileDestination"
+                                echo "$itemId,$itemTitle,$itemMediaType,$itemAdvertiser,$itemProduct,$itemType,$itemIsciCode,$itemReviewStatus,$itemReviewBy,$itemReviewNotes" >> "$adComplianceForAdvertiserFileDestination"
                                 sleep 1
                                 echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-adComplianceForAdvertiser) - ($itemId) - Process completed" >> "$logfile"
                             else
