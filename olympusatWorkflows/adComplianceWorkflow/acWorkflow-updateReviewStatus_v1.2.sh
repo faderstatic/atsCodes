@@ -81,7 +81,7 @@ then
                     echo "$(date +%Y/%m/%d_%H:%M:%S) - (reviewStatus) - [$itemId] - Advertiser or Contact Email Info MISSING - NOT Sending Email to Advertiser" >> "$logfile"
                 else
                     echo "$(date +%Y/%m/%d_%H:%M:%S) - (reviewStatus) - [$itemId] - Triggering Add to Advertiser Contact Report on New Item" >> "$logfile"
-                    bash -c "sudo /opt/olympusat/scriptsActive/notificationWorkflow-addToDailyReport_v2.7.sh $itemId adComplianceForLicensor $itemAdvertiser $itemContactEmail > /dev/null 2>&1 &"
+                    bash -c "sudo /opt/olympusat/scriptsActive/notificationWorkflow-addToDailyReport_v2.7.sh $itemId adComplianceForLicensor > /dev/null 2>&1 &"
                 fi
             fi
         else

@@ -282,35 +282,40 @@ else
                             then
                                 # emailNotificationWorkflow varialbe is set to adComplianceForAdvertiser
                                 # Set variables
-                                itemAdvertiser=$3
-                                itemContactEmail=$4
-                                echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-adComplianceForAdvertiser) - ($itemId) - Advertiser {$itemAdvertiser} - Contact Email [$itemContactEmail]" >> "$logfile"
-                                echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-adComplianceForAdvertiser) - ($itemId) - Checking for adComplianceForAdvertiser file" >> "$logfile"
-                                contactForFilename=$(echo "$itemContactEmail" | awk -F '@' '{print $1}')
-                                echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-adComplianceForAdvertiser) - ($itemId) - Contact For Filename [$contactForFilename]" >> "$logfile"
-                                adComplianceForAdvertiserFileDestination="/opt/olympusat/resources/emailNotificationWorkflow/adComplianceForAdvertiser/$itemAdvertiser-$contactForFilename-$mydate.csv"
-                                if [[ ! -e "$adComplianceForAdvertiserFileDestination" ]];
+                                itemAdvertiser=$(filterVidispineItemMetadata $itemId "metadata" "ac_advertiser")
+                                itemContactEmail=$(filterVidispineItemMetadata $itemId "metadata" "ac_contactEmail")
+                                if [[ "$itemAdvertiser" == "" || "$itemContactEmail" == "" ]];
                                 then
-                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-adComplianceForAdvertiser) - ($itemId) - adComplianceForAdvertiserFileDestination file NOT FOUND - creating new file with headers" >> "$logfile"
-                                    echo "$itemAdvertiser,$itemContactEmail" >> "$adComplianceForAdvertiserFileDestination"
-                                    echo "ItemId,Title,Media Type,Advertiser,Product,Type,ISCI Code,Review Status,Review By,Review Notes" >> "$adComplianceForAdvertiserFileDestination"
-                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-adComplianceForAdvertiser) - ($itemId) - New File created - [$adComplianceForAdvertiserFileDestination]" >> "$logfile"
-                                    sleep 2
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-adComplianceForAdvertiser) - [$itemId] - Advertiser or Contact Email Info MISSING - NOT Adding to CSV to Send to Advertiser" >> "$logfile"
+                                else
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-adComplianceForAdvertiser) - ($itemId) - Advertiser {$itemAdvertiser} - Contact Email [$itemContactEmail]" >> "$logfile"
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-adComplianceForAdvertiser) - ($itemId) - Checking for adComplianceForAdvertiser file" >> "$logfile"
+                                    contactForFilename=$(echo "$itemContactEmail" | awk -F '@' '{print $1}')
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-adComplianceForAdvertiser) - ($itemId) - Contact For Filename [$contactForFilename]" >> "$logfile"
+                                    adComplianceForAdvertiserFileDestination="/opt/olympusat/resources/emailNotificationWorkflow/adComplianceForAdvertiser/$itemAdvertiser-$contactForFilename-$mydate.csv"
+                                    if [[ ! -e "$adComplianceForAdvertiserFileDestination" ]];
+                                    then
+                                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-adComplianceForAdvertiser) - ($itemId) - adComplianceForAdvertiserFileDestination file NOT FOUND - creating new file with headers" >> "$logfile"
+                                        echo "$itemAdvertiser,$itemContactEmail" >> "$adComplianceForAdvertiserFileDestination"
+                                        echo "ItemId,Title,Media Type,Advertiser,Product,Type,ISCI Code,Review Status,Review By,Review Notes" >> "$adComplianceForAdvertiserFileDestination"
+                                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-adComplianceForAdvertiser) - ($itemId) - New File created - [$adComplianceForAdvertiserFileDestination]" >> "$logfile"
+                                        sleep 2
+                                    fi
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-adComplianceForAdvertiser) - ($itemId) - Gathering item metadata from Cantemo" >> "$logfile"
+                                    itemTitle=$(filterVidispineItemMetadata $itemId "metadata" "title")
+                                    itemMediaType=$(filterVidispineItemMetadata $itemId "metadata" "mediaType")
+                                    itemProduct=$(filterVidispineItemMetadata $itemId "metadata" "ac_product")
+                                    itemType=$(filterVidispineItemMetadata $itemId "metadata" "ac_type")
+                                    itemIsciCode=$(filterVidispineItemMetadata $itemId "metadata" "ac_isciCode")
+                                    itemReviewStatus=$(filterVidispineItemMetadata $itemId "metadata" "ac_reviewStatus")
+                                    itemReviewBy=$(filterVidispineItemMetadata $itemId "metadata" "ac_reviewBy")
+                                    itemReviewNotes=$(filterVidispineItemMetadata $itemId "metadata" "ac_reviewNotes")
+                                    sleep 1
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-adComplianceForAdvertiser) - ($itemId) - Adding item metadata to adComplianceForAdvertiser csv" >> "$logfile"
+                                    echo "$itemId,$itemTitle,$itemMediaType,$itemAdvertiser,$itemProduct,$itemType,$itemIsciCode,$itemReviewStatus,$itemReviewBy,$itemReviewNotes" >> "$adComplianceForAdvertiserFileDestination"
+                                    sleep 1
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-adComplianceForAdvertiser) - ($itemId) - Process completed" >> "$logfile"
                                 fi
-                                echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-adComplianceForAdvertiser) - ($itemId) - Gathering item metadata from Cantemo" >> "$logfile"
-                                itemTitle=$(filterVidispineItemMetadata $itemId "metadata" "title")
-                                itemMediaType=$(filterVidispineItemMetadata $itemId "metadata" "mediaType")
-                                itemProduct=$(filterVidispineItemMetadata $itemId "metadata" "ac_product")
-                                itemType=$(filterVidispineItemMetadata $itemId "metadata" "ac_type")
-                                itemIsciCode=$(filterVidispineItemMetadata $itemId "metadata" "ac_isciCode")
-                                itemReviewStatus=$(filterVidispineItemMetadata $itemId "metadata" "ac_reviewStatus")
-                                itemReviewBy=$(filterVidispineItemMetadata $itemId "metadata" "ac_reviewBy")
-                                itemReviewNotes=$(filterVidispineItemMetadata $itemId "metadata" "ac_reviewNotes")
-                                sleep 1
-                                echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-adComplianceForAdvertiser) - ($itemId) - Adding item metadata to adComplianceForAdvertiser csv" >> "$logfile"
-                                echo "$itemId,$itemTitle,$itemMediaType,$itemAdvertiser,$itemProduct,$itemType,$itemIsciCode,$itemReviewStatus,$itemReviewBy,$itemReviewNotes" >> "$adComplianceForAdvertiserFileDestination"
-                                sleep 1
-                                echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow-adComplianceForAdvertiser) - ($itemId) - Process completed" >> "$logfile"
                             else
                                 # emailNotificationWorkflow variable is not supported
                                 echo "$(date +%Y/%m/%d_%H:%M:%S) - (notificationWorkflow) - ($itemId) - emailNotificationWorkflow variable is not supported" >> "$logfile"
