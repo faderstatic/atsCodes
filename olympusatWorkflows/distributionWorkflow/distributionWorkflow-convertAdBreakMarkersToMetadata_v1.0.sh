@@ -90,42 +90,6 @@ convertToTimecode() {
   echo $finalTimecode
 }
 
-# Function to sort timecodes and store them in a variable
-sort_timecodes() {
-    local fps=29.97
-    local timecodes=("$@")
-    echo "----------------------------------------------" >> $logfile
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow-convertAdBreakMarkers) - ($itemId) - INTERNAL FUNCTION - timecodes [$timecodes]" >> "$logfile"
-    
-    # Create an associative array to map total frames back to timecodes
-    declare -A frame_map
-    
-    # Convert timecodes to total frames and store in an array
-    for timecode in "${timecodes[@]}"; do
-        total_frames=$(timecode_to_frames "$timecode" "$fps")
-        frame_map["$total_frames"]=$timecode
-    done
-    
-    # Sort the timecodes numerically based on total frames
-    sorted_frames=($(echo "${!frame_map[@]}" | tr ' ' '\n' | sort -n))
-    
-    # Initialize an empty string to store the sorted timecodes
-    local sorted_timecodes=""
-    
-    # Concatenate the sorted timecodes into a single string, separated by commas
-    for frame in "${sorted_frames[@]}"; do
-        if [[ -z "$sorted_timecodes" ]]; then
-            sorted_timecodes="${frame_map[$frame]}"
-        else
-            sorted_timecodes="$sorted_timecodes,${frame_map[$frame]}"
-        fi
-    done
-    
-    # Output the sorted timecodes as a variable
-    echo "$sorted_timecodes"
-}
-#--------------------------------------------------
-
 saveIFS=$IFS
 IFS=$(echo -e "\n\b")
 # Set global variables
@@ -192,8 +156,12 @@ then
     done | paste -sd "," -)
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow-convertAdBreakMarkers) - ($itemId) - adMarkerTimecodes [$adMarkerTimecodes]" >> "$logfile"
     # Call the function with the list of timecodes
-    sortedAdMarkerTimecodes=$(sort_timecodes "${adMarkerTimecodes[@]}")
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow-convertAdBreakMarkers) - ($itemId) - sortedAdMarkerTimecodes [$sortedAdMarkerTimecodes]" >> "$logfile"
+    sortTimecodes() {
+        # Sort the array and store in sortedAdMarkerTimecodes array
+        sortedAdMarkerTimecodes=($(printf "%s\n" "${adMarkerTimecodes[@]}" | sort))
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow-convertAdBreakMarkers) - ($itemId) - sortedAdMarkerTimecodes [$sortedAdMarkerTimecodes]" >> "$logfile"
+    }
+    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow-convertAdBreakMarkers) - ($itemId) - sortedAdMarkerTimecodes [$sortedAdMarkerTimecodes]" >> "$logfile"
     if [[ "$sortedAdMarkerTimecodes" == "" ]];
     then
         sortedAdMarkerTimecodes="NONE"
