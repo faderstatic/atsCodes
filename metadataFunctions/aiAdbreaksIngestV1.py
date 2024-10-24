@@ -3,7 +3,39 @@
 
 # This application ingests metadata from an XML API response into Cantemo
 # PREREQUISITE: -none-
-# 	Usage: aiAdbreaksIngest.py [full file path of the XML file
+# 	Usage: aiAdbreaksIngestVx.py [Cantemo item ID]
+
+#------------------------------
+# Requirements
+'''
+TIMESTAMP GUIDELINES
+
+1-FOR VOD/DISTRIBUTION we use ROKU guidelines:
+-Movie ad policy:
+No adBreaks should be listed during the first 10 minutes of playback
+No pre-roll adBreak should be listed – 00:00:00.000
+adBreak cue points should be provided at naturally occurring scene breaks and/or fades to black
+There should be no less than 10 minutes between each adBreak
+No adBreaks within 10 minutes of end credits
+
+-Series episode ad policy
+Content length longer than 15 minutes:
+No adBreaks should be listed during the first 5 mins of playback
+No pre-roll adBreak should be listed - 00:00:00
+adBreak cue points should be provided at naturally occurring scene breaks and/or fades to black
+There should be no less than 7 mins between each adBreak
+No adBreaks within the last 5 minutes of end credits
+
+2-FOR POPCORN MEXICO CHANNEL we use RTC(Mex government) guidelines:
+-Files Less than 20min = 2 Segments
+-Files 20min to 26min = 3 Segments
+-Files 26min to 55min = 5 Segments
+-Files 56min to 1h20min = 7 Segments
+-Files 1h21min to 1h45min = 9 Segments
+-Files longer than 1h45m. =10 Segments
+(If a show- All episodes should be same amount of segments)
+'''
+#------------------------------
 
 #------------------------------
 # Libraries
@@ -18,12 +50,44 @@ import xml.etree.ElementTree as ET
 import requests
 import json
 from requests.exceptions import HTTPError
+from array import *
+#------------------------------
+
+#------------------------------
+# Internal functions
+
+def findSegments(fcfRankFrameList, fcfSegmentCount, fcfTargetFrames, fcfMinFrames, fcfIntroFrames, fcfEndFrame):
+  rankTolerance = 2 # determine which "rank" result categories will be used
+  breaksFound = [0 for x in range(fcfSegmentCount)]
+  currentSegment = 1
+  while ((fcfEndFrame - fcfTargetFrames) > 0) and (currentSegment < fcfSegmentCount):
+    smallestDeviation = fcfTargetFrames
+    for i in range(1, (rankTolerance + 1), 1):
+      for j in range(1, (fcfRankFrameList[i][0] +1), 1):
+        segmentSize = fcfEndFrame - fcfRankFrameList[i][j]
+        deviationFrames = abs(segmentSize - fcfTargetFrames)
+        if (deviationFrames < smallestDeviation) and (segmentSize > fcfMinFrames) and (fcfRankFrameList[i][j] > fcfIntroFrames):
+          smallestDeviation = deviationFrames
+          breaksFound[currentSegment] = fcfRankFrameList[i][j]
+    setDurationSeconds = round((((fcfEndFrame - breaksFound[currentSegment]) * 1001) / 30000), 2)
+    fcfEndFrame = breaksFound[currentSegment]
+    # print(f"Ad frame using {breaksFound[currentSegment]} with segment duration {setDurationSeconds}")
+    # print(f"End frame is now at frame {fcfEndFrame}")
+    currentSegment += 1
+  return breaksFound
+
 #------------------------------
 
 try:
   cantemoItemId = sys.argv[1]
   # cantemoItemId = os.environ.get("portal_itemId")
   errorReport = ''
+  typeOne = "RTC_MX"
+  typeTwo = "VOD"
+  rowSize, columnSize = (5,30)
+  breakCandidates = [[0 for x in range(columnSize)] for y in range(rowSize)]
+  minDistributionSegmentMinutes = 10
+  minDistributionSegmentFrames = int((minDistributionSegmentMinutes * 60 * 30000) / 1001)
 
   #------------------------------
   # Making API to Vidispine to get timebase
@@ -32,7 +96,7 @@ try:
     'Cookie': 'csrftoken=OtjDQ4lhFt2wJjGaJhq3xi05z3uA6D8F7wCWNVXxMuJ8A9jw7Ri7ReqSNGLS2VRR',
     'Accept': 'application/json'
   }
-  urlGetTimebaseInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata?field=startTimeCode&terse=yes"
+  urlGetTimebaseInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata?field=startTimeCode,durationSeconds,oly_contentType&terse=yes&interval=generic"
   payload = {}
   httpApiResponse = requests.request("GET", urlGetTimebaseInfo, headers=headers, data=payload)
   httpApiResponse.raise_for_status()
@@ -58,9 +122,58 @@ try:
       timebaseMultiplier = 25
       timebaseNumerator = 25
       timebaseDenominator = 1
-  
   #------------------------------
-  # Making API call to Vionlabs to find possible profanity locations
+
+  #------------------------------
+  # Gather duration of the clip
+  if responseJson and 'item' in responseJson:
+    for itemInformation in responseJson['item']:
+      for durationInformation in itemInformation['durationSeconds']:
+        itemDuration = durationInformation['value']
+      for contentInformation in itemInformation['oly_contentType']:
+        contentType = contentInformation['value']
+  
+  itemDurationFrames = int(round(float(itemDuration) * float(timebaseMultiplier), 0))
+  if itemDurationFrames < 35964:
+    rtcSegmentCount = 2
+  elif itemDurationFrames < 46753:
+    rtcSegmentCount = 3
+  elif itemDurationFrames < 98901:
+    rtcSegmentCount = 5
+  elif itemDurationFrames < 143856:
+    rtcSegmentCount = 7
+  elif itemDurationFrames < 188811:
+    rtcSegmentCount = 9
+  else:
+    segmentCount = 10
+  print(f"This item is processed as a {contentType}")
+  print(f"Total duration: {itemDurationFrames} frames")
+  print(f"Segments needed (RTC MX): {rtcSegmentCount}")
+  targetSegmentFrames = int(round(itemDurationFrames / rtcSegmentCount, 0))
+  print(f"Target segment size (RTC MX): {targetSegmentFrames} frames")
+  print(f"Minimum segment size (for distribution): {minDistributionSegmentFrames} frames")
+  #------------------------------
+
+  #------------------------------
+  # Making API call to Vionlabs to get end credits
+  headers = {
+    'Accept': 'application/json'
+  }
+  payload = {}
+  urlGetBingeMarkers = f"https://apis.prod.vionlabs.com/results/markers/v1/asset/{cantemoItemId}?&key=kt8cyimHXxUzFNGyhd7c7g"
+  httpApiResponse = requests.request("GET", urlGetBingeMarkers, headers=headers, data=payload)
+  httpApiResponse.raise_for_status()
+  #------------------------------
+
+  #------------------------------
+  # Parsing and POST JSON data
+  responseJson = httpApiResponse.json()
+  creditStartTime = responseJson["credit_start"]
+  creditStartFrame = int(round(((creditStartTime * 30000) / 1001), 0))
+  #------------------------------
+
+  #------------------------------
+  # Making API call to Vionlabs to find possible ad break locations
   headers = {
     'Accept': 'application/json'
   }
@@ -72,15 +185,21 @@ try:
   #------------------------------
 
   #------------------------------
-  # Parsing and POST JSON data
+  # Parsing and POST JSON data for TYPE 1
   responseJson = httpApiResponse.json()
   for adbreakSegment in responseJson["adbreak"]:
     rankingSegment = adbreakSegment["rank"]
-    # print(rankingSegment)
+    indexCounter = 1
     for candidateSegment in adbreakSegment["candidates"]:
-      # print(candidateSegment)
-      candidateTimecode = int(candidateSegment)
-      endingTimecode = int(candidateSegment + 10)
+      breakCandidates[rankingSegment][indexCounter] = candidateSegment
+      # print(f"breakCandidates ({rankingSegment}, {indexCounter}) contain value: {breakCandidates[rankingSegment][indexCounter]}")
+      indexCounter += 1
+      breakCandidates[rankingSegment][0] = indexCounter
+  rtcSegmentList = findSegments(breakCandidates, rtcSegmentCount, targetSegmentFrames, 0, targetSegmentFrames, creditStartFrame)
+  for i in rtcSegmentList:
+    if i != 0:
+      candidateTimecode = int(i)
+      endingTimecode = int(i + 10)
       segmentPayload = json.dumps([
         {
           "start": {
@@ -97,7 +216,7 @@ try:
           "metadata": [
           {
             "key": "av_marker_description",
-            "value": '"Rank '+str(rankingSegment)+'"'
+            "value": '"'+typeOne+'"'
           },
           {
             "key": "av_marker_track_id",
@@ -126,6 +245,7 @@ try:
       time.sleep(5)
       #------------------------------
 
+  #------------------------------
   headers = {
   'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
   'Cookie': 'csrftoken=HFOqrbk9cGt3qnc6WBIxWPjvCFX0udBdbJnzCv9jECumOjfyG7SS2lgVbFcaHBCc',
@@ -136,7 +256,6 @@ try:
   parsedStatusPayload = xml.dom.minidom.parseString(statusRawPayload)
   statusPayload = parsedStatusPayload.toprettyxml()
   httpApiResponse = requests.request("PUT", urlPutAnalysisStatusInfo, headers=headers, data=statusPayload)
-
   #------------------------------
 
 except HTTPError as http_err:
