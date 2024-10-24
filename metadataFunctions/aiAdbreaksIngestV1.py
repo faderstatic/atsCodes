@@ -60,12 +60,14 @@ def findSegments(fcfRankFrameList, fcfSegmentCount, fcfTargetFrames, fcfMinFrame
   rankTolerance = 2 # determine which "rank" result categories will be used
   breaksFound = [0 for x in range(fcfSegmentCount)]
   currentSegment = 1
+  # print(f"{fcfEndFrame} - {fcfTargetFrames}, {currentSegment} - {fcfSegmentCount}")
   while ((fcfEndFrame - fcfTargetFrames) > 0) and (currentSegment < fcfSegmentCount):
-    smallestDeviation = fcfTargetFrames
+    smallestDeviation = fcfEndFrame
     for i in range(1, (rankTolerance + 1), 1):
       for j in range(1, (fcfRankFrameList[i][0] +1), 1):
         segmentSize = fcfEndFrame - fcfRankFrameList[i][j]
         deviationFrames = abs(segmentSize - fcfTargetFrames)
+        # print(f"{fcfEndFrame} - {fcfRankFrameList[i][j]}, Deviation: {deviationFrames}, Current closest maker: {smallestDeviation}, Segment size: {segmentSize}")
         if (deviationFrames < smallestDeviation) and (segmentSize > fcfMinFrames) and (fcfRankFrameList[i][j] > fcfIntroFrames):
           smallestDeviation = deviationFrames
           breaksFound[currentSegment] = fcfRankFrameList[i][j]
@@ -86,8 +88,6 @@ try:
   typeTwo = "VOD"
   rowSize, columnSize = (5,50)
   breakCandidates = [[0 for x in range(columnSize)] for y in range(rowSize)]
-  minDistributionSegmentMinutes = 10
-  minDistributionSegmentFrames = int((minDistributionSegmentMinutes * 60 * 30000) / 1001)
 
   #------------------------------
   # Making API to Vidispine to get timebase
@@ -125,7 +125,7 @@ try:
   #------------------------------
 
   #------------------------------
-  # Gather duration of the clip
+  # Gather information for the clip
   if responseJson and 'item' in responseJson:
     for itemInformation in responseJson['item']:
       for durationInformation in itemInformation['durationSeconds']:
@@ -148,30 +148,34 @@ try:
     segmentCount = 10
   print(f"This item is processed as a {contentType}")
   print(f"Total duration: {itemDurationFrames} frames")
-  print(f"Segments needed (RTC MX): {rtcSegmentCount}")
+  print(f"Segments needed (for {typeOne}): {rtcSegmentCount}")
   targetSegmentFrames = int(round(itemDurationFrames / rtcSegmentCount, 0))
-  print(f"Target segment size (RTC MX): {targetSegmentFrames} frames")
-  print(f"Minimum segment size (for distribution): {minDistributionSegmentFrames} frames")
+  print(f"Target segment size (for {typeOne}): {targetSegmentFrames} frames")
   #------------------------------
 
   #------------------------------
-  # Making API call to Vionlabs to get end credits
+  # Making API call to Vionlabs to get intro ending and end credits
   headers = {
     'Accept': 'application/json'
   }
   payload = {}
-  urlGetBingeMarkers = f"https://apis.prod.vionlabs.com/results/markers/v1/asset/{cantemoItemId}?&key=kt8cyimHXxUzFNGyhd7c7g"
-  httpApiResponse = requests.request("GET", urlGetBingeMarkers, headers=headers, data=payload)
+  urlGetAdBreakMarkers = f"https://apis.prod.vionlabs.com/results/markers/v1/asset/{cantemoItemId}?&key=kt8cyimHXxUzFNGyhd7c7g"
+  httpApiResponse = requests.request("GET", urlGetAdBreakMarkers, headers=headers, data=payload)
   httpApiResponse.raise_for_status()
   #------------------------------
-
+  
   #------------------------------
   # Parsing and POST JSON data
   responseJson = httpApiResponse.json()
   creditStartTime = responseJson["credit_start"]
   creditStartFrame = int(round(((creditStartTime * 30000) / 1001), 0))
+  introEndTime = responseJson["intro_end"]
+  if introEndTime:
+    introEndFrame = int(round(((introEndTime * 30000) / 1001), 0))
+  else:
+    introEndFrame = 0
   #------------------------------
-
+  
   #------------------------------
   # Making API call to Vionlabs to find possible ad break locations
   headers = {
@@ -183,67 +187,131 @@ try:
   httpApiResponse = requests.request("GET", urlGetAdbreaksSegments, headers=headers, data=payload)
   httpApiResponse.raise_for_status()
   #------------------------------
-
+  
   #------------------------------
   # Parsing and POST JSON data for TYPE 1
-  responseJson = httpApiResponse.json()
-  for adbreakSegment in responseJson["adbreak"]:
-    rankingSegment = adbreakSegment["rank"]
-    indexCounter = 1
-    for candidateSegment in adbreakSegment["candidates"]:
-      breakCandidates[rankingSegment][indexCounter] = candidateSegment
-      # print(f"breakCandidates ({rankingSegment}, {indexCounter}) contain value: {breakCandidates[rankingSegment][indexCounter]}")
-      indexCounter += 1
-      breakCandidates[rankingSegment][0] = indexCounter
-  rtcSegmentList = findSegments(breakCandidates, rtcSegmentCount, targetSegmentFrames, 0, targetSegmentFrames, creditStartFrame)
-  for i in rtcSegmentList:
-    if i != 0:
-      candidateTimecode = int(i)
-      endingTimecode = int(i + 10)
-      segmentPayload = json.dumps([
-        {
-          "start": {
-            "frame": candidateTimecode,
-            "numerator": timebaseNumerator,
-            "denominator": timebaseDenominator
-          },
-          "end": {
-            "frame": endingTimecode,
-            "numerator": timebaseNumerator,
-            "denominator": timebaseDenominator
-          },
-          "type": "AvAdBreak",
-          "metadata": [
+  if contentType == "movie" or contentType == "episode":
+    responseJson = httpApiResponse.json()
+    for adbreakSegment in responseJson["adbreak"]:
+      rankingSegment = adbreakSegment["rank"]
+      indexCounter = 1
+      for candidateSegment in adbreakSegment["candidates"]:
+        breakCandidates[rankingSegment][indexCounter] = candidateSegment
+        # print(f"breakCandidates ({rankingSegment}, {indexCounter}) contain value: {breakCandidates[rankingSegment][indexCounter]}")
+        indexCounter += 1
+        breakCandidates[rankingSegment][0] = indexCounter
+    typeOneSegmentList = findSegments(breakCandidates, rtcSegmentCount, targetSegmentFrames, 0, targetSegmentFrames, creditStartFrame)
+    for i in typeOneSegmentList:
+      if i != 0:
+        candidateTimecode = int(i)
+        endingTimecode = int(i + 10)
+        segmentPayload = json.dumps([
           {
-            "key": "av_marker_description",
-            "value": '"'+typeOne+'"'
-          },
-          {
-            "key": "av_marker_track_id",
-            "value": "AvAdBreak"
-          },
-          {
-            "key": "ad_break_type",
-            "value": "av:adbreak:marker:break"
+            "start": {
+              "frame": candidateTimecode,
+              "numerator": timebaseNumerator,
+              "denominator": timebaseDenominator
+            },
+            "end": {
+              "frame": endingTimecode,
+              "numerator": timebaseNumerator,
+              "denominator": timebaseDenominator
+            },
+            "type": "AvAdBreak",
+            "metadata": [
+            {
+              "key": "title",
+              "value": "Ad Break"
+            },
+            {
+              "key": "av_marker_description",
+              "value": '"'+typeOne+'"'
+            },
+            {
+              "key": "av_marker_track_id",
+              "value": "AvAdBreak"
+            },
+            {
+              "key": "ad_break_type",
+              "value": "av:adbreak:marker:break"
+            }
+            ],
+            "assetId": '"'+cantemoItemId+'"'
           }
-          ],
-          "assetId": '"'+cantemoItemId+'"'
+        ])
+        #------------------------------
+        # Update Cantemo metadata
+        headers = {
+          'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
+          'Cookie': 'csrftoken=obqpl1uZPs93ldSOFjsRbk2bL25JxPgBOb8t1zUH20fP0tUEdXNNjrYO8kzeOSah',
+          'Content-Type': 'application/json'
         }
-      ])
-      # print(segmentPayload)
-      #------------------------------
-      # Update Cantemo metadata
-      headers = {
-        'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
-        'Cookie': 'csrftoken=obqpl1uZPs93ldSOFjsRbk2bL25JxPgBOb8t1zUH20fP0tUEdXNNjrYO8kzeOSah',
-        'Content-Type': 'application/json'
-      }
-      urlPutProfanityInfo = f"http://10.1.1.34/AVAPI/asset/{cantemoItemId}/timespan/bulk"
-      httpApiResponse = requests.request("PUT", urlPutProfanityInfo, headers=headers, data=segmentPayload)
-      httpApiResponse.raise_for_status()
-      # print(httpApiResponse.text)
-      time.sleep(5)
-      #------------------------------
+        urlPutAdBreakMarkers = f"http://10.1.1.34/AVAPI/asset/{cantemoItemId}/timespan/bulk"
+        httpApiResponse = requests.request("PUT", urlPutAdBreakMarkers, headers=headers, data=segmentPayload)
+        httpApiResponse.raise_for_status()
+        time.sleep(5)
+        #------------------------------
+
+  #------------------------------
+  # Parsing and POST JSON data for TYPE 2
+  if contentType == "movie":
+    minDistributionSegmentMinutes = 10
+    minDistributionSegmentFrames = int((minDistributionSegmentMinutes * 60 * 30000) / 1001)
+    vodSegmentCount = int(round((itemDurationFrames / minDistributionSegmentFrames), 0))
+    typeTwoSegmentList = findSegments(breakCandidates, vodSegmentCount, minDistributionSegmentFrames, minDistributionSegmentFrames, minDistributionSegmentFrames, creditStartFrame)
+  elif contentType == "episode":
+    minDistributionSegmentMinutes = 7
+    minDistributionSegmentFrames = int((minDistributionSegmentMinutes * 60 * 30000) / 1001)
+    vodSegmentCount = int(round((itemDurationFrames / minDistributionSegmentFrames), 0))
+    typeTwoSegmentList = findSegments(breakCandidates, vodSegmentCount, minDistributionSegmentFrames, minDistributionSegmentFrames, introEndFrame, creditStartFrame)
+  if typeTwoSegmentList:
+    print(f"Maximum segment count (for {typeTwo}): {vodSegmentCount}")
+    print(f"Minimum segment size (for {typeTwo}): {minDistributionSegmentFrames} frames")
+    for i in typeTwoSegmentList:
+      if i != 0:
+        candidateTimecode = int(i)
+        endingTimecode = int(i + 10)
+        segmentPayload = json.dumps([
+          {
+            "start": {
+              "frame": candidateTimecode,
+              "numerator": timebaseNumerator,
+              "denominator": timebaseDenominator
+            },
+            "end": {
+              "frame": endingTimecode,
+              "numerator": timebaseNumerator,
+              "denominator": timebaseDenominator
+            },
+            "type": "AvAdBreak",
+            "metadata": [
+            {
+              "key": "title",
+              "value": "Ad Break"
+            },
+            {
+              "key": "av_marker_description",
+              "value": '"'+typeTwo+'"'
+            },
+            {
+              "key": "av_marker_track_id",
+              "value": "AvAdBreak"
+            },
+            {
+              "key": "ad_break_type",
+              "value": "av:adbreak:marker:break"
+            }
+            ],
+            "assetId": '"'+cantemoItemId+'"'
+          }
+        ])
+        #------------------------------
+        # Update Cantemo metadata
+        httpApiResponse = requests.request("PUT", urlPutAdBreakMarkers, headers=headers, data=segmentPayload)
+        httpApiResponse.raise_for_status()
+        time.sleep(5)
+        #------------------------------
+
 
   #------------------------------
   headers = {
