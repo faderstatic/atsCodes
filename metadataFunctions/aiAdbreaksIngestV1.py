@@ -68,7 +68,7 @@ def findSegments(fcfRankFrameList, fcfSegmentCount, fcfTargetFrames, fcfMinFrame
         segmentSize = fcfEndFrame - fcfRankFrameList[i][j]
         deviationFrames = abs(segmentSize - fcfTargetFrames)
         # print(f"{fcfEndFrame} - {fcfRankFrameList[i][j]}, Deviation: {deviationFrames}, Current closest maker: {smallestDeviation}, Segment size: {segmentSize}")
-        if (deviationFrames < smallestDeviation) and (segmentSize > fcfMinFrames) and (fcfRankFrameList[i][j] > fcfIntroFrames):
+        if (deviationFrames < smallestDeviation) and (segmentSize > fcfMinFrames) and (fcfRankFrameList[i][j] > (fcfIntroFrames + fcfMinFrames)):
           smallestDeviation = deviationFrames
           breaksFound[currentSegment] = fcfRankFrameList[i][j]
     setDurationSeconds = round((((fcfEndFrame - breaksFound[currentSegment]) * 1001) / 30000), 2)
