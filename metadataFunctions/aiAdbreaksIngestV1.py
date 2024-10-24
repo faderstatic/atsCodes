@@ -84,7 +84,7 @@ try:
   errorReport = ''
   typeOne = "RTC_MX"
   typeTwo = "VOD"
-  rowSize, columnSize = (5,30)
+  rowSize, columnSize = (5,50)
   breakCandidates = [[0 for x in range(columnSize)] for y in range(rowSize)]
   minDistributionSegmentMinutes = 10
   minDistributionSegmentFrames = int((minDistributionSegmentMinutes * 60 * 30000) / 1001)
