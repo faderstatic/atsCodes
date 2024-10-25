@@ -13,6 +13,15 @@
 . /opt/olympusat/scriptsLibrary/olympusatCantemo.lib
 #--------------------------------------------------
 
+#--------------------------------------------------
+# Internal funtions to include
+# Function to Release Lock after item is processed/completed
+releaseLock ()
+{
+    rm -f "$lockFile"
+}
+#--------------------------------------------------
+
 saveIFS=$IFS
 IFS=$(echo -e "\n\b")
 
@@ -21,30 +30,45 @@ export datetime=$(date +%Y/%m/%d_%H:%M)
 
 #Variables to be set by Metadata fields or information from Cantemo to be used in email body
 export itemId=$1
+logfile="/opt/olympusat/logs/graphicWorkflow-$mydate.log"
+# --------------------------------------------------
+# Lock file to ensure only one job runs at a time
+lockFile="/opt/olympusat/workflowQueues/graphicWorkflow/jobQueue.lock"
+echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - [$itemId] - Job Initiated" >> "$logfile"
+sleep 1
+# Acquire the lock by waiting if another job is running
+while [ -f "$lockFile" ];
+do
+    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - [$itemId] - Waiting for the previous job to finish..." >> "$logfile"
+    sleep 3
+done
+# Acquire the lock for this job
+touch "$lockFile"
+# Ensure that the lock is released when the job finishes
+trap releaseLock EXIT
+# --------------------------------------------------
 export title=$(filterVidispineItemMetadata $itemId "metadata" "title")
 export itemContentType=$(filterVidispineItemMetadata $itemId "metadata" "oly_contentType")
 export url="http://10.1.1.34:8080/API/item/$itemId/metadata/"
 
-logfile="/opt/olympusat/logs/titleDeconstruct-$mydate.log"
-
 if [[ "$itemContentType" != "image" ]];
 then
-    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Content Type - {$itemContentType}" >> "$logfile"
-    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Item is NOT an Image - skipping & exiting the Script/Workflow" >> "$logfile"
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Content Type - {$itemContentType}" >> "$logfile"
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Item is NOT an Image - skipping & exiting the Script/Workflow" >> "$logfile"
 else
-    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Deconstructing Title - $title" >> "$logfile"
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Deconstructing Title - $title" >> "$logfile"
 
     if [[ "$title" == *_RAW ]];
     then
-        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Title ends with _RAW - {$title} - Removing _RAW" >> "$logfile"
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Title ends with _RAW - {$title} - Removing _RAW" >> "$logfile"
         title=$(echo $title | sed 's/.\{4\}$//')
-        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - New Title - {$title}" >> "$logfile"
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - New Title - {$title}" >> "$logfile"
     fi
 
     numberOfUnderscores=$(echo $title | awk -F"_" '{print NF-1}')
 
     echo $numberOfUnderscores
-    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Number of Underscores - $numberOfUnderscores" >> "$logfile"
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Number of Underscores - $numberOfUnderscores" >> "$logfile"
 
     if [[ $numberOfUnderscores == 4 ]];
         then
@@ -72,8 +96,8 @@ else
                         if [[ "$seasonCheck" =~ ^S[0-9] ]];
                         then
                             seasonNumberCheck=$(echo $seasonCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
-                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
-                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
                         fi
                     ;;
                     "10")
@@ -82,8 +106,8 @@ else
                         if [[ "$seasonCheck" =~ ^S[0-9][0-9] ]];
                         then
                             seasonNumberCheck=$(echo $seasonCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
-                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
-                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
                         fi
                     ;;
                     "11")
@@ -93,9 +117,9 @@ else
                         then
                             seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
                             episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
-                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
-                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
-                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
                         fi
                     ;;
                     "12")
@@ -105,9 +129,9 @@ else
                         then
                             seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
                             episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
-                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
-                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
-                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
                         fi
                     ;;
                     "13")
@@ -117,9 +141,9 @@ else
                         then
                             seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
                             episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
-                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
-                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
-                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
                         fi
                     ;;
                     *)
@@ -163,8 +187,8 @@ else
                         if [[ "$seasonCheck" =~ ^S[0-9] ]];
                         then
                             seasonNumberCheck=$(echo $seasonCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
-                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
-                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
                         fi
                     ;;
                     "10")
@@ -173,8 +197,8 @@ else
                         if [[ "$seasonCheck" =~ ^S[0-9][0-9] ]];
                         then
                             seasonNumberCheck=$(echo $seasonCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
-                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
-                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
                         fi
                     ;;
                     "11")
@@ -184,9 +208,9 @@ else
                         then
                             seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
                             episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
-                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
-                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
-                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
                         fi
                     ;;
                     "12")
@@ -196,9 +220,9 @@ else
                         then
                             seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
                             episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
-                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
-                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
-                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
                         fi
                     ;;
                     "13")
@@ -208,9 +232,9 @@ else
                         then
                             seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
                             episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
-                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
-                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
-                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
                         fi
                     ;;
                     *)
@@ -248,8 +272,8 @@ else
                         if [[ "$seasonCheck" =~ ^S[0-9] ]];
                         then
                             seasonNumberCheck=$(echo $seasonCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
-                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
-                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
                         fi
                     ;;
                     "10")
@@ -258,8 +282,8 @@ else
                         if [[ "$seasonCheck" =~ ^S[0-9][0-9] ]];
                         then
                             seasonNumberCheck=$(echo $seasonCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
-                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
-                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
                         fi
                     ;;
                     "11")
@@ -269,9 +293,9 @@ else
                         then
                             seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
                             episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
-                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
-                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
-                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
                         fi
                     ;;
                     "12")
@@ -281,9 +305,9 @@ else
                         then
                             seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
                             episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
-                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
-                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
-                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
                         fi
                     ;;
                     "13")
@@ -293,9 +317,9 @@ else
                         then
                             seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
                             episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
-                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
-                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
-                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
                         fi
                     ;;
                     "2")
@@ -303,8 +327,8 @@ else
                         if [[ "$seasonCheck" =~ ^S[0-9][0-9] || "$seasonCheck" =~ ^S[0-9] ]];
                         then
                             seasonNumberCheck=$(echo $seasonCheck | awk -F "S" '{print $2}')
-                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonCheck" >> "$logfile"
-                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonEpisodeCheck - $seasonCheck" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
                         fi
                     ;;
                     "6" | "5" | "4")
@@ -313,9 +337,9 @@ else
                         then
                             seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
                             episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
-                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
-                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
-                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
                         fi
                     ;;
                     *)
@@ -344,9 +368,9 @@ else
                         then
                             if [[ "$blockFour" == *"still"* || "$blockFour" == *"Still"* ]];
                             then
-                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockFour} - DOES contain Still - Not extracting Season & Episode Number" >> "$logfile"
+                                echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Block Four {$blockFour} - DOES contain Still - Not extracting Season & Episode Number" >> "$logfile"
                             else
-                                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockFour} - Does NOT contain Still" >> "$logfile"
+                                echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Block Four {$blockFour} - Does NOT contain Still" >> "$logfile"
                                 seasonNumberCheck=$(echo $blockFour | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
                                 episodeNumberCheck=$(echo $blockFour | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
                             fi
@@ -375,10 +399,10 @@ else
                     then
                         if [[ "$blockFive" == *"still"* || "$blockFive" == *"Still"* || "$blockFive" == *"stil"* || "$blockFive" == *"Stil"* ]];
                         then
-                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Five {$blockFive} - DOES contain Still - Not extracting Season & Episode Number" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Block Five {$blockFive} - DOES contain Still - Not extracting Season & Episode Number" >> "$logfile"
                             imageType="still"
                         else
-                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Five {$blockFive} - Does NOT contain Still" >> "$logfile"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Block Five {$blockFive} - Does NOT contain Still" >> "$logfile"
                             seasonNumberCheck=$(echo $blockFive | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
                             episodeNumberCheck=$(echo $blockFive | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
                         fi
@@ -400,16 +424,16 @@ else
                 graphicsTags="<field><name>oly_graphicsTags</name><value>$blockOne</value><value>$blockTwo</value><value>$blockThree</value><value>$blockFour</value><value>$blockFive</value></field>"
             fi
             
-            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - +++++++++++++++++++++++++++++++++" >> "$logfile"
-            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleCode - $titleCode" >> "$logfile"
-            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageType - $imageType" >> "$logfile"
-            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
-            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - language - $language" >> "$logfile"
-            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageSize - $imageSize" >> "$logfile"
-            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageDesc - $imageDesc" >> "$logfile"
-            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageMisc - $imageMisc" >> "$logfile"
-            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumber - $seasonNumberCheck" >> "$logfile"
-            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumber - $episodeNumberCheck" >> "$logfile"
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - +++++++++++++++++++++++++++++++++" >> "$logfile"
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - titleCode - $titleCode" >> "$logfile"
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - imageType - $imageType" >> "$logfile"
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - language - $language" >> "$logfile"
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - imageSize - $imageSize" >> "$logfile"
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - imageDesc - $imageDesc" >> "$logfile"
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - imageMisc - $imageMisc" >> "$logfile"
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumber - $seasonNumberCheck" >> "$logfile"
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - episodeNumber - $episodeNumberCheck" >> "$logfile"
             
         else
             if [[ $numberOfUnderscores == 3 ]];
@@ -436,8 +460,8 @@ else
                                 if [[ "$seasonCheck" =~ ^S[0-9] ]];
                                 then
                                     seasonNumberCheck=$(echo $seasonCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
-                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
-                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
                                 fi
                             ;;
                             "10")
@@ -446,8 +470,8 @@ else
                                 if [[ "$seasonCheck" =~ ^S[0-9][0-9] ]];
                                 then
                                     seasonNumberCheck=$(echo $seasonCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
-                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
-                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
                                 fi
                             ;;
                             "11")
@@ -457,9 +481,9 @@ else
                                 then
                                     seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
                                     episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
-                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
-                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
-                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
                                 fi
                             ;;
                             "12")
@@ -469,9 +493,9 @@ else
                                 then
                                     seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
                                     episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
-                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
-                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
-                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
                                 fi
                             ;;
                             "13")
@@ -481,9 +505,9 @@ else
                                 then
                                     seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
                                     episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
-                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
-                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
-                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
                                 fi
                             ;;
                             *)
@@ -517,8 +541,8 @@ else
                                 if [[ "$seasonCheck" =~ ^S[0-9] ]];
                                 then
                                     seasonNumberCheck=$(echo $seasonCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
-                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
-                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
                                 fi
                             ;;
                             "10")
@@ -527,8 +551,8 @@ else
                                 if [[ "$seasonCheck" =~ ^S[0-9][0-9] ]];
                                 then
                                     seasonNumberCheck=$(echo $seasonCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
-                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
-                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
                                 fi
                             ;;
                             "11")
@@ -538,9 +562,9 @@ else
                                 then
                                     seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
                                     episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
-                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
-                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
-                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
                                 fi
                             ;;
                             "12")
@@ -550,9 +574,9 @@ else
                                 then
                                     seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
                                     episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
-                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
-                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
-                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
                                 fi
                             ;;
                             "13")
@@ -562,9 +586,9 @@ else
                                 then
                                     seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
                                     episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
-                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
-                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
-                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
                                 fi
                             ;;
                             *)
@@ -598,9 +622,9 @@ else
                             then
                                 if [[ "$blockFour" == *"still"* || "$blockFour" == *"Still"* ]];
                                 then
-                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockFour} - DOES contain Still - Not extracting Season & Episode Number" >> "$logfile"
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Block Four {$blockFour} - DOES contain Still - Not extracting Season & Episode Number" >> "$logfile"
                                 else
-                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockFour} - Does NOT contain Still" >> "$logfile"
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Block Four {$blockFour} - Does NOT contain Still" >> "$logfile"
                                     seasonNumberCheck=$(echo $blockFour | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
                                     episodeNumberCheck=$(echo $blockFour | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
                                 fi
@@ -622,16 +646,16 @@ else
                         graphicsTags="<field><name>oly_graphicsTags</name><value>$blockOne</value><value>$blockTwo</value><value>$blockThree</value><value>$blockFour</value></field>"
                     fi
                     
-                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - +++++++++++++++++++++++++++++++++" >> "$logfile"
-                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleCode - $titleCode" >> "$logfile"
-                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageType - $imageType" >> "$logfile"
-                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
-                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - language - $language" >> "$logfile"
-                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageSize - $imageSize" >> "$logfile"
-                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageDesc - $imageDesc" >> "$logfile"
-                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageMisc - $imageMisc" >> "$logfile"
-                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumber - $seasonNumberCheck" >> "$logfile"
-                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumber - $episodeNumberCheck" >> "$logfile"
+                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - +++++++++++++++++++++++++++++++++" >> "$logfile"
+                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - titleCode - $titleCode" >> "$logfile"
+                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - imageType - $imageType" >> "$logfile"
+                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
+                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - language - $language" >> "$logfile"
+                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - imageSize - $imageSize" >> "$logfile"
+                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - imageDesc - $imageDesc" >> "$logfile"
+                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - imageMisc - $imageMisc" >> "$logfile"
+                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumber - $seasonNumberCheck" >> "$logfile"
+                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - episodeNumber - $episodeNumberCheck" >> "$logfile"
                     
                 else
                     if [[ $numberOfUnderscores == 2 ]];
@@ -648,21 +672,21 @@ else
                                     seasonNumberCheck=$(echo $imageType | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
                                     episodeNumberCheck=$(echo $imageType | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
 
-                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleCode - $titleCode" >> "$logfile"
-                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageType - $imageType" >> "$logfile"
-                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
-                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - language - $language" >> "$logfile"
-                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumber - $seasonNumberCheck" >> "$logfile"
-                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumber - $episodeNumberCheck" >> "$logfile"
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - titleCode - $titleCode" >> "$logfile"
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - imageType - $imageType" >> "$logfile"
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - language - $language" >> "$logfile"
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumber - $seasonNumberCheck" >> "$logfile"
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - episodeNumber - $episodeNumberCheck" >> "$logfile"
                                 else
                                     titleCode=$(echo $title | awk -F "_" '{print $1}')
                                     imageType=$(echo $title | awk -F "_" '{print $2}')
                                     titleByLanguage=$(echo $title | awk -F "_" '{print $3}')
                                     titleByLanguage=$(echo $titleByLanguage | sed -r -e "s/([^A-Z])([A-Z])/\1 \2/g" -e "s/([A-Z]+)([A-Z])/\1 \2/g")
 
-                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleCode - $titleCode" >> "$logfile"
-                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageType - $imageType" >> "$logfile"
-                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - titleCode - $titleCode" >> "$logfile"
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - imageType - $imageType" >> "$logfile"
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
                                 fi
                         else
                             if [[ $numberOfUnderscores == 5 ]];
@@ -693,8 +717,8 @@ else
                                                 if [[ "$seasonCheck" =~ ^S[0-9] ]];
                                                 then
                                                     seasonNumberCheck=$(echo $seasonCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
-                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
-                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
+                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
                                                 fi
                                             ;;
                                             "10")
@@ -703,8 +727,8 @@ else
                                                 if [[ "$seasonCheck" =~ ^S[0-9][0-9] ]];
                                                 then
                                                     seasonNumberCheck=$(echo $seasonCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
-                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
-                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
+                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
                                                 fi
                                             ;;
                                             "11")
@@ -714,9 +738,9 @@ else
                                                 then
                                                     seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
                                                     episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
-                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
-                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
-                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
                                                 fi
                                             ;;
                                             "12")
@@ -726,9 +750,9 @@ else
                                                 then
                                                     seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
                                                     episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
-                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
-                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
-                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
                                                 fi
                                             ;;
                                             "13")
@@ -738,9 +762,9 @@ else
                                                 then
                                                     seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
                                                     episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
-                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
-                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
-                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
                                                 fi
                                             ;;
                                             *)
@@ -774,8 +798,8 @@ else
                                                 if [[ "$seasonCheck" =~ ^S[0-9] ]];
                                                 then
                                                     seasonNumberCheck=$(echo $seasonCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
-                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
-                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
+                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
                                                 fi
                                             ;;
                                             "10")
@@ -784,8 +808,8 @@ else
                                                 if [[ "$seasonCheck" =~ ^S[0-9][0-9] ]];
                                                 then
                                                     seasonNumberCheck=$(echo $seasonCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
-                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
-                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
+                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
                                                 fi
                                             ;;
                                             "11")
@@ -795,9 +819,9 @@ else
                                                 then
                                                     seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
                                                     episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
-                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
-                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
-                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
                                                 fi
                                             ;;
                                             "12")
@@ -807,9 +831,9 @@ else
                                                 then
                                                     seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
                                                     episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
-                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
-                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
-                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
                                                 fi
                                             ;;
                                             "13")
@@ -819,9 +843,9 @@ else
                                                 then
                                                     seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
                                                     episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
-                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
-                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
-                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
                                                 fi
                                             ;;
                                             *)
@@ -855,9 +879,9 @@ else
                                             then
                                                 if [[ "$blockFour" == *"still"* || "$blockFour" == *"Still"* ]];
                                                 then
-                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockFour} - DOES contain Still - Not extracting Season & Episode Number" >> "$logfile"
+                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Block Four {$blockFour} - DOES contain Still - Not extracting Season & Episode Number" >> "$logfile"
                                                 else
-                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockFour} - Does NOT contain Still" >> "$logfile"
+                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Block Four {$blockFour} - Does NOT contain Still" >> "$logfile"
                                                     seasonNumberCheck=$(echo $blockFour | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
                                                     episodeNumberCheck=$(echo $blockFour | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
                                                 fi
@@ -885,9 +909,9 @@ else
                                             then
                                                 if [[ "$blockFive" == *"still"* || "$blockFive" == *"Still"* ]];
                                                 then
-                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockFive} - DOES contain Still - Not extracting Season & Episode Number" >> "$logfile"
+                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Block Four {$blockFive} - DOES contain Still - Not extracting Season & Episode Number" >> "$logfile"
                                                 else
-                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockFive} - Does NOT contain Still" >> "$logfile"
+                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Block Four {$blockFive} - Does NOT contain Still" >> "$logfile"
                                                     seasonNumberCheck=$(echo $blockFive | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
                                                     episodeNumberCheck=$(echo $blockFive | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
                                                 fi
@@ -915,9 +939,9 @@ else
                                             then
                                                 if [[ "$blockSix" == *"still"* || "$blockSix" == *"Still"* ]];
                                                 then
-                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockSix} - DOES contain Still - Not extracting Season & Episode Number" >> "$logfile"
+                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Block Four {$blockSix} - DOES contain Still - Not extracting Season & Episode Number" >> "$logfile"
                                                 else
-                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockSix} - Does NOT contain Still" >> "$logfile"
+                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Block Four {$blockSix} - Does NOT contain Still" >> "$logfile"
                                                     seasonNumberCheck=$(echo $blockSix | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
                                                     episodeNumberCheck=$(echo $blockSix | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
                                                 fi
@@ -939,16 +963,16 @@ else
                                         graphicsTags="<field><name>oly_graphicsTags</name><value>$blockOne</value><value>$blockTwo</value><value>$blockThree</value><value>$blockFour</value><value>$blockFive</value><value>$blockSix</value></field>"
                                     fi
                                     
-                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - +++++++++++++++++++++++++++++++++" >> "$logfile"
-                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleCode - $titleCode" >> "$logfile"
-                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageType - $imageType" >> "$logfile"
-                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
-                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - language - $language" >> "$logfile"
-                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageSize - $imageSize" >> "$logfile"
-                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageDesc - $imageDesc" >> "$logfile"
-                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageMisc - $imageMisc" >> "$logfile"
-                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumber - $seasonNumberCheck" >> "$logfile"
-                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumber - $episodeNumberCheck" >> "$logfile"
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - +++++++++++++++++++++++++++++++++" >> "$logfile"
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - titleCode - $titleCode" >> "$logfile"
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - imageType - $imageType" >> "$logfile"
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - language - $language" >> "$logfile"
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - imageSize - $imageSize" >> "$logfile"
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - imageDesc - $imageDesc" >> "$logfile"
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - imageMisc - $imageMisc" >> "$logfile"
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumber - $seasonNumberCheck" >> "$logfile"
+                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - episodeNumber - $episodeNumberCheck" >> "$logfile"
                                 else
                                     if [[ $numberOfUnderscores == 6 ]];
                                         then
@@ -980,8 +1004,8 @@ else
                                                         if [[ "$seasonCheck" =~ ^S[0-9] ]];
                                                         then
                                                             seasonNumberCheck=$(echo $seasonCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
-                                                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
-                                                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
+                                                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
                                                         fi
                                                     ;;
                                                     "10")
@@ -990,8 +1014,8 @@ else
                                                         if [[ "$seasonCheck" =~ ^S[0-9][0-9] ]];
                                                         then
                                                             seasonNumberCheck=$(echo $seasonCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
-                                                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
-                                                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
+                                                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
                                                         fi
                                                     ;;
                                                     "11")
@@ -1001,9 +1025,9 @@ else
                                                         then
                                                             seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
                                                             episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
-                                                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
-                                                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
-                                                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                                                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
                                                         fi
                                                     ;;
                                                     "12")
@@ -1013,9 +1037,9 @@ else
                                                         then
                                                             seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
                                                             episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
-                                                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
-                                                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
-                                                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                                                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
                                                         fi
                                                     ;;
                                                     "13")
@@ -1025,9 +1049,9 @@ else
                                                         then
                                                             seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
                                                             episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
-                                                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
-                                                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
-                                                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                                                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
                                                         fi
                                                     ;;
                                                     *)
@@ -1061,8 +1085,8 @@ else
                                                         if [[ "$seasonCheck" =~ ^S[0-9] ]];
                                                         then
                                                             seasonNumberCheck=$(echo $seasonCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
-                                                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
-                                                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
+                                                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
                                                         fi
                                                     ;;
                                                     "10")
@@ -1071,8 +1095,8 @@ else
                                                         if [[ "$seasonCheck" =~ ^S[0-9][0-9] ]];
                                                         then
                                                             seasonNumberCheck=$(echo $seasonCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
-                                                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
-                                                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
+                                                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
                                                         fi
                                                     ;;
                                                     "11")
@@ -1082,9 +1106,9 @@ else
                                                         then
                                                             seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
                                                             episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
-                                                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
-                                                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
-                                                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                                                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
                                                         fi
                                                     ;;
                                                     "12")
@@ -1094,9 +1118,9 @@ else
                                                         then
                                                             seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
                                                             episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
-                                                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
-                                                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
-                                                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                                                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
                                                         fi
                                                     ;;
                                                     "13")
@@ -1106,9 +1130,9 @@ else
                                                         then
                                                             seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
                                                             episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
-                                                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
-                                                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
-                                                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                                                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
                                                         fi
                                                     ;;
                                                     *)
@@ -1142,9 +1166,9 @@ else
                                                     then
                                                         if [[ "$blockFour" == *"still"* || "$blockFour" == *"Still"* ]];
                                                         then
-                                                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockFour} - DOES contain Still - Not extracting Season & Episode Number" >> "$logfile"
+                                                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Block Four {$blockFour} - DOES contain Still - Not extracting Season & Episode Number" >> "$logfile"
                                                         else
-                                                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockFour} - Does NOT contain Still" >> "$logfile"
+                                                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Block Four {$blockFour} - Does NOT contain Still" >> "$logfile"
                                                             seasonNumberCheck=$(echo $blockFour | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
                                                             episodeNumberCheck=$(echo $blockFour | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
                                                         fi
@@ -1172,9 +1196,9 @@ else
                                                     then
                                                         if [[ "$blockFive" == *"still"* || "$blockFive" == *"Still"* ]];
                                                         then
-                                                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockFive} - DOES contain Still - Not extracting Season & Episode Number" >> "$logfile"
+                                                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Block Four {$blockFive} - DOES contain Still - Not extracting Season & Episode Number" >> "$logfile"
                                                         else
-                                                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockFive} - Does NOT contain Still" >> "$logfile"
+                                                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Block Four {$blockFive} - Does NOT contain Still" >> "$logfile"
                                                             seasonNumberCheck=$(echo $blockFive | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
                                                             episodeNumberCheck=$(echo $blockFive | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
                                                         fi
@@ -1202,9 +1226,9 @@ else
                                                     then
                                                         if [[ "$blockSix" == *"still"* || "$blockSix" == *"Still"* ]];
                                                         then
-                                                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockSix} - DOES contain Still - Not extracting Season & Episode Number" >> "$logfile"
+                                                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Block Four {$blockSix} - DOES contain Still - Not extracting Season & Episode Number" >> "$logfile"
                                                         else
-                                                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockSix} - Does NOT contain Still" >> "$logfile"
+                                                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Block Four {$blockSix} - Does NOT contain Still" >> "$logfile"
                                                             seasonNumberCheck=$(echo $blockSix | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
                                                             episodeNumberCheck=$(echo $blockSix | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
                                                         fi
@@ -1232,9 +1256,9 @@ else
                                                     then
                                                         if [[ "$blockSeven" == *"still"* || "$blockSeven" == *"Still"* ]];
                                                         then
-                                                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockSeven} - DOES contain Still - Not extracting Season & Episode Number" >> "$logfile"
+                                                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Block Four {$blockSeven} - DOES contain Still - Not extracting Season & Episode Number" >> "$logfile"
                                                         else
-                                                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockSeven} - Does NOT contain Still" >> "$logfile"
+                                                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Block Four {$blockSeven} - Does NOT contain Still" >> "$logfile"
                                                             seasonNumberCheck=$(echo $blockSeven | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
                                                             episodeNumberCheck=$(echo $blockSeven | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
                                                         fi
@@ -1256,16 +1280,16 @@ else
                                                 graphicsTags="<field><name>oly_graphicsTags</name><value>$blockOne</value><value>$blockTwo</value><value>$blockThree</value><value>$blockFour</value><value>$blockFive</value><value>$blockSix</value><value>$blockSeven</value></field>"
                                             fi
                                             
-                                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - +++++++++++++++++++++++++++++++++" >> "$logfile"
-                                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleCode - $titleCode" >> "$logfile"
-                                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageType - $imageType" >> "$logfile"
-                                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
-                                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - language - $language" >> "$logfile"
-                                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageSize - $imageSize" >> "$logfile"
-                                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageDesc - $imageDesc" >> "$logfile"
-                                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageMisc - $imageMisc" >> "$logfile"
-                                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumber - $seasonNumberCheck" >> "$logfile"
-                                            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumber - $episodeNumberCheck" >> "$logfile"
+                                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - +++++++++++++++++++++++++++++++++" >> "$logfile"
+                                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - titleCode - $titleCode" >> "$logfile"
+                                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - imageType - $imageType" >> "$logfile"
+                                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
+                                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - language - $language" >> "$logfile"
+                                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - imageSize - $imageSize" >> "$logfile"
+                                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - imageDesc - $imageDesc" >> "$logfile"
+                                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - imageMisc - $imageMisc" >> "$logfile"
+                                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumber - $seasonNumberCheck" >> "$logfile"
+                                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - episodeNumber - $episodeNumberCheck" >> "$logfile"
                                         else
                                             if [[ $numberOfUnderscores == 7 ]];
                                                 then
@@ -1299,8 +1323,8 @@ else
                                                                 if [[ "$seasonCheck" =~ ^S[0-9] ]];
                                                                 then
                                                                     seasonNumberCheck=$(echo $seasonCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
-                                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
-                                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
+                                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
                                                                 fi
                                                             ;;
                                                             "10")
@@ -1309,8 +1333,8 @@ else
                                                                 if [[ "$seasonCheck" =~ ^S[0-9][0-9] ]];
                                                                 then
                                                                     seasonNumberCheck=$(echo $seasonCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
-                                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
-                                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
+                                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
                                                                 fi
                                                             ;;
                                                             "11")
@@ -1320,9 +1344,9 @@ else
                                                                 then
                                                                     seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
                                                                     episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
-                                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
-                                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
-                                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
                                                                 fi
                                                             ;;
                                                             "12")
@@ -1332,9 +1356,9 @@ else
                                                                 then
                                                                     seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
                                                                     episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
-                                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
-                                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
-                                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
                                                                 fi
                                                             ;;
                                                             "13")
@@ -1344,9 +1368,9 @@ else
                                                                 then
                                                                     seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
                                                                     episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
-                                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
-                                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
-                                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
                                                                 fi
                                                             ;;
                                                             *)
@@ -1380,8 +1404,8 @@ else
                                                                     if [[ "$seasonCheck" =~ ^S[0-9] ]];
                                                                     then
                                                                         seasonNumberCheck=$(echo $seasonCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
-                                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
-                                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
+                                                                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
                                                                     fi
                                                                 ;;
                                                                 "10")
@@ -1390,8 +1414,8 @@ else
                                                                     if [[ "$seasonCheck" =~ ^S[0-9][0-9] ]];
                                                                     then
                                                                         seasonNumberCheck=$(echo $seasonCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
-                                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
-                                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonCheck - $seasonCheck" >> "$logfile"
+                                                                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
                                                                     fi
                                                                 ;;
                                                                 "11")
@@ -1401,9 +1425,9 @@ else
                                                                     then
                                                                         seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
                                                                         episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
-                                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
-                                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
-                                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                                                                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                                                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
                                                                     fi
                                                                 ;;
                                                                 "12")
@@ -1413,9 +1437,9 @@ else
                                                                     then
                                                                         seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
                                                                         episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
-                                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
-                                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
-                                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                                                                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                                                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
                                                                     fi
                                                                 ;;
                                                                 "13")
@@ -1425,9 +1449,9 @@ else
                                                                     then
                                                                         seasonNumberCheck=$(echo $seasonEpisodeCheck | awk -F "S" '{print $2}' | awk -F "E" '{print $1}')
                                                                         episodeNumberCheck=$(echo $seasonEpisodeCheck | awk -F "E" '{print $2}')
-                                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
-                                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
-                                                                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
+                                                                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonEpisodeCheck - $seasonEpisodeCheck" >> "$logfile"
+                                                                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumberCheck - $seasonNumberCheck" >> "$logfile"
+                                                                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - episodeNumberCheck - $episodeNumberCheck" >> "$logfile"
                                                                     fi
                                                                 ;;
                                                                 *)
@@ -1461,9 +1485,9 @@ else
                                                             then
                                                                 if [[ "$blockFour" == *"still"* || "$blockFour" == *"Still"* ]];
                                                                 then
-                                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockFour} - DOES contain Still - Not extracting Season & Episode Number" >> "$logfile"
+                                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Block Four {$blockFour} - DOES contain Still - Not extracting Season & Episode Number" >> "$logfile"
                                                                 else
-                                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockFour} - Does NOT contain Still" >> "$logfile"
+                                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Block Four {$blockFour} - Does NOT contain Still" >> "$logfile"
                                                                     seasonNumberCheck=$(echo $blockFour | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
                                                                     episodeNumberCheck=$(echo $blockFour | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
                                                                 fi
@@ -1491,9 +1515,9 @@ else
                                                             then
                                                                 if [[ "$blockFive" == *"still"* || "$blockFive" == *"Still"* ]];
                                                                 then
-                                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockFive} - DOES contain Still - Not extracting Season & Episode Number" >> "$logfile"
+                                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Block Four {$blockFive} - DOES contain Still - Not extracting Season & Episode Number" >> "$logfile"
                                                                 else
-                                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockFive} - Does NOT contain Still" >> "$logfile"
+                                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Block Four {$blockFive} - Does NOT contain Still" >> "$logfile"
                                                                     seasonNumberCheck=$(echo $blockFive | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
                                                                     episodeNumberCheck=$(echo $blockFive | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
                                                                 fi
@@ -1521,9 +1545,9 @@ else
                                                             then
                                                                 if [[ "$blockSix" == *"still"* || "$blockSix" == *"Still"* ]];
                                                                 then
-                                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockSix} - DOES contain Still - Not extracting Season & Episode Number" >> "$logfile"
+                                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Block Four {$blockSix} - DOES contain Still - Not extracting Season & Episode Number" >> "$logfile"
                                                                 else
-                                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockSix} - Does NOT contain Still" >> "$logfile"
+                                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Block Four {$blockSix} - Does NOT contain Still" >> "$logfile"
                                                                     seasonNumberCheck=$(echo $blockSix | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
                                                                     episodeNumberCheck=$(echo $blockSix | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
                                                                 fi
@@ -1551,9 +1575,9 @@ else
                                                             then
                                                                 if [[ "$blockSeven" == *"still"* || "$blockSeven" == *"Still"* ]];
                                                                 then
-                                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockSeven} - DOES contain Still - Not extracting Season & Episode Number" >> "$logfile"
+                                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Block Four {$blockSeven} - DOES contain Still - Not extracting Season & Episode Number" >> "$logfile"
                                                                 else
-                                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockSeven} - Does NOT contain Still" >> "$logfile"
+                                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Block Four {$blockSeven} - Does NOT contain Still" >> "$logfile"
                                                                     seasonNumberCheck=$(echo $blockSeven | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
                                                                     episodeNumberCheck=$(echo $blockSeven | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
                                                                 fi
@@ -1581,9 +1605,9 @@ else
                                                             then
                                                                 if [[ "$blockEight" == *"still"* || "$blockEight" == *"Still"* ]];
                                                                 then
-                                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockEight} - DOES contain Still - Not extracting Season & Episode Number" >> "$logfile"
+                                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Block Four {$blockEight} - DOES contain Still - Not extracting Season & Episode Number" >> "$logfile"
                                                                 else
-                                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Block Four {$blockEight} - Does NOT contain Still" >> "$logfile"
+                                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Block Four {$blockEight} - Does NOT contain Still" >> "$logfile"
                                                                     seasonNumberCheck=$(echo $blockEight | awk 'BEGIN { FPAT = "[0-9]+" } {print $1}')
                                                                     episodeNumberCheck=$(echo $blockEight | awk 'BEGIN { FPAT = "[0-9]+" } {print $2}')
                                                                 fi
@@ -1605,16 +1629,16 @@ else
                                                         graphicsTags="<field><name>oly_graphicsTags</name><value>$blockOne</value><value>$blockTwo</value><value>$blockThree</value><value>$blockFour</value><value>$blockFive</value><value>$blockSix</value><value>$blockSeven</value><value>$blockEight</value></field>"
                                                     fi
                                                     
-                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - +++++++++++++++++++++++++++++++++" >> "$logfile"
-                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleCode - $titleCode" >> "$logfile"
-                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageType - $imageType" >> "$logfile"
-                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
-                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - language - $language" >> "$logfile"
-                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageSize - $imageSize" >> "$logfile"
-                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageDesc - $imageDesc" >> "$logfile"
-                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - imageMisc - $imageMisc" >> "$logfile"
-                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - seasonNumber - $seasonNumberCheck" >> "$logfile"
-                                                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - episodeNumber - $episodeNumberCheck" >> "$logfile"
+                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - +++++++++++++++++++++++++++++++++" >> "$logfile"
+                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - titleCode - $titleCode" >> "$logfile"
+                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - imageType - $imageType" >> "$logfile"
+                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - titleByLanguage - $titleByLanguage" >> "$logfile"
+                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - language - $language" >> "$logfile"
+                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - imageSize - $imageSize" >> "$logfile"
+                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - imageDesc - $imageDesc" >> "$logfile"
+                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - imageMisc - $imageMisc" >> "$logfile"
+                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - seasonNumber - $seasonNumberCheck" >> "$logfile"
+                                                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - episodeNumber - $episodeNumberCheck" >> "$logfile"
                                             fi
                                     fi
                             fi
@@ -1731,28 +1755,42 @@ else
                     itemSearchBody="{ \"filter\": { \"operator\": \"AND\",\"terms\": [{ \"name\": \"oly_titleCode\", \"value\": \"$titleCode\", \"exact\": true },{ \"name\": \"oly_versionType\", \"value\": \"originalFile\" },{ \"name\": \"oly_originalFileFlags\", \"value\": \"originalrawmaster\" }]}}"
                 ;;
                 *)
-                    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Title Code Character Count NOT Supported - [$titleCode]" >> "$logfile"
+                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Title Code Character Count NOT Supported - [$titleCode]" >> "$logfile"
                 ;;
             esac
         fi
-        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Searching Cantemo for Original Raw Master or Series based on Title Code [$titleCode]" >> "$logfile"
-        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Title Code Character Count - [$titleCodeCharCount]" >> "$logfile"
-        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Search Body - [$itemSearchBody]" >> "$logfile"
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Searching Cantemo for Original Raw Master or Series based on Title Code [$titleCode]" >> "$logfile"
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Title Code Character Count - [$titleCodeCharCount]" >> "$logfile"
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Search Body - [$itemSearchBody]" >> "$logfile"
         export itemSearchUrl="http://10.1.1.34/API/v2/search/"
         itemSearchHttpResponse=$(curl --location --request PUT $itemSearchUrl --header 'Content-Type: application/json' --header 'Accept: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=VDa9RP3Y9rgomyzNWvRxbu7WdTMetVYBlLg6pGMIJ6oyVABsjJiiEK9JCWVA1HYd' --data $itemSearchBody)
         itemHitResults=$(echo $itemSearchHttpResponse | awk -F "<hits>" '{print $2}' | awk -F "</hits>" '{print $1}')
-        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Search Results - Number of Hits - [$itemHitResults]" >> "$logfile"
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Search Results - Number of Hits - [$itemHitResults]" >> "$logfile"
         if [ "$itemHitResults" -eq 1 ];
         then
             itemSearchItemId=$(echo $itemSearchHttpResponse | awk -F "<id>" '{print $2}' | awk -F "</id>" '{print $1}')
             itemSearchItemLicensor=$(echo $itemSearchHttpResponse | awk -F "<oly_licensor>" '{print $2}' | awk -F "</oly_licensor>" '{print $1}')
             itemSearchItemLicensor=$(echo $itemSearchItemLicensor | awk -F "<list-item>" '{print $2}' | awk -F "</list-item>" '{print $1}')
-            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Search Results - Item ID - [$itemSearchItemId]" >> "$logfile"
-            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Search Results - Item Licensor - [$itemSearchItemLicensor]" >> "$logfile"
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Search Results - Item ID - [$itemSearchItemId]" >> "$logfile"
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Search Results - Item Licensor - [$itemSearchItemLicensor]" >> "$logfile"
             itemLicensor=$(echo "$itemSearchItemLicensor")
+            # Create For Distribution Relationship
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - [$itemId] - Creating For Distribution Relationship with [$itemSearchItemId]" >> "$logfile"
+            sleep 1
+            createRelationUrl="http://10.1.1.34:8080/API/relation?allowDuplicate=false"
+            createForDistributionRelationBody="{\"relation\": [{\"direction\": {\"source\": \"$itemSearchItemId\",\"target\": \"$itemId\",\"type\": \"U\"},\"value\": [{\"key\": \"type\",\"value\": \"portal_undirectional\"},{\"key\": \"cs_type\",\"value\": \"forDistribution\"}]}]}"
+            createForDistributionRelationHttpResponse=$(curl --location $createRelationUrl --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=izsJxc40uxUMKwzH4JavShE11i6wz9rKlTg2pavusNjK0gLTqstgxD8kgRLgSiL4' --data $createForDistributionRelationBody)
+            #echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - [$itemId] - Sent API Call to Create Season Item - [$createForDistributionRelationHttpResponse]" >> "$logfile"
+            sleep 2            
+            reindexItemUrl="http://10.1.1.34/API/v2/reindex/"
+            reindexItemBody="{ \"items\": [\"$itemId\", \"$itemSearchItemId\"] }"
+            reindexItemHttpResponse=$(curl --location --request PUT $reindexItemUrl --header 'Content-Type: application/json' --header 'Accept: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=VDa9RP3Y9rgomyzNWvRxbu7WdTMetVYBlLg6pGMIJ6oyVABsjJiiEK9JCWVA1HYd' --data $reindexItemBody)
+            #echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - [$itemId] - Sent API Call to ReIndex Item - [$reindexItemHttpResponse]" >> "$logfile"
+            sleep 2
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - [$itemId] - For Distribution Relationship Created" >> "$logfile"
         elif [ "$itemHitResults" -eq 0 ];
         then
-            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - No Search Results Found - Searching for Conform Item" >> "$logfile"
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - No Search Results Found - Searching for Conform Item" >> "$logfile"
             if [[ "$titleCode" == M* ]];
             then
                 itemSearchBody="{ \"filter\": { \"operator\": \"AND\",\"terms\": [{ \"name\": \"oly_titleCode\", \"value\": \"$titleCode\", \"exact\": true },{ \"name\": \"oly_versionType\", \"value\": \"conformFile\" }]}}"
@@ -1777,64 +1815,78 @@ else
                         itemSearchBody="{ \"filter\": { \"operator\": \"AND\",\"terms\": [{ \"name\": \"oly_titleCode\", \"value\": \"$titleCode\", \"exact\": true },{ \"name\": \"oly_versionType\", \"value\": \"conformFile\" }]}}"
                     ;;
                     *)
-                        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Title Code Character Count NOT Supported - [$titleCode]" >> "$logfile"
+                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Title Code Character Count NOT Supported - [$titleCode]" >> "$logfile"
                     ;;
                 esac
             fi
-            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Search Body - [$itemSearchBody]" >> "$logfile"
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Search Body - [$itemSearchBody]" >> "$logfile"
             export itemSearchUrl="http://10.1.1.34/API/v2/search/"
             itemSearchHttpResponse=$(curl --location --request PUT $itemSearchUrl --header 'Content-Type: application/json' --header 'Accept: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=VDa9RP3Y9rgomyzNWvRxbu7WdTMetVYBlLg6pGMIJ6oyVABsjJiiEK9JCWVA1HYd' --data $itemSearchBody)
             itemHitResults=$(echo $itemSearchHttpResponse | awk -F "<hits>" '{print $2}' | awk -F "</hits>" '{print $1}')
-            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Search Results - Number of Hits - [$itemHitResults]" >> "$logfile"
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Search Results - Number of Hits - [$itemHitResults]" >> "$logfile"
             if [ "$itemHitResults" -eq 1 ];
             then
                 itemSearchItemId=$(echo $itemSearchHttpResponse | awk -F "<id>" '{print $2}' | awk -F "</id>" '{print $1}')
                 itemSearchItemLicensor=$(echo $itemSearchHttpResponse | awk -F "<oly_licensor>" '{print $2}' | awk -F "</oly_licensor>" '{print $1}')
                 itemSearchItemLicensor=$(echo $itemSearchItemLicensor | awk -F "<list-item>" '{print $2}' | awk -F "</list-item>" '{print $1}')
-                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Search Results - Item ID - [$itemSearchItemId]" >> "$logfile"
-                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Search Results - Item Licensor - [$itemSearchItemLicensor]" >> "$logfile"
+                echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Search Results - Item ID - [$itemSearchItemId]" >> "$logfile"
+                echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Search Results - Item Licensor - [$itemSearchItemLicensor]" >> "$logfile"
                 itemLicensor=$(echo "$itemSearchItemLicensor")
+                # Create For Distribution Relationship
+                echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - [$itemId] - Creating For Distribution Relationship with [$itemSearchItemId]" >> "$logfile"
+                sleep 1
+                createRelationUrl="http://10.1.1.34:8080/API/relation?allowDuplicate=false"
+                createForDistributionRelationBody="{\"relation\": [{\"direction\": {\"source\": \"$itemSearchItemId\",\"target\": \"$itemId\",\"type\": \"U\"},\"value\": [{\"key\": \"type\",\"value\": \"portal_undirectional\"},{\"key\": \"cs_type\",\"value\": \"forDistribution\"}]}]}"
+                createForDistributionRelationHttpResponse=$(curl --location $createRelationUrl --header 'Content-Type: application/json' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=izsJxc40uxUMKwzH4JavShE11i6wz9rKlTg2pavusNjK0gLTqstgxD8kgRLgSiL4' --data $createForDistributionRelationBody)
+                #echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - [$itemId] - Sent API Call to Create Season Item - [$createForDistributionRelationHttpResponse]" >> "$logfile"
+                sleep 2            
+                reindexItemUrl="http://10.1.1.34/API/v2/reindex/"
+                reindexItemBody="{ \"items\": [\"$itemId\", \"$itemSearchItemId\"] }"
+                reindexItemHttpResponse=$(curl --location --request PUT $reindexItemUrl --header 'Content-Type: application/json' --header 'Accept: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=VDa9RP3Y9rgomyzNWvRxbu7WdTMetVYBlLg6pGMIJ6oyVABsjJiiEK9JCWVA1HYd' --data $reindexItemBody)
+                #echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - [$itemId] - Sent API Call to ReIndex Item - [$reindexItemHttpResponse]" >> "$logfile"
+                sleep 2
+                echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - [$itemId] - For Distribution Relationship Created" >> "$logfile"
             elif [ "$itemHitResults" -eq 0 ];
             then
-                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - No Search Results Found in Second Search - NOT Setting Licensor Variable" >> "$logfile"
+                echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - No Search Results Found in Second Search - NOT Setting Licensor Variable" >> "$logfile"
             elif [ "$itemHitResults" -gt 1 ];
             then
-                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Second Search Results - More than 1 Found - Getting first instance of Licensor" >> "$logfile"
+                echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Second Search Results - More than 1 Found - Getting first instance of Licensor" >> "$logfile"
                 itemSearchItemId=$(echo $itemSearchHttpResponse | awk -F "<id>" '{print $2}' | awk -F "</id>" '{print $1}')
                 itemSearchItemLicensor=$(echo $itemSearchHttpResponse | awk -F "<oly_licensor>" '{print $2}' | awk -F "</oly_licensor>" '{print $1}')
                 itemSearchItemLicensor=$(echo $itemSearchItemLicensor | awk -F "<list-item>" '{print $2}' | awk -F "</list-item>" '{print $1}')
-                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Search Results - Item ID - [$itemSearchItemId]" >> "$logfile"
-                echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Search Results - Item Licensor - [$itemSearchItemLicensor]" >> "$logfile"
+                echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Search Results - Item ID - [$itemSearchItemId]" >> "$logfile"
+                echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Search Results - Item Licensor - [$itemSearchItemLicensor]" >> "$logfile"
                 itemLicensor=$(echo "$itemSearchItemLicensor")
             fi
         elif [ "$itemHitResults" -gt 1 ];
         then
-            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Search Results - More than 1 Found - Getting first instance of Licensor" >> "$logfile"
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Search Results - More than 1 Found - Getting first instance of Licensor" >> "$logfile"
             itemSearchItemId=$(echo $itemSearchHttpResponse | awk -F "<id>" '{print $2}' | awk -F "</id>" '{print $1}')
             itemSearchItemLicensor=$(echo $itemSearchHttpResponse | awk -F "<oly_licensor>" '{print $2}' | awk -F "</oly_licensor>" '{print $1}')
             itemSearchItemLicensor=$(echo $itemSearchItemLicensor | awk -F "<list-item>" '{print $2}' | awk -F "</list-item>" '{print $1}')
-            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Search Results - Item ID - [$itemSearchItemId]" >> "$logfile"
-            echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Search Results - Item Licensor - [$itemSearchItemLicensor]" >> "$logfile"
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Search Results - Item ID - [$itemSearchItemId]" >> "$logfile"
+            echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Search Results - Item Licensor - [$itemSearchItemLicensor]" >> "$logfile"
             itemLicensor=$(echo "$itemSearchItemLicensor")
         fi
     else
-        echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Title Code is NOT correct format - NOT Searching API for Item based on Title Code" >> "$logfile"
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Title Code is NOT correct format - NOT Searching API for Item based on Title Code" >> "$logfile"
     fi
     
-    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Graphics Type - $graphicsType" >> "$logfile"
-    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Graphics Resolution - $graphicsResolution" >> "$logfile"
-    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Graphics Language - $graphicsLanguage" >> "$logfile"
-    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Graphics Tags - $graphicsTags" >> "$logfile"
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Graphics Type - $graphicsType" >> "$logfile"
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Graphics Resolution - $graphicsResolution" >> "$logfile"
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Graphics Language - $graphicsLanguage" >> "$logfile"
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Graphics Tags - $graphicsTags" >> "$logfile"
 
     bodyData=$(echo "<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\">$graphicsTags<field><name>oly_titleCode</name><value>$titleCode</value></field><field><name>oly_licensor</name><value>$itemLicensor</value></field><field><name>oly_primaryMetadataLanguage</name><value>$graphicsLanguage</value></field><field><name>oly_graphicsLanguage</name><value>$graphicsLanguage</value></field><field><name>oly_graphicsResolution</name><value>$graphicsResolution</value></field>$fieldNameValue<field><name>oly_graphicsType</name><value>$graphicsType</value></field></timespan></MetadataDocument>")
 
-    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Body Data - $bodyData" >> "$logfile"
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Body Data - $bodyData" >> "$logfile"
 
     curl -s -o /dev/null --location --request PUT $url --header 'Content-Type: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=xZqBrKBPBOUANsWFnMC3aF90S52Ip3tgXdUHwWZvhNnu9aLl9j4rdrxRhV9nSQx9' --data $bodyData
 
     sleep 5
 
-    echo "$(date +%Y/%m/%d_%H:%M) - ($itemId) - Metadata Update Completed" >> "$logfile"
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (graphicWorkflow) - ($itemId) - Metadata Update Completed" >> "$logfile"
 fi
 
 IFS=$saveIFS
