@@ -107,7 +107,7 @@ then
     itemMarkersExtractedInfo=$(echo "$itemMarkersFiltered" | jq -c '
     [
         .[] | 
-        select(.metadata[]?.value | startswith("\"VOD\"")) |
+        select(.metadata[]?.value | startswith("VOD")) |
         {
             type: .type,
             description: (.metadata[] | select(.key == "av_marker_description").value),
@@ -159,7 +159,7 @@ then
     itemMarkersExtractedInfo=$(echo "$itemMarkersFiltered" | jq -c '
     [
         .[] | 
-        select(.metadata[]?.value | startswith("\"RTC_MX\"")) |
+        select(.metadata[]?.value | startswith("RTC_MX")) |
         {
             type: .type,
             description: (.metadata[] | select(.key == "av_marker_description").value),
