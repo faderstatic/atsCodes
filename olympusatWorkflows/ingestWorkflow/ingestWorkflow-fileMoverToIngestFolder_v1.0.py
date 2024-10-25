@@ -8,7 +8,6 @@
 # Rev A: 
 # PREREQUISITE: This script must receive watch folder location, destination folder location and delay in seconds.
 # 	Usage: ingestWorkflow-fileMoverToIngestFolder.py [watch folder] [destination folder]
-#                                                       [delay between checks in seconds]
 #
 # Note:
 #  System requirements: This script will only run in LINUX but not MacOS (because hash openssl)
