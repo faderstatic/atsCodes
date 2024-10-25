@@ -225,7 +225,7 @@ try:
             },
             {
               "key": "av_marker_description",
-              "value": '"'+typeOne+'"'
+              "value": typeOne
             },
             {
               "key": "av_marker_track_id",
@@ -291,7 +291,7 @@ try:
             },
             {
               "key": "av_marker_description",
-              "value": '"'+typeTwo+'"'
+              "value": typeTwo
             },
             {
               "key": "av_marker_track_id",
