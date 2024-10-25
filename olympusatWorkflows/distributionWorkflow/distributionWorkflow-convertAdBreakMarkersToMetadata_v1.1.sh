@@ -22,34 +22,6 @@ releaseLock ()
     rm -f "$lockFile"
 }
 
-# Function to create comma seperated list
-createCommaSeperatedList ()
-{
-    currentFieldValue="$1"
-    currentFieldName="$2"
-    numberOfValues=$(echo "$currentFieldValue"  | awk -F '<list-item>' '{print NF}')
-    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (spWorkflow) - ($itemId) - [$currentFieldName] - Values - [$currentFieldValue]" >> "$logfile"
-    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (spWorkflow) - ($itemId) - [$currentFieldName] - Number of Values - [$numberOfValues]" >> "$logfile"
-    outputVariable=""
-    for (( a=2 ; a<=$numberOfValues ; a++ ));
-    do
-        currentValue=$(echo "$currentFieldValue" | awk -F '<list-item>' '{print $'$a'}' | awk -F '</list-item>' '{print $1}')
-        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (spWorkflow) - ($itemId) - [$currentFieldName] - Current Value - [$currentValue]" >> "$logfile"
-        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (spWorkflow) - ($itemId) - [$currentFieldName] - Output Variable - [$outputVariable]" >> "$logfile"
-        if [[ "$currentValue" != "" ]];
-        then
-            if [[ "$outputVariable" == "" ]];
-            then
-                outputVariable=$(echo "$currentValue")
-            else
-                outputVariable="$(echo "$outputVariable"), $(echo "$currentValue")"
-            fi
-        fi
-    done
-    echo "$outputVariable"
-    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (spWorkflow) - ($itemId) - [$currentFieldName] - Final Output Variable - [$outputVariable]" >> "$logfile"
-}
-
 # Function to convert to timecode
 convertToTimecode() {
   local frame=$1
@@ -83,12 +55,10 @@ convertToTimecode() {
   # Format output as HH:MM:SS:FF
   finalTimecode=$(printf "%02d:%02d:%02d:%02d\n" "$hours" "$minutes" "$seconds" "$frames")
   echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow-convertAdBreakMarkers) - ($itemId) - INTERNAL FUNCTION - FINAL [$finalTimecode]" >> "$logfile"
-  
-  # Add timecode to array to be sorted later
-  adMarkerTimecodeArray+=("$finalTimecode")
 
   echo $finalTimecode
 }
+#--------------------------------------------------
 
 saveIFS=$IFS
 IFS=$(echo -e "\n\b")
@@ -137,7 +107,7 @@ then
     itemMarkersExtractedInfo=$(echo "$itemMarkersFiltered" | jq -c '
     [
         .[] | 
-        select(.metadata[]?.value | startswith("VOD")) |
+        select(.metadata[]?.value | startswith("\"VOD\"")) |
         {
             type: .type,
             description: (.metadata[] | select(.key == "av_marker_description").value),
@@ -148,22 +118,22 @@ then
 ')
     sleep 1
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow-convertAdBreakMarkers) - ($itemId) - Extracted Info [$itemMarkersExtractedInfo]" >> "$logfile"
+    sleep 1
+    # Sort results in ascending order based on start_frame
+    itemMarkersSortedInfo=$(echo "$itemMarkersExtractedInfo" | jq 'sort_by(.start_frame)')
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow-convertAdBreakMarkers) - ($itemId) - Sorted Info [$itemMarkersSortedInfo]" >> "$logfile"
     fps=$(echo "scale=8; 30000 / 1001" | bc)
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow-convertAdBreakMarkers) - ($itemId) - fps [$fps]" >> "$logfile"
     # Extract start frames and convert to timecode
-    adMarkerTimecodeArray=()
-    adMarkerTimecodes=$(echo "$itemMarkersExtractedInfo" | jq -r '.[] | .start_frame' | while read frame; do
+    adMarkerTimecodes=$(echo "$itemMarkersSortedInfo" | jq -r '.[] | .start_frame' | while read frame; do
         convertToTimecode "$frame" "$fps"
     done | paste -sd "," -)
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow-convertAdBreakMarkers) - ($itemId) - adMarkerTimecodes [$adMarkerTimecodes]" >> "$logfile"
-    # Sort Ad Break Markers
-    sortedAdMarkerTimecodes=$(IFS=$'\n'; indexedArray=${adMarkerTimecodeArray[*]}; sorted=($(sort -n <<<"${indexedArray[*]}")); unset IFS; echo ${sorted[*]})
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow-convertAdBreakMarkers) - ($itemId) - sortedAdMarkerTimecodes [$sortedAdMarkerTimecodes]" >> "$logfile"
-    if [[ "$sortedAdMarkerTimecodes" == "" ]];
+    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow-convertAdBreakMarkers) - ($itemId) - adMarkerTimecodes [$adMarkerTimecodes]" >> "$logfile"
+    if [[ "$adMarkerTimecodes" == "" ]];
     then
-        sortedAdMarkerTimecodes="NONE"
+        adMarkerTimecodes="NONE"
     fi
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow-convertAdBreakMarkers) - ($itemId) - Extracted Marker Info [$sortedAdMarkerTimecodes]" >> "$logfile"
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow-convertAdBreakMarkers) - ($itemId) - Extracted Marker Info [$adMarkerTimecodes]" >> "$logfile"
     sleep 1
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow-convertAdBreakMarkers) - ($itemId) - Updating Item's Ad Marker Info in Cantemo" >> "$logfile"
     updateVidispineMetadata $itemId "oly_adMarkers" "$adMarkerTimecodes"
@@ -189,7 +159,7 @@ then
     itemMarkersExtractedInfo=$(echo "$itemMarkersFiltered" | jq -c '
     [
         .[] | 
-        select(.metadata[]?.value | startswith("RTC_MX")) |
+        select(.metadata[]?.value | startswith("\"RTC_MX\"")) |
         {
             type: .type,
             description: (.metadata[] | select(.key == "av_marker_description").value),
@@ -200,22 +170,22 @@ then
 ')
     sleep 1
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow-convertAdBreakMarkers) - ($itemId) - Extracted Info [$itemMarkersExtractedInfo]" >> "$logfile"
+    sleep 1
+    # Sort results in ascending order based on start_frame
+    itemMarkersSortedInfo=$(echo "$itemMarkersExtractedInfo" | jq 'sort_by(.start_frame)')
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow-convertAdBreakMarkers) - ($itemId) - Sorted Info [$itemMarkersSortedInfo]" >> "$logfile"
     fps=$(echo "scale=8; 30000 / 1001" | bc)
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow-convertAdBreakMarkers) - ($itemId) - fps [$fps]" >> "$logfile"
     # Extract start frames and convert to timecode
-    adMarkerTimecodeArray=()
-    adMarkerTimecodes=$(echo "$itemMarkersExtractedInfo" | jq -r '.[] | .start_frame' | while read frame; do
+    adMarkerTimecodes=$(echo "$itemMarkersSortedInfo" | jq -r '.[] | .start_frame' | while read frame; do
         convertToTimecode "$frame" "$fps"
     done | paste -sd "," -)
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow-convertAdBreakMarkers) - ($itemId) - adMarkerTimecodes [$adMarkerTimecodes]" >> "$logfile"
-    # Sort Ad Break Markers
-    sortedAdMarkerTimecodes=$(IFS=$'\n'; indexedArray=${adMarkerTimecodeArray[*]}; sorted=($(sort -n <<<"${indexedArray[*]}")); unset IFS; echo ${sorted[*]})
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow-convertAdBreakMarkers) - ($itemId) - sortedAdMarkerTimecodes [$sortedAdMarkerTimecodes]" >> "$logfile"
-    if [[ "$sortedAdMarkerTimecodes" == "" ]];
+    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow-convertAdBreakMarkers) - ($itemId) - adMarkerTimecodes [$adMarkerTimecodes]" >> "$logfile"
+    if [[ "$adMarkerTimecodes" == "" ]];
     then
-        sortedAdMarkerTimecodes="NONE"
+        adMarkerTimecodes="NONE"
     fi
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow-convertAdBreakMarkers) - ($itemId) - Extracted Marker Info [$sortedAdMarkerTimecodes]" >> "$logfile"
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow-convertAdBreakMarkers) - ($itemId) - Extracted Marker Info [$adMarkerTimecodes]" >> "$logfile"
     sleep 1
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow-convertAdBreakMarkers) - ($itemId) - Updating Item's Ad Marker Info in Cantemo" >> "$logfile"
     updateVidispineMetadata $itemId "oly_adMarkers" "$adMarkerTimecodes"
