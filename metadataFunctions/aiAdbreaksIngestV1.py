@@ -57,7 +57,7 @@ from array import *
 # Internal functions
 
 def findSegments(fcfRankFrameList, fcfSegmentCount, fcfTargetFrames, fcfMinFrames, fcfIntroFrames, fcfEndFrame):
-  rankTolerance = 2 # determine which "rank" result categories will be used
+  rankTolerance = 3 # determine which "rank" result categories will be used
   breaksFound = [0 for x in range(fcfSegmentCount)]
   currentSegment = 1
   # print(f"{fcfEndFrame} - {fcfTargetFrames}, {currentSegment} - {fcfSegmentCount}")
