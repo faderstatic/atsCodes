@@ -53,14 +53,14 @@ convertToTimecode() {
     local fractional_seconds=$(echo "$total_seconds - $int_seconds" | bc)
     frames=$(echo "scale=0; ($fractional_seconds * $fps + 0.5) / 1" | bc)
   
-  # Calculate hours, minutes, and seconds
-  local hours=$(echo "$int_seconds / 3600" | bc)
-  local minutes=$(echo "($int_seconds % 3600) / 60" | bc)
-  local seconds=$(echo "$int_seconds % 60" | bc)
-  echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow-convertAdBreakMarkers) - ($itemId) - INTERNAL FUNCTION - hours [$hours]" >> "$logfile"
-  echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow-convertAdBreakMarkers) - ($itemId) - INTERNAL FUNCTION - minutes [$minutes]" >> "$logfile"
-  echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow-convertAdBreakMarkers) - ($itemId) - INTERNAL FUNCTION - seconds [$seconds]" >> "$logfile"
-
+    # Calculate hours, minutes, and seconds
+    local hours=$(echo "$int_seconds / 3600" | bc)
+    local minutes=$(echo "($int_seconds % 3600) / 60" | bc)
+    local seconds=$(echo "$int_seconds % 60" | bc)
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow-convertAdBreakMarkers) - ($itemId) - INTERNAL FUNCTION - hours [$hours]" >> "$logfile"
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow-convertAdBreakMarkers) - ($itemId) - INTERNAL FUNCTION - minutes [$minutes]" >> "$logfile"
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow-convertAdBreakMarkers) - ($itemId) - INTERNAL FUNCTION - seconds [$seconds]" >> "$logfile"
+  fi
   # Format output as HH:MM:SS:FF
   finalTimecode=$(printf "%02d:%02d:%02d:%02d\n" "$hours" "$minutes" "$seconds" "$frames")
   echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow-convertAdBreakMarkers) - ($itemId) - INTERNAL FUNCTION - FINAL [$finalTimecode]" >> "$logfile"
