@@ -31,15 +31,17 @@ convertToTimecode() {
   echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow-convertAdBreakMarkers) - ($itemId) - INTERNAL FUNCTION - fps [$fps]" >> "$logfile"
 
   # Calculate drop-frame adjusted time
-  # Drop-frame calculation for 29.97 fps
+  # Drop-frame calculation for 29.97 fpstewaa
   local frames_per_hour=107892
   local frames_per_minute=1798
   local frames_per_10_minutes=17982
 
   local hours=$((frame / frames_per_hour))
   local minutes=$(( (frame % frames_per_hour) / frames_per_10_minutes * 10 + (frame % frames_per_10_minutes) / frames_per_minute))
-  local seconds=$(( (frame % frames_per_minute) / fps))
-  local frames=$(( frame % fps ))
+  #local seconds=$(( (frame % frames_per_minute) / fps))
+  #local frames=$(( frame % fps ))
+  local seconds=$(echo "scale=0; ($frame % $frames_per_minute) / $fps" | bc)
+  local frames=$(echo "scale=0; ($frame % $fps)" | bc)
 
   # Adjust for dropped frames
   local total_minutes=$(( hours * 60 + minutes ))
