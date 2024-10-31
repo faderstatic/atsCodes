@@ -36,11 +36,13 @@ convertToTimecode() {
   
   # Extract integer part of seconds
   local int_seconds=$(echo "$total_seconds / 1" | bc)
+  local int_frame=$(($int_seconds * $fps))
   echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow-convertAdBreakMarkers) - ($itemId) - INTERNAL FUNCTION - int_seconds [$int_seconds]" >> "$logfile"
   
   # Extract fractional part and calculate frames
   local fractional_seconds=$(echo "$total_seconds - $int_seconds" | bc)
-  local frames=$(echo "scale=0; ($fractional_seconds * $fps + 0.5) / 1" | bc)  # Adding 0.5 for rounding
+  local frames=$(($frame - $int_frame))
+  # local frames=$(echo "scale=0; ($fractional_seconds * $fps + 0.5) / 1" | bc)  # Adding 0.5 for rounding
   echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow-convertAdBreakMarkers) - ($itemId) - INTERNAL FUNCTION - fractional_seconds [$fractional_seconds]" >> "$logfile"
   echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow-convertAdBreakMarkers) - ($itemId) - INTERNAL FUNCTION - frames [$frames]" >> "$logfile"
   
