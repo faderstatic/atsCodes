@@ -26,7 +26,7 @@ releaseLock ()
 convertToTimecode() {
   local frame=$1
   local fps=$2
-  local drop_frame=$((fps == 29.97 ? 1 : 0))  # Enable drop-frame if fps is 29.97
+  local drop_frame=$(echo "$fps" == 29.97 ? 1 : 0 | bc)  # Enable drop-frame if fps is 29.97
   echo "----------------------------------------------" >> $logfile
   echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow-convertAdBreakMarkers) - ($itemId) - INTERNAL FUNCTION - frame [$frame]" >> "$logfile"
   echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow-convertAdBreakMarkers) - ($itemId) - INTERNAL FUNCTION - fps [$fps]" >> "$logfile"
