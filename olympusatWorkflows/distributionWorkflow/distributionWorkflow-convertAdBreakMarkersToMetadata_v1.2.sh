@@ -26,7 +26,7 @@ releaseLock ()
 convertToTimecode() {
   local frame=$1
   local fps=$2
-  if [[ "$fps" == 29.97002997 ]];
+  if [[ $fps -eq 29.97002997 ]];
   then
     local drop_frame=1
   else
