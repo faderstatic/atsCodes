@@ -26,46 +26,24 @@ releaseLock ()
 convertToTimecode() {
   local frame=$1
   local fps=$2
-  if [[ $fps -eq 29.97002997 ]];
-  then
-    local drop_frame=1
-  else
-    local drop_frame=0
-  fi
   echo "----------------------------------------------" >> $logfile
   echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow-convertAdBreakMarkers) - ($itemId) - INTERNAL FUNCTION - frame [$frame]" >> "$logfile"
   echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow-convertAdBreakMarkers) - ($itemId) - INTERNAL FUNCTION - fps [$fps]" >> "$logfile"
 
   # Calculate drop-frame adjusted time
-  if [[ $drop_frame -eq 1 ]]; then
-    # Drop-frame calculation for 29.97 fps
-    local frames_per_hour=107892
-    local frames_per_minute=1798
-    local frames_per_10_minutes=17982
+  # Drop-frame calculation for 29.97 fps
+  local frames_per_hour=107892
+  local frames_per_minute=1798
+  local frames_per_10_minutes=17982
 
-    local hours=$((frame / frames_per_hour))
-    local minutes=$(( (frame % frames_per_hour) / frames_per_10_minutes * 10 + (frame % frames_per_10_minutes) / frames_per_minute))
-    local seconds=$(( (frame % frames_per_minute) / fps))
-    local frames=$(( frame % fps ))
+  local hours=$((frame / frames_per_hour))
+  local minutes=$(( (frame % frames_per_hour) / frames_per_10_minutes * 10 + (frame % frames_per_10_minutes) / frames_per_minute))
+  local seconds=$(( (frame % frames_per_minute) / fps))
+  local frames=$(( frame % fps ))
 
-    # Adjust for dropped frames
-    local total_minutes=$(( hours * 60 + minutes ))
-    frame=$(( frame + total_minutes - (total_minutes / 10) ))
-  else
-    # Non-drop-frame calculation
-    local total_seconds=$(echo "scale=4; $frame / $fps" | bc)
-    local int_seconds=$(echo "$total_seconds / 1" | bc)
-    local fractional_seconds=$(echo "$total_seconds - $int_seconds" | bc)
-    frames=$(echo "scale=0; ($fractional_seconds * $fps + 0.5) / 1" | bc)
-  
-    # Calculate hours, minutes, and seconds
-    local hours=$(echo "$int_seconds / 3600" | bc)
-    local minutes=$(echo "($int_seconds % 3600) / 60" | bc)
-    local seconds=$(echo "$int_seconds % 60" | bc)
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow-convertAdBreakMarkers) - ($itemId) - INTERNAL FUNCTION - hours [$hours]" >> "$logfile"
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow-convertAdBreakMarkers) - ($itemId) - INTERNAL FUNCTION - minutes [$minutes]" >> "$logfile"
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow-convertAdBreakMarkers) - ($itemId) - INTERNAL FUNCTION - seconds [$seconds]" >> "$logfile"
-  fi
+  # Adjust for dropped frames
+  local total_minutes=$(( hours * 60 + minutes ))
+  frame=$(( frame + total_minutes - (total_minutes / 10) ))
   # Format output as HH:MM:SS:FF
   finalTimecode=$(printf "%02d:%02d:%02d:%02d\n" "$hours" "$minutes" "$seconds" "$frames")
   echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow-convertAdBreakMarkers) - ($itemId) - INTERNAL FUNCTION - FINAL [$finalTimecode]" >> "$logfile"
