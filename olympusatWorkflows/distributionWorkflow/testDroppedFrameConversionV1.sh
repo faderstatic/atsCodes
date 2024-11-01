@@ -21,13 +21,22 @@
 # Function to convert to timecode
 convertToTimecode() {
   local frame=$1
+  local droppedFrame=$2
 
   # --------Drop Frame Calculation---------
   # Drop-frame constants for 29.97 fps
-  local frames_per_hour=107892       # 29.97 fps, drop-frame
-  local frames_per_10_minutes=17982  # Frames in 10 minutes (with drop-frame)
-  local frames_per_minute=1798       # Frames in 1 minute (with drop-frame)
-  local frames_per_seconds=28         # Frames in 1 second within 10 minutes
+  if [[ $droppedFrame -eq 1 ]];
+  then
+    local frames_per_hour=107892       # 29.97 fps, drop-frame
+    local frames_per_10_minutes=17982  # Frames in 10 minutes (with drop-frame)
+    local frames_per_minute=1798       # Frames in 1 minute (with drop-frame)
+    local frames_per_seconds=28         # Frames in 1 second within 10 minutes
+  else
+    local frames_per_hour=108000
+    local frames_per_10_minutes=18000
+    local frames_per_minute=1800
+    local frames_per_seconds=30
+  fi
 
   # Calculate drop-frame adjusted timecode
   local total_hours=$(( frame / frames_per_hour ))
@@ -54,7 +63,8 @@ saveIFS=$IFS
 IFS=$(echo -e "\n\b")
 
 export frame=$1
+export droppedFrame=$2
 
-convertToTimecode $frame
+convertToTimecode $frame $droppedFrame
 
 IFS=$saveIFS
