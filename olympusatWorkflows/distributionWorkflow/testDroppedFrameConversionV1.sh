@@ -23,8 +23,7 @@ convertToTimecode() {
   local frame=$1
   local droppedFrame=$2
 
-  # --------Drop Frame Calculation---------
-  # Drop-frame constants for 29.97 fps
+  # --------Frame Calculation---------
   if [[ $droppedFrame -eq 1 ]];
   then
     local frames_per_hour=107892       # 29.97 fps, drop-frame
