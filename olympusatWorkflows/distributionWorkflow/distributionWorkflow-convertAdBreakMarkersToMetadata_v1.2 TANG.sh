@@ -32,16 +32,16 @@ convertToTimecode() {
   local frames_per_hour=107892       # 29.97 fps, drop-frame
   local frames_per_10_minutes=17982  # Frames in 10 minutes (with drop-frame)
   local frames_per_minute=1798       # Frames in 1 minute (with drop-frame)
-  local frame_per_seconds=28         # Frames in 1 second within 10 minutes
+  local frames_per_seconds=28         # Frames in 1 second within 10 minutes
 
   # Calculate drop-frame adjusted timecode
-  local total_hours=$(( frame / frame_per_hour ))
-  local frame_remainder=$(( frame % frame_per_hour))
-  local total_10minutes=$(( frame_remainder / frame_per_10_minutes ))
-  frame_remainder=$(( frame_remainder % frame_per_10_minutes ))
+  local total_hours=$(( frame / frames_per_hour ))
+  local frame_remainder=$(( frame % frames_per_hour))
+  local total_10minutes=$(( frame_remainder / frames_per_10_minutes ))
+  frame_remainder=$(( frame_remainder % frames_per_10_minutes ))
   local total_minutes=$(( total_10minutes * 10 ))
-  local total_seconds=$(( frame_remainder / frame_per_seconds ))
-  frame_remainder=$(( frame_remainder % frame_per_seconds ))
+  local total_seconds=$(( frame_remainder / frames_per_seconds ))
+  frame_remainder=$(( frame_remainder % frames_per_seconds ))
 
   # --------Final Output---------
   # Format output as HH:MM:SS:FF
