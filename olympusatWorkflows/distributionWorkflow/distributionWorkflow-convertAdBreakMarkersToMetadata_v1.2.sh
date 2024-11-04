@@ -32,42 +32,25 @@ convertToTimecode() {
 
   # --------Drop Frame Calculation---------
   # Drop-frame constants for 29.97 fps
-  #local frames_per_hour=107892       # 29.97 fps, drop-frame
-  #local frames_per_10_minutes=17982  # Frames in 10 minutes (with drop-frame)
-  #local frames_per_minute=1798       # Frames in 1 minute (with drop-frame)
+  local frames_per_hour=107892       # 29.97 fps, drop-frame
+  local frames_per_10_minutes=17982  # Frames in 10 minutes (with drop-frame)
+  local frames_per_minute=1798       # Frames in 1 minute (with drop-frame)
+  local frames_per_seconds=28         # Frames in 1 second within 10 minutes
 
   # Calculate drop-frame adjusted timecode
-  #local total_minutes=$(( frame / frames_per_minute ))
-  #local drop_frames=$(( total_minutes - (total_minutes / 10) ))
-
-  # Adjust frame count for drop frames
-  #local adjusted_frame=$(( frame + drop_frames ))
-
-  # Calculate time components
-  #local hours=$(( adjusted_frame / frames_per_hour ))
-  #local remaining_frames=$(( adjusted_frame % frames_per_hour ))
-  #local minutes=$(( (remaining_frames / frames_per_10_minutes) * 10 + (remaining_frames % frames_per_10_minutes) / frames_per_minute ))
-  #remaining_frames=$(( remaining_frames % frames_per_minute ))
-
-  # Calculate seconds and frames using fractional fps
-  #local seconds=$(( remaining_frames / 30 ))
-  #local frames=$(( remaining_frames % 30 ))
-
-  # --------Non-Drop Frame Calculation---------
-  # Non-drop-frame calculation
-  local total_seconds=$(echo "scale=4; $frame / $fps" | bc)
-  local int_seconds=$(echo "$total_seconds / 1" | bc)
-  local fractional_seconds=$(echo "$total_seconds - $int_seconds" | bc)
-  frames=$(echo "scale=0; ($fractional_seconds * $fps + 0.5) / 1" | bc)
-
-  # Non-drop-frame Calculate hours, minutes, and seconds
-  hours=$(echo "$int_seconds / 3600" | bc)
-  minutes=$(echo "($int_seconds % 3600) / 60" | bc)
-  seconds=$(echo "$int_seconds % 60" | bc)
+  local total_hours=$(( frame / frames_per_hour ))
+  local frame_remainder=$(( frame % frames_per_hour))
+  local total_10minutes=$(( frame_remainder / frames_per_10_minutes ))
+  frame_remainder=$(( frame_remainder % frames_per_10_minutes ))
+  total_10minutes=$(( total_10minutes * 10 ))
+  local total_minutes=$(( (frame_remainder / frames_per_minute) + total_10minutes ))
+  frame_remainder=$(( frame_remainder % frames_per_minute ))
+  local total_seconds=$(( frame_remainder / frames_per_seconds ))
+  frame_remainder=$(( frame_remainder % frames_per_seconds ))
 
   # --------Final Output---------
   # Format output as HH:MM:SS:FF
-  finalTimecode=$(printf "%02d:%02d:%02d:%02d\n" "$hours" "$minutes" "$seconds" "$frames")
+  finalTimecode=$(printf "%02d:%02d:%02d:%02d\n" "$total_hours" "$total_minutes" "$total_seconds" "$frame_remainder")
   echo "$(date +%Y/%m/%d_%H:%M:%S) - (distributionWorkflow-convertAdBreakMarkers) - ($itemId) - INTERNAL FUNCTION - FINAL [$finalTimecode]" >> "$logfile"
 
   echo $finalTimecode
