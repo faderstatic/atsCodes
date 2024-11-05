@@ -2726,7 +2726,8 @@ processContent() {
         #echo "$(date +%Y/%m/%d_%H:%M:%S) - (ingestMetadataWorkflow) - [$itemId] - Body Data - $bodyData" >> "$logfile"
         curl -s -o /dev/null --location --request PUT $url --header 'Content-Type: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=xZqBrKBPBOUANsWFnMC3aF90S52Ip3tgXdUHwWZvhNnu9aLl9j4rdrxRhV9nSQx9' --data $bodyData
         sleep 5
-        bash -c "sudo /opt/olympusat/scriptsActive/importRightslineLegacyInfo-media_v5.1.sh $itemId $userName oly_titleCode /opt/olympusat/resources/rightslineData/RIGHTSLINE_CATALOG-ITEM_DATABASE_2024-10-08.csv > /dev/null 2>&1 &"
+        echo "$(date +%Y/%m/%d_%H:%M:%S) - (ingestMetadataWorkflow) - [$itemId] - userName - $userName" >> "$logfile"
+        bash -c "sudo /opt/olympusat/scriptsActive/importRightslineLegacyInfo-media_v5.1.sh $itemId $userName oly_titleCode /opt/olympusat/resources/rightslineData/RIGHTSLINE_CATALOG-ITEM_DATABASE_2024-10-08.csv > /dev/null 2>&1"
         echo "$(date +%Y/%m/%d_%H:%M:%S) - (ingestMetadataWorkflow) - [$itemId] - Metadata Update Completed" >> "$logfile"
         echo "$(date +%Y/%m/%d_%H:%M:%S) - (ingestMetadataWorkflow) - [$itemId] - Triggered Import Rightsline Legacy Info script" >> "$logfile"
     else

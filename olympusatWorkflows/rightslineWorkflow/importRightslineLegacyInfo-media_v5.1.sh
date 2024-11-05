@@ -544,13 +544,15 @@ then
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - Triggering API Call to Import XML into Cantemo" >> "$logfile"
     url="http://10.1.1.34:8080/API/import/sidecar/$cantemoItemId?sidecar=/opt/olympusat/xmlsForMetadataImport/$cantemoItemId.xml"
     importXmlHttpResponse=$(curl --location --request POST $url --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0')
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - url [$url]" >> "$logfile"
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - importXmlHttpResponse [$importXmlHttpResponse]" >> "$logfile"
     sleep 2
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - Moving XML to zCompleted Folder" >> "$logfile"
     sleep 2
     mv "$fileDestination" "/opt/olympusat/xmlsForMetadataImport/zCompleted/"
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - Triggering Shell Script to Import Contract Information" >> "$logfile"
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - UserName {$userName} - Rightsline Item ID ($rightslineItemId)" >> "$logfile"
-    bash -c "sudo /opt/olympusat/scriptsActive/importRightslineLegacyInfo-contract_v5.1.sh $cantemoItemId $userName oly_rightslineItemId /opt/olympusat/resources/rightslineData/RIGHTSLINE_CONTRACT_CODE_INFO_DATABASE_2024-07-31.csv $rightslineItemId > /dev/null 2>&1 &"
+    bash -c "sudo /opt/olympusat/scriptsActive/importRightslineLegacyInfo-contract_v5.1.sh $cantemoItemId $userName oly_rightslineItemId /opt/olympusat/resources/rightslineData/RIGHTSLINE_CONTRACT_CODE_INFO_DATABASE_2024-07-31.csv $rightslineItemId > /dev/null 2>&1"
 else
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - Import Metadata Job Skipped - No Matching Rightsline Item Id Found in CSV - {$rightslineItemId}" >> "$logfile"
 fi
