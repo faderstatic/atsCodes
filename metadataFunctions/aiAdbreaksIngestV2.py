@@ -71,13 +71,18 @@ def findSegments(fcfRankFrameList, fcfSegmentCount, fcfTargetFrames, fcfMinFrame
         if (deviationFrames < smallestDeviation) and (segmentSize > fcfMinFrames) and (fcfRankFrameList[i][j] > (fcfIntroFrames + fcfMinFrames)):
           smallestDeviation = deviationFrames
           breaksFound[currentSegment] = fcfRankFrameList[i][j]
-    setDurationSeconds = round((((fcfEndFrame - breaksFound[currentSegment]) * 1001) / 30000), 2)
+    # setDurationSeconds = round((((fcfEndFrame - breaksFound[currentSegment]) * 1001) / 30000), 2)
     fcfEndFrame = breaksFound[currentSegment]
     # print(f"Ad frame using {breaksFound[currentSegment]} with segment duration {setDurationSeconds}")
     # print(f"End frame is now at frame {fcfEndFrame}")
     currentSegment += 1
   return breaksFound
 
+def findSegmentsFromEnds(fseRankFrameList, fseSegmentCount, fseTargetFrames, fseMinFrames, fseIntroFrames, fseEndFrame):
+  rankTolerance = 3 # determine which "rank" result categories will be used
+  breaksFound = [0 for x in range(fseSegmentCount)]
+  currentSegment = 1
+  return breaksFound
 #------------------------------
 
 try:
