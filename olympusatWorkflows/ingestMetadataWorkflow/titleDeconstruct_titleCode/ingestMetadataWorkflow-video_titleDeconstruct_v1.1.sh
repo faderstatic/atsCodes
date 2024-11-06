@@ -2729,7 +2729,7 @@ processContent() {
         echo "$(date +%Y/%m/%d_%H:%M:%S) - (ingestMetadataWorkflow) - [$itemId] - userName - $userName" >> "$logfile"
         echo "$(date +%Y/%m/%d_%H:%M:%S) - (ingestMetadataWorkflow) - [$itemId] - Triggering Import Rightsline Legacy Info script" >> "$logfile"
         sleep 1
-        /opt/olympusat/scriptsActive/importRightslineLegacyInfo-media_v5.2.sh $itemId $userName oly_titleCode /opt/olympusat/resources/rightslineData/RIGHTSLINE_CATALOG-ITEM_DATABASE_2024-10-08.csv
+        /opt/olympusat/scriptsActive/importRightslineLegacyInfo-media_v5.3.sh $itemId $userName oly_titleCode /opt/olympusat/resources/rightslineData/RIGHTSLINE_CATALOG-ITEM_DATABASE_2024-10-08.csv
         echo "$(date +%Y/%m/%d_%H:%M:%S) - (ingestMetadataWorkflow) - [$itemId] - Metadata Update Completed" >> "$logfile"
     else
         echo "$(date +%Y/%m/%d_%H:%M:%S) - (ingestMetadataWorkflow) - [$itemId] - No TitleCode Found in Title - skipping & exiting the Script/Workflow" >> "$logfile"
