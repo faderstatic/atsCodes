@@ -56,11 +56,16 @@ try:
     for itemInformation in responseJson['item']:
       metadataInformation = itemInformation['metadata']
       for timespanInformation in metadataInformation['timespan']:
-        groupInformation = timespanInformation['group']
-        for ingestGroupInformation in groupInformation['Ingest']:
-          print(ingestGroupInformation)
-      #for ingestInformation in ingestGroupInformation:
-      #  print(f"Ingest Value is {ingestInformation}")
+        for groupInformation in timespanInformation['group']:
+          for fieldInformation in groupInformation['field']:
+            if fieldInformation['name'] == 'oly_metadataAssignedTo':
+              for assignmentInformation in fieldInformation['value']:
+                assignmentMetadata = assignmentInformation['value']
+                print(f"\n{assignmentMetadata} - ", end="")
+            elif fieldInformation['name'] == 'oly_metadataStatus':
+              for assignmentInformation in fieldInformation['value']:
+                assignmentStatus = assignmentInformation['value']
+                print(f"{assignmentStatus}")
 
   '''
   if not os.path.isfile(outputFPFile):
