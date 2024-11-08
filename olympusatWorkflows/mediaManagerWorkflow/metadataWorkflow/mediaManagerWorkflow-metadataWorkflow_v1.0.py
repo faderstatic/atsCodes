@@ -61,7 +61,7 @@ try:
             if fieldInformation['name'] == 'oly_metadataAssignedTo':
               for assignmentInformation in fieldInformation['value']:
                 assignmentMetadata = assignmentInformation['value']
-                print(f"\n{assignmentMetadata} - ", end="")
+                print(f"{assignmentMetadata} - ", end="")
             elif fieldInformation['name'] == 'oly_metadataStatus':
               for assignmentInformation in fieldInformation['value']:
                 assignmentStatus = assignmentInformation['value']
