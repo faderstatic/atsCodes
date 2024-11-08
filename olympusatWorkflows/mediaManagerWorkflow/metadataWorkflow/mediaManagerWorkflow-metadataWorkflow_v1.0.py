@@ -53,16 +53,14 @@ try:
   # Parsing JSON data for subgroup metadata values
   responseJson = httpApiResponse.json() if httpApiResponse and httpApiResponse.status_code == 200 else None
   if responseJson and 'item' in responseJson:
-    itemInformation = responseJson['item']
-    itemInfoJson = json.dumps(itemInformation)
-    metadataInformation = itemInfoJson['metadata']
-    print(metadataInformation)
-    #timespanInformation = metadataInformation['timespan']
-    #print(timespanInformation)
-    #groupInformation = timespanInformation['group']
-    #ingestGroupInformation = groupInformation['Ingest']
-    #for ingestInformation in ingestGroupInformation:
-    #  print(f"Ingest Value is {ingestInformation}")
+    for itemInformation in responseJson['item']:
+      metadataInformation = itemInformation['metadata']
+      for timespanInformation in metadataInformation['timespan']:
+        groupInformation = timespanInformation['group']
+        for ingestGroupInformation in groupInformation['Ingest']:
+          print(ingestGroupInformation)
+      #for ingestInformation in ingestGroupInformation:
+      #  print(f"Ingest Value is {ingestInformation}")
 
   '''
   if not os.path.isfile(outputFPFile):
