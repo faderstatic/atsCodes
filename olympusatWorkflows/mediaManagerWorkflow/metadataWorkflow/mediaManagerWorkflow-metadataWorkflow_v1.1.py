@@ -66,15 +66,14 @@ try:
             #------------------------------
             # Update Cantemo metadata
             assignedDateTime = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
-            print(assignedDateTime)
             headers = {
               'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
               'Cookie': 'csrftoken=HFOqrbk9cGt3qnc6WBIxWPjvCFX0udBdbJnzCv9jECumOjfyG7SS2lgVbFcaHBCc',
               'Content-Type': 'application/xml'
             }
-            urlPutAnalysisInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata/"
-            payload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_metadataAssignedTo</name><value>{assignedTo}</value></field><field><name>oly_metadataAssignedDate</name><value>{assignedDateTime}</value></field><field><name>oly_metadataBy</name><value>{assignedTo}</value></field><field><name>oly_metadataStatus</name><value>pending</value></field></timespan></MetadataDocument>"
-            httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=payload)
+            urlPutMetadataInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata/"
+            payload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><group mode=\"add\"><name>Ingest</name><field><name>oly_metadataAssignedTo</name><value>{assignedTo}</value></field><field><name>oly_metadataAssignedDate</name><value>{assignedDateTime}</value></field><field><name>oly_metadataBy</name><value>{assignedTo}</value></field><field><name>oly_metadataStatus</name><value>pending</value></field></group></timespan></MetadataDocument>"
+            httpApiResponse = requests.request("PUT", urlPutMetadataInfo, headers=headers, data=payload)
             #------------------------------
           elif metadataStatus == "pending":
             print("metadataStatus EQUALS pending")
@@ -87,7 +86,7 @@ try:
               'Content-Type': 'application/xml'
             }
             urlPutAnalysisInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata/"
-            payload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_metadataBy</name><value>{userName}</value></field><field><name>oly_metadataStatus</name><value>{metadataStatus}</value></field></timespan></MetadataDocument>"
+            payload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><group mode=\"add\"><name>Ingest</name><field><name>oly_metadataBy</name><value>{userName}</value></field><field><name>oly_metadataStatus</name><value>{metadataStatus}</value></field></group></timespan></MetadataDocument>"
             httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=payload)
             #------------------------------
           elif metadataStatus == "inProgress":
@@ -101,7 +100,7 @@ try:
               'Content-Type': 'application/xml'
             }
             urlPutAnalysisInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata/"
-            payload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_metadataBy</name><value>{userName}</value></field><field><name>oly_metadataStatus</name><value>{metadataStatus}</value></field></timespan></MetadataDocument>"
+            payload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><group mode=\"add\"><name>Ingest</name><field><name>oly_metadataBy</name><value>{userName}</value></field><field><name>oly_metadataStatus</name><value>{metadataStatus}</value></field></group></timespan></MetadataDocument>"
             httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=payload)
             #------------------------------
           elif metadataStatus == "completed":
@@ -115,7 +114,7 @@ try:
               'Content-Type': 'application/xml'
             }
             urlPutAnalysisInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata/"
-            payload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_metadataBy</name><value>{userName}</value></field><field><name>oly_metadataStatus</name><value>{metadataStatus}</value></field><field><name>oly_metadataDate</name><value>{statusDateTime}</value></field></timespan></MetadataDocument>"
+            payload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><group mode=\"add\"><name>Ingest</name><field><name>oly_metadataBy</name><value>{userName}</value></field><field><name>oly_metadataStatus</name><value>{metadataStatus}</value></field><field><name>oly_metadataDate</name><value>{statusDateTime}</value></field></group></timespan></MetadataDocument>"
             httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=payload)
             #------------------------------
           else:
@@ -130,6 +129,7 @@ try:
               # Check metadataStatus variable
               if metadataStatus == "assigned":
                 print("metadataStatus EQUALS assigned")
+                addNewEntryForUser = 0
                 for fieldInformation in groupInformation['field']:
                   if fieldInformation['name'] == 'oly_metadataAssignedTo':
                     for assignmentInformation in fieldInformation['value']:
@@ -139,6 +139,10 @@ try:
                     for assignmentInformation in fieldInformation['value']:
                       assignmentStatus = assignmentInformation['value']
                       print(f"{assignmentStatus}")
+                  if (assignmentMetadata == assignedTo and assignmentStatus == "completed") or not (assignmentMetadata == assignedTo):
+                    addNewEntryForUser = 1
+                  if addNewEntryForUser -eq 1:
+                    print("add new entry")
               elif metadataStatus == "pending":
                 print("metadataStatus EQUALS pending")
                 for fieldInformation in groupInformation['field']:
