@@ -142,6 +142,9 @@ try:
                       assignmentStatus = assignmentInformation['value']
                       print(f"{assignmentStatus}")
                   # Check if assignmentMetadata & assignmentStatus have been set before using them
+                  print(f"Assignment Metadata - {assignmentMetadata}")
+                  print(f"Assignment Status - {assignmentStatus}")
+                  print(f"Assigned To - {assignedTo}")
                   if (assignmentMetadata == assignedTo and assignmentStatus == "completed") or not (assignmentMetadata == assignedTo):
                     addNewEntryForUser = 1
                 if addNewEntryForUser == 1:
