@@ -130,6 +130,8 @@ try:
               if metadataStatus == "assigned":
                 print("metadataStatus EQUALS assigned")
                 addNewEntryForUser = 0
+                assignmentMetadata = None
+                assignmentStatus = None
                 for fieldInformation in groupInformation['field']:
                   if fieldInformation['name'] == 'oly_metadataAssignedTo':
                     for assignmentInformation in fieldInformation['value']:
@@ -139,10 +141,13 @@ try:
                     for assignmentInformation in fieldInformation['value']:
                       assignmentStatus = assignmentInformation['value']
                       print(f"{assignmentStatus}")
+                  # Check if assignmentMetadata & assignmentStatus have been set before using them
                   if (assignmentMetadata == assignedTo and assignmentStatus == "completed") or not (assignmentMetadata == assignedTo):
                     addNewEntryForUser = 1
                 if addNewEntryForUser == 1:
                   print("ADD NEW ENTRY")
+                else:
+                  print("Entry for User Already Exists - NOT Creating New Entry")
               elif metadataStatus == "pending":
                 print("metadataStatus EQUALS pending")
                 for fieldInformation in groupInformation['field']:
