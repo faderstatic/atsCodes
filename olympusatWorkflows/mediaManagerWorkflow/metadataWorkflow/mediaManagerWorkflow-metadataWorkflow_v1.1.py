@@ -57,59 +57,62 @@ try:
       metadataInformation = itemInformation['metadata']
       for timespanInformation in metadataInformation['timespan']:
         print("Entered timespanInformation")
-        for groupInformation in timespanInformation['group']:
-          print("Entered groupInformation")
-          if groupInformation['name'] == 'Ingest':
-            print("Ingest Subgroup Metadata Found")
-            #------------------------------
-            # Check metadataStatus variable
-            if metadataStatus == "assigned":
-              print("metadataStatus EQUALS assigned")
-              for fieldInformation in groupInformation['field']:
-                if fieldInformation['name'] == 'oly_metadataAssignedTo':
-                  for assignmentInformation in fieldInformation['value']:
-                    assignmentMetadata = assignmentInformation['value']
-                    print(f"{assignmentMetadata} - ", end="")
-                elif fieldInformation['name'] == 'oly_metadataStatus':
-                  for assignmentInformation in fieldInformation['value']:
-                    assignmentStatus = assignmentInformation['value']
-                    print(f"{assignmentStatus}")
-            elif metadataStatus == "pending":
-              print("metadataStatus EQUALS pending")
-              for fieldInformation in groupInformation['field']:
-                if fieldInformation['name'] == 'oly_metadataAssignedTo':
-                  for assignmentInformation in fieldInformation['value']:
-                    assignmentMetadata = assignmentInformation['value']
-                    print(f"{assignmentMetadata} - ", end="")
-                elif fieldInformation['name'] == 'oly_metadataStatus':
-                  for assignmentInformation in fieldInformation['value']:
-                    assignmentStatus = assignmentInformation['value']
-                    print(f"{assignmentStatus}")
-            elif metadataStatus == "inProgress":
-              print("metadataStatus EQUALS inProgress")
-              for fieldInformation in groupInformation['field']:
-                if fieldInformation['name'] == 'oly_metadataAssignedTo':
-                  for assignmentInformation in fieldInformation['value']:
-                    assignmentMetadata = assignmentInformation['value']
-                    print(f"{assignmentMetadata} - ", end="")
-                elif fieldInformation['name'] == 'oly_metadataStatus':
-                  for assignmentInformation in fieldInformation['value']:
-                    assignmentStatus = assignmentInformation['value']
-                    print(f"{assignmentStatus}")
-            elif metadataStatus == "completed":
-              print("metadataStatus EQUALS completed")
-              for fieldInformation in groupInformation['field']:
-                if fieldInformation['name'] == 'oly_metadataAssignedTo':
-                  for assignmentInformation in fieldInformation['value']:
-                    assignmentMetadata = assignmentInformation['value']
-                    print(f"{assignmentMetadata} - ", end="")
-                elif fieldInformation['name'] == 'oly_metadataStatus':
-                  for assignmentInformation in fieldInformation['value']:
-                    assignmentStatus = assignmentInformation['value']
-                    print(f"{assignmentStatus}")
-            else:
-              print("metadataStatus type NOT Supported")
-            #------------------------------
+        if not timespanInformation['group']:
+          print("group info is empty")
+        else:
+          for groupInformation in timespanInformation['group']:
+            print("Entered groupInformation")
+            if groupInformation['name'] == 'Ingest':
+              print("Ingest Subgroup Metadata Found")
+              #------------------------------
+              # Check metadataStatus variable
+              if metadataStatus == "assigned":
+                print("metadataStatus EQUALS assigned")
+                for fieldInformation in groupInformation['field']:
+                  if fieldInformation['name'] == 'oly_metadataAssignedTo':
+                    for assignmentInformation in fieldInformation['value']:
+                      assignmentMetadata = assignmentInformation['value']
+                      print(f"{assignmentMetadata} - ", end="")
+                  elif fieldInformation['name'] == 'oly_metadataStatus':
+                    for assignmentInformation in fieldInformation['value']:
+                      assignmentStatus = assignmentInformation['value']
+                      print(f"{assignmentStatus}")
+              elif metadataStatus == "pending":
+                print("metadataStatus EQUALS pending")
+                for fieldInformation in groupInformation['field']:
+                  if fieldInformation['name'] == 'oly_metadataAssignedTo':
+                    for assignmentInformation in fieldInformation['value']:
+                      assignmentMetadata = assignmentInformation['value']
+                      print(f"{assignmentMetadata} - ", end="")
+                  elif fieldInformation['name'] == 'oly_metadataStatus':
+                    for assignmentInformation in fieldInformation['value']:
+                      assignmentStatus = assignmentInformation['value']
+                      print(f"{assignmentStatus}")
+              elif metadataStatus == "inProgress":
+                print("metadataStatus EQUALS inProgress")
+                for fieldInformation in groupInformation['field']:
+                  if fieldInformation['name'] == 'oly_metadataAssignedTo':
+                    for assignmentInformation in fieldInformation['value']:
+                      assignmentMetadata = assignmentInformation['value']
+                      print(f"{assignmentMetadata} - ", end="")
+                  elif fieldInformation['name'] == 'oly_metadataStatus':
+                    for assignmentInformation in fieldInformation['value']:
+                      assignmentStatus = assignmentInformation['value']
+                      print(f"{assignmentStatus}")
+              elif metadataStatus == "completed":
+                print("metadataStatus EQUALS completed")
+                for fieldInformation in groupInformation['field']:
+                  if fieldInformation['name'] == 'oly_metadataAssignedTo':
+                    for assignmentInformation in fieldInformation['value']:
+                      assignmentMetadata = assignmentInformation['value']
+                      print(f"{assignmentMetadata} - ", end="")
+                  elif fieldInformation['name'] == 'oly_metadataStatus':
+                    for assignmentInformation in fieldInformation['value']:
+                      assignmentStatus = assignmentInformation['value']
+                      print(f"{assignmentStatus}")
+              else:
+                print("metadataStatus type NOT Supported")
+              #------------------------------
   #------------------------------
 
   '''
