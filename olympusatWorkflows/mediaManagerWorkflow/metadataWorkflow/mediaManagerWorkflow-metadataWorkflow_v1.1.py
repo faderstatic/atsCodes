@@ -141,8 +141,8 @@ try:
                       print(f"{assignmentStatus}")
                   if (assignmentMetadata == assignedTo and assignmentStatus == "completed") or not (assignmentMetadata == assignedTo):
                     addNewEntryForUser = 1
-                  if addNewEntryForUser -eq 1:
-                    print("add new entry")
+                if addNewEntryForUser == 1:
+                  print("add new entry")
               elif metadataStatus == "pending":
                 print("metadataStatus EQUALS pending")
                 for fieldInformation in groupInformation['field']:
