@@ -153,10 +153,25 @@ try:
                     print(f"SKIPPING because variable set to None - metadata {assignmentMetadata} - status - {assignmentStatus}")
                 if addNewEntryForUser == 1:
                   print("ADD NEW ENTRY")
+                  #------------------------------
+                  # Update Cantemo metadata
+                  assignedDateTime = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
+                  headers = {
+                    'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
+                    'Cookie': 'csrftoken=HFOqrbk9cGt3qnc6WBIxWPjvCFX0udBdbJnzCv9jECumOjfyG7SS2lgVbFcaHBCc',
+                    'Content-Type': 'application/xml'
+                  }
+                  urlPutMetadataInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata/"
+                  payload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><group mode=\"add\"><name>Ingest</name><field><name>oly_metadataAssignedTo</name><value>{assignedTo}</value></field><field><name>oly_metadataAssignedDate</name><value>{assignedDateTime}</value></field><field><name>oly_metadataBy</name><value>{assignedTo}</value></field><field><name>oly_metadataStatus</name><value>pending</value></field></group></timespan></MetadataDocument>"
+                  httpApiResponse = requests.request("PUT", urlPutMetadataInfo, headers=headers, data=payload)
+                  #------------------------------
                 else:
                   print("Entry for User Already Exists - NOT Creating New Entry")
               elif metadataStatus == "pending":
                 print("metadataStatus EQUALS pending")
+                addNewEntryForUser = 0
+                assignmentMetadata = None
+                assignmentStatus = None
                 for fieldInformation in groupInformation['field']:
                   if fieldInformation['name'] == 'oly_metadataAssignedTo':
                     for assignmentInformation in fieldInformation['value']:
@@ -166,8 +181,37 @@ try:
                     for assignmentInformation in fieldInformation['value']:
                       assignmentStatus = assignmentInformation['value']
                       print(f"{assignmentStatus}")
+                  # Check if assignmentMetadata & assignmentStatus have been set before using them
+                  print(f"Assignment Metadata - {assignmentMetadata}")
+                  print(f"Assignment Status - {assignmentStatus}")
+                  print(f"Assigned To - {assignedTo}")
+                  # Check after loop if variables are set and meet the condition
+                  if (assignmentMetadata is not None and assignmentStatus is not None):
+                    if (assignmentMetadata == assignedTo and assignmentStatus == "completed") or not (assignmentMetadata == assignedTo):
+                      addNewEntryForUser = 1
+                  else:
+                    print(f"SKIPPING because variable set to None - metadata {assignmentMetadata} - status - {assignmentStatus}")
+                if addNewEntryForUser == 1:
+                  print("ADD NEW ENTRY")
+                  #------------------------------
+                  # Update Cantemo metadata
+                  statusDateTime = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
+                  headers = {
+                    'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
+                    'Cookie': 'csrftoken=HFOqrbk9cGt3qnc6WBIxWPjvCFX0udBdbJnzCv9jECumOjfyG7SS2lgVbFcaHBCc',
+                    'Content-Type': 'application/xml'
+                  }
+                  urlPutAnalysisInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata/"
+                  payload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><group mode=\"add\"><name>Ingest</name><field><name>oly_metadataBy</name><value>{userName}</value></field><field><name>oly_metadataStatus</name><value>{metadataStatus}</value></field></group></timespan></MetadataDocument>"
+                  httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=payload)
+                  #------------------------------
+                else:
+                  print("Entry for User Already Exists - Updating existing Ingest Entry")
               elif metadataStatus == "inProgress":
                 print("metadataStatus EQUALS inProgress")
+                addNewEntryForUser = 0
+                assignmentMetadata = None
+                assignmentStatus = None
                 for fieldInformation in groupInformation['field']:
                   if fieldInformation['name'] == 'oly_metadataAssignedTo':
                     for assignmentInformation in fieldInformation['value']:
@@ -177,8 +221,37 @@ try:
                     for assignmentInformation in fieldInformation['value']:
                       assignmentStatus = assignmentInformation['value']
                       print(f"{assignmentStatus}")
+                  # Check if assignmentMetadata & assignmentStatus have been set before using them
+                  print(f"Assignment Metadata - {assignmentMetadata}")
+                  print(f"Assignment Status - {assignmentStatus}")
+                  print(f"Assigned To - {assignedTo}")
+                  # Check after loop if variables are set and meet the condition
+                  if (assignmentMetadata is not None and assignmentStatus is not None):
+                    if (assignmentMetadata == assignedTo and assignmentStatus == "completed") or not (assignmentMetadata == assignedTo):
+                      addNewEntryForUser = 1
+                  else:
+                    print(f"SKIPPING because variable set to None - metadata {assignmentMetadata} - status - {assignmentStatus}")
+                if addNewEntryForUser == 1:
+                  print("ADD NEW ENTRY")
+                  #------------------------------
+                  # Update Cantemo metadata
+                  statusDateTime = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
+                  headers = {
+                    'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
+                    'Cookie': 'csrftoken=HFOqrbk9cGt3qnc6WBIxWPjvCFX0udBdbJnzCv9jECumOjfyG7SS2lgVbFcaHBCc',
+                    'Content-Type': 'application/xml'
+                  }
+                  urlPutAnalysisInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata/"
+                  payload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><group mode=\"add\"><name>Ingest</name><field><name>oly_metadataBy</name><value>{userName}</value></field><field><name>oly_metadataStatus</name><value>{metadataStatus}</value></field></group></timespan></MetadataDocument>"
+                  httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=payload)
+                  #------------------------------
+                else:
+                  print("Entry for User Already Exists - Updating existing Ingest Entry")
               elif metadataStatus == "completed":
                 print("metadataStatus EQUALS completed")
+                addNewEntryForUser = 0
+                assignmentMetadata = None
+                assignmentStatus = None
                 for fieldInformation in groupInformation['field']:
                   if fieldInformation['name'] == 'oly_metadataAssignedTo':
                     for assignmentInformation in fieldInformation['value']:
@@ -188,6 +261,32 @@ try:
                     for assignmentInformation in fieldInformation['value']:
                       assignmentStatus = assignmentInformation['value']
                       print(f"{assignmentStatus}")
+                  # Check if assignmentMetadata & assignmentStatus have been set before using them
+                  print(f"Assignment Metadata - {assignmentMetadata}")
+                  print(f"Assignment Status - {assignmentStatus}")
+                  print(f"Assigned To - {assignedTo}")
+                  # Check after loop if variables are set and meet the condition
+                  if (assignmentMetadata is not None and assignmentStatus is not None):
+                    if (assignmentMetadata == assignedTo and assignmentStatus == "completed") or not (assignmentMetadata == assignedTo):
+                      addNewEntryForUser = 1
+                  else:
+                    print(f"SKIPPING because variable set to None - metadata {assignmentMetadata} - status - {assignmentStatus}")
+                if addNewEntryForUser == 1:
+                  print("ADD NEW ENTRY")
+                  #------------------------------
+                  # Update Cantemo metadata
+                  statusDateTime = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
+                  headers = {
+                    'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
+                    'Cookie': 'csrftoken=HFOqrbk9cGt3qnc6WBIxWPjvCFX0udBdbJnzCv9jECumOjfyG7SS2lgVbFcaHBCc',
+                    'Content-Type': 'application/xml'
+                  }
+                  urlPutAnalysisInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata/"
+                  payload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><group mode=\"add\"><name>Ingest</name><field><name>oly_metadataBy</name><value>{userName}</value></field><field><name>oly_metadataStatus</name><value>{metadataStatus}</value></field><field><name>oly_metadataDate</name><value>{statusDateTime}</value></field></group></timespan></MetadataDocument>"
+                  httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=payload)
+                  #------------------------------
+                else:
+                  print("Entry for User Already Exists - Updating existing Ingest Entry")
               else:
                 print("metadataStatus type NOT Supported")
               #------------------------------
