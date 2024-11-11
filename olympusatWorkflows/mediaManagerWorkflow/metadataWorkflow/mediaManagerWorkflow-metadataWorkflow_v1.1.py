@@ -12,7 +12,7 @@ import os
 import os.path
 import glob
 import sys
-import datetime
+from datetime import datetime
 import time
 import subprocess
 import xml.dom.minidom
@@ -66,6 +66,7 @@ try:
             #------------------------------
             # Update Cantemo metadata
             assignedDateTime = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
+            print(assignedDateTime)
             headers = {
               'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
               'Cookie': 'csrftoken=HFOqrbk9cGt3qnc6WBIxWPjvCFX0udBdbJnzCv9jECumOjfyG7SS2lgVbFcaHBCc',
