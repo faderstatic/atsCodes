@@ -138,6 +138,7 @@ try:
                     print(f"{assignmentName[i]} - ", end="")
                 elif fieldInformation['name'] == 'oly_metadataStatus':
                   for assignmentInformation in fieldInformation['value']:
+                    print(assignmentInformation)
                     assignmentNameStatus[i] = assignmentInformation['value']
                     print(assignmentNameStatus[i])
                 i += 1
