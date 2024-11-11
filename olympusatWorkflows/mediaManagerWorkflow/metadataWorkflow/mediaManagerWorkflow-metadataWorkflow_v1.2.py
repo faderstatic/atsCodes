@@ -110,6 +110,69 @@ try:
             else:
               print("metadataStatus type NOT Supported")
             #------------------------------
+          else:
+            print("Ingest Subgroup Metadata NOT Found")
+            #------------------------------
+            # Check metadataStatus variable
+            if metadataStatus == "assigned":
+              print("metadataStatus EQUALS assigned")
+              #------------------------------
+              # Update Cantemo metadata
+              assignedDateTime = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
+              headers = {
+                'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
+                'Cookie': 'csrftoken=HFOqrbk9cGt3qnc6WBIxWPjvCFX0udBdbJnzCv9jECumOjfyG7SS2lgVbFcaHBCc',
+                'Content-Type': 'application/xml'
+              }
+              urlPutAnalysisInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata/"
+              payload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_metadataAssignedTo</name><value>{assignedTo}</value></field><field><name>oly_metadataAssignedDate</name><value>{assignedDateTime}</value></field><field><name>oly_metadataBy</name><value>{assignedTo}</value></field><field><name>oly_metadataStatus</name><value>pending</value></field></timespan></MetadataDocument>"
+              httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=payload)
+              #------------------------------
+            elif metadataStatus == "pending":
+              print("metadataStatus EQUALS pending")
+              #------------------------------
+              # Update Cantemo metadata
+              statusDateTime = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
+              headers = {
+                'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
+                'Cookie': 'csrftoken=HFOqrbk9cGt3qnc6WBIxWPjvCFX0udBdbJnzCv9jECumOjfyG7SS2lgVbFcaHBCc',
+                'Content-Type': 'application/xml'
+              }
+              urlPutAnalysisInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata/"
+              payload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_metadataBy</name><value>{userName}</value></field><field><name>oly_metadataStatus</name><value>{metadataStatus}</value></field></timespan></MetadataDocument>"
+              httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=payload)
+              #------------------------------
+            elif metadataStatus == "inProgress":
+              print("metadataStatus EQUALS inProgress")
+              #------------------------------
+              # Update Cantemo metadata
+              statusDateTime = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
+              headers = {
+                'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
+                'Cookie': 'csrftoken=HFOqrbk9cGt3qnc6WBIxWPjvCFX0udBdbJnzCv9jECumOjfyG7SS2lgVbFcaHBCc',
+                'Content-Type': 'application/xml'
+              }
+              urlPutAnalysisInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata/"
+              payload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_metadataBy</name><value>{userName}</value></field><field><name>oly_metadataStatus</name><value>{metadataStatus}</value></field></timespan></MetadataDocument>"
+              httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=payload)
+              #------------------------------
+            elif metadataStatus == "completed":
+              print("metadataStatus EQUALS completed")
+              #------------------------------
+              # Update Cantemo metadata
+              statusDateTime = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
+              headers = {
+                'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
+                'Cookie': 'csrftoken=HFOqrbk9cGt3qnc6WBIxWPjvCFX0udBdbJnzCv9jECumOjfyG7SS2lgVbFcaHBCc',
+                'Content-Type': 'application/xml'
+              }
+              urlPutAnalysisInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata/"
+              payload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_metadataBy</name><value>{userName}</value></field><field><name>oly_metadataStatus</name><value>{metadataStatus}</value></field><field><name>oly_metadataDate</name><value>{statusDateTime}</value></field></timespan></MetadataDocument>"
+              httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=payload)
+              #------------------------------
+            else:
+              print("metadataStatus type NOT Supported")
+            #------------------------------
   #------------------------------
 
   '''
