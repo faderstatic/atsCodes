@@ -139,7 +139,7 @@ try:
                 elif fieldInformation['name'] == 'oly_metadataStatus':
                   for assignmentInformation in fieldInformation['value']:
                     assignmentNameStatus[i] = assignmentInformation['value']
-                    print(f"{assignmentNameStatus[i]}")
+                    print(assignmentNameStatus[i])
                 i += 1
               #------------------------------
               # Check metadataStatus variable
