@@ -132,13 +132,13 @@ try:
               print("Ingest Subgroup Metadata Found")
               i = 1
               for fieldInformation in groupInformation['field']:
+                print(fieldInformation)
                 if fieldInformation['name'] == 'oly_metadataAssignedTo':
                   for assignmentInformation in fieldInformation['value']:
                     assignmentName[i] = assignmentInformation['value']
                     print(f"{assignmentName[i]} - ", end="")
                 elif fieldInformation['name'] == 'oly_metadataStatus':
                   for assignmentInformation in fieldInformation['value']:
-                    print(assignmentInformation)
                     assignmentNameStatus[i] = assignmentInformation['value']
                     print(assignmentNameStatus[i])
                 i += 1
