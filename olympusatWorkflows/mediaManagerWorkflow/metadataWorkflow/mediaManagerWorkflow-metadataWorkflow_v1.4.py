@@ -141,7 +141,6 @@ try:
                     assignmentNameStatus[i] = assignmentInformation['value']
                     print(f"{assignmentNameStatus[i]}")
                 i += 1
-
               #------------------------------
               # Check metadataStatus variable
               if metadataStatus == "assigned":
