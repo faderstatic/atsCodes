@@ -136,7 +136,7 @@ try:
                   for assignmentInformation in fieldInformation['value']:
                     assignmentName[i] = assignmentInformation['value']
                     print(f"{assignmentName[i]} - ", end="")
-                if fieldInformation['name'] == 'oly_metadataStatus':
+                elif fieldInformation['name'] == 'oly_metadataStatus':
                   for assignmentInformation in fieldInformation['value']:
                     assignmentNameStatus[i] = assignmentInformation['value']
                     print(f"{assignmentNameStatus[i]}")
