@@ -159,32 +159,19 @@ try:
             # For action "inProgress"
             elif metadataAction == "inProgress":
               if assignmentName[assignmentIndex] == userName:
-                print(f"Update metadata to inProgress for {userName}")
-
-
+                if assignmentNameStatus[assignmentIndex] == "pending":
+                  print(f"Update metadata to inProgress for {userName}")
+                  createNewRecord = 0
+                elif assignmentNameStatus[assignmentIndex] == "inProgress":
+                  print(f"Status is Already In Progress - Not Doing Shit for {userName}")
+                  createNewRecord = 0
             #------------------------------
             
             #------------------------------
             # For action "completed"
             elif metadataAction == "completed":
               print("metadataAction EQUALS completed")
-
             #------------------------------
-
-
-
-
-
-
-            elif metadataAction == "pending":
-              print("metadataAction EQUALS pending")
-            elif "inProgress":
-              print("metadataAction EQUALS inProgress")
-            elif metadataAction == "completed":
-              print("metadataAction EQUALS completed")
-            else:
-              print("metadataAction type NOT Supported")
-          #------------------------------
   #------------------------------
 
   '''
