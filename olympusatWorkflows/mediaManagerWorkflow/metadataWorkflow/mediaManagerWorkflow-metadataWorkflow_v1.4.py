@@ -143,13 +143,37 @@ try:
           #------------------------------
           # Check assignmentNameStatus variable
           for assignmentIndex in range(i):
-            createNewRecord = 0
+            createNewRecord = 1
+
             #------------------------------
             # For action "assigned"
             if metadataAction == "assigned":
-              # print("metadataAction EQUALS assigned - checking if one already exists for this user")
-              if assignmentNameStatus[assignmentIndex] == "inProgress":
-                print(f"{assignmentIndex} - {assignmentName[assignmentIndex]}")
+              if (assignmentNameStatus[assignmentIndex] == "inProgress") or (assignmentNameStatus[assignmentIndex] == "pending"):
+                if assignmentName[assignmentIndex] == assignedTo:
+                  createNewRecord = 0
+                elif:
+                  print(f"{assignmentName[assignmentIndex]} does not match {assignedTo}")
+            #------------------------------
+            
+            #------------------------------
+            # For action "inProgress"
+            elif metadataAction == "inProgress":
+              if assignmentName[assignmentIndex] == userName:
+                print(f"Update metadata to inProgress for {userName}")
+
+            #------------------------------
+            
+            #------------------------------
+            # For action "completed"
+            elif metadataAction == "completed":
+
+
+            #------------------------------
+
+
+
+
+
 
             elif metadataAction == "pending":
               print("metadataAction EQUALS pending")
