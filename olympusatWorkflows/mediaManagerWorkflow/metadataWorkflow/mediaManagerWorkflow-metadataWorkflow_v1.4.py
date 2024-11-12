@@ -33,7 +33,7 @@ from array import *
 try:
   cantemoItemId = sys.argv[1]
   userName = sys.argv[2]
-  metadataStatus = sys.argv[3]
+  metadataAction = sys.argv[3]
   assignedTo = sys.argv[4]
   maximumArraySize = 50
   assignmentName = []
@@ -65,9 +65,9 @@ try:
         if not timespanInformation['group']:
           print("NO Subgroup Metadata Found")
           #------------------------------
-          # Check metadataStatus variable
-          if metadataStatus == "assigned":
-            print("metadataStatus EQUALS assigned")
+          # Check metadataAction variable
+          if metadataAction == "assigned":
+            print("metadataAction EQUALS assigned")
             #------------------------------
             # Update Cantemo metadata
             assignedDateTime = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
@@ -80,8 +80,8 @@ try:
             payload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><group mode=\"add\"><name>Ingest</name><field><name>oly_metadataAssignedTo</name><value>{assignedTo}</value></field><field><name>oly_metadataAssignedDate</name><value>{assignedDateTime}</value></field><field><name>oly_metadataBy</name><value>{assignedTo}</value></field><field><name>oly_metadataStatus</name><value>pending</value></field></group></timespan></MetadataDocument>"
             httpApiResponse = requests.request("PUT", urlPutMetadataInfo, headers=headers, data=payload)
             #------------------------------
-          elif metadataStatus == "pending":
-            print("metadataStatus EQUALS pending")
+          elif metadataAction == "pending":
+            print("metadataAction EQUALS pending")
             #------------------------------
             # Update Cantemo metadata
             statusDateTime = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
@@ -91,11 +91,11 @@ try:
               'Content-Type': 'application/xml'
             }
             urlPutAnalysisInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata/"
-            payload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><group mode=\"add\"><name>Ingest</name><field><name>oly_metadataBy</name><value>{userName}</value></field><field><name>oly_metadataStatus</name><value>{metadataStatus}</value></field></group></timespan></MetadataDocument>"
+            payload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><group mode=\"add\"><name>Ingest</name><field><name>oly_metadataBy</name><value>{userName}</value></field><field><name>oly_metadataStatus</name><value>{metadataAction}</value></field></group></timespan></MetadataDocument>"
             httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=payload)
             #------------------------------
-          elif metadataStatus == "inProgress":
-            print("metadataStatus EQUALS inProgress")
+          elif metadataAction == "inProgress":
+            print("metadataAction EQUALS inProgress")
             #------------------------------
             # Update Cantemo metadata
             statusDateTime = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
@@ -105,11 +105,11 @@ try:
               'Content-Type': 'application/xml'
             }
             urlPutAnalysisInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata/"
-            payload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><group mode=\"add\"><name>Ingest</name><field><name>oly_metadataBy</name><value>{userName}</value></field><field><name>oly_metadataStatus</name><value>{metadataStatus}</value></field></group></timespan></MetadataDocument>"
+            payload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><group mode=\"add\"><name>Ingest</name><field><name>oly_metadataBy</name><value>{userName}</value></field><field><name>oly_metadataStatus</name><value>{metadataAction}</value></field></group></timespan></MetadataDocument>"
             httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=payload)
             #------------------------------
-          elif metadataStatus == "completed":
-            print("metadataStatus EQUALS completed")
+          elif metadataAction == "completed":
+            print("metadataAction EQUALS completed")
             #------------------------------
             # Update Cantemo metadata
             statusDateTime = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
@@ -119,43 +119,47 @@ try:
               'Content-Type': 'application/xml'
             }
             urlPutAnalysisInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata/"
-            payload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><group mode=\"add\"><name>Ingest</name><field><name>oly_metadataBy</name><value>{userName}</value></field><field><name>oly_metadataStatus</name><value>{metadataStatus}</value></field><field><name>oly_metadataDate</name><value>{statusDateTime}</value></field></group></timespan></MetadataDocument>"
+            payload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><group mode=\"add\"><name>Ingest</name><field><name>oly_metadataBy</name><value>{userName}</value></field><field><name>oly_metadataStatus</name><value>{metadataAction}</value></field><field><name>oly_metadataDate</name><value>{statusDateTime}</value></field></group></timespan></MetadataDocument>"
             httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=payload)
             #------------------------------
           else:
-            print("metadataStatus type NOT Supported")
+            print("metadataAction type NOT Supported")
           #------------------------------
         else:
+          i = 1
           for groupInformation in timespanInformation['group']:
-            print("Entered groupInformation")
+            # print("Entered groupInformation")
             if groupInformation['name'] == 'Ingest':
-              print("Ingest Subgroup Metadata Found")
-              i = 1
+              # print("Ingest Subgroup Metadata Found")
               for fieldInformation in groupInformation['field']:
-                print(fieldInformation)
                 if fieldInformation['name'] == 'oly_metadataAssignedTo':
                   for assignmentInformation in fieldInformation['value']:
                     assignmentName[i] = assignmentInformation['value']
-                    print(f"{assignmentName[i]} - ", end="")
-                elif fieldInformation['name'] == 'oly_metadataStatus':
+                if fieldInformation['name'] == 'oly_metadataStatus':
                   for assignmentInformation in fieldInformation['value']:
                     assignmentNameStatus[i] = assignmentInformation['value']
-                    print(assignmentNameStatus[i])
-                i += 1
-              #------------------------------
-              # Check metadataStatus variable
-              if metadataStatus == "assigned":
-                print("metadataStatus EQUALS assigned")
-                addNewEntryForUser = 0
-              elif metadataStatus == "pending":
-                print("metadataStatus EQUALS pending")
-              elif metadataStatus == "inProgress":
-                print("metadataStatus EQUALS inProgress")
-              elif metadataStatus == "completed":
-                print("metadataStatus EQUALS completed")
-              else:
-                print("metadataStatus type NOT Supported")
-              #------------------------------
+              print(f"{assignmentName[i]} - {assignmentNameStatus[i]}")
+              i += 1
+          #------------------------------
+          # Check assignmentNameStatus variable
+          for assignmentIndex in range(i):
+            createNewRecord = 0
+            #------------------------------
+            # For action "assigned"
+            if metadataAction == "assigned":
+              # print("metadataAction EQUALS assigned - checking if one already exists for this user")
+              if assignmentNameStatus[assignmentIndex] == "inProgress":
+                print(f"{assignmentIndex} - {assignmentName[assignmentIndex]}")
+
+            elif metadataAction == "pending":
+              print("metadataAction EQUALS pending")
+            elif "inProgress":
+              print("metadataAction EQUALS inProgress")
+            elif metadataAction == "completed":
+              print("metadataAction EQUALS completed")
+            else:
+              print("metadataAction type NOT Supported")
+          #------------------------------
   #------------------------------
 
   '''
