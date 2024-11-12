@@ -151,7 +151,7 @@ try:
               if (assignmentNameStatus[assignmentIndex] == "inProgress") or (assignmentNameStatus[assignmentIndex] == "pending"):
                 if assignmentName[assignmentIndex] == assignedTo:
                   createNewRecord = 0
-                elif:
+                else:
                   print(f"{assignmentName[assignmentIndex]} does not match {assignedTo}")
             #------------------------------
             
@@ -167,7 +167,7 @@ try:
             #------------------------------
             # For action "completed"
             elif metadataAction == "completed":
-
+              print("metadataAction EQUALS completed")
 
             #------------------------------
 
