@@ -161,6 +161,7 @@ try:
               if assignmentName[assignmentIndex] == userName:
                 print(f"Update metadata to inProgress for {userName}")
 
+
             #------------------------------
             
             #------------------------------
