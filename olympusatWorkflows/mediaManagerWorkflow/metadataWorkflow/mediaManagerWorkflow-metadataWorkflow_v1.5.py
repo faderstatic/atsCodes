@@ -68,66 +68,46 @@ try:
     for itemInformation in responseJson['item']:
       metadataInformation = itemInformation['metadata']
       for timespanInformation in metadataInformation['timespan']:
-        print("Entered timespanInformation")
+        #print("Entered timespanInformation")
         if not timespanInformation['group']:
           print("NO Subgroup Metadata Found")
           #------------------------------
           # Check metadataAction variable
           if metadataAction == "assigned":
-            print("metadataAction EQUALS assigned")
+            #print("metadataAction EQUALS assigned")
             #------------------------------
             # Update Cantemo metadata
             assignedDateTime = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
-            headers = {
-              'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
-              'Cookie': 'csrftoken=HFOqrbk9cGt3qnc6WBIxWPjvCFX0udBdbJnzCv9jECumOjfyG7SS2lgVbFcaHBCc',
-              'Content-Type': 'application/xml'
-            }
-            urlPutMetadataInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata/"
             payload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><group mode=\"add\"><name>Ingest</name><field><name>oly_metadataAssignedTo</name><value>{assignedTo}</value></field><field><name>oly_metadataAssignedDate</name><value>{assignedDateTime}</value></field><field><name>oly_metadataBy</name><value>{assignedTo}</value></field><field><name>oly_metadataStatus</name><value>pending</value></field></group></timespan></MetadataDocument>"
             httpApiResponse = requests.request("PUT", urlPutMetadataInfo, headers=headers, data=payload)
+            httpApiResponse.raise_for_status()
             #------------------------------
           elif metadataAction == "pending":
-            print("metadataAction EQUALS pending")
+            #print("metadataAction EQUALS pending")
             #------------------------------
             # Update Cantemo metadata
             statusDateTime = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
-            headers = {
-              'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
-              'Cookie': 'csrftoken=HFOqrbk9cGt3qnc6WBIxWPjvCFX0udBdbJnzCv9jECumOjfyG7SS2lgVbFcaHBCc',
-              'Content-Type': 'application/xml'
-            }
-            urlPutMetadataInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata/"
             payload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><group mode=\"add\"><name>Ingest</name><field><name>oly_metadataBy</name><value>{userName}</value></field><field><name>oly_metadataStatus</name><value>{metadataAction}</value></field></group></timespan></MetadataDocument>"
             httpApiResponse = requests.request("PUT", urlPutMetadataInfo, headers=headers, data=payload)
+            httpApiResponse.raise_for_status()
             #------------------------------
           elif metadataAction == "inProgress":
-            print("metadataAction EQUALS inProgress")
+            #print("metadataAction EQUALS inProgress")
             #------------------------------
             # Update Cantemo metadata
             statusDateTime = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
-            headers = {
-              'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
-              'Cookie': 'csrftoken=HFOqrbk9cGt3qnc6WBIxWPjvCFX0udBdbJnzCv9jECumOjfyG7SS2lgVbFcaHBCc',
-              'Content-Type': 'application/xml'
-            }
-            urlPutMetadataInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata/"
             payload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><group mode=\"add\"><name>Ingest</name><field><name>oly_metadataBy</name><value>{userName}</value></field><field><name>oly_metadataStatus</name><value>{metadataAction}</value></field></group></timespan></MetadataDocument>"
             httpApiResponse = requests.request("PUT", urlPutMetadataInfo, headers=headers, data=payload)
+            httpApiResponse.raise_for_status()
             #------------------------------
           elif metadataAction == "completed":
-            print("metadataAction EQUALS completed")
+            #print("metadataAction EQUALS completed")
             #------------------------------
             # Update Cantemo metadata
             statusDateTime = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
-            headers = {
-              'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
-              'Cookie': 'csrftoken=HFOqrbk9cGt3qnc6WBIxWPjvCFX0udBdbJnzCv9jECumOjfyG7SS2lgVbFcaHBCc',
-              'Content-Type': 'application/xml'
-            }
-            urlPutMetadataInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata/"
             payload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><group mode=\"add\"><name>Ingest</name><field><name>oly_metadataBy</name><value>{userName}</value></field><field><name>oly_metadataStatus</name><value>{metadataAction}</value></field><field><name>oly_metadataDate</name><value>{statusDateTime}</value></field></group></timespan></MetadataDocument>"
             httpApiResponse = requests.request("PUT", urlPutMetadataInfo, headers=headers, data=payload)
+            httpApiResponse.raise_for_status()
             #------------------------------
           else:
             print("metadataAction type NOT Supported")
@@ -172,6 +152,7 @@ try:
                   createNewRecord = 0
                   payload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><group uuid=\"{assignmentNameUuid[assignmentIndex]}\"><name>Ingest</name><field><name>oly_metadataBy</name><value>{userName}</value></field><field><name>oly_metadataStatus</name><value>{metadataAction}</value></field></group></timespan></MetadataDocument>"
                   httpApiResponse = requests.request("PUT", urlPutMetadataInfo, headers=headers, data=payload)
+                  httpApiResponse.raise_for_status()
                 elif assignmentNameStatus[assignmentIndex] == "inProgress":
                   print(f"Status is Already In Progress - Not Doing Shit for {userName}")
                   createNewRecord = 0
@@ -186,105 +167,39 @@ try:
                   statusDateTime = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
                   createNewRecord = 0
                   payload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><group uuid=\"{assignmentNameUuid[assignmentIndex]}\"><name>Ingest</name><field><name>oly_metadataBy</name><value>{userName}</value></field><field><name>oly_metadataStatus</name><value>{metadataAction}</value></field><field><name>oly_metadataDate</name><value>{statusDateTime}</value></field></group></timespan></MetadataDocument>"
-                  httpApiResponse = requests.request("PUT", urlPutMetadataInfo, headers=headers, data=payload)                  
+                  httpApiResponse = requests.request("PUT", urlPutMetadataInfo, headers=headers, data=payload)
+                  httpApiResponse.raise_for_status()
                 elif assignmentNameStatus[assignmentIndex] == "completed":
                   print(f"Status is Already Completed - Not Doing Shit for {userName}")
                   createNewRecord = 0
             #------------------------------
-            print(f"createNewRecord = {createNewRecord}")
+            #print(f"createNewRecord = {createNewRecord}")
           if createNewRecord == 1:
             print("Create New Record for User")
-            print(f"{metadataAction} - {userName}")
+            #print(f"{metadataAction} - {userName}")
             if metadataAction == "assigned":
               assignedDateTime = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
               payload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><group mode=\"add\"><name>Ingest</name><field><name>oly_metadataAssignedTo</name><value>{assignedTo}</value></field><field><name>oly_metadataAssignedDate</name><value>{assignedDateTime}</value></field><field><name>oly_metadataBy</name><value>{assignedTo}</value></field><field><name>oly_metadataStatus</name><value>pending</value></field></group></timespan></MetadataDocument>"
               httpApiResponse = requests.request("PUT", urlPutMetadataInfo, headers=headers, data=payload)
+              httpApiResponse.raise_for_status()
             elif metadataAction == "pending":
               statusDateTime = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
               payload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><group mode=\"add\"><name>Ingest</name><field><name>oly_metadataAssignedTo</name><value>{userName}</value></field><field><name>oly_metadataAssignedDate</name><value>{statusDateTime}</value></field><field><name>oly_metadataBy</name><value>{userName}</value></field><field><name>oly_metadataStatus</name><value>{metadataAction}</value></field></group></timespan></MetadataDocument>"
               httpApiResponse = requests.request("PUT", urlPutMetadataInfo, headers=headers, data=payload)
+              httpApiResponse.raise_for_status()
             elif metadataAction == "inProgress":
               statusDateTime = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
               payload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><group mode=\"add\"><name>Ingest</name><field><name>oly_metadataAssignedTo</name><value>{userName}</value></field><field><name>oly_metadataAssignedDate</name><value>{statusDateTime}</value></field><field><name>oly_metadataBy</name><value>{userName}</value></field><field><name>oly_metadataStatus</name><value>{metadataAction}</value></field></group></timespan></MetadataDocument>"
               httpApiResponse = requests.request("PUT", urlPutMetadataInfo, headers=headers, data=payload)
+              httpApiResponse.raise_for_status()
             elif metadataAction == "completed":
               statusDateTime = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
               payload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><group mode=\"add\"><name>Ingest</name><field><name>oly_metadataAssignedTo</name><value>{userName}</value></field><field><name>oly_metadataAssignedDate</name><value>{statusDateTime}</value></field><field><name>oly_metadataBy</name><value>{userName}</value></field><field><name>oly_metadataStatus</name><value>{metadataAction}</value></field><field><name>oly_metadataDate</name><value>{statusDateTime}</value></field></group></timespan></MetadataDocument>"
               httpApiResponse = requests.request("PUT", urlPutMetadataInfo, headers=headers, data=payload)
+              httpApiResponse.raise_for_status()
           else:
             print("NOT Creating a New Record")
   #------------------------------
-
-  '''
-  if not os.path.isfile(outputFPFile):
-    #------------------------------
-    # Making API call to Vionlabs to get fingerprints
-    headers = {
-      'Accept': 'application/json'
-    }
-    payload = {}
-    urlGetFingerprintPlus = f"https://apis.prod.vionlabs.com/results/fingerprintplus/v1/{cantemoItemId}?&key=kt8cyimHXxUzFNGyhd7c7g"
-    # urlGetProfanitySegments = f"https://apis.prod.vionlabs.com/results/fingerprintplus/v1/OLT-003?&key=kt8cyimHXxUzFNGyhd7c7g"
-    httpApiResponse = requests.request("GET", urlGetFingerprintPlus, headers=headers, data=payload)
-    httpApiResponse.raise_for_status()
-    responseJson = httpApiResponse.json()
-    #------------------------------
-    # Writing response data to a file
-    apiResponseJson = json.loads(httpApiResponse.text)
-    apiResponseJsonFormat = json.dumps(apiResponseJson, indent=2)
-    responseWriting = open(outputFPFile, "w")
-    responseWriting.write(apiResponseJsonFormat)
-    responseWriting.close()
-    #------------------------------
-  else:
-    outputFPFileCreation = os.path.getctime(outputFPFile)
-    timeNow = time.time()
-    fileCreationLimitOffset = timeNow - (60 * 60 * 24 * olderFileDayLimit)
-    if outputFPFileCreation > fileCreationLimitOffset:
-      existingAnalysisRead = open(outputFPFile, "r")
-      responseJson = json.loads(existingAnalysisRead.read())
-      existingAnalysisRead.close()
-    else:
-      #------------------------------
-      # Making API call to Vionlabs to get fingerprints
-      headers = {
-        'Accept': 'application/json'
-      }
-      payload = {}
-      urlGetFingerprintPlus = f"https://apis.prod.vionlabs.com/results/fingerprintplus/v1/{cantemoItemId}?&key=kt8cyimHXxUzFNGyhd7c7g"
-      # urlGetProfanitySegments = f"https://apis.prod.vionlabs.com/results/fingerprintplus/v1/OLT-003?&key=kt8cyimHXxUzFNGyhd7c7g"
-      httpApiResponse = requests.request("GET", urlGetFingerprintPlus, headers=headers, data=payload)
-      httpApiResponse.raise_for_status()
-      responseJson = httpApiResponse.json()
-      #------------------------------
-      # Writing response data to a file
-      apiResponseJson = json.loads(httpApiResponse.text)
-      apiResponseJsonFormat = json.dumps(apiResponseJson, indent=2)
-      responseWriting = open(outputFPFile, "w")
-      responseWriting.write(apiResponseJsonFormat)
-      responseWriting.close()
-      #------------------------------
-  '''
-  '''
-  #------------------------------
-  # Update Cantemo metadata
-  headers = {
-  'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
-  'Cookie': 'csrftoken=HFOqrbk9cGt3qnc6WBIxWPjvCFX0udBdbJnzCv9jECumOjfyG7SS2lgVbFcaHBCc',
-  'Content-Type': 'application/xml'
-  }
-  urlPutMetadataInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata/"
-  # genrePayload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_analysisReport</name><value>{errorReport}</value></field></timespan></MetadataDocument>"
-  httpApiResponse = requests.request("PUT", urlPutMetadataInfo, headers=headers, data=genrePayload)
-  time.sleep(5)
-  httpApiResponse = requests.request("PUT", urlPutMetadataInfo, headers=headers, data=moodPayload)
-  time.sleep(5)
-  httpApiResponse = requests.request("PUT", urlPutMetadataInfo, headers=headers, data=keywordPayload)
-  time.sleep(5)
-  httpApiResponse = requests.request("PUT", urlPutMetadataInfo, headers=headers, data=statusPayload)
-  #------------------------------
-  #------------------------------
-  '''
 
 except HTTPError as http_err:
     print(f'HTTP error occurred: {http_err}')
