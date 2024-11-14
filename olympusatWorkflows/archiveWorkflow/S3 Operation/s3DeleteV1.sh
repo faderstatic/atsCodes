@@ -50,7 +50,7 @@ export recipient1=mamAdmin@olympusat.com
 export emailFrom=notify@olympusat.com
 
 #Email Body
-subject="MAM - Deleted from s3 - $title"
+subject="MAM - Deleted from s3 - $awsFileName"
 body="Hi,
 
 [$sourceFileName] has been deleted from S3 Glacier Deep Archive by [$cantemoUser].
@@ -75,7 +75,7 @@ message="Subject: $subject\n\n$body"
 curl --url 'smtp://smtp-mail.outlook.com:587' \
   --ssl-reqd \
   --mail-from $emailFrom \
-  --user 'notify@olympusat.com:560Village' \
+  --user 'notify@olympusat.com:6bOblVsLg9bPQ8WG7JC7f8Zump' \
   --tlsv1.2 \
   -T <(echo -e "$message")
 
