@@ -28,7 +28,7 @@ export logFile="/opt/olympusat/logs/S3-$myDate.log"
 export urlUpdateMetadata="http://10.1.1.34:8080/API/item/$cantemoItemId/metadata/"
 #--------------------------------------------------
 sourceFile=$(filterVidispineFileInfo $cantemoItemId "uri" "tag=original" | sed -e 's/%20/ /g' | sed -e 's/%23/\#/g')
-sourceFileName=$(basename "$sourceFile"
+sourceFileName=$(basename "$sourceFile")
 echo "$(date "+%H:%M:%S") (S3Delete) - ($cantemoItemId) $sourceFileName" >> "$logFile"
 #--------------------------------------------------
 
@@ -87,6 +87,6 @@ curl --url 'smtp://smtp-mail.outlook.com:587' \
 #   --tlsv1.2 \
 #   -T <(echo -e "$message")
 
-#echo "$(date "+%H:%M:%S") (S3Delete) - Email Sent" >> "$logFile"
+echo "$(date "+%H:%M:%S") (S3Delete) - Email Sent" >> "$logFile"
 
 exit 0
