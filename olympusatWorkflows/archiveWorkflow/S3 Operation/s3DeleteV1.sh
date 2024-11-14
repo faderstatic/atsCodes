@@ -34,7 +34,7 @@ echo "$(date "+%H:%M:%S") (S3Delete) - ($cantemoItemId) $sourceFileName" >> "$lo
 
 updateValue=$(date "+%Y-%m-%dT%H:%M:%S")
 updateVidispineMetadata $cantemoItemId "oly_deleteDateAWS" $updateValue
-bodyData=$(echo "<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_uploadStatusAWSS3</name><value></value></field><field><name>oly_uploadDateAWSS3</name><value></value></field><field><name>oly_uploadIdAWSS3</name><value></value></field></timespan></MetadataDocument>")
+bodyData=$(echo "<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_uploadStatusAWSS3</name><value><field><name>oly_uploadBucketAWSS3</name><value></value></field><field></value></field><field><name>oly_uploadDateAWSS3</name><value></value></field><field><name>oly_uploadIdAWSS3</name><value></value></field></timespan></MetadataDocument>")
 curl -s -o /dev/null --location --request PUT $urlUpdateMetadata --header 'Content-Type: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=xZqBrKBPBOUANsWFnMC3aF90S52Ip3tgXdUHwWZvhNnu9aLl9j4rdrxRhV9nSQx9' --data $bodyData
 glacierApiResponse=$(/usr/local/bin/aws s3api delete-object --bucket "$awsBucketName" --key "$sourceFileName")
 echo "$(date "+%H:%M:%S") (S3Delete) - ($cantemoItemId) Item has been deleted" >> "$logFile"
