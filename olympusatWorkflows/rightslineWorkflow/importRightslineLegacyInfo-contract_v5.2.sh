@@ -212,33 +212,7 @@ then
                 columnCounter=$(($columnCounter + 1))
             ;;
             "oly_rightslineContractId")
-                if [[ ! -z "${fieldValue[$columnCounter]}" && "$bulkMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
-                then
-                    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is NOT empty" >> "$logfile"
-                    numberOfCharacters=$(echo "${fieldValue[$columnCounter]}" | wc -c)
-                    if [[ $numberOfCharacters != 1 ]];
-                    then
-                        contractString="CA_"
-                        missingCharacters=$((7 - $numberOfCharacters))
-                        for (( k=1 ; k<=$missingCharacters ; k++ ));
-                        do
-                            contractString="$contractString""0"
-                        done
-                        contractString="$contractString""${fieldValue[$columnCounter]}"
-                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadata) - [$cantemoItemId] - oly_rightslineContractId - [$contractString]" >> "$logfile"
-                        updateVidispineMetadata $cantemoItemId "oly_contractCode" "$contractString"
-                        sleep 1
-                        columnCounter=$(($columnCounter + 1))
-                    else
-                        echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadata) - [$cantemoItemId] - oly_rightslineContractId - [$contractString]" >> "$logfile"
-                        updateVidispineMetadata $cantemoItemId "oly_licen" "$contractString"
-                        sleep 1
-                        columnCounter=$(($columnCounter + 1))
-                    fi
-                else
-                    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importContractMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
-                    columnCounter=$(($columnCounter + 1))
-                fi
+                columnCounter=$(($columnCounter + 1))
             ;;
             "oly_contractCode")
                 if [[ ! -z "${fieldValue[$columnCounter]}" && "$bulkMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
