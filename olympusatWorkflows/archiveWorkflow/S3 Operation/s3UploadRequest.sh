@@ -2,7 +2,7 @@
 
 # This application creates archive queue file in a folder determined by the argument
 #	customer-id 500844647317
-#	vault-name olympusatMamGlacier
+#	s3-bucket olympusatdeeparch
 # PREREQUISITE: This script must receive item ID as an argument and source file location.
 # 	Usage: createQueueFile.sh [Cantemo item] [queue type - archive or restore]
 #
