@@ -341,7 +341,7 @@ then
                         then
                             #echo "$(date +%Y/%m/%d_%H:%M:%S) - (initialIngestMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
                             fieldValue[$columnCounter]=$(convertToCamelCase ${fieldValue[$columnCounter]})
-                            if [[ "${fieldName[$columnCounter]}" = "oly_countryOfOrigin" || "${fieldName[$columnCounter]}" = "oly_secondaryGenres" || "${fieldName[$columnCounter]}" = "oly_reasonForOriginalRating" ]];
+                            if [[ "${fieldName[$columnCounter]}" = "oly_originalMpaaRating" || "${fieldName[$columnCounter]}" = "oly_originalRating" || "${fieldName[$columnCounter]}" = "oly_originalRtcRating" || "${fieldName[$columnCounter]}" = "oly_countryOfOrigin" || "${fieldName[$columnCounter]}" = "oly_secondaryGenres" || "${fieldName[$columnCounter]}" = "oly_reasonForOriginalRating" ]];
                             then
                                 createTags "${fieldValue[$columnCounter]}" "${fieldName[$columnCounter]}" "$fileDestination"
                             else
