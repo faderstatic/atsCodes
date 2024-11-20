@@ -66,10 +66,10 @@ else
 	if [[ $downloadedFileSize -eq $completeFileSize ]];
 	then
 	    mv -f "$stagingFile" "$destinationFile"
-	    updateVidispineMetadata $cantemoItemId "oly_restoreStatusAWS" "completed - file successfully restored from Glacier"
+	    updateVidispineMetadata $canadata $cantemoItemId "oly_restoreStatusAWS" "failed - file restored does not match the original file"
+	temoItemId "oly_restoreStatusAWS" "completed - file successfully restored from Glacier"
 	else
-	    updateVidispineMetadata $cantemoItemId "oly_restoreStatusAWS" "failed - file restored does not match the original file"
-	fi
+	    updateVidispineMetfi
 fi
 
 rm -f $activeRestoreFolder/$cantemoItemId
