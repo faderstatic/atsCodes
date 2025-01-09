@@ -70,7 +70,7 @@ userHashPasscode=$(hashPasscode "$userReloadPasscode")
 if [[ "$userHashPasscode" != "$storedHashPasscode" ]];
 then
     # Users passcode does NOT match stored passcode-exiting script
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (prepareForReloadWorkflow) - [$itemId] - Users Passcode does NOT match the Stored Passcode - NOT Preparing item for Reload" >> "$logfile"
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (prepareForReloadWorkflow) - [$itemId] - Users Passcode [$userReloadPasscode - $userHashPasscode] does NOT match the Stored Passcode - NOT Preparing item for Reload" >> "$logfile"
     # Update the reloadLogDetail field in Cantemo with timestamp, user and status
     newReloadLogDetail="$(date +%Y/%m/%d_%H:%M)-FAILED-{$userName}-Passcode does NOT match"
     itemReloadLogDetail=$(filterVidispineItemMetadata $itemId "metadata" "oly_reloadLogDetail")
