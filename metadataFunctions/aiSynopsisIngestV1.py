@@ -101,10 +101,10 @@ try:
   }
   urlPutAnalysisInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata/"
   metadataRawPayload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\">"\
-  "<field><name>oly_aiSynopsisShort</name><value>{synopsisShort}</value>"\
-  "</field><field><name>oly_aiSynopsisLong</name><value>{synopsisLong}</value></field>"\
-  "<field><name>oly_aiOverviewShort</name><value>{overviewShort}</value></field>"\
-  "<field><name>oly_aiOverviewLong</name><value>{overviewLong}</value></field>"\
+  f"<field><name>oly_aiSynopsisShort</name><value>{synopsisShort}</value>"\
+  f"</field><field><name>oly_aiSynopsisLong</name><value>{synopsisLong}</value></field>"\
+  f"<field><name>oly_aiOverviewShort</name><value>{overviewShort}</value></field>"\
+  f"<field><name>oly_aiOverviewLong</name><value>{overviewLong}</value></field>"\
   "<field><name>oly_analysisStatus</name><value>completed - last request - synopsis</value></field>"\
   "</timespan></MetadataDocument>"
   parsedMetadataPayload = xml.dom.minidom.parseString(metadataRawPayload)
