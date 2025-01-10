@@ -113,6 +113,8 @@ try:
   "</timespan></MetadataDocument>"
   parsedMetadataPayload = xml.dom.minidom.parseString(metadataRawPayload)
   metadataPayload = parsedMetadataPayload.toprettyxml()
+  httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=statusPayload)
+  time.sleep(5)
   httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=metadataPayload)
   httpApiResponse.raise_for_status()
   #------------------------------
