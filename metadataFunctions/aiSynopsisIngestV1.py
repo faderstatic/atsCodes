@@ -92,20 +92,14 @@ try:
   overviewLong = synopsisType["overview_with_vibe_long"]
   # print(f"ss: {synopsisShort}\nsl: {synopsisLong}\nos: {overviewShort}\nol: {overviewLong}")
 
+  #------------------------------
+  # Update Cantemo metadata
   headers = {
   'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
   'Cookie': 'csrftoken=HFOqrbk9cGt3qnc6WBIxWPjvCFX0udBdbJnzCv9jECumOjfyG7SS2lgVbFcaHBCc',
   'Content-Type': 'application/xml'
   }
   urlPutAnalysisInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata/"
-  statusRawPayload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_analysisStatus</name><value>completed - last request - synopsis</value></field></timespan></MetadataDocument>"
-  parsedStatusPayload = xml.dom.minidom.parseString(statusRawPayload)
-  statusPayload = parsedStatusPayload.toprettyxml()
-  httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=statusPayload)
-  time.sleep(5)
-
-  #------------------------------
-  # Update Cantemo metadata
   metadataRawPayload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\">"\
   "<field><name>oly_aiSynopsisShort</name><value>{synopsisShort}</value>"\
   "</field><field><name>oly_aiSynopsisLong</name><value>{synopsisLong}</value></field>"\
