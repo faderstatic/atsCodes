@@ -60,12 +60,46 @@ try:
 
   cantemoItemId = sys.argv[1]
 
-  cantemoTitle = readCantemoMetadata(cantemoItemId, 'title')
-  time.sleep(1)
-  cantemoTitleCode = readCantemoMetadata(cantemoItemId, 'oly_titleCode')
-  time.sleep(1)
-  cantemoRightslineId = readCantemoMetadata(cantemoItemId, 'oly_rightslineItemId')
+  cantemoOriginalTitleWhite = readCantemoMetadata(cantemoItemId, 'oly_originalTitle')
+  cantemoOriginalTitle = cantemoOriginalTitleWhite.replace(' ', '+')
 
+  #------------------------------
+  # Update The User
+  print(f"{cantemoOriginalTitle}")
+  #------------------------------
+
+  #------------------------------
+  urlOmdb = f"http://omdbapi.com/?apikey=79cb45c2&t={cantemoOriginalTitle}&plot=full"
+  payload = {}
+  headers = {
+    'apikey': '79cb45c2'
+  }
+  httpApiResponse = requests.request("GET", urlOmdb, headers=headers, data=payload)
+  responseJson = httpApiResponse.json() if httpApiResponse and httpApiResponse.status_code == 200 else None
+  if responseJson and 'Error' not in responseJson:
+    print(responseJson.text)
+  #------------------------------
+
+  #------------------------------
+  urlTmdb = f"https://api.themoviedb.org/3/search/movie?query={cantemoOriginalTitle}&original_language=en-US&page=1"
+  payload = {}
+  headers = {
+    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0Yjg3M2EyNGM0OTFlYjYyY2ZiY2VmNDEzMWY5OWY4NSIsIm5iZiI6MTczNzU1NDY1OC45MjcsInN1YiI6IjY3OTBmYWUyMmQ2MWMzM2U2M2RmZmQ5MiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.EDxZTU7a_ntkOVB8QhyC7loglpyw57haw6_4OR1Dr9w'
+  }
+  httpApiResponse = requests.request("GET", urlTmdb, headers=headers, data=payload)
+  responseJson = httpApiResponse.json() if httpApiResponse and httpApiResponse.status_code == 200 else None
+  if responseJson and 'results' in responseJson:
+    for itemResults in responseJson['results']:
+      tmdbTitleEn = itemResults['title']
+      tmdbOverview = itemResults['overview']
+      tmdbPoster = f"https://image.tmdb.org/t/p/w300_and_h450_bestv2{itemResults['poster_path']}"
+  print(f"English Title: {tmdbTitleEn} - Overview: {tmdbOverview} - Poster Path: {tmdbPoster}")
+
+  imageUrlTmdb = f"https://image.tmdb.org/t/p/w300_and_h450_bestv2{tmdbPoster}"
+  #------------------------------
+
+
+  """"
   if (cantemoRightslineId == '<none>') and cantemoTitle.startswith("CA_",0,3):
     stringSegments = cantemoTitle.split('_')
     cantemoRightslineId = stringSegments[2]
@@ -82,14 +116,10 @@ try:
     itemIdPayload = parsedItemIdPayload.toprettyxml()
     httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=itemIdPayload)
     #------------------------------
-
-  #------------------------------
-  # Update The User
-  print(f"{cantemoTitle} (Title Code: {cantemoTitleCode}) - (Rightsline ID: {cantemoRightslineId})")
-  #------------------------------
-  #------------------------------
+  """
+#------------------------------
 
 except HTTPError as http_err:
-    print(f'HTTP error occurred: {http_err}')
+  print(f'HTTP error occurred: {http_err}')
 except Exception as err:
-    print(f'Other error occurred: {err}')
+  print(f'Other error occurred: {err}')
