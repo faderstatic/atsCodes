@@ -22,6 +22,7 @@ import json
 import smtplib
 from email.message import EmailMessage
 from requests.exceptions import HTTPError
+from urllib.parse import quote_plus
 #------------------------------
 
 #------------------------------
@@ -65,7 +66,7 @@ try:
 
   #------------------------------
   # Update The User
-  print(f"{cantemoOriginalTitle}")
+  # print(f"{cantemoOriginalTitle}")
   #------------------------------
 
   #------------------------------
@@ -77,7 +78,9 @@ try:
   httpApiResponse = requests.request("GET", urlOmdb, headers=headers, data=payload)
   responseJson = httpApiResponse.json() if httpApiResponse and httpApiResponse.status_code == 200 else None
   if responseJson and 'Error' not in responseJson:
-    print(responseJson.text)
+    omdbCombinedResult = responseJson.text
+  else:
+    omdbCombinedResult = responseJson['Error']
   #------------------------------
 
   #------------------------------
@@ -92,31 +95,32 @@ try:
     for itemResults in responseJson['results']:
       tmdbTitleEn = itemResults['title']
       tmdbOverview = itemResults['overview']
+      tmdbPosterTMP = itemResults['poster_path']
+      # tmdbPoster = tmdbPosterTMP.replace('/', '')
       tmdbPoster = f"https://image.tmdb.org/t/p/w300_and_h450_bestv2{itemResults['poster_path']}"
-  print(f"English Title: {tmdbTitleEn} - Overview: {tmdbOverview} - Poster Path: {tmdbPoster}")
-
-  imageUrlTmdb = f"https://image.tmdb.org/t/p/w300_and_h450_bestv2{tmdbPoster}"
+      encodedTmdbPoster = quote_plus(tmdbPoster)
+    # tmdbCombinedResult = f"English Title: {tmdbTitleEn}\nOverview: {tmdbOverview}\nPoster File: {encodedTmdbPoster}"
+    tmdbCombinedResult = f"English Title: {tmdbTitleEn}\nOverview: {tmdbOverview}"
+    print(tmdbCombinedResult)
+  else:
+    tmdbCombinedResult = "No Result"
   #------------------------------
 
-
-  """"
-  if (cantemoRightslineId == '<none>') and cantemoTitle.startswith("CA_",0,3):
-    stringSegments = cantemoTitle.split('_')
-    cantemoRightslineId = stringSegments[2]
-    #------------------------------
-    # Update Cantemo metadata
-    headers = {
-    'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
-    'Cookie': 'csrftoken=HFOqrbk9cGt3qnc6WBIxWPjvCFX0udBdbJnzCv9jECumOjfyG7SS2lgVbFcaHBCc',
-    'Content-Type': 'application/xml'
-    }
-    urlPutAnalysisInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata/"
-    itemIdRawPayload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_rightslineItemId</name><value>{cantemoRightslineId}</value></field></timespan></MetadataDocument>"
-    parsedItemIdPayload = xml.dom.minidom.parseString(itemIdRawPayload)
-    itemIdPayload = parsedItemIdPayload.toprettyxml()
-    httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=itemIdPayload)
-    #------------------------------
-  """
+  #------------------------------
+  # Update Cantemo metadata
+  headers = {
+  'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
+  'Cookie': 'csrftoken=HFOqrbk9cGt3qnc6WBIxWPjvCFX0udBdbJnzCv9jECumOjfyG7SS2lgVbFcaHBCc',
+  'Content-Type': 'application/xml'
+  }
+  urlPutAnalysisInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata/"
+  itemIdRawPayload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_omdbCombinedResult</name><value>{omdbCombinedResult}</value></field><field><name>oly_tmdbCombinedResult</name><value>{tmdbCombinedResult}</value></field></timespan></MetadataDocument>"
+  parsedItemIdPayload = xml.dom.minidom.parseString(itemIdRawPayload)
+  itemIdPayload = parsedItemIdPayload.toprettyxml()
+  httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=itemIdPayload)
+  print(itemIdPayload)
+  #------------------------------
+  
 #------------------------------
 
 except HTTPError as http_err:
