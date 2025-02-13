@@ -92,15 +92,21 @@ try:
   httpApiResponse = requests.request("GET", urlTmdb, headers=headers, data=payload)
   responseJson = httpApiResponse.json() if httpApiResponse and httpApiResponse.status_code == 200 else None
   if responseJson and 'results' in responseJson:
+    itemCounter = 1
+    tmdbCombinedResult = ""
     for itemResults in responseJson['results']:
-      tmdbTitleEn = itemResults['title']
-      tmdbOverview = itemResults['overview']
-      tmdbPosterTMP = itemResults['poster_path']
-      # tmdbPoster = tmdbPosterTMP.replace('/', '')
-      tmdbPoster = f"https://image.tmdb.org/t/p/w300_and_h450_bestv2{itemResults['poster_path']}"
-      encodedTmdbPoster = quote_plus(tmdbPoster)
-    # tmdbCombinedResult = f"English Title: {tmdbTitleEn}\nOverview: {tmdbOverview}\nPoster File: {encodedTmdbPoster}"
-    tmdbCombinedResult = f"English Title: {tmdbTitleEn}\nOverview: {tmdbOverview}"
+      tmdbOriginalTitle = responseJson['original_title']
+      if cantemoOriginalTitle.lower() == tmdbOriginalTitle.lower():
+        tmdbTitleEn = itemResults['title']
+        tmdbOverview = itemResults['overview']
+        tmdbPosterTMP = itemResults['poster_path']
+        tmdbReleaseDate = itemResults['release_date']
+        # tmdbPoster = tmdbPosterTMP.replace('/', '')
+        tmdbPoster = f"https://image.tmdb.org/t/p/w300_and_h450_bestv2{itemResults['poster_path']}"
+        encodedTmdbPoster = quote_plus(tmdbPoster)
+      # tmdbCombinedResult = f"English Title: {tmdbTitleEn}\nOverview: {tmdbOverview}\nPoster File: {encodedTmdbPoster}"
+      tmdbCombinedResult = f"{tmdbCombinedResult}[{itemCounter}] English Title: {tmdbTitleEn}\n[{itemCounter}] Release Date: {tmdbReleaseDate}\n[{itemCounter}] Overview: {tmdbOverview}\n"
+      itemCounter += 1
     print(tmdbCombinedResult)
   else:
     tmdbCombinedResult = "No Result"
