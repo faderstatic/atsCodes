@@ -14,6 +14,7 @@ import glob
 import sys
 import datetime
 import time
+import string
 import subprocess
 import xml.dom.minidom
 import xml.etree.ElementTree as ET
@@ -30,7 +31,7 @@ from urllib.parse import quote_plus
 
 def readCantemoMetadata(rcmItemId, rcmFieldName):
   #------------------------------
-  # Making API to Cantemo to get lookup values
+  # Making API to Cantemo to get metadata values
   headers = {
     'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
     'Cookie': 'csrftoken=OtjDQ4lhFt2wJjGaJhq3xi05z3uA6D8F7wCWNVXxMuJ8A9jw7Ri7ReqSNGLS2VRR',
@@ -61,9 +62,17 @@ try:
 
   cantemoItemId = sys.argv[1]
 
+  #------------------------------
+  # Creating Spanish accented characters translation
+  accentedCharacters = "áéíóúÁÉÍÓÚñÑ"
+  unaccentedCharacters = "aeiouAEIOUnN"
+  translationTable = str.maketrans(accentedCharacters, unaccentedCharacters)
+  #------------------------------
+
   cantemoOriginalTitleRaw = readCantemoMetadata(cantemoItemId, 'oly_originalTitle')
   cantemoOriginalTitleWhite = cantemoOriginalTitleRaw.lstrip()
-  cantemoOriginalTitle = cantemoOriginalTitleWhite.replace(' ', '+')
+  cantemoOriginalTitleTemp = cantemoOriginalTitleWhite.replace(' ', '+')
+  cantemoOriginalTitle = cantemoOriginalTitleTemp.translate(translationTable)
 
   #------------------------------
   # Update The User
@@ -81,10 +90,10 @@ try:
   if responseJson and 'Error' not in responseJson:
     omdbReleaseDate = responseJson['Year']
     omdbRated = responseJson['Rated']
-    omdbDirector = responseJson['Director']
-    omdbWriter = responseJson['Writer']
-    omdbActors = responseJson['Actors']
-    omdbOverview = responseJson['Plot']
+    omdbDirector = str(responseJson['Director']).translate(translationTable)
+    omdbWriter = str(responseJson['Writer']).translate(translationTable)
+    omdbActors = str(responseJson['Actors']).translate(translationTable)
+    omdbOverview = str(responseJson['Plot']).translate(translationTable)
     omdbCombinedResultTemp = f"Release Date: {omdbReleaseDate}\nRated: {omdbRated}\nDirector: {omdbDirector}\nWriter: {omdbWriter}\nActors: {omdbActors}\nOverview: {omdbOverview}"
     omdbCombinedResult = omdbCombinedResultTemp.rstrip()
   else:
@@ -105,8 +114,8 @@ try:
     for itemResults in responseJson['results']:
       tmdbOriginalTitle = str(itemResults['original_title'])
       if cantemoOriginalTitleWhite.lower() == tmdbOriginalTitle.lower():
-        tmdbTitleEn = itemResults['title']
-        tmdbOverview = itemResults['overview']
+        tmdbTitleEn = str(itemResults['title']).translate(translationTable)
+        tmdbOverview = str(itemResults['overview']).translate(translationTable)
         tmdbPosterTMP = itemResults['poster_path']
         tmdbReleaseDate = itemResults['release_date']
         # tmdbPoster = tmdbPosterTMP.replace('/', '')
