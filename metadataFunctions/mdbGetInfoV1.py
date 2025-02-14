@@ -71,8 +71,8 @@ try:
 
   cantemoOriginalTitleRaw = readCantemoMetadata(cantemoItemId, 'oly_originalTitle')
   cantemoOriginalTitleWhite = cantemoOriginalTitleRaw.lstrip()
-  cantemoOriginalTitleTemp = cantemoOriginalTitleWhite.replace(' ', '+')
-  cantemoOriginalTitle = cantemoOriginalTitleTemp.translate(translationTable)
+  cantemoOriginalTitleTemp = cantemoOriginalTitleWhite.translate(translationTable)
+  cantemoOriginalTitle = cantemoOriginalTitleTemp.replace(' ', '+')
 
   #------------------------------
   # Update The User
@@ -113,7 +113,7 @@ try:
     tmdbCombinedResultTemp = ""
     for itemResults in responseJson['results']:
       tmdbOriginalTitle = str(itemResults['original_title'])
-      if cantemoOriginalTitleWhite.lower() == tmdbOriginalTitle.lower():
+      if cantemoOriginalTitleTemp.lower() == tmdbOriginalTitle.lower():
         tmdbTitleEn = str(itemResults['title']).translate(translationTable)
         tmdbOverview = str(itemResults['overview']).translate(translationTable)
         tmdbPosterTMP = itemResults['poster_path']
