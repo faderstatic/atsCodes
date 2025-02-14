@@ -61,7 +61,8 @@ try:
 
   cantemoItemId = sys.argv[1]
 
-  cantemoOriginalTitleWhite = readCantemoMetadata(cantemoItemId, 'oly_originalTitle')
+  cantemoOriginalTitleRaw = readCantemoMetadata(cantemoItemId, 'oly_originalTitle')
+  cantemoOriginalTitleWhite = cantemoOriginalTitleRaw.lstrip()
   cantemoOriginalTitle = cantemoOriginalTitleWhite.replace(' ', '+')
 
   #------------------------------
@@ -78,7 +79,14 @@ try:
   httpApiResponse = requests.request("GET", urlOmdb, headers=headers, data=payload)
   responseJson = httpApiResponse.json() if httpApiResponse and httpApiResponse.status_code == 200 else None
   if responseJson and 'Error' not in responseJson:
-    omdbCombinedResult = str(responseJson)
+    omdbReleaseDate = responseJson['Year']
+    omdbRated = responseJson['Rated']
+    omdbDirector = responseJson['Director']
+    omdbWriter = responseJson['Writer']
+    omdbActors = responseJson['Actors']
+    omdbOverview = responseJson['Plot']
+    omdbCombinedResultTemp = f"Release Date: {omdbReleaseDate}\nRated: {omdbRated}\nDirector: {omdbDirector}\nWriter: {omdbWriter}\nActors: {omdbActors}\nOverview: {omdbOverview}"
+    omdbCombinedResult = omdbCombinedResultTemp.rstrip()
   else:
     omdbCombinedResult = responseJson['Error']
   #------------------------------
@@ -91,12 +99,12 @@ try:
   }
   httpApiResponse = requests.request("GET", urlTmdb, headers=headers, data=payload)
   responseJson = httpApiResponse.json() if httpApiResponse and httpApiResponse.status_code == 200 else None
-  if responseJson and ( 'results' in responseJson ):
+  if (responseJson) and ('results' in responseJson):
     itemCounter = 1
-    tmdbCombinedResult = ""
+    tmdbCombinedResultTemp = ""
     for itemResults in responseJson['results']:
       tmdbOriginalTitle = str(itemResults['original_title'])
-      if cantemoOriginalTitle.lower() == tmdbOriginalTitle.lower():
+      if cantemoOriginalTitleWhite.lower() == tmdbOriginalTitle.lower():
         tmdbTitleEn = itemResults['title']
         tmdbOverview = itemResults['overview']
         tmdbPosterTMP = itemResults['poster_path']
@@ -105,8 +113,9 @@ try:
         tmdbPoster = f"https://image.tmdb.org/t/p/w300_and_h450_bestv2{itemResults['poster_path']}"
         encodedTmdbPoster = quote_plus(tmdbPoster)
         # tmdbCombinedResult = f"English Title: {tmdbTitleEn}\nOverview: {tmdbOverview}\nPoster File: {encodedTmdbPoster}"
-        tmdbCombinedResult = f"{tmdbCombinedResult}[{itemCounter}] English Title: {tmdbTitleEn}\n[{itemCounter}] Release Date: {tmdbReleaseDate}\n[{itemCounter}] Overview: {tmdbOverview}\n"
+        tmdbCombinedResultTemp = f"{tmdbCombinedResultTemp}[{itemCounter}] English Title: {tmdbTitleEn}\n[{itemCounter}] Release Date: {tmdbReleaseDate}\n[{itemCounter}] Overview: {tmdbOverview}\n"
         itemCounter += 1
+      tmdbCombinedResult = tmdbCombinedResultTemp.rstrip()
     # print(tmdbCombinedResult)
   else:
     tmdbCombinedResult = "No Result"
@@ -123,8 +132,8 @@ try:
   itemIdRawPayload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_omdbCombinedResult</name><value>{omdbCombinedResult}</value></field><field><name>oly_tmdbCombinedResult</name><value>{tmdbCombinedResult}</value></field></timespan></MetadataDocument>"
   parsedItemIdPayload = xml.dom.minidom.parseString(itemIdRawPayload)
   itemIdPayload = parsedItemIdPayload.toprettyxml()
-  httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=itemIdPayload)
-  print(itemIdPayload)
+  # print(itemIdPayload)
+  httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=itemIdPayload)  
   #------------------------------
   
 #------------------------------
