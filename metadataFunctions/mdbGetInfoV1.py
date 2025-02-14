@@ -22,7 +22,7 @@ import json
 import smtplib
 from email.message import EmailMessage
 from requests.exceptions import HTTPError
-from urllib.parse import quote_plus,quote
+from urllib.parse import quote_plus
 #------------------------------
 
 #------------------------------
@@ -84,7 +84,7 @@ try:
     omdbDirector = responseJson['Director']
     omdbWriter = responseJson['Writer']
     omdbActors = responseJson['Actors']
-    omdbOverview = quote(responseJson['Plot'])
+    omdbOverview = responseJson['Plot']
     omdbCombinedResultTemp = f"Release Date: {omdbReleaseDate}\nRated: {omdbRated}\nDirector: {omdbDirector}\nWriter: {omdbWriter}\nActors: {omdbActors}\nOverview: {omdbOverview}"
     omdbCombinedResult = omdbCombinedResultTemp.rstrip()
   else:
