@@ -104,6 +104,7 @@ try:
   #------------------------------
 
   #------------------------------
+  tmdbCombinedResultTemp = ""
   urlTmdb = f"https://api.themoviedb.org/3/search/movie?query={cantemoOriginalTitle}&original_language=en-US&page=1"
   payload = {}
   headers = {
@@ -113,7 +114,6 @@ try:
   responseJson = httpApiResponse.json() if httpApiResponse and httpApiResponse.status_code == 200 else None
   if (responseJson) and ('results' in responseJson):
     itemCounter = 1
-    tmdbCombinedResultTemp = ""
     for itemResults in responseJson['results']:
       if itemResults:
         tmdbOriginalTitle = str(itemResults['original_title'])
@@ -128,11 +128,9 @@ try:
           # tmdbCombinedResult = f"English Title: {tmdbTitleEn}\nOverview: {tmdbOverview}\nPoster File: {encodedTmdbPoster}"
           tmdbCombinedResultTemp = f"{tmdbCombinedResultTemp}[{itemCounter}] English Title: {tmdbTitleEn}\n[{itemCounter}] Release Date: {tmdbReleaseDate}\n[{itemCounter}] Overview: {tmdbOverview}\n"
           itemCounter += 1
-      else:
-        tmdbCombinedResultTemp = "No Result"
     tmdbCombinedResult = tmdbCombinedResultTemp.rstrip()
-  else:
-    tmdbCombinedResult = "No Result"
+  if tmdbCombinedResultTemp == "":
+    tmdbCombinedResult = "No Result Found!"
   # print(f"TMDB = {tmdbCombinedResult}")
   #------------------------------
 
