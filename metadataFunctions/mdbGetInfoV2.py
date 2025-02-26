@@ -89,7 +89,7 @@ try:
   }
   httpApiResponse = requests.request("GET", urlOmdb, headers=headers, data=payload)
   responseJson = httpApiResponse.json() if httpApiResponse and httpApiResponse.status_code == 200 else None
-  if responseJson and 'Error' not in responseJson:
+  if responseJson and ('Error' not in responseJson):
     omdbReleaseDate = responseJson['Year']
     omdbRated = responseJson['Rated']
     omdbDirector = str(responseJson['Director']).encode('utf-8')
@@ -100,6 +100,7 @@ try:
     omdbCombinedResult = omdbCombinedResultTemp.rstrip()
   else:
     omdbCombinedResult = responseJson['Error']
+  print(omdbCombinedResult)
   #------------------------------
 
   #------------------------------
@@ -114,22 +115,25 @@ try:
     itemCounter = 1
     tmdbCombinedResultTemp = ""
     for itemResults in responseJson['results']:
-      tmdbOriginalTitle = str(itemResults['original_title'])
-      if cantemoOriginalTitleTemp.lower() == tmdbOriginalTitle.lower():
-        tmdbTitleEn = str(itemResults['title']).encode('utf-8')
-        tmdbOverview = str(itemResults['overview']).encode('utf-8')
-        tmdbPosterTMP = str(itemResults['poster_path']).encode('utf-8')
-        tmdbReleaseDate = str(itemResults['release_date']).encode('utf-8')
-        # tmdbPoster = tmdbPosterTMP.replace('/', '')
-        tmdbPoster = f"https://image.tmdb.org/t/p/w300_and_h450_bestv2{itemResults['poster_path']}"
-        encodedTmdbPoster = quote_plus(tmdbPoster)
-        # tmdbCombinedResult = f"English Title: {tmdbTitleEn}\nOverview: {tmdbOverview}\nPoster File: {encodedTmdbPoster}"
-        tmdbCombinedResultTemp = f"{tmdbCombinedResultTemp}[{itemCounter}] English Title: {tmdbTitleEn}\n[{itemCounter}] Release Date: {tmdbReleaseDate}\n[{itemCounter}] Overview: {tmdbOverview}\n"
-        itemCounter += 1
-      tmdbCombinedResult = tmdbCombinedResultTemp.rstrip()
-    # print(tmdbCombinedResult)
+      if itemResults:
+        tmdbOriginalTitle = str(itemResults['original_title'])
+        if cantemoOriginalTitleTemp.lower() == tmdbOriginalTitle.lower():
+          tmdbTitleEn = str(itemResults['title'])
+          tmdbOverview = str(itemResults['overview'])
+          tmdbPosterTMP = str(itemResults['poster_path'])
+          tmdbReleaseDate = str(itemResults['release_date'])
+          # tmdbPoster = tmdbPosterTMP.replace('/', '')
+          tmdbPoster = f"https://image.tmdb.org/t/p/w300_and_h450_bestv2{itemResults['poster_path']}"
+          encodedTmdbPoster = quote_plus(tmdbPoster)
+          # tmdbCombinedResult = f"English Title: {tmdbTitleEn}\nOverview: {tmdbOverview}\nPoster File: {encodedTmdbPoster}"
+          tmdbCombinedResultTemp = f"{tmdbCombinedResultTemp}[{itemCounter}] English Title: {tmdbTitleEn}\n[{itemCounter}] Release Date: {tmdbReleaseDate}\n[{itemCounter}] Overview: {tmdbOverview}\n"
+          itemCounter += 1
+      else:
+        tmdbCombinedResultTemp = "No Result"
+    tmdbCombinedResult = tmdbCombinedResultTemp.rstrip()
   else:
     tmdbCombinedResult = "No Result"
+  # print(f"TMDB = {tmdbCombinedResult}")
   #------------------------------
 
   #------------------------------
