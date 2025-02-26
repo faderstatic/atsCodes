@@ -118,10 +118,10 @@ try:
       if itemResults:
         tmdbOriginalTitle = str(itemResults['original_title'])
         if cantemoOriginalTitleTemp.lower() == tmdbOriginalTitle.lower():
-          tmdbTitleEn = str(itemResults['title'])
-          tmdbOverview = str(itemResults['overview'])
-          tmdbPosterTMP = str(itemResults['poster_path'])
-          tmdbReleaseDate = str(itemResults['release_date'])
+          tmdbTitleEn = str(itemResults['title']).encode('utf-8')
+          tmdbOverview = str(itemResults['overview']).encode('utf-8')
+          tmdbPosterTMP = str(itemResults['poster_path']).encode('utf-8')
+          tmdbReleaseDate = str(itemResults['release_date']).encode('utf-8')
           # tmdbPoster = tmdbPosterTMP.replace('/', '')
           tmdbPoster = f"https://image.tmdb.org/t/p/w300_and_h450_bestv2{itemResults['poster_path']}"
           encodedTmdbPoster = quote_plus(tmdbPoster)
