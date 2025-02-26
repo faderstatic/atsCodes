@@ -57,6 +57,13 @@ def readCantemoMetadata(rcmItemId, rcmFieldName):
   #------------------------------
   return metadataValue
 
+def create_xml_payload(data):
+    root = ET.Element("data")
+    item = ET.SubElement(root, "item")
+    item.text = data
+    xml_string = ET.tostring(root, encoding='utf-8').decode('utf-8')
+    return xml_string
+
 #------------------------------
 
 try:
@@ -92,10 +99,10 @@ try:
   if responseJson and ('Error' not in responseJson):
     omdbReleaseDate = responseJson['Year']
     omdbRated = responseJson['Rated']
-    omdbDirector = str(responseJson['Director']).encode('utf-8')
-    omdbWriter = str(responseJson['Writer']).encode('utf-8')
-    omdbActors = str(responseJson['Actors']).encode('utf-8')
-    omdbOverview = str(responseJson['Plot']).encode('utf-8')
+    omdbDirector = str(responseJson['Director'])
+    omdbWriter = str(responseJson['Writer'])
+    omdbActors = str(responseJson['Actors'])
+    omdbOverview = str(responseJson['Plot'])
     omdbCombinedResultTemp = f"Release Date: {omdbReleaseDate}\nRated: {omdbRated}\nDirector: {omdbDirector}\nWriter: {omdbWriter}\nActors: {omdbActors}\nOverview: {omdbOverview}"
     omdbCombinedResult = omdbCombinedResultTemp.rstrip()
   else:
@@ -118,10 +125,10 @@ try:
       if itemResults:
         tmdbOriginalTitle = str(itemResults['original_title'])
         if cantemoOriginalTitleTemp.lower() == tmdbOriginalTitle.lower():
-          tmdbTitleEn = str(itemResults['title']).encode('utf-8')
-          tmdbOverview = str(itemResults['overview']).encode('utf-8')
-          tmdbPosterTMP = str(itemResults['poster_path']).encode('utf-8')
-          tmdbReleaseDate = str(itemResults['release_date']).encode('utf-8')
+          tmdbTitleEn = str(itemResults['title'])
+          tmdbOverview = str(itemResults['overview'])
+          tmdbPosterTMP = str(itemResults['poster_path'])
+          tmdbReleaseDate = str(itemResults['release_date'])
           # tmdbPoster = tmdbPosterTMP.replace('/', '')
           tmdbPoster = f"https://image.tmdb.org/t/p/w300_and_h450_bestv2{itemResults['poster_path']}"
           encodedTmdbPoster = quote_plus(tmdbPoster)
@@ -143,7 +150,8 @@ try:
   }
   urlPutAnalysisInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata/"
   itemIdRawPayload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_omdbCombinedResult</name><value>{omdbCombinedResult}</value></field><field><name>oly_tmdbCombinedResult</name><value>{tmdbCombinedResult}</value></field></timespan></MetadataDocument>"
-  parsedItemIdPayload = xml.dom.minidom.parseString(itemIdRawPayload)
+  parsedItemIdPayload = create_xml_payload(itemIdRawPayload)
+  # parsedItemIdPayload = xml.dom.minidom.parseString(itemIdRawPayload)
   itemIdPayload = parsedItemIdPayload.toprettyxml()
   # print(itemIdPayload)
   httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=itemIdPayload)  
