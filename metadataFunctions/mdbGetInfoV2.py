@@ -149,10 +149,10 @@ try:
   'Content-Type': 'application/xml; charset=utf-8'
   }
   urlPutAnalysisInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata/"
-  itemIdRawPayload = f"<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_omdbCombinedResult</name><value>{omdbCombinedResult}</value></field><field><name>oly_tmdbCombinedResult</name><value>{tmdbCombinedResult}</value></field></timespan></MetadataDocument>"
+  itemIdRawPayload = f"<?xml version="1.0" encoding="UTF-8"?><MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_omdbCombinedResult</name><value>{omdbCombinedResult}</value></field><field><name>oly_tmdbCombinedResult</name><value>{tmdbCombinedResult}</value></field></timespan></MetadataDocument>"
   # parsedItemIdPayload = xml.dom.minidom.parseString(itemIdRawPayload)
-  # itemIdPayload = parsedItemIdPayload.toprettyxml()
-  itemIdPayload = create_xml_payload(itemIdRawPayload)
+  parsedItemIdPayload = create_xml_payload(itemIdRawPayload)
+  itemIdPayload = parsedItemIdPayload.toprettyxml()
   # print(itemIdPayload)
   httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=itemIdPayload.encode('utf-8'))  
   #------------------------------
