@@ -153,7 +153,7 @@ try:
   name1.text = "oly_omdbCombinedResult"
   value1 = ET.SubElement(field1, "value")
   value1.text = omdbCombinedResult
-  field2 = ET.SubElement(rootBody, "field")
+  field2 = ET.SubElement(timespan, "field")
   name2 = ET.SubElement(field2, "name")
   name2.text = "oly_tmdbCombinedResult"
   value2 = ET.SubElement(field2, "value")
