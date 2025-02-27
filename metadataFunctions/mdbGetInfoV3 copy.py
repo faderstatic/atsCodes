@@ -142,25 +142,11 @@ try:
   'Content-Type': 'application/xml; charset=utf-8'
   }
   urlPutAnalysisInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata/"
-  # itemIdRawPayload = f"<?xml version=\"1.0\" encoding=\"UTF-8\"?><MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_omdbCombinedResult</name><value>{omdbCombinedResult}</value></field><field><name>oly_tmdbCombinedResult</name><value>{tmdbCombinedResult}</value></field></timespan></MetadataDocument>"
-  # parsedItemIdPayload = xml.dom.minidom.parseString(itemIdRawPayload)
-  # itemIdPayload = parsedItemIdPayload.toprettyxml()
+  itemIdRawPayload = f"<?xml version=\"1.0\" encoding=\"UTF-8\"?><MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_omdbCombinedResult</name><value>{omdbCombinedResult}</value></field><field><name>oly_tmdbCombinedResult</name><value>{tmdbCombinedResult}</value></field></timespan></MetadataDocument>"
+  parsedItemIdPayload = xml.dom.minidom.parseString(itemIdRawPayload)
+  itemIdPayload = parsedItemIdPayload.toprettyxml()
   # print(itemIdPayload)
-  rootBody = ET.Element(f"MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"")
-  timespan = ET.SubElement(rootBody, f"timespan start=\"-INF\" end=\"+INF\"")
-  field1 = ET.SubElement(timespan, "field")
-  name1 = ET.SubElement(field1, "name")
-  name1.text = "oly_omdbCombinedResult"
-  value1 = ET.SubElement(field1, "value")
-  value1.text = omdbCombinedResult
-  field2 = ET.SubElement(rootBody, "field")
-  name2 = ET.SubElement(field2, "name")
-  name2.text = "oly_tmdbCombinedResult"
-  value2 = ET.SubElement(field2, "value")
-  value2.text = tmdbCombinedResult
-  itemIdPayload = ET.tostring(rootBody, encoding="utf-8", method="xml")
-  # print(itemIdPayload)
-  httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=itemIdPayload)
+  httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=itemIdPayload)  
   #------------------------------
   
 #------------------------------
