@@ -152,7 +152,7 @@ try:
   itemIdRawPayload = f"<?xml version=\"1.0\" encoding=\"UTF-8\"?><MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_omdbCombinedResult</name><value>{omdbCombinedResult}</value></field><field><name>oly_tmdbCombinedResult</name><value>{tmdbCombinedResult}</value></field></timespan></MetadataDocument>"
   parsedItemIdPayload = xml.dom.minidom.parseString(itemIdRawPayload)
   itemIdPayload = parsedItemIdPayload.toprettyxml()
-  itemIdPayloadEncoded = create_xml_payload(itemIdRawPayload)
+  itemIdPayloadEncoded = create_xml_payload(itemIdPayload)
   print(itemIdPayloadEncoded)
   # print(itemIdPayload)
   httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=itemIdPayloadEncoded)  
