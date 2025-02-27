@@ -139,6 +139,7 @@ try:
   headers = {
   'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
   'Cookie': 'csrftoken=HFOqrbk9cGt3qnc6WBIxWPjvCFX0udBdbJnzCv9jECumOjfyG7SS2lgVbFcaHBCc',
+  'Accept': 'application/xml',
   'Content-Type': 'application/xml; charset=UTF-8'
   }
   urlPutAnalysisInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata/"
