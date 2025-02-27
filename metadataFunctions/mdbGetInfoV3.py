@@ -143,19 +143,20 @@ try:
   'Content-Type': 'application/xml; charset=utf-8'
   }
   urlPutAnalysisInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata/"
-  itemIdRawPayload = f"""
-  <MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"> 
-    <timespan start=\"-INF\" end=\"+INF\">
-      <field>
-        <name>oly_omdbCombinedResult</name>
-        <value>{omdbCombinedResult}</value>
-      </field>
-      <field>
-        <name>oly_tmdbCombinedResult</name>
-        <value>{tmdbCombinedResult}</value>
-      </field>
-    </timespan>
-  </MetadataDocument>"""
+  # itemIdRawPayload = f"""
+  # <MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"> 
+  #   <timespan start=\"-INF\" end=\"+INF\">
+  #     <field>
+  #       <name>oly_omdbCombinedResult</name>
+  #       <value>{omdbCombinedResult}</value>
+  #     </field>
+  #     <field>
+  #       <name>oly_tmdbCombinedResult</name>
+  #       <value>{tmdbCombinedResult}</value>
+  #     </field>
+  #   </timespan>
+  # </MetadataDocument>"""
+  itemIdRawPayload = "\r\n  <MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\">\r\n    <timespan start=\"-INF\" end=\"+INF\">\r\n      <field>\r\n        <name>oly_omdbCombinedResult</name>\r\n        <value>Release Date: 1975\r\nRated: TV-PG\r\nDirector: Federico Curiel\r\nWriter: Federico Curiel\r\nActors: Cornelio Reyna, Lola Beltrán, Roberto 'Flaco' Guzmán\r\nOverview: Una interesante producción, matizada por la tragi-comedia en la que un hombre rescata al dueño de una taquerÍa, quien se encuentra en una situación de inminente riesgo.</value>\r\n      </field>\r\n      <field>\r\n        <name>oly_tmdbCombinedResult</name>\r\n        <value>[1] English Title: Me caiste del cielo\r\n[1] Release Date: 1975-01-01\r\n[1] Overview:</value>\r\n      </field>\r\n    </timespan>\r\n  </MetadataDocument>"
   # parsedItemIdPayload = xml.dom.minidom.parseString(itemIdRawPayload)
   # itemIdPayload = parsedItemIdPayload.toprettyxml()
   # print(itemIdRawPayload)
