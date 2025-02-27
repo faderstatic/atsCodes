@@ -158,7 +158,7 @@ try:
   # parsedItemIdPayload = xml.dom.minidom.parseString(itemIdRawPayload)
   # itemIdPayload = parsedItemIdPayload.toprettyxml()
   # print(itemIdRawPayload)
-  httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=itemIdPayload)  
+  httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=itemIdRawPayload)  
   #------------------------------
   
 #------------------------------
