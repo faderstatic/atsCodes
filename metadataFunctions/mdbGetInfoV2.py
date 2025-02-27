@@ -61,7 +61,7 @@ def create_xml_payload(data):
     root = ET.Element("data")
     item = ET.SubElement(root, "item")
     item.text = data
-    xml_string = ET.tostring(root, encoding='utf-8').decode('utf-8')
+    xml_string = ET.tostring(root, encoding='utf-8', method='xml')
     return xml_string
 
 #------------------------------
@@ -107,7 +107,7 @@ try:
     omdbCombinedResult = omdbCombinedResultTemp.rstrip()
   else:
     omdbCombinedResult = responseJson['Error']
-  print(omdbCombinedResult)
+  # print(omdbCombinedResult)
   #------------------------------
 
   #------------------------------
@@ -150,12 +150,12 @@ try:
   }
   urlPutAnalysisInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata/"
   itemIdRawPayload = f"<?xml version=\"1.0\" encoding=\"UTF-8\"?><MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"><timespan start=\"-INF\" end=\"+INF\"><field><name>oly_omdbCombinedResult</name><value>{omdbCombinedResult}</value></field><field><name>oly_tmdbCombinedResult</name><value>{tmdbCombinedResult}</value></field></timespan></MetadataDocument>"
-  # parsedItemIdPayload = xml.dom.minidom.parseString(itemIdRawPayload)
-  parsedItemIdPayload = create_xml_payload(itemIdRawPayload)
+  parsedItemIdPayload = xml.dom.minidom.parseString(itemIdRawPayload)
   itemIdPayload = parsedItemIdPayload.toprettyxml()
-  print(itemIdPayload.encode('utf-8'))
+  itemIdPayloadEncoded = create_xml_payload(itemIdRawPayload)
+  print(itemIdPayloadEncoded)
   # print(itemIdPayload)
-  httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=itemIdPayload.encode('utf-8'))  
+  httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=itemIdPayloadEncoded)  
   #------------------------------
   
 #------------------------------
