@@ -66,7 +66,7 @@ def readCantemoMetadata(rcmItemId, rcmFieldName):
 # dbPasswordEncoded = quote_plus(dbPassword)
 # print(f"Username Encoded = {dbUsernameEncoded} - Password Encoded = {dbPasswordEncoded}")
 # uri = "mongodb+srv://eymqsqaa:d53102b4-6381-403b-8c90-4bf9d103e91c@prod-1.4g3ic.mongodb.net/?retryWrites=true&w=majority&appName=Prod-1&tls=true"
-uri = "mongodb+srv://eymqsqaa:d53102b4-6381-403b-8c90-4bf9d103e91c@prod-1.4g3ic.mongodb.net/admin"
+uri = "mongodb+srv://@prod-1.4g3ic.mongodb.net/admin"
 # Create a new client and connect to the server
 client = MongoClient(uri)
 # Send a ping to confirm a successful connection
