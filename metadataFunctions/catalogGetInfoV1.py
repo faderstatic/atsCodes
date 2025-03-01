@@ -25,8 +25,7 @@ import urllib.request
 from email.message import EmailMessage
 from requests.exceptions import HTTPError
 from urllib.parse import quote_plus
-from pymongo.mongo_client import MongoClient
-from urllib.parse import quote_plus
+from pymongo import MongoClient
 # import traceback
 #------------------------------
 
