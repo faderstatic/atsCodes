@@ -27,6 +27,7 @@ from requests.exceptions import HTTPError
 from urllib.parse import quote_plus
 from pymongo.mongo_client import MongoClient
 from urllib.parse import quote_plus
+# import traceback
 #------------------------------
 
 #------------------------------
@@ -60,22 +61,30 @@ def readCantemoMetadata(rcmItemId, rcmFieldName):
   return metadataValue
 
 #------------------------------
-# dbUsername = 'kkanjanapitak@olympusat.com'
-# dbPassword = 'Ross2016!'
+# dbUsername = ''
+# dbPassword = ''
 # dbUsernameEncoded = quote_plus(dbUsername)
 # dbPasswordEncoded = quote_plus(dbPassword)
 # print(f"Username Encoded = {dbUsernameEncoded} - Password Encoded = {dbPasswordEncoded}")
-# uri = "mongodb+srv://eymqsqaa:d53102b4-6381-403b-8c90-4bf9d103e91c@prod-1.4g3ic.mongodb.net/?retryWrites=true&w=majority&appName=Prod-1&tls=true"
-uri = "mongodb+srv://@prod-1.4g3ic.mongodb.net/admin"
+#------------------------------
+
+# uriProd1 = "mongodb+srv://mamadmin:YOzHzj5EAhAJ4u7T@prod-1.4g3ic.mongodb.net/?retryWrites=true&w=majority&appName=Prod-1&tls=true"
+uriOdev = "mongodb+srv://mamadmin:YOzHzj5EAhAJ4u7T@olympusatdev.4g3ic.mongodb.net/?retryWrites=true&w=majority&appName=OlympusatDev&tls=true"
+# uri = "mongodb+srv://mamadmin:YOzHzj5EAhAJ4u7T@prod-1.4g3ic.mongodb.net/admin"
 # Create a new client and connect to the server
-client = MongoClient(uri)
+# clientProd1 = MongoClient(uriProd1)
+clientOdev = MongoClient(uriOdev)
 # Send a ping to confirm a successful connection
 
 try:
     
-  client.admin.command('ping')
-  print("Pinged your deployment. You successfully connected to MongoDB!")
-  print(client.list_database_names())
+  # clientProd1.admin.command('ping')
+  # print(f"Pinged your deployment. You successfully connected to Prod-1")
+  # clientOdev.admin.command('ping')
+  # print(f"Pinged your deployment. You successfully connected to OlympusatDev")
+
+  olyplatCatalog = clientOdev["olyplat_catalog"]
+  catalogCollection = olyplatCatalog["catalog"]
 
   cantemoItemId = sys.argv[1]
 
@@ -91,14 +100,54 @@ try:
   cantemoOriginalTitle = cantemoOriginalTitleWhite.translate(translationTable)
   # cantemoOriginalTitle = cantemoOriginalTitleTemp.replace(' ', '+')
 
+  cantemoTitleCode = readCantemoMetadata(cantemoItemId, 'oly_titleCode')
+  queryTitleCode = {'titleCode': cantemoTitleCode}
+  catalogItemMetadata = catalogCollection.find_one(queryTitleCode)
+  # print(catalogItemMetadata)
+  catalogMetadataUpdate = ""
+  for metadataItem, metadataValue in catalogItemMetadata.items():
+    if metadataItem in ["year", "languageLabel", "productionCompany", "sourceType", "producer", "primaryGenreLabel", "secondaryGenresLabel", "duration", "description"]:
+      catalogMetadataUpdate = catalogMetadataUpdate + f"""{metadataItem}: {metadataValue}
+"""
+      # print(f"{metadataItem}: {metadataValue}")
+  # print(catalogMetadataUpdate)
+  # clientProd1.close()
+  clientOdev.close()
+
   #------------------------------
   # Update The User
-  print(f"{cantemoOriginalTitleWhite} \(without accents: {cantemoOriginalTitle}\)")
+  # print(f"{cantemoOriginalTitleWhite} (without accents: {cantemoOriginalTitle}) - {cantemoTitleCode}")
   #------------------------------
- 
+
+  #------------------------------
+  # Update Cantemo metadata
+  headers = {
+  'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
+  'Cookie': 'csrftoken=HFOqrbk9cGt3qnc6WBIxWPjvCFX0udBdbJnzCv9jECumOjfyG7SS2lgVbFcaHBCc',
+  'Accept': 'application/xml',
+  'Content-Type': 'application/xml; charset=utf-8'
+  }
+  urlPutAnalysisInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata/"
+  itemRawPayload = f"""
+<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"> 
+  <timespan start=\"-INF\" end=\"+INF\">
+    <field>
+      <name>oly_catalogMetadata</name>
+      <value>{catalogMetadataUpdate}</value>
+    </field>
+  </timespan>
+</MetadataDocument>"""
+  # print(itemRawPayload)
+  itemPayload = itemRawPayload.encode('utf-8')
+  # print(itemPayload)
+  httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=itemPayload)  
+
 #------------------------------
 except Exception as e:
     print(f"MongoDB Error: {e}")
+    # print(traceback.format_exc())
+    # clientProd1.close()
+    clientOdev.close()
 except HTTPError as http_err:
   print(f'HTTP error occurred: {http_err}')
 except Exception as err:
