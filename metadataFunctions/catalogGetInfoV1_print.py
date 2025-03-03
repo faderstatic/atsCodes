@@ -105,7 +105,7 @@ try:
   # print(catalogItemMetadata)
   catalogMetadataUpdate = ""
   for metadataItem, metadataValue in catalogItemMetadata.items():
-    if metadataItem in ["year", "languageLabel", "productionCompany", "sourceType", "producer", "primaryGenreLabel", "secondaryGenresLabel", "duration", "description", "externalReferences", "cast", "metadataSource"]:
+    if metadataItem in ["year", "languageLabel", "productionCompany", "sourceType", "producer", "primaryGenreLabel", "secondaryGenresLabel", "duration", "description", "metadataSource", "cast"]:
       if metadataItem == "metadataSource":
         for infoItem in catalogItemMetadata['metadataSource']:
           sourceType = infoItem['sourceType']
@@ -145,8 +145,8 @@ try:
 </MetadataDocument>"""
   # print(itemRawPayload)
   itemPayload = itemRawPayload.encode('utf-8')
-  # print(itemPayload)
-  httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=itemPayload)  
+  print(itemPayload)
+  # httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=itemPayload)  
 
 #------------------------------
 except Exception as e:
