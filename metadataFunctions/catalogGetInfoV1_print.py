@@ -102,7 +102,7 @@ try:
   cantemoTitleCode = readCantemoMetadata(cantemoItemId, 'oly_titleCode')
   queryTitleCode = {'titleCode': cantemoTitleCode}
   catalogItemMetadata = catalogCollection.find_one(queryTitleCode)
-  # print(catalogItemMetadata)
+  print(catalogItemMetadata)
   catalogMetadataUpdate = ""
   for metadataItem, metadataValue in catalogItemMetadata.items():
     if metadataItem in ["year", "languageLabel", "productionCompany", "sourceType", "producer", "primaryGenreLabel", "secondaryGenresLabel", "duration", "description", "metadataSource", "cast"]:
