@@ -100,6 +100,7 @@ try:
   # cantemoOriginalTitle = cantemoOriginalTitleTemp.replace(' ', '+')
 
   cantemoTitleCode = readCantemoMetadata(cantemoItemId, 'oly_titleCode')
+  print(cantemoTitleCode)
   queryTitleCode = {'titleCode': cantemoTitleCode}
   catalogItemMetadata = catalogCollection.find_one(queryTitleCode)
   print(catalogItemMetadata)
