@@ -116,7 +116,7 @@ try:
         catalogMetadataUpdate = catalogMetadataUpdate + f"""{metadataItem}: {metadataValue}
 """
       # print(f"{metadataItem}: {metadataValue}")
-  # print(catalogMetadataUpdate)
+  print(catalogMetadataUpdate)
   # clientProd1.close()
   clientOdev.close()
 
