@@ -102,6 +102,7 @@ try:
   cantemoTitleCode = readCantemoMetadata(cantemoItemId, 'oly_titleCode')
   print(cantemoTitleCode)
   queryTitleCode = {'titleCode': cantemoTitleCode}
+  print(queryTitleCode)
   catalogItemMetadata = catalogCollection.find_one(queryTitleCode)
   print(catalogItemMetadata)
   catalogMetadataUpdate = ""
