@@ -148,7 +148,7 @@ try:
           catalogMetadataUpdate = catalogMetadataUpdate + f"""Source Type - {sourceType}: {sourceUrl}
 """
       else:
-        catalogMetadataUpdate = catalogMetadataUpdate + f"""{metadataItem}: {metadataValue}
+        catalogMetadataUpdate = catalogMetadataUpdate + f"""{metadataItem}: {str(metadataValue).replace('[,',"").replace(',]',"")}
 """
       # print(f"{metadataItem}: {metadataValue}")
   # print(catalogMetadataUpdate)
