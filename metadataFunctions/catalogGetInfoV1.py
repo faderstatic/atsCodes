@@ -84,6 +84,8 @@ try:
 
   olyplatCatalog = clientOdev["olyplat_catalog"]
   catalogCollection = olyplatCatalog["catalog"]
+  movieCollection = olyplatCatalog["movie"]
+  seriesCollection = olyplatCatalog["series"]
 
   cantemoItemId = sys.argv[1]
 
@@ -102,11 +104,32 @@ try:
   cantemoTitleCode = readCantemoMetadata(cantemoItemId, 'oly_titleCode')
   queryTitleCode = {'titleCode': cantemoTitleCode}
   catalogItemMetadata = catalogCollection.find_one(queryTitleCode)
-  # print(catalogItemMetadata)
+  if not catalogItemMetadata:
+    if cantemoTitleCode[0] == "M":
+      catalogItemMetadata = movieCollection.find_one(queryTitleCode)
+      # print("Get information from movie collection")
+    if cantemoTitleCode[0] == "S":
+      catalogItemMetadata = seriesCollection.find_one(queryTitleCode)
+      # print("Get information from series collection")
   catalogMetadataUpdate = ""
   for metadataItem, metadataValue in catalogItemMetadata.items():
-    if metadataItem in ["year", "languageLabel", "productionCompany", "sourceType", "producer", "primaryGenreLabel", "secondaryGenresLabel", "duration", "description", "externalReferences", "cast", "metadataSource"]:
-      if metadataItem == "metadataSource":
+    if metadataItem in ["year", "languageLabel", "productionCompany", "sourceType", "producer", "director", "primaryGenreLabel", "secondaryGenresLabel", "duration", "description", "metadataSource", "cast", "editorsNotes", "translations"]:
+      if metadataItem == "translations":
+        enTranslations = metadataValue['en']
+        if enTranslations['description']:
+          catalogMetadataUpdate = catalogMetadataUpdate + f"""description en: {enTranslations['description']}
+"""
+        if enTranslations['shortDescription']:
+          catalogMetadataUpdate = catalogMetadataUpdate + f"""short description en: {enTranslations['shortDescription']}
+"""
+        esTranslations = metadataValue['es']
+        if esTranslations['description']:
+          catalogMetadataUpdate = catalogMetadataUpdate + f"""description es: {esTranslations['description']}
+"""
+        if esTranslations['shortDescription']:
+          catalogMetadataUpdate = catalogMetadataUpdate + f"""short description es: {esTranslations['shortDescription']}
+"""
+      elif metadataItem == "metadataSource":
         for infoItem in catalogItemMetadata['metadataSource']:
           sourceType = infoItem['sourceType']
           sourceUrl = infoItem['url']
