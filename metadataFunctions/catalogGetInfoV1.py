@@ -86,6 +86,7 @@ try:
   catalogCollection = olyplatCatalog["catalog"]
   movieCollection = olyplatCatalog["movie"]
   seriesCollection = olyplatCatalog["series"]
+  genreCollection = olyplatCatalog["genre_type"]
 
   cantemoItemId = sys.argv[1]
 
@@ -113,7 +114,18 @@ try:
       # print("Get information from series collection")
   catalogMetadataUpdate = ""
   for metadataItem, metadataValue in catalogItemMetadata.items():
-    if metadataItem in ["year", "languageLabel", "productionCompany", "sourceType", "producer", "director", "primaryGenreLabel", "secondaryGenresLabel", "duration", "description", "metadataSource", "cast", "editorsNotes", "translations"]:
+    if metadataItem in ["year", "languageLabel", "productionCompany", "sourceType", "producer", "director", "primaryGenreLabel", "secondaryGenresLabel", "duration", "description", "metadataSource", "cast", "editorsNotes", "translations", "secondaryGenres", "primaryGenre"]:
+      if (metadataItem == "secondaryGenres"):
+        genreCombined = ""
+        for eachGenre in metadataValue:
+          queryGenreCode = {'entityUUID': eachGenre}
+          genreValue = genreCollection.find_one(queryGenreCode)
+          genreCombined = genreCombined+genreValue['entityValue']+","
+        metadataValue = genreCombined[:-1]
+      if (metadataItem == "primaryGenre"):
+        queryGenreCode = {'entityUUID': metadataValue}
+        genreValue = genreCollection.find_one(queryGenreCode)
+        metadataValue = genreValue['entityValue']
       if metadataItem == "translations":
         enTranslations = metadataValue['en']
         if enTranslations['description']:
