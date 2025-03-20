@@ -363,7 +363,7 @@ then
     sleep 1
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - Triggering Import Contract Information - Paramaters-{$userName} - ($rightslineItemId) " >> "$logfile"
     sleep 1
-    /opt/olympusat/scriptsActive/importRightslineLegacyInfo-contract_v5.2.sh $cantemoItemId $userName oly_rightslineItemId /opt/olympusat/resources/rightslineData/RIGHTSLINE_CONTRACT_CODE_INFO_DATABASE_2024-07-31.csv $rightslineItemId
+    # /opt/olympusat/scriptsActive/importRightslineLegacyInfo-contract_v5.2.sh $cantemoItemId $userName oly_rightslineItemId /opt/olympusat/resources/rightslineData/RIGHTSLINE_CONTRACT_CODE_INFO_DATABASE_2024-07-31.csv $rightslineItemId
 else
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - Import Metadata Job Skipped - No Matching Rightsline Item Id Found in CSV - {$rightslineItemId}" >> "$logfile"
 fi
