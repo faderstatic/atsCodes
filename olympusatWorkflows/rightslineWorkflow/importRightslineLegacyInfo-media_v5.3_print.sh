@@ -116,20 +116,20 @@ export mydate=$(date +%Y-%m-%d)
 # --------------------------------------------------
 
 export cantemoItemTitleCode=$(filterVidispineItemMetadata "$cantemoItemId" "metadata" "oly_titleCode")
-echo "Title code is $cantemoItemTitleCode"
 export cantemoItemTitle=$(filterVidispineItemMetadata "$cantemoItemId" "metadata" "title")
-echo "Title in Cantemo is $cantemoItemTitle"
 # --------------------------------------------------
 
 # --------------------------------------------------
 # Sanitize cantemoItemTitleCode to remove any empty spaces
 echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - Import Metadata Job Initiated by {$userName}"
+cantemoItemTitleCodeCleaned=$(echo $cantemoItemTitleCode | tr -d ' ')
 if [[ "$cantemoItemTitleCodeCleaned" != "$cantemoItemTitleCode" ]];
 then
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - Updating Cantemo with Sanitized Title Code - [$cantemoItemTitleCode] - {$rightslineItemIdCleaned}"
     # updateVidispineMetadata $cantemoItemId "oly_titleCode" "$cantemoItemTitleCodeCleaned"
     sleep 5
-    export cantemoItemTitleCode=$(filterVidispineItemMetadata "$cantemoItemId" "metadata" "oly_titleCode")
+    cantemoItemTitleCode=$cantemoItemTitleCodeCleaned
+    # export cantemoItemTitleCode=$(filterVidispineItemMetadata "$cantemoItemId" "metadata" "oly_titleCode")
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - Newly Updated Title Code from Cantemo - [$cantemoItemTitleCode]"
 else
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - Title Code from Cantemo - [$cantemoItemTitleCode]"
