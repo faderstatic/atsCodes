@@ -13,8 +13,8 @@ IFS=$(echo -e "\n\b\015")
 
 # --------------------------------------------------
 # External funtions to include
-# . /opt/olympusat/scriptsLibrary/olympusatCantemo.lib
-. /mnt/c/Users/kkanjanapitak/Desktop/Repositories/atsCodes/libraries-shell/olympusatCantemo.lib
+. /opt/olympusat/scriptsLibrary/olympusatCantemo.lib
+# . /mnt/c/Users/kkanjanapitak/Desktop/Repositories/atsCodes/libraries-shell/olympusatCantemo.lib
 # --------------------------------------------------
 
 # --------------------------------------------------
