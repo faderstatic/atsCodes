@@ -13,8 +13,8 @@ IFS=$(echo -e "\n\b\015")
 
 # --------------------------------------------------
 # External funtions to include
-# . /opt/olympusat/scriptsLibrary/olympusatCantemo.lib
-. /mnt/c/Users/kkanjanapitak/Desktop/Repositories/atsCodes/libraries-shell/olympusatCantemo.lib
+. /opt/olympusat/scriptsLibrary/olympusatCantemo.lib
+# . /mnt/c/Users/kkanjanapitak/Desktop/Repositories/atsCodes/libraries-shell/olympusatCantemo.lib
 # --------------------------------------------------
 
 # --------------------------------------------------
@@ -114,11 +114,9 @@ export mydate=$(date +%Y-%m-%d)
 # Ensure that the lock is released when the job finishes
 # trap releaseLock EXIT
 # --------------------------------------------------
-echo "Let's get started"
+
 export cantemoItemTitleCode=$(filterVidispineItemMetadata "$cantemoItemId" "metadata" "oly_titleCode")
-echo $cantemoItemTitleCode
 export cantemoItemTitle=$(filterVidispineItemMetadata "$cantemoItemId" "metadata" "title")
-echo $cantemoitemTitle
 # --------------------------------------------------
 
 # --------------------------------------------------
