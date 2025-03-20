@@ -409,6 +409,7 @@ then
     done
     apiPayload="$apiPayload</timespan>
 </Metadatadocument>"
+echo $apiPayload
 urlUpdateMetadata="http://10.1.1.34:8080/API/item/$cantemoItemId/metadata/"
 curl -s -o /dev/null --location --request PUT $urlUpdateMetadata --header 'Content-Type: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=xZqBrKBPBOUANsWFnMC3aF90S52Ip3tgXdUHwWZvhNnu9aLl9j4rdrxRhV9nSQx9' --data $apiPayload
     # --------------------------------------------------
