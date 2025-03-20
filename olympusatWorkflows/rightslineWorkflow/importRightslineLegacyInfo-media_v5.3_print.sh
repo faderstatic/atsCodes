@@ -13,7 +13,8 @@ IFS=$(echo -e "\n\b\015")
 
 # --------------------------------------------------
 # External funtions to include
-. /opt/olympusat/scriptsLibrary/olympusatCantemo.lib
+# . /opt/olympusat/scriptsLibrary/olympusatCantemo.lib
+. /mnt/c/Users/kkanjanapitak/Desktop/Repositories/atsCodes/libraries-shell/olympusatCantemo.lib
 # --------------------------------------------------
 
 # --------------------------------------------------
@@ -98,39 +99,41 @@ export columnHeader="$3"
 export inputFile="$4"
 export mydate=$(date +%Y-%m-%d)
 #logfile="/opt/olympusat/logs/importRightslineLegacyInfo-$mydate.log"
-logfile="/opt/olympusat/logs/ingestMetadataWorkflow-$mydate.log"
+# logfile="/opt/olympusat/logs/ingestMetadataWorkflow-$mydate.log"
 # --------------------------------------------------
 # Lock file to ensure only one job runs at a time
-lockFile="/opt/olympusat/workflowQueues/importRightslineLegacyInfo/jobQueue.lock"
+# lockFile="/opt/olympusat/workflowQueues/importRightslineLegacyInfo/jobQueue.lock"
 # Acquire the lock by waiting if another job is running
-while [ -f "$lockFile" ];
-do
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - Waiting for the previous job to finish..." >> "$logfile"    
-    sleep 2
-done
+# while [ -f "$lockFile" ];
+# do
+#     echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - Waiting for the previous job to finish..." 
+#     sleep 2
+# done
 # Acquire the lock for this job
-touch "$lockFile"
+# touch "$lockFile"
 # Ensure that the lock is released when the job finishes
-trap releaseLock EXIT
+# trap releaseLock EXIT
 # --------------------------------------------------
+echo "Let's get started"
 export cantemoItemTitleCode=$(filterVidispineItemMetadata "$cantemoItemId" "metadata" "oly_titleCode")
+echo $cantemoItemTitleCode
 export cantemoItemTitle=$(filterVidispineItemMetadata "$cantemoItemId" "metadata" "title")
+echo $cantemoitemTitle
 # --------------------------------------------------
 
 # --------------------------------------------------
 # Sanitize cantemoItemTitleCode to remove any empty spaces
-echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - Import Metadata Job Initiated by {$userName}" >> "$logfile"
-cantemoItemTitleCodeCleaned=$(echo $cantemoItemTitleCode | tr -d ' ')
+echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - Import Metadata Job Initiated by {$userName}"
 if [[ "$cantemoItemTitleCodeCleaned" != "$cantemoItemTitleCode" ]];
 then
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - Updating Cantemo with Sanitized Title Code - [$cantemoItemTitleCode] - {$rightslineItemIdCleaned}" >> "$logfile"
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - Updating Cantemo with Sanitized Title Code - [$cantemoItemTitleCode] - {$rightslineItemIdCleaned}"
     updateVidispineMetadata $cantemoItemId "oly_titleCode" "$cantemoItemTitleCodeCleaned"
     sleep 5
     export cantemoItemTitleCode=$(filterVidispineItemMetadata "$cantemoItemId" "metadata" "oly_titleCode")
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - Newly Updated Title Code from Cantemo - [$cantemoItemTitleCode]" >> "$logfile"
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - Newly Updated Title Code from Cantemo - [$cantemoItemTitleCode]"
 else
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - Title Code from Cantemo - [$cantemoItemTitleCode]" >> "$logfile"
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - Title from Cantemo - [$cantemoItemTitle]" >> "$logfile"
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - Title Code from Cantemo - [$cantemoItemTitleCode]"
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - Title from Cantemo - [$cantemoItemTitle]"
 fi
 # --------------------------------------------------
 #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - Reading Information in CSV" >> "$logfile"
@@ -239,8 +242,8 @@ then
                 then
                     #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
                     export rightslineItemId="${fieldValue[$columnCounter]}"
-                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - oly_rightslineItemId - [$rightslineItemId]" >> "$logfile"
-                    updateVidispineMetadata $cantemoItemId "oly_rightslineItemId" "$rightslineItemId"
+                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - oly_rightslineItemId - [$rightslineItemId]"
+                    # updateVidispineMetadata $cantemoItemId "oly_rightslineItemId" "$rightslineItemId"
                     sleep 1
                     columnCounter=$(($columnCounter + 1))
                 else
@@ -253,8 +256,8 @@ then
                 then
                     #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
                     export rightslineEntityTitle="${fieldValue[$columnCounter]}"
-                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - oly_rightslineEntityTitle - [$rightslineEntityTitle]" >> "$logfile"
-                    updateVidispineMetadata $cantemoItemId "oly_rightslineEntityTitle" "$rightslineEntityTitle"
+                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - oly_rightslineEntityTitle - [$rightslineEntityTitle]"
+                    # updateVidispineMetadata $cantemoItemId "oly_rightslineEntityTitle" "$rightslineEntityTitle"
                     sleep 1
                     columnCounter=$(($columnCounter + 1))
                 else
@@ -267,8 +270,8 @@ then
                 then
                     #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
                     export episodeNumber="${fieldValue[$columnCounter]}"
-                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - oly_episodeNumber - [$episodeNumber]" >> "$logfile"
-                    updateVidispineMetadata $cantemoItemId "oly_episodeNumber" "$episodeNumber"
+                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - oly_episodeNumber - [$episodeNumber]"
+                    # updateVidispineMetadata $cantemoItemId "oly_episodeNumber" "$episodeNumber"
                     sleep 1
                     columnCounter=$(($columnCounter + 1))
                 else
@@ -294,13 +297,13 @@ then
                                 firstContractString="$firstContractString""0"
                             done
                             firstContractString="$firstContractString""$firstContractId"
-                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - oly_rightslineContractId - [$firstContractString]" >> "$logfile"
-                            updateVidispineMetadata $cantemoItemId "oly_rightslineContractId" "$firstContractString"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - oly_rightslineContractId - [$firstContractString]"
+                            # updateVidispineMetadata $cantemoItemId "oly_rightslineContractId" "$firstContractString"
                             sleep 1
                             columnCounter=$(($columnCounter + 1))
                         else
-                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - oly_rightslineContractId - [$firstContractString]" >> "$logfile"
-                            updateVidispineMetadata $cantemoItemId "oly_rightslineContractId" "$firstContractString"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - oly_rightslineContractId - [$firstContractString]"
+                            # updateVidispineMetadata $cantemoItemId "oly_rightslineContractId" "$firstContractString"
                             sleep 1
                             columnCounter=$(($columnCounter + 1))
                         fi
@@ -314,13 +317,13 @@ then
                                 secondContractString="$secondContractString""0"
                             done
                             secondContractString="$secondContractString""$secondContractId"
-                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - oly_rightslineContractId - [$secondContractString]" >> "$logfile"
-                            updateVidispineMetadata $cantemoItemId "oly_rightslineContractId" "$secondContractString"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - oly_rightslineContractId - [$secondContractString]"
+                            # updateVidispineMetadata $cantemoItemId "oly_rightslineContractId" "$secondContractString"
                             sleep 1
                             columnCounter=$(($columnCounter + 1))
                         else
-                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - oly_rightslineContractId - [$secondContractString]" >> "$logfile"
-                            updateVidispineMetadata $cantemoItemId "oly_rightslineContractId" "$secondContractString"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - oly_rightslineContractId - [$secondContractString]"
+                            # updateVidispineMetadata $cantemoItemId "oly_rightslineContractId" "$secondContractString"
                             sleep 1
                             columnCounter=$(($columnCounter + 1))
                         fi
@@ -336,13 +339,13 @@ then
                                 contractString="$contractString""0"
                             done
                             contractString="$contractString""${fieldValue[$columnCounter]}"
-                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - oly_rightslineContractId - [$contractString]" >> "$logfile"
-                            updateVidispineMetadata $cantemoItemId "oly_rightslineContractId" "$contractString"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - oly_rightslineContractId - [$contractString]"
+                            # updateVidispineMetadata $cantemoItemId "oly_rightslineContractId" "$contractString"
                             sleep 1
                             columnCounter=$(($columnCounter + 1))
                         else
-                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - oly_rightslineContractId - [$contractString]" >> "$logfile"
-                            updateVidispineMetadata $cantemoItemId "oly_rightslineContractId" "$contractString"
+                            echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - oly_rightslineContractId - [$contractString]"
+                            # updateVidispineMetadata $cantemoItemId "oly_rightslineContractId" "$contractString"
                             sleep 1
                             columnCounter=$(($columnCounter + 1))
                         fi
@@ -359,13 +362,13 @@ then
     done
     # --------------------------------------------------
     sleep 5
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - Update Media Content Metadata Completed" >> "$logfile"
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - Update Media Content Metadata Completed"
     sleep 1
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - Triggering Import Contract Information - Paramaters-{$userName} - ($rightslineItemId) " >> "$logfile"
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - Triggering Import Contract Information - Paramaters-{$userName} - ($rightslineItemId)"
     sleep 1
-    /opt/olympusat/scriptsActive/importRightslineLegacyInfo-contract_v5.2.sh $cantemoItemId $userName oly_rightslineItemId /opt/olympusat/resources/rightslineData/RIGHTSLINE_CONTRACT_CODE_INFO_DATABASE_2024-07-31.csv $rightslineItemId
+    # /opt/olympusat/scriptsActive/importRightslineLegacyInfo-contract_v5.2.sh $cantemoItemId $userName oly_rightslineItemId /opt/olympusat/resources/rightslineData/RIGHTSLINE_CONTRACT_CODE_INFO_DATABASE_2024-07-31.csv $rightslineItemId
 else
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - Import Metadata Job Skipped - No Matching Rightsline Item Id Found in CSV - {$rightslineItemId}" >> "$logfile"
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - Import Metadata Job Skipped - No Matching Rightsline Item Id Found in CSV - {$rightslineItemId}"
 fi
 
 IFS=$saveIFS
