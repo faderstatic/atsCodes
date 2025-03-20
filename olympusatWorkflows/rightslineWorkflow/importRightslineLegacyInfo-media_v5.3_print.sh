@@ -126,7 +126,7 @@ cantemoItemTitleCodeCleaned=$(echo $cantemoItemTitleCode | tr -d ' ')
 if [[ "$cantemoItemTitleCodeCleaned" != "$cantemoItemTitleCode" ]];
 then
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - Updating Cantemo with Sanitized Title Code - [$cantemoItemTitleCode] - {$rightslineItemIdCleaned}"
-    # updateVidispineMetadata $cantemoItemId "oly_titleCode" "$cantemoItemTitleCodeCleaned"
+    updateVidispineMetadata $cantemoItemId "oly_titleCode" "$cantemoItemTitleCodeCleaned"
     sleep 5
     cantemoItemTitleCode=$cantemoItemTitleCodeCleaned
     # export cantemoItemTitleCode=$(filterVidispineItemMetadata "$cantemoItemId" "metadata" "oly_titleCode")
@@ -146,12 +146,14 @@ columnCounter=1
 noMoreColumns="false"
 while [ "$noMoreColumns" == "false" ];
 do
+    echo "Column counter: $columnCounter"
     if [[ $columnCounter -eq 1 ]];
     then
         fieldName[$columnCounter]=$(echo $headerRow | awk 'BEGIN { FPAT = "([^,]*)|(\"[^\"]+\")" } {print $'$columnCounter'}' | sed -e 's/\"//g') #| sed -e 's/^.//')
     else
         fieldName[$columnCounter]=$(echo $headerRow | awk 'BEGIN { FPAT = "([^,]*)|(\"[^\"]+\")" } {print $'$columnCounter'}' | sed -e 's/\"//g')
     fi
+    echo $fieldName[$columnCounter]
     if [[ "${fieldName[$columnCounter]}" == *"$columnHeader" ]];
     then
         cantemoItemTitleCodeColumn=$columnCounter
