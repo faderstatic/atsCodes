@@ -168,11 +168,11 @@ done
 #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - cantemoItemTitleCodeColumn - [$cantemoItemTitleCodeColumn]" >> "$logfile"
 for matchedRow in $(grep -n "$inputFile" -e "\<$cantemoItemTitleCode\>" | awk -F ',' '{print $'1'}')
 do
-    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - matchedRow - [$matchedRow]" >> "$logfile"
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - matchedRow - [$matchedRow]"
     matchedValue=$(echo $matchedRow | awk -F ':' '{print $2}')
-    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - matchedValue - [$matchedValue]" >> "$logfile"
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - matchedValue - [$matchedValue]"
     matchedRowNumber=$(echo $matchedRow | awk -F ':' '{print $1}')
-    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - matchedRowNumber - [$matchedRowNumber]" >> "$logfile"
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - matchedRowNumber - [$matchedRowNumber]"
 done
 # --------------------------------------------------
 
