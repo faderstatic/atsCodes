@@ -315,7 +315,6 @@ then
                 then
                     descriptionEn="${fieldValue[$columnCounter]}"
                     echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - oly_descriptionEn - [$descriptionEn]" >> "$logfile"
-                    apiPayload="$apiPayload       <field>\n           <name>oly_descriptionEn</name>\n         <value>$descriptionEn</value>\n      </field>\n"
                     columnCounter=$(($columnCounter + 1))
                 else
                     columnCounter=$(($columnCounter + 1))
@@ -326,7 +325,6 @@ then
                 then
                     shortDescriptionEn="${fieldValue[$columnCounter]}"
                     echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - oly_shortDescriptionEn - [$shortDescriptionEn]" >> "$logfile"
-                    apiPayload="$apiPayload       <field>\n           <name>oly_shortDescriptionEn</name>\n         <value>$shortDescriptionEn</value>\n      </field>\n"
                     columnCounter=$(($columnCounter + 1))
                 else
                     columnCounter=$(($columnCounter + 1))
@@ -337,7 +335,6 @@ then
                 then
                     descriptionEs="${fieldValue[$columnCounter]}"
                     echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - oly_descriptionEs - [$descriptionEs]" >> "$logfile"
-                    apiPayload="$apiPayload       <field>\n           <name>oly_descriptionEs</name>\n         <value>$descriptionEs</value>\n      </field>\n"
                     columnCounter=$(($columnCounter + 1))
                 else
                     columnCounter=$(($columnCounter + 1))
@@ -348,7 +345,6 @@ then
                 then
                     shortDescriptionEs="${fieldValue[$columnCounter]}"
                     echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - oly_shortDescriptionEs - [$shortDescriptionEs]" >> "$logfile"
-                    apiPayload="$apiPayload       <field>\n           <name>oly_shortDescriptionEs</name>\n         <value>$shortDescriptionEs</value>\n      </field>\n"
                     columnCounter=$(($columnCounter + 1))
                 else
                     columnCounter=$(($columnCounter + 1))
@@ -360,17 +356,6 @@ then
                     originalLanguage="${fieldValue[$columnCounter]}"
                     echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - oly_originalLanguage - [$originalLanguage]" >> "$logfile"
                     apiPayload="$apiPayload       <field>\n           <name>oly_originalLanguage</name>\n         <value>$originalLanguage</value>\n      </field>\n"
-                    columnCounter=$(($columnCounter + 1))
-                else
-                    columnCounter=$(($columnCounter + 1))
-                fi
-            ;;
-            "oly_countryOfOriginGenres")
-                if [[ ! -z "${fieldValue[$columnCounter]}" && "$bulkMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
-                then
-                    countryOfOriginGenres="${fieldValue[$columnCounter]}"
-                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - oly_countryOfOriginGenres - [$countryOfOriginGenres]" >> "$logfile"
-                    apiPayload="$apiPayload       <field>\n           <name>oly_countryOfOriginGenres</name>\n         <value>$countryOfOriginGenres</value>\n      </field>\n"
                     columnCounter=$(($columnCounter + 1))
                 else
                     columnCounter=$(($columnCounter + 1))
@@ -533,6 +518,8 @@ then
             ;;
         esac
     done
+    apiPayload="$apiPayload     <group mode=\"add\">\n          <name>English Synopsis</name>\n         <field>\n               <name>oly_descriptionEn</name>\n                <value>$descriptionEn</value>\n         </field>\n         <field>\n               <name>oly_shortDescriptionEn</name>\n                <value>$shortDescriptionEn</value>\n         </field>\n     </group>\n"
+    apiPayload="$apiPayload     <group mode=\"add\">\n          <name>Spanish Synopsis</name>\n         <field>\n               <name>oly_descriptionEs</name>\n                <value>$descriptionEs</value>\n         </field>\n         <field>\n               <name>oly_shortDescriptionEs</name>\n                <value>$shortDescriptionEs</value>\n         </field>\n     </group>\n"
     apiPayload="$apiPayload </timespan>\n</MetadataDocument>"
 apiPayloadFormatted=$(echo -e $apiPayload)
 echo $apiPayloadFormatted
