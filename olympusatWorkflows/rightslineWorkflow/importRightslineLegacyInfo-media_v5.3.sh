@@ -368,7 +368,7 @@ then
             ;;
         esac
     done
-    apiPayload="$apiPayload </timespan>\n</Metadatadocument>"
+    apiPayload="$apiPayload </timespan>\n</MetadataDocument>"
 apiPayloadFormatted=$(echo -e $apiPayload)
 echo $apiPayloadFormatted
 urlUpdateMetadata="http://10.1.1.34:8080/API/item/$cantemoItemId/metadata/"
