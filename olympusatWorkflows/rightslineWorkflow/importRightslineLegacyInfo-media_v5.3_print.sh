@@ -181,8 +181,9 @@ if [ ! -z "$matchedRowNumber" ];
 then
     line=$(sed -n ''$matchedRowNumber'p' "$inputFile")
     echo "Line read - $line"
-    cleanLine=$(echo $line | sed -e 's/\"\"/-/g')
+    cleanLine=$(echo "$line" | sed -e 's/\"\"/-/g')
     cleanLine=$(echo "$cleanLine" | sed -e 's/&/\&amp;/g')
+    cleanLine=$(echo $cleanLine | sed -e 's/-\"/-/g')
     echo "Clean line read - $cleanLine"
     # columnsForThisRow=$(echo "$cleanLine" | awk 'BEGIN { FPAT = "([^,]*)|(\"[^\"]+)|(\"[^\"]+\")" } {print NF+1}' )
     columnsForThisRow=$(countDaMuthaFukkingColumns "$cleanLine")
