@@ -132,6 +132,7 @@ then
     fi
     columnHeader="oly_rightslineItemId"
 fi
+echo "Searching for \"$queryValue\" in $columnHeader"
 # --------------------------------------------------
 
 # --------------------------------------------------
@@ -566,7 +567,7 @@ then
     apiPayloadFormatted=$(echo -e $apiPayload)
     # echo $apiPayloadFormatted
     urlUpdateMetadata="http://10.1.1.34:8080/API/item/$cantemoItemId/metadata/"
-    response=$(curl -s -o /dev/null --location --request PUT $urlUpdateMetadata --header 'Content-Type: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=xZqBrKBPBOUANsWFnMC3aF90S52Ip3tgXdUHwWZvhNnu9aLl9j4rdrxRhV9nSQx9' --data "$apiPayloadFormatted")
+    # response=$(curl -s -o /dev/null --location --request PUT $urlUpdateMetadata --header 'Content-Type: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=xZqBrKBPBOUANsWFnMC3aF90S52Ip3tgXdUHwWZvhNnu9aLl9j4rdrxRhV9nSQx9' --data "$apiPayloadFormatted")
     # --------------------------------------------------
     sleep 5
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - Update Media Content Metadata Completed" >> "$logfile"
