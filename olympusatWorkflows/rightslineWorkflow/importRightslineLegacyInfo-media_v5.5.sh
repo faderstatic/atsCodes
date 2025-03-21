@@ -113,25 +113,41 @@ touch "$lockFile"
 # Ensure that the lock is released when the job finishes
 trap releaseLock EXIT
 # --------------------------------------------------
-export cantemoItemTitleCode=$(filterVidispineItemMetadata "$cantemoItemId" "metadata" "oly_titleCode")
-export cantemoItemTitle=$(filterVidispineItemMetadata "$cantemoItemId" "metadata" "title")
-export rightslineItemId=$(filterVidispineItemMetadata "$cantemoItemId" "metadata" "oly_rightslineItemId")
-echo $cantemoItemTitle
+export queryValue=$(filterVidispineItemMetadata "$cantemoItemId" "metadata" "oly_titleCode")
+
+if [[ -z "$queryValue" ]];
+then
+    export rightslineItemId=$(filterVidispineItemMetadata "$cantemoItemId" "metadata" "oly_rightslineItemId")
+    if [[ -z "$rightslineItemId" ]];
+    then
+        export cantemoItemTitle=$(filterVidispineItemMetadata "$cantemoItemId" "metadata" "title")
+        if [[ $cantemoItemTitle == "CA_"* ]];
+        then
+            queryValue=$(echo $queryValue | awk -F "_" '{print $3}')
+        else
+            queryValue=0
+        fi
+    else
+        queryValue=$cantemoItemTitle
+    fi
+    columnHeader="oly_rightslineItemId"
+fi
+echo "Searching for \"$queryValue\" in $columnHeader"
 # --------------------------------------------------
 
 # --------------------------------------------------
-# Sanitize cantemoItemTitleCode to remove any empty spaces
+# Sanitize queryValue to remove any empty spaces
 echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - Import Metadata Job Initiated by {$userName}" >> "$logfile"
-cantemoItemTitleCodeCleaned=$(echo $cantemoItemTitleCode | tr -d ' ')
-if [[ "$cantemoItemTitleCodeCleaned" != "$cantemoItemTitleCode" ]];
+queryValueCleaned=$(echo $queryValue | tr -d ' ')
+if [[ "$queryValueCleaned" != "$queryValue" ]];
 then
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - Updating Cantemo with Sanitized Title Code - [$cantemoItemTitleCode] - {$rightslineItemIdCleaned}" >> "$logfile"
-    updateVidispineMetadata $cantemoItemId "oly_titleCode" "$cantemoItemTitleCodeCleaned"
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - Updating Cantemo with Sanitized search value - [$queryValue] - {$queryValueCleaned}" >> "$logfile"
+    updateVidispineMetadata $cantemoItemId "$columnHeader" "$queryValueCleaned"
     sleep 5
-    export cantemoItemTitleCode=$(filterVidispineItemMetadata "$cantemoItemId" "metadata" "oly_titleCode")
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - Newly Updated Title Code from Cantemo - [$cantemoItemTitleCode]" >> "$logfile"
+    export queryValue=$queryValueCleaned
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - Newly Updated search value from Cantemo - [$queryValue]" >> "$logfile"
 else
-    echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - Title Code from Cantemo - [$cantemoItemTitleCode]" >> "$logfile"
+    echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - Searching for - [$queryValue]" >> "$logfile"
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - Title from Cantemo - [$cantemoItemTitle]" >> "$logfile"
 fi
 # --------------------------------------------------
@@ -153,8 +169,8 @@ do
     fi
     if [[ "${fieldName[$columnCounter]}" == *"$columnHeader" ]];
     then
-        cantemoItemTitleCodeColumn=$columnCounter
-        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - cantemoItemTitleCodeColumn - [$cantemoItemTitleCodeColumn]" >> "$logfile"
+        queryValueColumn=$columnCounter
+        #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - queryValueColumn - [$queryValueColumn]" >> "$logfile"
     fi
     if [[ "${fieldName[$columnCounter]}" == "" ]];
     then
@@ -165,9 +181,9 @@ do
     fi
 done
 #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - inputFile - [$inputFile]" >> "$logfile"
-#echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - cantemoItemTitleCode - [$cantemoItemTitleCode]" >> "$logfile"
-#echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - cantemoItemTitleCodeColumn - [$cantemoItemTitleCodeColumn]" >> "$logfile"
-for matchedRow in $(grep -n "$inputFile" -e "\<$cantemoItemTitleCode\>" | awk -F ',' '{print $'1'}')
+#echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - queryValue - [$queryValue]" >> "$logfile"
+#echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - queryValueColumn - [$queryValueColumn]" >> "$logfile"
+for matchedRow in $(grep -n "$inputFile" -e "\<$queryValue\>" | awk -F ',' '{print $'1'}')
 do
     #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - matchedRow - [$matchedRow]" >> "$logfile"
     matchedValue=$(echo $matchedRow | awk -F ':' '{print $2}')
@@ -217,7 +233,7 @@ then
 
     # --------------------------------------------------
     # Checking Cantemo Item for existing metadata
-    urlGetItemBulkMetadata="http://10.1.1.34:8080/API/item/$cantemoItemId/metadata?field=oly_rightslineEntityTitle%2Coly_titleCode%2Coly_rightslineContractId%2Coly_contentType%2Coly_originalLanguage%2Coly_cast%2Coly_director%2Coly_episodeNumber%2Coly_firstUseDate%2Coly_producer%2Coly_originalMpaaRating%2Coly_originalRtcRating%2Coly_originalRating%2Coly_readyForAirDate%2Coly_seasonNumber%2Coly_titleEn%2Coly_titleEs%2Coly_closedCaptionInfo%2Coly_countryOfOrigin%2Coly_primaryGenre%2Coly_secondaryGenres%2Coly_closedCaptionLanguage%2Coly_originalTitle%2Coly_productionCompany%2Coly_tags%2Coly_productionYear%2Coly_numberOfEpisodes%2Coly_totalSeasonsBySeries%2Coly_totalEpisodesBySeries%2Coly_totalEpisodesBySeason%2Coly_editorNotes%2Coly_format%2Coly_timecode&terse=yes&includeConstraintValue=all"
+    urlGetItemBulkMetadata="http://10.1.1.34:8080/API/item/$cantemoItemId/metadata?field=oly_rightslineEntityTitle%2Coly_rightslineItemId%2Coly_titleCode%2Coly_rightslineContractId%2Coly_contentType%2Coly_originalLanguage%2Coly_cast%2Coly_director%2Coly_episodeNumber%2Coly_firstUseDate%2Coly_producer%2Coly_originalMpaaRating%2Coly_originalRtcRating%2Coly_originalRating%2Coly_readyForAirDate%2Coly_seasonNumber%2Coly_titleEn%2Coly_titleEs%2Coly_closedCaptionInfo%2Coly_countryOfOrigin%2Coly_primaryGenre%2Coly_secondaryGenres%2Coly_closedCaptionLanguage%2Coly_originalTitle%2Coly_productionCompany%2Coly_tags%2Coly_productionYear%2Coly_numberOfEpisodes%2Coly_totalSeasonsBySeries%2Coly_totalEpisodesBySeries%2Coly_totalEpisodesBySeason%2Coly_editorNotes%2Coly_format%2Coly_timecode&terse=yes&includeConstraintValue=all"
     bulkMetadataHttpResponse=$(curl --location --request GET $urlGetItemBulkMetadata --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=Tkb9vkSC8v4SceB8CHUyB3iaMPjvgoHrzhLrvo36agG3wqv0jHc7nsOtdTo9JEyM')
     sleep 1
     urlGetItemSpaSynopMetadata="http://10.1.1.34:8080/API/item/$cantemoItemId/metadata?field=oly_descriptionEs%2Coly_shortDescriptionEs%2Coly_socialDescriptionEs%2Coly_logLineEs&group=Spanish%20Synopsis&terse=yes"
@@ -248,6 +264,21 @@ then
                     # updateVidispineMetadata $cantemoItemId "oly_rightslineItemId" "$rightslineItemId"
                     # sleep 1
                     apiPayload="$apiPayload       <field>\n           <name>oly_rightslineItemId</name>\n         <value>$rightslineItemId</value>\n      </field>\n"
+                    columnCounter=$(($columnCounter + 1))
+                else
+                    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
+                    columnCounter=$(($columnCounter + 1))
+                fi
+            ;;
+            "oly_titleCode")
+                if [[ ! -z "${fieldValue[$columnCounter]}" && "$bulkMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
+                then
+                    #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
+                    titleCode="${fieldValue[$columnCounter]}"
+                    echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - oly_titleCode - [$titleCode]" >> "$logfile"
+                    # updateVidispineMetadata $cantemoItemId "oly_rightslineItemId" "$rightslineItemId"
+                    # sleep 1
+                    apiPayload="$apiPayload       <field>\n           <name>oly_titleCode</name>\n         <value>$titleCode</value>\n      </field>\n"
                     columnCounter=$(($columnCounter + 1))
                 else
                     #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
@@ -534,7 +565,7 @@ then
     apiPayload="$apiPayload     <group mode=\"add\">\n          <name>Spanish Synopsis</name>\n         <field>\n               <name>oly_descriptionEs</name>\n                <value>$descriptionEs</value>\n         </field>\n         <field>\n               <name>oly_shortDescriptionEs</name>\n                <value>$shortDescriptionEs</value>\n         </field>\n     </group>\n"
     apiPayload="$apiPayload </timespan>\n</MetadataDocument>"
     apiPayloadFormatted=$(echo -e $apiPayload)
-    # echo $apiPayloadFormatted
+    echo $apiPayloadFormatted
     urlUpdateMetadata="http://10.1.1.34:8080/API/item/$cantemoItemId/metadata/"
     # response=$(curl -s -o /dev/null --location --request PUT $urlUpdateMetadata --header 'Content-Type: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=xZqBrKBPBOUANsWFnMC3aF90S52Ip3tgXdUHwWZvhNnu9aLl9j4rdrxRhV9nSQx9' --data "$apiPayloadFormatted")
     # --------------------------------------------------
