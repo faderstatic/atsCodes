@@ -200,7 +200,7 @@ then
     while [[ $columnCounter -le $columnCounts ]];
     do
         fieldValue[$columnCounter]=$(echo $cleanLine | awk 'BEGIN { FPAT = "([^,]*)|(\"[^\"]+)|(\"[^\"]+\")" } {print $'$columnCounter'}' | sed -e 's/\"//g')
-        currentValueRead=$fieldValue[$columnCounter]
+        currentValueRead=${fieldValue[$columnCounter]}
         echo "For column $columnCounter the value is $currentValueRead"
         columnCounter=$(($columnCounter + 1))
     done
