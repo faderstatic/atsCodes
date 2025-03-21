@@ -115,7 +115,7 @@ trap releaseLock EXIT
 # --------------------------------------------------
 export queryValue=$(filterVidispineItemMetadata "$cantemoItemId" "metadata" "oly_titleCode")
 
-if [[ -z "$queryValue" ]];
+if [[ "$queryValue"  == "" ]];
 then
     export rightslineItemId=$(filterVidispineItemMetadata "$cantemoItemId" "metadata" "oly_rightslineItemId")
     if [[ -z "$rightslineItemId" ]];
@@ -128,7 +128,7 @@ then
             queryValue=0
         fi
     else
-        queryValue=$cantemoItemTitle
+        queryValue=$rightslineItemId
     fi
     columnHeader="oly_rightslineItemId"
 fi
