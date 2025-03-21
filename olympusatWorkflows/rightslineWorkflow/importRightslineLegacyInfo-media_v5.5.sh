@@ -123,7 +123,7 @@ then
         export cantemoItemTitle=$(filterVidispineItemMetadata "$cantemoItemId" "metadata" "title")
         if [[ $cantemoItemTitle == "CA_"* ]];
         then
-            queryValue=$(echo $queryValue | awk -F "_" '{print $3}')
+            queryValue=$(echo $cantemoItemTitle | awk -F "_" '{print $3}')
         else
             queryValue=0
         fi
