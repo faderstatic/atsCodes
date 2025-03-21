@@ -118,7 +118,7 @@ export queryValue=$(filterVidispineItemMetadata "$cantemoItemId" "metadata" "oly
 if [[ "$queryValue"  == "" ]];
 then
     export rightslineItemId=$(filterVidispineItemMetadata "$cantemoItemId" "metadata" "oly_rightslineItemId")
-    if [[ -z "$rightslineItemId" ]];
+    if [[ "$rightslineItemId" == "" ]];
     then
         export cantemoItemTitle=$(filterVidispineItemMetadata "$cantemoItemId" "metadata" "title")
         if [[ $cantemoItemTitle == "CA_"* ]];
@@ -132,7 +132,6 @@ then
     fi
     columnHeader="oly_rightslineItemId"
 fi
-echo "Searching for \"$queryValue\" in $columnHeader"
 # --------------------------------------------------
 
 # --------------------------------------------------
@@ -565,9 +564,9 @@ then
     apiPayload="$apiPayload     <group mode=\"add\">\n          <name>Spanish Synopsis</name>\n         <field>\n               <name>oly_descriptionEs</name>\n                <value>$descriptionEs</value>\n         </field>\n         <field>\n               <name>oly_shortDescriptionEs</name>\n                <value>$shortDescriptionEs</value>\n         </field>\n     </group>\n"
     apiPayload="$apiPayload </timespan>\n</MetadataDocument>"
     apiPayloadFormatted=$(echo -e $apiPayload)
-    echo $apiPayloadFormatted
+    # echo $apiPayloadFormatted
     urlUpdateMetadata="http://10.1.1.34:8080/API/item/$cantemoItemId/metadata/"
-    # response=$(curl -s -o /dev/null --location --request PUT $urlUpdateMetadata --header 'Content-Type: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=xZqBrKBPBOUANsWFnMC3aF90S52Ip3tgXdUHwWZvhNnu9aLl9j4rdrxRhV9nSQx9' --data "$apiPayloadFormatted")
+    response=$(curl -s -o /dev/null --location --request PUT $urlUpdateMetadata --header 'Content-Type: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=xZqBrKBPBOUANsWFnMC3aF90S52Ip3tgXdUHwWZvhNnu9aLl9j4rdrxRhV9nSQx9' --data "$apiPayloadFormatted")
     # --------------------------------------------------
     sleep 5
     echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - Update Media Content Metadata Completed" >> "$logfile"
