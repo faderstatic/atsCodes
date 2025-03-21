@@ -263,6 +263,7 @@ then
                     apiPayload="$apiPayload       <field>\n           <name>oly_rightslineEntityTitle</name>\n         <value>$rightslineEntityTitle</value>\n      </field>\n"
                     columnCounter=$(($columnCounter + 1))
                     if [[ $rightslineEntityTitle == *"|"* ]];
+                    then
                         seriesName=$(echo "$rightslineEntityTitle" | awk -F "|" '{print $1}')
                         apiPayload="$apiPayload       <field>\n           <name>oly_seriesName</name>\n         <value>$seriesName</value>\n      </field>\n"
                         seasonNumber=$(echo "$rightslineEntityTitle" | awk -F "|" '{print $2}' | awk -F " " '{print $2}')
