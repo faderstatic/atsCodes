@@ -228,10 +228,7 @@ then
     sleep 1
     # --------------------------------------------------
 
-    apiPayload='<MetadataDocument xmlns="http://xml.vidispine.com/schema/vidispine">
-    <group>Olympusat</group>
-    <timespan start="-INF" end="+INF">
-        '
+    apiPayload="<MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\">\n    <group>Olympusat</group>\n  <timespan start=\"-INF\" end=\"+INF\">\n"
 
     # --------------------------------------------------
     # Choose what information from the CSV export file needed to be printed
@@ -247,11 +244,7 @@ then
                     echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - oly_rightslineItemId - [$rightslineItemId]" >> "$logfile"
                     # updateVidispineMetadata $cantemoItemId "oly_rightslineItemId" "$rightslineItemId"
                     # sleep 1
-                    apiPayload="$apiPayload<field>
-            <name>oly_rightslineItemId</name>
-            <value>$rightslineItemId</value>
-        </field>
-        "
+                    apiPayload="$apiPayload       <field>\n           <name>oly_rightslineItemId</name>\n         <value>$rightslineItemId</value>\n      </field>\n"
                     columnCounter=$(($columnCounter + 1))
                 else
                     #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
@@ -266,11 +259,7 @@ then
                     echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - oly_rightslineEntityTitle - [$rightslineEntityTitle]" >> "$logfile"
                     # updateVidispineMetadata $cantemoItemId "oly_rightslineEntityTitle" "$rightslineEntityTitle"
                     # sleep 1
-                    apiPayload="$apiPayload<field>
-            <name>oly_rightslineEntityTitle</name>
-            <value>$rightslineEntityTitle</value>
-        </field>
-        "
+                    apiPayload="$apiPayload       <field>\n           <name>oly_rightslineEntityTitle</name>\n         <value>$rightslineEntityTitle</value>\n      </field>\n"
                     columnCounter=$(($columnCounter + 1))
                 else
                     #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
@@ -285,11 +274,7 @@ then
                     echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - oly_episodeNumber - [$episodeNumber]" >> "$logfile"
                     # updateVidispineMetadata $cantemoItemId "oly_episodeNumber" "$episodeNumber"
                     # sleep 1
-                    apiPayload="$apiPayload<field>
-            <name>oly_episodeNumber</name>
-            <value>$episodeNumber</value>
-        </field>
-        "
+                    apiPayload="$apiPayload       <field>\n           <name>oly_episodeNumber</name>\n         <value>$episodeNumber</value>\n      </field>\n"
                     columnCounter=$(($columnCounter + 1))
                 else
                     #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column is EMPTY" >> "$logfile"
@@ -317,21 +302,13 @@ then
                             echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - oly_rightslineContractId - [$firstContractString]" >> "$logfile"
                             # updateVidispineMetadata $cantemoItemId "oly_rightslineContractId" "$firstContractString"
                             # sleep 1
-                            apiPayload="$apiPayload<field>
-            <name>oly_rightslineContractId</name>
-            <value>$firstContractString</value>
-        </field>
-        "
+                            apiPayload="$apiPayload       <field>\n           <name>oly_rightslineContractId</name>\n         <value>$firstContractString</value>\n      </field>\n"
                             columnCounter=$(($columnCounter + 1))
                         else
                             echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - oly_rightslineContractId - [$firstContractString]" >> "$logfile"
                             # updateVidispineMetadata $cantemoItemId "oly_rightslineContractId" "$firstContractString"
                             # sleep 1
-                            apiPayload="$apiPayload<field>
-            <name>oly_rightslineContractId</name>
-            <value>$firstContractString</value>
-        </field>
-        "
+                            apiPayload="$apiPayload       <field>\n           <name>oly_rightslineContractId</name>\n         <value>$firstContractString</value>\n      </field>\n"
                             columnCounter=$(($columnCounter + 1))
                         fi
                         secondIdNumberOfCharacters=$(echo "$secondContractId" | wc -c)
@@ -347,21 +324,13 @@ then
                             echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - oly_rightslineContractId - [$secondContractString]" >> "$logfile"
                             # updateVidispineMetadata $cantemoItemId "oly_rightslineContractId" "$secondContractString"
                             # sleep 1
-                            apiPayload="$apiPayload<field>
-            <name>oly_rightslineContractId</name>
-            <value>$secondContractString</value>
-        </field>
-        "
+                            apiPayload="$apiPayload       <field>\n           <name>oly_rightslineContractId</name>\n         <value>$secondContractString</value>\n      </field>\n"
                             columnCounter=$(($columnCounter + 1))
                         else
                             echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - oly_rightslineContractId - [$secondContractString]" >> "$logfile"
                             # updateVidispineMetadata $cantemoItemId "oly_rightslineContractId" "$secondContractString"
                             # sleep 1
-                            apiPayload="$apiPayload<field>
-            <name>oly_rightslineContractId</name>
-            <value>$secondContractString</value>
-        </field>
-        "
+                            apiPayload="$apiPayload       <field>\n           <name>oly_rightslineContractId</name>\n         <value>$secondContractString</value>\n      </field>\n"
                             columnCounter=$(($columnCounter + 1))
                         fi
                     else
@@ -379,21 +348,13 @@ then
                             echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - oly_rightslineContractId - [$contractString]" >> "$logfile"
                             # updateVidispineMetadata $cantemoItemId "oly_rightslineContractId" "$contractString"
                             # sleep 1
-                            apiPayload="$apiPayload<field>
-            <name>oly_rightslineContractId</name>
-            <value>$contractString</value>
-        </field>
-        "
+                            apiPayload="$apiPayload       <field>\n           <name>oly_rightslineContractId</name>\n         <value>$contractString</value>\n      </field>\n"
                             columnCounter=$(($columnCounter + 1))
                         else
                             echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - oly_rightslineContractId - [$contractString]" >> "$logfile"
                             # updateVidispineMetadata $cantemoItemId "oly_rightslineContractId" "$contractString"
                             # sleep 1
-                            apiPayload="$apiPayload<field>
-            <name>oly_rightslineContractId</name>
-            <value>$contractString</value>
-        </field>
-    "
+                            apiPayload="$apiPayload       <field>\n           <name>oly_rightslineContractId</name>\n         <value>$contractString</value>\n      </field>\n"
                             columnCounter=$(($columnCounter + 1))
                         fi
                     fi
@@ -407,8 +368,7 @@ then
             ;;
         esac
     done
-    apiPayload="$apiPayload</timespan>
-</Metadatadocument>"
+    apiPayload="$apiPayload </timespan>\n</Metadatadocument>"
 echo $apiPayload
 urlUpdateMetadata="http://10.1.1.34:8080/API/item/$cantemoItemId/metadata/"
 response=$(curl -s -o /dev/null --location --request PUT $urlUpdateMetadata --header 'Content-Type: application/xml' --header 'Authorization: Basic YWRtaW46MTBsbXBAc0B0' --header 'Cookie: csrftoken=xZqBrKBPBOUANsWFnMC3aF90S52Ip3tgXdUHwWZvhNnu9aLl9j4rdrxRhV9nSQx9' --data "$apiPayload")
