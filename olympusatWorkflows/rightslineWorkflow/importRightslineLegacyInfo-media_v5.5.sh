@@ -285,7 +285,8 @@ then
                 fi
             ;;
             "oly_rightslineEntityTitle")
-                if [[ ! -z "${fieldValue[$columnCounter]}" && "$bulkMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
+                # if [[ ! -z "${fieldValue[$columnCounter]}" && "$bulkMetadataHttpResponse" != *"</${fieldName[$columnCounter]}>"* ]];
+                if [[ ! -z "${fieldValue[$columnCounter]}" ]];
                 then
                     #echo "$(date +%Y/%m/%d_%H:%M:%S) - (importLegacyMetadata) - [$cantemoItemId] - [${fieldValue[$columnCounter]}] Column NOT empty" >> "$logfile"
                     rightslineEntityTitle="${fieldValue[$columnCounter]}"
