@@ -109,34 +109,22 @@ try:
       #------------------------------
       # Check if crews from Mira already exist in the database and update
       queryCrewName = {'crewName': miraCrewName[crewNumber]}
-      crewMetadata = refCrewCollection.find_one(queryCrewName)
+      crewMetadata = list(refCrewCollection.find(queryCrewName))
+      updateRoleFlag = 1
       if crewMetadata:
-        mongodbId = crewMetadata['_id']
-        queryUpdate = { "_id": mongodbId }
-        print("  Already exists in MongoDB but may update roles")
-        # Check if roles match
-        if miraCrewRole[crewNumber] == "actor":
-          if not crewMetadata['actorRole'] or crewMetadata['actorRole'] is None:
-            print("  Add actor to crew role")
-            crew_record = {
-              "$set":
-              { "actorRole": True }
-            }
-            print(f"  {queryUpdate} - {crew_record}")
-            updated_record = refCrewCollection.update_one(queryUpdate, crew_record)
-            print(f"  Updated actor role - result: {updated_record}")
-        if miraCrewRole[crewNumber] == "director":
-          if not crewMetadata['directorRole']  or crewMetadata['directorRole'] is None:
-            print("  Add director to crew role")
-            crew_record = {
-              "$set":
-              { "directorRole": True }
-            }
-            print(f"  {queryUpdate} - {crew_record}")
-            updated_record = refCrewCollection.update_one(queryUpdate, crew_record)
-            print(f"  Updated actor role - result: {updated_record}")
+        for crewRole in crewMetadata:
+          if miraCrewRole[crewNumber] == "actor":
+            if crewRole['actorRole'] is True:
+              updateRoleFlag = 0
+              print("  Already in Catalog Service as an actor")
+          if miraCrewRole[crewNumber] == "director":
+            if crewRole['directorRole'] is True:
+              updateRoleFlag = 0
+              print("  Already in Catalog Service as a director")
       else:
-        print("  Adding new record to MongoDB")
+        updateRoleFlag = 0
+      if updateRoleFlag == 1:
+        print("  Creating new role for this crew")
         if miraCrewRole[crewNumber] == "actor":
           crew_record = {
             "crewName": miraCrewName[crewNumber],
@@ -159,8 +147,8 @@ try:
           inserted_record = refCrewCollection.insert_one(crew_record)
         print(f"  Inserted new crew - record ID: {inserted_record.inserted_id}")
       #------------------------------
-    #------------------------------
-    #------------------------------
+  #------------------------------
+  #------------------------------
 
   queryTitleCode = {'titleCode': cantemoTitleCode}
   if cantemoTitleCode[0] == "M":
@@ -169,13 +157,14 @@ try:
   if cantemoTitleCode[0] == "S":
     catalogItemMetadata = seriesCollection.find_one(queryTitleCode)
     print(f"--- Getting information for {cantemoTitleCode} from series collection ---")
-
+  
   #------------------------------
   # Get information from Catalog Service
   updateMiraMedataFlag = 0
   payload = f"{{\r\n    \"id_titles\": {miraId},\r\n    \"title_subjects\": ["
   for metadataItem, metadataValue in catalogItemMetadata.items():
     if metadataItem in ["cast", "director"]:
+      # Working on actors
       if (metadataItem == "cast"):
         actorUuid = list(range(len(metadataValue)))
         for iCounter in range(len(metadataValue)):
@@ -185,23 +174,15 @@ try:
           #------------------------------
           # Check if crews from Catalog Service already exist in the database and update
           queryCrewName = {'crewName': metadataValue[iCounter]}
-          crewMetadata = refCrewCollection.find_one(queryCrewName)
+          crewMetadata = list(refCrewCollection.find(queryCrewName))
+          updateRoleFlag = 1
           if crewMetadata:
-            mongodbId = crewMetadata['_id']
-            queryUpdate = { "_id": mongodbId }
-            actorUuid[iCounter] = crewMetadata['miraId']
-            print("  Already exists in MongoDB but may update roles")
-            # Check if roles match
-            if not crewMetadata['actorRole'] or crewMetadata['actorRole'] is None:
-              print("  Add actor to crew role")
-              crew_record = {
-                "$set":
-                { "actorRole": True}
-              }
-              # print(f"  {queryUpdate} - {crew_record}")
-              updated_record = refCrewCollection.update_one(queryUpdate, crew_record)
-              print(f"  Updated actor role - result: {updated_record}")
-          else:
+            for crewEntry in crewMetadata:
+              if crewEntry['actorRole'] is True:
+                actorUuid[iCounter] = crewEntry['miraId']
+                updateRoleFlag = 0
+                print("  Already exists in MongoDB with actor roles")
+          if updateRoleFlag == 1:
             print("  Adding new actor record to MongoDB")
             crew_record = {
               "crewName": metadataValue[iCounter],
@@ -213,24 +194,9 @@ try:
             }
             inserted_record = refCrewCollection.insert_one(crew_record)
             print(f"  Inserted new crew - record ID: {inserted_record.inserted_id}")
-            #------------------------------
-
-          # Check if crew is already in Mira
-          if metadataValue[iCounter] not in miraCrewName:
-            print("  Update Mira actor list")
-            updateMiraMetadataFlag = 1
-            payload = f"{payload}\r\n        {{\r\n            \"id_positions\": 1,\r\n            \"first_name\": \"{metadataValue[iCounter]}\",\r\n            \"external_ident\": \"{actorUuid[iCounter]}\"\r\n        }},"
-          else:
-            indexes = [i for i, val in enumerate(miraCrewName) if val == metadataValue[iCounter]]
-            updateRoleFlag = 1
-            for j in indexes:
-              if miraCrewRole[j] == "actor":
-                updateRoleFlag = 0
-                print("  Already in Mira as an actor")
-            if updateRoleFlag == 1:
-              print("  Update crew role in Mira")
-              updateMiraMetadataFlag = 1
-              payload = f"{payload}\r\n        {{\r\n            \"id_positions\": 1,\r\n            \"first_name\": \"{metadataValue[iCounter]}\",\r\n            \"external_ident\": \"{miraCrewId[iCounter]}\"\r\n        }},"
+          #------------------------------
+          payload = f"{payload}\r\n        {{\r\n            \"id_positions\": 1,\r\n            \"first_name\": \"{metadataValue[iCounter]}\",\r\n            \"external_ident\": \"{actorUuid[iCounter]}\"\r\n        }},"
+      # Working on directors
       if (metadataItem == "director"):
         directorUuid = list(range(len(metadataValue)))
         for iCounter in range(len(metadataValue)):
@@ -240,26 +206,19 @@ try:
           #------------------------------
           # Check if crews from Catalog Service already exist in the database and update
           queryCrewName = {'crewName': metadataValue[iCounter]}
-          crewMetadata = refCrewCollection.find_one(queryCrewName)
+          crewMetadata = list(refCrewCollection.find(queryCrewName))
+          updateRoleFlag = 1
           if crewMetadata:
-            mongodbId = crewMetadata['_id']
-            queryUpdate = { "_id": mongodbId }
-            directorUuid[iCounter] = crewMetadata['miraId']
-            print("  Already exists in MongoDB but may update roles")
-            # Check if roles match
-            if not crewMetadata['directorRole'] or crewMetadata['directorRole'] is None:
-              print("  Add director to crew role")
-              crew_record = {
-                "$set":
-                { "directorRole": True}
-              }
-              # print(f"  {queryUpdate} - {crew_record}")
-              updated_record = refCrewCollection.update_one(queryUpdate, crew_record)
-              print(f"  Updated actor role - result: {updated_record}")
-          else:
+            for crewEntry in crewMetadata:
+              if crewEntry['directorRole'] is True:
+                print("  Already exists in MongoDB with director roles")
+                directorUuid[iCounter] = crewEntry['miraId']
+                updateRoleFlag = 0
+          if updateRoleFlag == 1:
+            print("  Add new director record to MongoDB")
             crew_record = {
               "crewName": metadataValue[iCounter],
-              "miraId": actorUuid[iCounter],
+              "miraId": directorUuid[iCounter],
               "miscId": None,
               "actorRole": None,
               "directorRole": True,
@@ -267,33 +226,19 @@ try:
             }
             inserted_record = refCrewCollection.insert_one(crew_record)
             print(f"  Inserted new crew - record ID: {inserted_record.inserted_id}")
-          #------------------------------
-          if metadataValue[iCounter] not in miraCrewName:
-            print("  Update Mira director list")
-            updateMiraMetadataFlag = 1
-            payload = f"{payload}\r\n        {{\r\n            \"id_positions\": 2,\r\n            \"first_name\": \"{metadataValue[iCounter]}\",\r\n            \"external_ident\": \"{directorUuid[iCounter]}\"\r\n        }},"
-          else:
-            indexes = [i for i, val in enumerate(miraCrewName) if val == metadataValue[iCounter]]
-            updateRoleFlag = 1
-            for j in indexes:
-              if miraCrewRole[j] == "director":
-                updateRoleFlag = 0
-                print("  Already in Mira as a director")
-            if updateRoleFlag == 1:
-              print("  Update crew role in Mira")
-              updateMiraMetadataFlag = 1
-              payload = f"{payload}\r\n        {{\r\n            \"id_positions\": 2,\r\n            \"first_name\": \"{metadataValue[iCounter]}\",\r\n            \"external_ident\": \"{miraCrewId[iCounter]}\"\r\n        }},"
-  if updateMiraMetadataFlag == 1:
-    trimmedPayload = payload[:-1]
-    urlMiraUpdate = "http://10.1.1.22:83/Service1.svc/titles"
-    rawPayload = f"{trimmedPayload}\r\n    ]\r\n}}"
-    headers = {
-      'Content-Type': 'text/plain; charset=utf-8'
-    }
-    payload = rawPayload.encode('utf-8')
-    # print(payload)
-    response = requests.request("PUT", urlMiraUpdate, headers=headers, data=payload)
-    print(f" Updated crew inforamation in Mira - result: {response.text}")
+        #------------------------------
+          payload = f"{payload}\r\n        {{\r\n            \"id_positions\": 2,\r\n            \"first_name\": \"{metadataValue[iCounter]}\",\r\n            \"external_ident\": \"{directorUuid[iCounter]}\"\r\n        }},"
+    
+  trimmedPayload = payload[:-1]
+  urlMiraUpdate = "http://10.1.1.22:83/Service1.svc/titles"
+  rawPayload = f"{trimmedPayload}\r\n    ]\r\n}}"
+  headers = {
+    'Content-Type': 'text/plain; charset=utf-8'
+  }
+  payload = rawPayload
+  # print(payload)
+  response = requests.request("PUT", urlMiraUpdate, headers=headers, data=payload)
+  print(f" Updated crew inforamation in Mira - result: {response.text}")
   #------------------------------
 
   # clientProd1.close()
