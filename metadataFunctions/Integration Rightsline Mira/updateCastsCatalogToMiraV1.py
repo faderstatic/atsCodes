@@ -64,14 +64,107 @@ try:
   translationTable = str.maketrans(accentedCharacters, unaccentedCharacters)
   #------------------------------
 
+  #------------------------------
+  # Get existing information from Mira
+  urlMira = f"http://10.1.1.22:83/Service1.svc/titles/{cantemoTitleCode}"
+  payload = ""
+  headers = {
+    'Cotent-Type': 'text/plain'
+  }
+
+  miraResponse = requests.request("GET", urlMira, headers=headers, data=payload)
+  miraResponse.raise_for_status
+  #------------------------------
+  # Parsing JSON data
+  responseJson = miraResponse.json() if miraResponse and miraResponse.status_code == 200 else None
+  miraId = responseJson[0]['id_titles']
+  miraCrew = responseJson[0]['title_subjects']
+  miraCrewCount = len(responseJson[0]['title_subjects'])
+  miraCrewName = list(range(miraCrewCount))
+  miraCrewId = list(range(miraCrewCount))
+  miraCrewRole = list(range(miraCrewCount))
+  miraCrewNumber = 0
+  miraActorCount = 0
+  miraDirectorCount = 0
+  for eachCrew in responseJson[0]['title_subjects']:
+    if eachCrew['id_positions'] == 1:
+      miraCrewName[miraCrewNumber] = eachCrew['first_name']
+      miraCrewId[miraCrewNumber] = eachCrew['external_ident']
+      miraCrewRole[miraCrewNumber] = "actor"
+      miraCrewNumber = miraCrewNumber +1
+      miraActorCount = miraActorCount + 1
+    elif eachCrew['id_positions'] == 2:
+      miraCrewName[miraCrewNumber] = eachCrew['first_name']
+      miraCrewId[miraCrewNumber] = eachCrew['external_ident']
+      miraCrewRole[miraCrewNumber] = "director"
+      miraCrewNumber = miraCrewNumber + 1
+      miraDirectorCount = miraDirectorCount + 1
+  miraActorCount = miraActorCount - 1
+  miraDirectorCount = miraDirectorCount - 1
+  miraCrewNumber = miraCrewNumber - 1
+  print("Information from Mira")
+  for crewNumber in range(miraCrewCount):
+    print(f"{miraCrewRole[crewNumber]}: {miraCrewName[crewNumber]} ({miraCrewId[crewNumber]})")
+    #------------------------------
+    # Check if crews from Mira already exist in the database and update
+    queryCrewName = {'crewName': miraCrewName[crewNumber]}
+    crewMetadata = refCrewCollection.find_one(queryCrewName)
+    if crewMetadata:
+      print("Already exists in MongoDB but may update roles")
+      # Check if roles match
+      if miraCrewRole[crewNumber] == "actor":
+        if not crewMetadata['actorRole'] or crewMetadata['actorRole'] is None:
+          print("Add actor to crew role")
+          crew_record = {
+            "actorRole": True
+          }
+          inserted_record = refCrewCollection.insert_one(crew_record)
+          print(f"Inserted actor role - record ID: {inserted_record.inserted_id}")
+      if miraCrewRole[crewNumber] == "director":
+        if not crewMetadata['directorRole']  or crewMetadata['directorRole'] is None:
+          print("Add director to crew role")
+          crew_record = {
+            "directorRole": True
+          }
+          inserted_record = refCrewCollection.insert_one(crew_record)
+          print(f"Inserted director role - record ID: {inserted_record.inserted_id}")
+    else:
+      print("Adding new record to MongoDB")
+      if miraCrewRole[crewNumber] == "actor":
+        crew_record = {
+          "crewName": miraCrewName[crewNumber],
+          "miraId": miraCrewId[crewNumber],
+          "miscId": None,
+          "actorRole": True,
+          "directorRole": None,
+          "producerRole": None
+        }
+        inserted_record = refCrewCollection.insert_one(crew_record)
+      if miraCrewRole[crewNumber] == "director":
+        crew_record = {
+          "crewName": miraCrewName[crewNumber],
+          "miraId": miraCrewId[crewNumber],
+          "miscId": None,
+          "actorRole": None,
+          "directorRole": True,
+          "producerRole": None
+        }
+        inserted_record = refCrewCollection.insert_one(crew_record)
+      print(f"Inserted new crew - record ID: {inserted_record.inserted_id}")
+    #------------------------------
+  #------------------------------
+  #------------------------------
+
   queryTitleCode = {'titleCode': cantemoTitleCode}
   if cantemoTitleCode[0] == "M":
     catalogItemMetadata = movieCollection.find_one(queryTitleCode)
-    print("Get information from movie collection")
+    print(f"{cantemoTitleCode} - Get information from movie collection")
   if cantemoTitleCode[0] == "S":
     catalogItemMetadata = seriesCollection.find_one(queryTitleCode)
-    print("Get information from series collection")
+    print(f"{cantemoTitleCode} - Get information from series collection")
 
+  #------------------------------
+  # Get information from Catalog Service
   for metadataItem, metadataValue in catalogItemMetadata.items():
     if metadataItem in ["cast", "director"]:
       if (metadataItem == "cast"):
@@ -79,16 +172,43 @@ try:
         for iCounter in range(len(metadataValue)):
           actorUuid[iCounter] = uuid.uuid4().hex[:16]
           print(f"Actor {iCounter} [{actorUuid[iCounter]}]: {metadataValue[iCounter]}")
-        del actorUuid
+          # Check if crew is already in Mira
+          if metadataValue[iCounter] not in miraCrewName:
+            print("Update Mira actor list")
+          else:
+            indexes = [i for i, val in enumerate(miraCrewName) if val == metadataValue[iCounter]]
+            updateRoleFlag = 1
+            for j in indexes:
+              if miraCrewRole[j] == "actor":
+                updateRoleFlag = 0
+                print("Already in Mira as an actor")
+            if updateRoleFlag == 1:
+              print("Update crew role in Mira")
       if (metadataItem == "director"):
         directorUuid = list(range(len(metadataValue)))
         for iCounter in range(len(metadataValue)):
           directorUuid[iCounter] = uuid.uuid4().hex[:16]
           print(f"Director {iCounter} [{directorUuid[iCounter]}]: {metadataValue[iCounter]}")
+          # Check if crew is already in Mira
+          if metadataValue[iCounter] not in miraCrewName:
+            print("Update Mira actor list")
+          else:
+            indexes = [i for i, val in enumerate(miraCrewName) if val == metadataValue[iCounter]]
+            updateRoleFlag = 1
+            for j in indexes:
+              if miraCrewRole[j] == "director":
+                updateRoleFlag = 0
+                print("Already in Mira as a director")
+            if updateRoleFlag == 1:
+              print("Update crew role in Mira")
+  #------------------------------
 
   # clientProd1.close()
   clientOdev.close()
   clientCluster0.close()
+
+  del actorUuid
+  del directorUuid
 
   #------------------------------
   # Update The User
