@@ -105,13 +105,12 @@ try:
   cantemoTitleCode = readCantemoMetadata(cantemoItemId, 'oly_titleCode')
   queryTitleCode = {'titleCode': cantemoTitleCode}
   catalogItemMetadata = catalogCollection.find_one(queryTitleCode)
-  if not catalogItemMetadata:
-    if cantemoTitleCode[0] == "M":
-      catalogItemMetadata = movieCollection.find_one(queryTitleCode)
-      # print("Get information from movie collection")
-    if cantemoTitleCode[0] == "S":
-      catalogItemMetadata = seriesCollection.find_one(queryTitleCode)
-      # print("Get information from series collection")
+  if cantemoTitleCode[0] == "M":
+    catalogItemMetadata = movieCollection.find_one(queryTitleCode)
+    # print("Get information from movie collection")
+  if cantemoTitleCode[0] == "S":
+    catalogItemMetadata = seriesCollection.find_one(queryTitleCode)
+    # print("Get information from series collection")
   catalogMetadataUpdate = ""
   for metadataItem, metadataValue in catalogItemMetadata.items():
     if metadataItem in ["year", "languageLabel", "productionCompany", "sourceType", "producer", "director", "primaryGenreLabel", "secondaryGenresLabel", "duration", "description", "metadataSource", "cast", "editorsNotes", "translations", "secondaryGenres", "primaryGenre"]:
