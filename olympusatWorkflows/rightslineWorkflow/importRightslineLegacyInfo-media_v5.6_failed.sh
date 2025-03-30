@@ -113,6 +113,16 @@ touch "$lockFile"
 # Ensure that the lock is released when the job finishes
 trap releaseLock EXIT
 # --------------------------------------------------
+export cantemoItemTitle=$(filterVidispineItemMetadata "$cantemoItemId" "metadata" "title")
+if [[ $cantemoItemTitle == "CA_"* ]];
+then
+    queryValueFromTitle=$(echo $cantemoItemTitle | awk -F "_" '{print $3}')
+    rightslineContractId=$(echo $cantemoItemTitle | awk -F "_" '{print $2}')
+    if [[ ! -z $rightslineContractId ]];
+    then
+        useContractIdFromTitle=1
+    fi
+fi
 export queryValue=$(filterVidispineItemMetadata "$cantemoItemId" "metadata" "oly_titleCode")
 
 if [[ "$queryValue"  == "" ]];
@@ -120,15 +130,9 @@ then
     export rightslineItemId=$(filterVidispineItemMetadata "$cantemoItemId" "metadata" "oly_rightslineItemId")
     if [[ "$rightslineItemId" == "" ]];
     then
-        export cantemoItemTitle=$(filterVidispineItemMetadata "$cantemoItemId" "metadata" "title")
         if [[ $cantemoItemTitle == "CA_"* ]];
         then
-            queryValue=$(echo $cantemoItemTitle | awk -F "_" '{print $3}')
-            rightslineContractId=$(echo $cantemoItemTitle | awk -F "_" '{print $2}')
-            if [[ $rightslineContractId != "" ]];
-            then
-                useContractIdFromTitle=1
-            fi
+            queryValue=$queryValueFromTitle
         else
             queryValue=0
         fi
@@ -570,16 +574,9 @@ then
     done
     if [[ $useContractIdFromTitle == 1 ]]
     then
-        apiPayload="$apiPayload       <field>\n           <name>oly_rightslineContractId</name>\n         <value>$rightslineContractId</value>\n      </field>\n"
-    fi
-    if [[ ($descriptionEn != "") || ($shortDescriptionEn != "") ]];
-    then
-        apiPayload="$apiPayload     <group mode=\"add\">\n          <name>English Synopsis</name>\n         <field>\n               <name>oly_descriptionEn</name>\n                <value>$descriptionEn</value>\n         </field>\n         <field>\n               <name>oly_shortDescriptionEn</name>\n                <value>$shortDescriptionEn</value>\n         </field>\n     </group>\n"
-    fi
-    if [[ ($descriptionEs != "") || ($shortDescriptionEs != "") ]];
-    then
-        apiPayload="$apiPayload     <group mode=\"add\">\n          <name>Spanish Synopsis</name>\n         <field>\n               <name>oly_descriptionEs</name>\n                <value>$descriptionEs</value>\n         </field>\n         <field>\n               <name>oly_shortDescriptionEs</name>\n                <value>$shortDescriptionEs</value>\n         </field>\n     </group>\n"
-    fi
+        apiPayload="$apiPayload       <field>\n           <name>oly_rightslineContractid</name>\n         <value>$rightslineContractId</value>\n      </field>\n"
+    apiPayload="$apiPayload     <group mode=\"add\">\n          <name>English Synopsis</name>\n         <field>\n               <name>oly_descriptionEn</name>\n                <value>$descriptionEn</value>\n         </field>\n         <field>\n               <name>oly_shortDescriptionEn</name>\n                <value>$shortDescriptionEn</value>\n         </field>\n     </group>\n"
+    apiPayload="$apiPayload     <group mode=\"add\">\n          <name>Spanish Synopsis</name>\n         <field>\n               <name>oly_descriptionEs</name>\n                <value>$descriptionEs</value>\n         </field>\n         <field>\n               <name>oly_shortDescriptionEs</name>\n                <value>$shortDescriptionEs</value>\n         </field>\n     </group>\n"
     apiPayload="$apiPayload </timespan>\n</MetadataDocument>"
     apiPayloadFormatted=$(echo -e $apiPayload)
     # echo $apiPayloadFormatted
