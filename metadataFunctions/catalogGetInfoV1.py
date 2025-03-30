@@ -86,6 +86,7 @@ try:
   catalogCollection = olyplatCatalog["catalog"]
   movieCollection = olyplatCatalog["movie"]
   seriesCollection = olyplatCatalog["series"]
+  episodeCollection = olyplatCatalog["episode"]
   genreCollection = olyplatCatalog["genre_type"]
 
   cantemoItemId = sys.argv[1]
@@ -105,12 +106,16 @@ try:
   cantemoTitleCode = readCantemoMetadata(cantemoItemId, 'oly_titleCode')
   queryTitleCode = {'titleCode': cantemoTitleCode}
   catalogItemMetadata = catalogCollection.find_one(queryTitleCode)
-  if cantemoTitleCode[0] == "M":
-    catalogItemMetadata = movieCollection.find_one(queryTitleCode)
-    # print("Get information from movie collection")
-  if cantemoTitleCode[0] == "S":
-    catalogItemMetadata = seriesCollection.find_one(queryTitleCode)
-    # print("Get information from series collection")
+  if catalogItemMetadata is None:
+    if cantemoTitleCode[0] == "M":
+      catalogItemMetadata = movieCollection.find_one(queryTitleCode)
+      # print("Get information from movie collection")
+    if (cantemoTitleCode[0] == "S") and ("E" in cantemoTitleCode[-3:]):
+      catalogItemMetadata = episodeCollection.find_one(queryTitleCode)
+      # print("Get information from episode collection")
+    elif cantemoTitleCode[0] == "S":
+      catalogItemMetadata = seriesCollection.find_one(queryTitleCode)
+      # print("Get information from series collection")
   catalogMetadataUpdate = ""
   for metadataItem, metadataValue in catalogItemMetadata.items():
     if metadataItem in ["year", "languageLabel", "productionCompany", "sourceType", "producer", "director", "primaryGenreLabel", "secondaryGenresLabel", "duration", "description", "metadataSource", "cast", "editorsNotes", "translations", "secondaryGenres", "primaryGenre"]:

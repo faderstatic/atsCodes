@@ -233,7 +233,8 @@ try:
   urlMiraUpdate = "http://10.1.1.22:83/Service1.svc/titles"
   rawPayload = f"{trimmedPayload}\r\n    ]\r\n}}"
   headers = {
-    'Content-Type': 'text/plain; charset=utf-8'
+    'Content-Type': 'text/plain; charset=utf-8',
+    'accept': 'application/json'
   }
   payload = rawPayload
   # print(payload)

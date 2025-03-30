@@ -86,6 +86,7 @@ try:
   catalogCollection = olyplatCatalog["catalog"]
   movieCollection = olyplatCatalog["movie"]
   seriesCollection = olyplatCatalog["series"]
+  episodeCollection = olyplatCatalog["episode"]
   genreCollection = olyplatCatalog["genre_type"]
 
   cantemoItemId = sys.argv[1]
@@ -105,11 +106,16 @@ try:
   cantemoTitleCode = readCantemoMetadata(cantemoItemId, 'oly_titleCode')
   queryTitleCode = {'titleCode': cantemoTitleCode}
   catalogItemMetadata = catalogCollection.find_one(queryTitleCode)
-  if not catalogItemMetadata:
+  print(f"Cantemo Title Code = {cantemoTitleCode}")
+  print(f"Catalog Item Found: {catalogItemMetadata}")
+  if catalogItemMetadata is None:
     if cantemoTitleCode[0] == "M":
       catalogItemMetadata = movieCollection.find_one(queryTitleCode)
       # print("Get information from movie collection")
-    if cantemoTitleCode[0] == "S":
+    if (cantemoTitleCode[0] == "S") and ("E" in cantemoTitleCode[-3:]):
+      catalogItemMetadata = episodeCollection.find_one(queryTitleCode)
+      # print("Get information from episode collection")
+    elif cantemoTitleCode[0] == "S":
       catalogItemMetadata = seriesCollection.find_one(queryTitleCode)
       # print("Get information from series collection")
   catalogMetadataUpdate = ""
