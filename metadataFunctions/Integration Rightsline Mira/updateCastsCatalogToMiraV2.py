@@ -69,7 +69,7 @@ try:
   urlMira = f"http://10.1.1.22:83/Service1.svc/titles/{cantemoTitleCode}"
   payload = ""
   headers = {
-    'Cotent-Type': 'text/plain'
+    'Content-Type': 'text/plain; charset=utf-8',
   }
 
   miraResponse = requests.request("GET", urlMira, headers=headers, data=payload)
@@ -226,20 +226,21 @@ try:
             }
             inserted_record = refCrewCollection.insert_one(crew_record)
             print(f"  Inserted new crew - record ID: {inserted_record.inserted_id}")
-        #------------------------------
+          #------------------------------
           payload = f"{payload}\r\n        {{\r\n            \"id_positions\": 2,\r\n            \"first_name\": \"{metadataValue[iCounter]}\",\r\n            \"external_ident\": \"{directorUuid[iCounter]}\"\r\n        }},"
     
   trimmedPayload = payload[:-1]
   urlMiraUpdate = "http://10.1.1.22:83/Service1.svc/titles"
   rawPayload = f"{trimmedPayload}\r\n    ]\r\n}}"
-  headers = {
-    'Content-Type': 'text/plain; charset=utf-8',
-    'accept': 'application/json'
-  }
   payload = rawPayload
-  # print(payload)
+  # payload = json.dumps(rawPayload, ensure_ascii=False).encode('utf-8')
+  print(payload)
   response = requests.request("PUT", urlMiraUpdate, headers=headers, data=payload)
-  print(f" Updated crew inforamation in Mira - result: {response.text}")
+  jsonResponse = response.json()
+  if jsonResponse == "null":
+    print("Updated crew information in Mira - result: success")
+  else:
+    print(f" Updated crew information in Mira - result: {jsonResponse}")
   #------------------------------
 
   # clientProd1.close()
