@@ -43,6 +43,7 @@ clientCluster0 = MongoClient(uriCluster0)
 try:
 
   cantemoTitleCode = sys.argv[1]
+  titleFile = sys.argv[2]
     
   # clientProd1.admin.command('ping')
   # print(f"Pinged your deployment. You successfully connected to Prod-1")
@@ -69,7 +70,7 @@ try:
   urlMira = f"http://10.1.1.22:83/Service1.svc/titles/{cantemoTitleCode}"
   payload = ""
   headers = {
-    'Content-Type': 'text/plain; charset=utf-8',
+    'Content-Type': 'text/plain; charset=UTF-8',
   }
 
   miraResponse = requests.request("GET", urlMira, headers=headers, data=payload)
@@ -232,9 +233,9 @@ try:
   trimmedPayload = payload[:-1]
   urlMiraUpdate = "http://10.1.1.22:83/Service1.svc/titles"
   rawPayload = f"{trimmedPayload}\r\n    ]\r\n}}"
-  payload = rawPayload
+  payload = rawPayload.encode('utf-8')
   # payload = json.dumps(rawPayload, ensure_ascii=False).encode('utf-8')
-  print(payload)
+  # print(payload)
   response = requests.request("PUT", urlMiraUpdate, headers=headers, data=payload)
   jsonResponse = response.json()
   if jsonResponse == "null":
