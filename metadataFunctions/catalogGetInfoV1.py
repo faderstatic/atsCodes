@@ -104,85 +104,111 @@ try:
   cantemoOriginalTitle = cantemoOriginalTitleWhite.translate(translationTable)
   # cantemoOriginalTitle = cantemoOriginalTitleTemp.replace(' ', '+')
 
-  cantemoTitleCode = readCantemoMetadata(cantemoItemId, 'oly_titleCode')
-  queryTitleCode = {'titleCode': cantemoTitleCode}
-  catalogItemMetadata = catalogCollection.find_one(queryTitleCode)
-  if catalogItemMetadata is None:
-    if cantemoTitleCode[0] == "M":
-      catalogItemMetadata = movieCollection.find_one(queryTitleCode)
+  titleCode = list(range(3))
+  catalogItemMetadata = list(range(3))
+  titleCode[0] = readCantemoMetadata(cantemoItemId, 'oly_titleCode')
+
+  #------------------------------
+  # Start with gathering information on movie or series level
+  if titleCode[0] is not None:
+    if titleCode[0][0] == "M":
+      titleCodeDepth = 1
+      queryTitleCode = {'titleCode': titleCode[0]}
+      catalogItemMetadata[0] = movieCollection.find_one(queryTitleCode)
       # print("Get information from movie collection")
-    elif cantemoTitleCode[0] == "S":
-      seriesTitleCode = cantemoTitleCode[:7]
-      episodeNumberPosition = cantemoTitleCode.rfind("E")
-      if episodeNumberPosition != -1:
-        seasonTitleCode = cantemoTitleCode[:episodeNumberPosition]
-      else:
-        seasonTitleCode = cantemoTitleCode
-      catalogItemMetadata = episodeCollection.find_one(queryTitleCode)
-      # print("Get information from series collection")
+    elif titleCode[0][0] == "S":
+      titleCodeDepth = 3
+      queryTitleCode = {'titleCode': titleCode[0]}
+      catalogItemMetadata[0] = episodeCollection.find_one(queryTitleCode)
+      # print("Get information from episode collection")
+      # Prepare series (titleCode[2]) and season (titleCode[1]) titlecode incase no information in episode
+      titleCode[2] = titleCode[0][:7]
+      print(titleCode[2])
+      queryTitleCode = {'titleCode': titleCode[2]}
+      catalogItemMetadata[2] = seriesCollection.find_one(queryTitleCode)
+      # episodeNumberPosition = titleCode[0].rfind("E")
+      # if episodeNumberPosition != -1:
+      #   titleCode[1] = titleCode[0][:episodeNumberPosition]
+      # else:
+      #   titleCode[1] = titleCode[0]
+      # queryTitleCode = {'titleCode': titleCode[1]}
+      # catalogItemMetadata[1] = seasonCollection.find_one(queryTitleCode)
+  #------------------------------
+
   catalogMetadataUpdate = ""
-  updateCrewFromSeasonFlag = 1
-  for metadataItem, metadataValue in catalogItemMetadata.items():
-    if metadataItem in ["year", "languageLabel", "productionCompany", "sourceType", "producer", "director", "primaryGenreLabel", "secondaryGenresLabel", "duration", "description", "metadataSource", "cast", "editorsNotes", "translations", "secondaryGenres", "primaryGenre"]:
+
+  # print(catalogItemMetadata[0])
+  # print(catalogItemMetadata[1])
+  # print(catalogItemMetadata[2])
+  if (catalogItemMetadata[0] == "") or (not catalogItemMetadata[0]):
+    firstValue = 2
+  else:
+    firstValue = 0
+  
+  for metadataItem, metadataValue in catalogItemMetadata[firstValue].items():
+    if metadataItem in ["year", "languageLabel", "productionCompany", "sourceType", "cast", "producer", "director", "primaryGenreLabel", "secondaryGenresLabel", "duration", "description", "metadataSource", "editorsNotes", "translations", "secondaryGenres", "primaryGenre"]:
       if metadataItem == "secondaryGenres":
-        genreCombined = ""
-        for eachGenre in metadataValue:
-          queryGenreCode = {'entityUUID': eachGenre}
-          genreValue = genreCollection.find_one(queryGenreCode)
-          genreCombined = genreCombined+genreValue['entityValue']+","
-        metadataValue = genreCombined[:-1]
+        if (not metadataValue) or (metadataValue == ""):
+          metadataValue = catalogItemMetadata[2][metadataItem]
+          # if (not metadataValue) or (metadataValue == ""):
+          #   metadataValue = catalogItemMetadata[2][metadataItem]
+        if (metadataValue) and (metadataValue != ""):
+          genreCombined = ""
+          for eachGenre in metadataValue:
+            queryGenreCode = {'entityUUID': eachGenre}
+            genreValue = genreCollection.find_one(queryGenreCode)
+            genreCombined = genreCombined+genreValue['entityValue']+","
+          metadataValue = genreCombined[:-1]
       elif metadataItem == "primaryGenre":
-        queryGenreCode = {'entityUUID': metadataValue}
-        genreValue = genreCollection.find_one(queryGenreCode)
-        metadataValue = genreValue['entityValue']
+        if (not metadataValue) or (metadataValue == ""):
+          metadataValue = catalogItemMetadata[2][metadataItem]
+          # if (not metadataValue) or (metadataValue == ""):
+          #   metadataValue = catalogItemMetadata[2][metadataItem]
+        if (metadataValue) and (metadataValue != ""):
+          queryGenreCode = {'entityUUID': metadataValue}
+          genreValue = genreCollection.find_one(queryGenreCode)
+          metadataValue = genreValue['entityValue']
       elif metadataItem == "translations":
-        enTranslations = metadataValue['en']
-        if enTranslations['description']:
-          catalogMetadataUpdate = catalogMetadataUpdate + f"""description en: {enTranslations['description']}
-"""
-        if enTranslations['shortDescription']:
-          catalogMetadataUpdate = catalogMetadataUpdate + f"""short description en: {enTranslations['shortDescription']}
-"""
-        esTranslations = metadataValue['es']
-        if esTranslations['description']:
-          catalogMetadataUpdate = catalogMetadataUpdate + f"""description es: {esTranslations['description']}
-"""
-        if esTranslations['shortDescription']:
-          catalogMetadataUpdate = catalogMetadataUpdate + f"""short description es: {esTranslations['shortDescription']}
-"""
+        if (not metadataValue) or (metadataValue == ""):
+          metadataValue = catalogItemMetadata[2][metadataItem]
+          # if (not metadataValue) or (metadataValue == ""):
+          #   metadataValue = catalogItemMetadata[2][metadataItem]
+        if (metadataValue) and (metadataValue != ""):
+          enTranslations = metadataValue['en']
+          if enTranslations['description']:
+            catalogMetadataUpdate = catalogMetadataUpdate + f"""description en: {enTranslations['description']}
+  """
+          if enTranslations['shortDescription']:
+            catalogMetadataUpdate = catalogMetadataUpdate + f"""short description en: {enTranslations['shortDescription']}
+  """
+          esTranslations = metadataValue['es']
+          if esTranslations['description']:
+            catalogMetadataUpdate = catalogMetadataUpdate + f"""description es: {esTranslations['description']}
+  """
+          if esTranslations['shortDescription']:
+            catalogMetadataUpdate = catalogMetadataUpdate + f"""short description es: {esTranslations['shortDescription']}
+  """
       elif metadataItem == "metadataSource":
-        for infoItem in catalogItemMetadata['metadataSource']:
-          sourceType = infoItem['sourceType']
-          sourceUrl = infoItem['url']
-          catalogMetadataUpdate = catalogMetadataUpdate + f"""Source Type - {sourceType}: {sourceUrl}
-"""
-      elif (metadataItem in ["producer", "director", "cast"]):
-        if metadataValue != "":
-          updateCrewFromSeasonFlag = 0
-          catalogMetadataUpdate = catalogMetadataUpdate + f"""{metadataItem}: {str(metadataValue).replace('[',"").replace(']',"")}
-"""
+        if (not metadataValue) or (metadataValue == ""):
+          metadataValue = catalogItemMetadata[2][metadataItem]
+          # if (not metadataValue) or (metadataValue == ""):
+          #   metadataValue = catalogItemMetadata[2][metadataItem]
+        if (metadataValue) and (metadataValue != ""):
+          for infoItem in metadataValue:
+            sourceType = infoItem['sourceType']
+            sourceUrl = infoItem['url']
+            catalogMetadataUpdate = catalogMetadataUpdate + f"""Source Type - {sourceType}: {sourceUrl}
+  """
       else:
-        catalogMetadataUpdate = catalogMetadataUpdate + f"""{metadataItem}: {str(metadataValue).replace('[',"").replace(']',"")}
-"""
-      # print(f"{metadataItem}: {metadataValue}")
-  if updateCrewFromSeasonFlag == 1:
-    updateCrewFromSeriesFlag = 1
-    queryTitleCode = {'titleCode': seasonTitleCode}
-    catalogItemMetadata = seasonCollection.find_one(queryTitleCode)
-    # print("Get information from season collection")
-    for metadataItem, metadataValue in catalogItemMetadata.items():
-      if metadataItem in ["producer", "director","cast"]:
-        if metadataValue != "":
-          updateCrewFromSeriesFlag = 0
+        if (not metadataValue) or (metadataValue == ""):
+          metadataValue = catalogItemMetadata[2][metadataItem]
+          # if (not metadataValue) or (metadataValue == ""):
+          #   metadataValue = catalogItemMetadata[2][metadataItem]
+        if (metadataValue) and (metadataValue != ""):
           catalogMetadataUpdate = catalogMetadataUpdate + f"""{metadataItem}: {str(metadataValue).replace('[',"").replace(']',"")}
-"""
-  if updateCrewFromSeriesFlag == 1:
-    queryTitleCode = {'titleCode': seriesTitleCode}
-    catalogItemMetadata = seriesCollection.find_one(queryTitleCode)
-    for metadataItem, metadataValue in catalogItemMetadata.items():
-      if metadataItem in ["producer", "director","cast"]:
-        catalogMetadataUpdate = catalogMetadataUpdate + f"""{metadataItem}: {str(metadataValue).replace('[',"").replace(']',"")}
-"""
+  """
+    # print(f"{metadataItem}: {metadataValue}")
+
   # print(catalogMetadataUpdate)
   # clientProd1.close()
   clientOdev.close()
