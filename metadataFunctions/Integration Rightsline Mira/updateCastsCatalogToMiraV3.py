@@ -232,7 +232,7 @@ try:
       trimmedPayload = payload[:-1]
       urlMiraUpdate = "http://10.1.1.22:83/Service1.svc/titles"
       rawPayload = f"{trimmedPayload}\r\n    ]\r\n}}"
-      print(rawPayload)
+      # print(rawPayload)
       payload = rawPayload.encode('utf-8')
       # payload = json.dumps(rawPayload, ensure_ascii=False).encode('utf-8')
       # print(payload)
