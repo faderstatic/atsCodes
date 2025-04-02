@@ -17,6 +17,7 @@ import subprocess
 import requests
 import json
 import xml.etree.ElementTree as ET
+from requests.exceptions import HTTPError
 import hashlib
 #------------------------------
 
@@ -46,6 +47,7 @@ try:
     print("--------------------------------------------------")
 
     response = requests.request("POST", mondayApiUrl, headers=headers, data=payload)
+    response.raise_for_status
 
     print(response.text)
 
