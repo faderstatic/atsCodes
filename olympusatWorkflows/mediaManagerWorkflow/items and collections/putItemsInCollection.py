@@ -115,6 +115,7 @@ try:
         ]
     }
 }
+            searchPayload = json.dumps(searchPayloadText)
             httpApiResponse = requests.request("PUT", cantemoSearchUrl, headers=headers, data=searchPayload)
             responseJson = httpApiResponse.json() if httpApiResponse and httpApiResponse.status_code == 200 else None
             if responseJson and 'results' in responseJson:
