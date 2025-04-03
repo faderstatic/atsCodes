@@ -14,6 +14,7 @@ import xml.etree.ElementTree as ET
 import requests
 import uuid
 import json
+import csv
 from email.message import EmailMessage
 from requests.exceptions import HTTPError
 from urllib.parse import quote_plus
@@ -65,12 +66,17 @@ try:
     'Content-Type': 'application/json'
   }
 
-  with open(titleFile, "r") as file:
-    lines = file.readlines()
-    for cantemoTitleCodeLine in lines:
-      cantemoTitleCode = cantemoTitleCodeLine.strip()
-      print(f"Putting {cantemoTitleCode} in {destinationCollection}")
-      searchPayloadText = {
+  # with open(titleFile, "r") as file:
+  with open(titleFile, newline='') as csvfile:
+    reader = csv.reader(csvfile)
+    # lines = file.readlines()
+    #for cantemoTitleCodeLine in lines:
+    for row in reader:
+      if len(row) > 1:
+        cantemoTitleCode = row[0].strip()
+        cantemoTitle = row[1].strip()
+        print(f"Putting {cantemoTitleCode} in {destinationCollection}")
+        searchPayloadText = {
     "filter": {
         "operator": "AND",
         "terms": [
@@ -86,11 +92,39 @@ try:
         ]
     }
 }
-      searchPayload = json.dumps(searchPayloadText)
-      print(searchPayload)
-
-      httpResponse = requests.request("PUT", cantemoSearchUrl, headers=headers, data=searchPayload)
-      print(httpResponse.text)
+        searchPayload = json.dumps(searchPayloadText)
+        httpApiResponse = requests.request("PUT", cantemoSearchUrl, headers=headers, data=searchPayload)
+        responseJson = httpApiResponse.json() if httpApiResponse and httpApiResponse.status_code == 200 else None
+        if responseJson and 'results' in responseJson:
+          if responseJson['results']:
+            for resultItem in responseJson['results']:
+              if "id" in resultItem:
+                if resultItem['id'] is not None:
+                  print(f"  Cantemo item ID is {resultItem['id']}")
+          else:
+            print(f"  Item with title code [{cantemoTitleCode}] cannot be found in Cantemo. Searching with title [{cantemoTitle}].")
+            searchPayloadText = {
+    "filter": {
+        "operator": "AND",
+        "terms": [
+            {
+                "name": "title",
+                "value": cantemoTitle,
+                "exact": True
+            }
+        ]
+    }
+}
+            httpApiResponse = requests.request("PUT", cantemoSearchUrl, headers=headers, data=searchPayload)
+            responseJson = httpApiResponse.json() if httpApiResponse and httpApiResponse.status_code == 200 else None
+            if responseJson and 'results' in responseJson:
+              if responseJson['results']:
+                for resultItem in responseJson['results']:
+                  if "id" in resultItem:
+                    if resultItem['id'] is not None:
+                      print(f"  Cantemo item ID is {resultItem['id']}")
+              else:
+                print(f"  Item with title code [{cantemoTitleCode}] or title [{cantemoTitle}] cannot be found in Cantemo.")
 
 except HTTPError as http_err:
   print(f'HTTP error occurred: {http_err}')
