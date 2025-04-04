@@ -231,6 +231,14 @@ try:
                 missingItem = f"{missingItem}, {resultItem['id']}"
             time.sleep(2)
   #------------------------------
+  print("-----Error Report-----")
+  print("Items failed to be added:")
+  print(failedItem)
+  print("----------------------")
+  print("Item missing from Cantemo:")
+  print(missingItem)
+  print("----------------------")
+  #------------------------------
 
 except HTTPError as http_err:
   print(f'HTTP error occurred: {http_err}')
