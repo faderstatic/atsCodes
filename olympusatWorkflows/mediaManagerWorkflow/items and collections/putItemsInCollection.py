@@ -188,7 +188,7 @@ try:
                     else:
                       print(f"  Adding {resultItem['id']} to {destinationCollection} failed.")
                       failedItem = f"{failedItem}, {resultItem['id']}"
-            time.sleep(2)
+                    time.sleep(2)
           else:
             print(f"  Item with title code [{cantemoTitleCode}] cannot be found in Cantemo. Searching with title [{cantemoTitle}].")
             searchPayloadText = {
@@ -226,10 +226,10 @@ try:
                         else:
                           print(f"  Adding {resultItem['id']} to {destinationCollection} failed.")
                           failedItem = f"{failedItem}, {resultItem['id']}"
+                        time.sleep(2)
               else:
                 print(f"  Item with title code [{cantemoTitleCode}] or title [{cantemoTitle}] cannot be found in Cantemo.")
                 missingItem = f"{missingItem}, {resultItem['id']}"
-            time.sleep(2)
   #------------------------------
   print("-----Error Report-----")
   print("Items failed to be added:")
