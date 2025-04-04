@@ -17,7 +17,7 @@ import json
 import csv
 from email.message import EmailMessage
 from requests.exceptions import HTTPError
-from urllib.parse import quote_plus
+from urllib.parse import quote_plus, quote
 from pymongo import MongoClient
 # import traceback
 #------------------------------
@@ -57,6 +57,9 @@ def readCantemoMetadata(rcmItemId, rcmFieldName):
 try:
   titleFile = sys.argv[1]
   destinationCollection = sys.argv[2]
+  destinationCollectionQuoted = quote(destinationCollection)
+  failedItem = ""
+  missingItem = ""
 
   cantemoSearchUrl = "http://10.1.1.34/API/v2/search/"
   headers = {
@@ -66,6 +69,76 @@ try:
     'Content-Type': 'application/json'
   }
 
+  #------------------------------
+  # Find and/or create collection
+  collectionSearchPayloadText = {
+    "filter": {
+        "operator": "AND",
+        "terms": [
+            {
+                "name": "type",
+                "value": "collection",
+                "exact": True
+            },
+            {
+                "name": "name",
+                "value": destinationCollection,
+                "exact": True
+            }
+        ]
+    }
+}
+  useExistingCollection = 0
+  collectionSearchPayload = json.dumps(collectionSearchPayloadText)
+  httpApiResponse = requests.request("PUT", cantemoSearchUrl, headers=headers, data=collectionSearchPayload)
+  httpApiResponse.raise_for_status()
+  responseJson = httpApiResponse.json() if httpApiResponse and httpApiResponse.status_code == 200 else None
+  if responseJson and 'results' in responseJson:
+    if responseJson['results']:
+      for resultItem in responseJson['results']:
+        if "id" in resultItem:
+          if resultItem['id'] is not None:
+            collectionId = resultItem['id']
+            print(f"Collection ID for {destinationCollection} is {collectionId}")
+            useExistingCollection = 1
+    else:
+      print(f"{destinationCollection} does not exist in Cantemo. Creating new collection.")
+      payload = ""
+      createCollectionUrl = f"http://10.1.1.34:8080/API/collection?name={destinationCollectionQuoted}"
+      createCollectionHeaders = {
+    'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
+    'Accept': 'application/json',
+    'Cookie': 'csrftoken=OtjDQ4lhFt2wJjGaJhq3xi05z3uA6D8F7wCWNVXxMuJ8A9jw7Ri7ReqSNGLS2VRR'
+  }
+      httpApiResponse = requests.request("POST", cantemoSearchUrl, headers=createCollectionHeaders, data=payload)
+      httpApiResponse.raise_for_status()
+      responseJson = httpApiResponse.json() if httpApiResponse and httpApiResponse.status_code == 200 else None
+      collectionId = responseJson['id']
+  #------------------------------
+
+  #------------------------------
+  # Getting content of existing collection
+  if useExistingCollection == 1:
+    payload = ""
+    urlCollectionContent = f"http://10.1.1.34:8080/API/collection/{collectionId}/item/"
+    httpApiResponse = requests.request("GET", urlCollectionContent, headers=headers, data=payload)
+    httpApiResponse.raise_for_status()
+    responseJson = httpApiResponse.json() if httpApiResponse and httpApiResponse.status_code == 200 else None
+    if responseJson['item']:
+      collectionItems = responseJson['item']
+      # print(collectionItems)
+      # formattedId = {'id': 'OLY-14199'}
+      # if formattedId in collectionItems:
+      #   print("it exists")
+    else:
+      # print(f"Collection \"{destinationCollection}\" is empty")
+      collectionItems = ""
+  else:
+    collectionItems = ""
+  #------------------------------
+  
+  #------------------------------
+  # Read items from a file and process them
   # with open(titleFile, "r") as file:
   with open(titleFile, newline='') as csvfile:
     reader = csv.reader(csvfile)
@@ -94,6 +167,7 @@ try:
 }
         searchPayload = json.dumps(searchPayloadText)
         httpApiResponse = requests.request("PUT", cantemoSearchUrl, headers=headers, data=searchPayload)
+        httpApiResponse.raise_for_status()
         responseJson = httpApiResponse.json() if httpApiResponse and httpApiResponse.status_code == 200 else None
         if responseJson and 'results' in responseJson:
           if responseJson['results']:
@@ -101,6 +175,20 @@ try:
               if "id" in resultItem:
                 if resultItem['id'] is not None:
                   print(f"  Cantemo item ID is {resultItem['id']}")
+                  if any(item['id'] == resultItem['id'] for item in collectionItems):
+                    print(f"  {resultItem['id']} is already in collection")
+                  else:
+                    # print("  assign this item")
+                    putItemToCollectionUrl = f"http://10.1.1.34:8080/API/collection/{collectionId}/{resultItem['id']}"
+                    httpApiResponse = requests.request("PUT", putItemToCollectionUrl, headers=headers, data=payload)
+                    httpApiResponse.raise_for_status()
+                    # responseJson = httpApiResponse.json() if httpApiResponse and httpApiResponse.status_code == 200 else None
+                    if httpApiResponse and httpApiResponse.status_code == 200:
+                      print(f"  {resultItem['id']} is successfully added.")
+                    else:
+                      print(f"  Adding {resultItem['id']} to {destinationCollection} failed.")
+                      failedItem = f"{failedItem}, {resultItem['id']}"
+            time.sleep(2)
           else:
             print(f"  Item with title code [{cantemoTitleCode}] cannot be found in Cantemo. Searching with title [{cantemoTitle}].")
             searchPayloadText = {
@@ -117,6 +205,7 @@ try:
 }
             searchPayload = json.dumps(searchPayloadText)
             httpApiResponse = requests.request("PUT", cantemoSearchUrl, headers=headers, data=searchPayload)
+            httpApiResponse.raise_for_status()
             responseJson = httpApiResponse.json() if httpApiResponse and httpApiResponse.status_code == 200 else None
             if responseJson and 'results' in responseJson:
               if responseJson['results']:
@@ -124,8 +213,24 @@ try:
                   if "id" in resultItem:
                     if resultItem['id'] is not None:
                       print(f"  Cantemo item ID is {resultItem['id']}")
+                      if any(item['id'] == resultItem['id'] for item in collectionItems):
+                        print(f"  {resultItem['id']} is already in collection")
+                      else:
+                        # print("  assign this item")
+                        putItemToCollectionUrl = f"http://10.1.1.34:8080/API/collection/{collectionId}/{resultItem['id']}"
+                        httpApiResponse = requests.request("PUT", putItemToCollectionUrl, headers=headers, data=payload)
+                        httpApiResponse.raise_for_status()
+                        # responseJson = httpApiResponse.json() if httpApiResponse and httpApiResponse.status_code == 200 else None
+                        if httpApiResponse and httpApiResponse.status_code == 200:
+                          print(f"  {resultItem['id']} is successfully added.")
+                        else:
+                          print(f"  Adding {resultItem['id']} to {destinationCollection} failed.")
+                          failedItem = f"{failedItem}, {resultItem['id']}"
               else:
                 print(f"  Item with title code [{cantemoTitleCode}] or title [{cantemoTitle}] cannot be found in Cantemo.")
+                missingItem = f"{missingItem}, {resultItem['id']}"
+            time.sleep(2)
+  #------------------------------
 
 except HTTPError as http_err:
   print(f'HTTP error occurred: {http_err}')
