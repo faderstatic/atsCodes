@@ -123,7 +123,7 @@ try:
       # print("Get information from episode collection")
       # Prepare series (titleCode[2]) and season (titleCode[1]) titlecode incase no information in episode
       titleCode[2] = titleCode[0][:7]
-      print(titleCode[2])
+      # print(titleCode[2])
       queryTitleCode = {'titleCode': titleCode[2]}
       catalogItemMetadata[2] = seriesCollection.find_one(queryTitleCode)
       # episodeNumberPosition = titleCode[0].rfind("E")
@@ -220,6 +220,7 @@ try:
 
   if (not catalogMetadataUpdate) or (catalogMetadataUpdate == ""):
     catalogMetadataUpdate = "Information of this item cannot be found in Catalog Service"
+
   #------------------------------
   # Update Cantemo metadata
   headers = {
