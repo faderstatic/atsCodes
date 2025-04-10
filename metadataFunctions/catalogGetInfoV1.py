@@ -220,9 +220,8 @@ try:
   # print(f"{cantemoOriginalTitleWhite} (without accents: {cantemoOriginalTitle}) - {cantemoTitleCode}")
   #------------------------------
 
-  if (not catalogMetadataUpdate) or (catalogMetadataUpdate == "") or (catalogItemMetadata[firstValue] != firstValue):
+  if (catalogMetadataUpdate == ""):
     catalogMetadataUpdate = "Information of this item cannot be found in Catalog Service"
-  # print(f"Value to update is: {catalogMetadataUpdate}")
 
   #------------------------------
   # Update Cantemo metadata
