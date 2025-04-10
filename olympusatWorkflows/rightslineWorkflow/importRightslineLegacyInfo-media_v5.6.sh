@@ -124,6 +124,7 @@ then
         if [[ $cantemoItemTitle == "CA_"* ]];
         then
             queryValue=$(echo $cantemoItemTitle | awk -F "_" '{print $3}')
+            rightslineItemId=$queryValue
             rightslineContractId=$(echo $cantemoItemTitle | awk -F "_" '{print $2}')
             if [[ $rightslineContractId != "" ]];
             then
