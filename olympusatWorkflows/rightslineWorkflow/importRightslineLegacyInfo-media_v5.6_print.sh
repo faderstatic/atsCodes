@@ -13,7 +13,8 @@ IFS=$(echo -e "\n\b\015")
 
 # --------------------------------------------------
 # External funtions to include
-. /opt/olympusat/scriptsLibrary/olympusatCantemo.lib
+# . /opt/olympusat/scriptsLibrary/olympusatCantemo.lib
+. /mnt/c/Users/kkanjanapitak/Desktop/Repositories/atsCodes/libraries-shell/olympusatCantemo.lib
 # --------------------------------------------------
 
 # --------------------------------------------------
@@ -97,11 +98,11 @@ export userName="$2"
 export columnHeader="$3"
 export inputFile="$4"
 export mydate=$(date +%Y-%m-%d)
-#logfile="/opt/olympusat/logs/importRightslineLegacyInfo-$mydate.log"
-logfile="/opt/olympusat/logs/ingestMetadataWorkflow-$mydate.log"
+# logfile="/opt/olympusat/logs/importRightslineLegacyInfo-$mydate.log"
+logfile="/mnt/c/Users/kkanjanapitak/Desktop/Repositories/atsCodes/ingestMetadataWorkflow-$mydate.log"
 # --------------------------------------------------
 # Lock file to ensure only one job runs at a time
-lockFile="/opt/olympusat/workflowQueues/importRightslineLegacyInfo/jobQueue.lock"
+lockFile="/mnt/c/Users/kkanjanapitak/Desktop/Repositories/atsCodes/jobQueue.lock"
 # Acquire the lock by waiting if another job is running
 while [ -f "$lockFile" ];
 do
@@ -137,6 +138,8 @@ then
     fi
     columnHeader="oly_rightslineItemId"
 fi
+echo "Querying: $queryValue"
+echo "Using column header: $columnHeader"
 # --------------------------------------------------
 
 # --------------------------------------------------
