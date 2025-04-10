@@ -218,6 +218,8 @@ try:
   # print(f"{cantemoOriginalTitleWhite} (without accents: {cantemoOriginalTitle}) - {cantemoTitleCode}")
   #------------------------------
 
+  if (not catalogMetadataUpdate) or (catalogMetadataUpdate == ""):
+    catalogMetadataUpdate = "Information of this item cannot be found in Catalog Service"
   #------------------------------
   # Update Cantemo metadata
   headers = {
@@ -239,7 +241,8 @@ try:
   # print(itemRawPayload)
   itemPayload = itemRawPayload.encode('utf-8')
   # print(itemPayload)
-  httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=itemPayload)  
+  httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=itemPayload)
+  #------------------------------
 
 #------------------------------
 except Exception as e:

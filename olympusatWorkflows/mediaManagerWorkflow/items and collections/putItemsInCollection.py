@@ -110,7 +110,7 @@ try:
     'Accept': 'application/json',
     'Cookie': 'csrftoken=OtjDQ4lhFt2wJjGaJhq3xi05z3uA6D8F7wCWNVXxMuJ8A9jw7Ri7ReqSNGLS2VRR'
   }
-      httpApiResponse = requests.request("POST", cantemoSearchUrl, headers=createCollectionHeaders, data=payload)
+      httpApiResponse = requests.request("POST", createCollectionUrl, headers=createCollectionHeaders, data=payload)
       httpApiResponse.raise_for_status()
       responseJson = httpApiResponse.json() if httpApiResponse and httpApiResponse.status_code == 200 else None
       collectionId = responseJson['id']
@@ -229,7 +229,7 @@ try:
                         time.sleep(2)
               else:
                 print(f"  Item with title code [{cantemoTitleCode}] or title [{cantemoTitle}] cannot be found in Cantemo.")
-                missingItem = f"{missingItem}, {resultItem['id']}"
+                missingItem = f"{missingItem}, {cantemoTitle}"
   #------------------------------
   print("-----Error Report-----")
   print("Items failed to be added:")
