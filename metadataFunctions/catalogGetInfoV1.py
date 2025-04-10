@@ -107,8 +107,8 @@ try:
 
   titleCode = list(range(3))
   catalogItemMetadata = list(range(3))
-  titleCode[0] = readCantemoMetadata(cantemoItemId, 'oly_titleCode')
-
+  titleCode[0] = readCantemoMetadata(cantemoItemId, 'oly_titleCode').strip()
+  
   #------------------------------
   # Start with gathering information on movie or series level
   if titleCode[0] is not None:
@@ -138,77 +138,78 @@ try:
 
   catalogMetadataUpdate = ""
 
-  # print(catalogItemMetadata[0])
+  # print(f"base level metadata collected: {catalogItemMetadata[0]}")
   # print(catalogItemMetadata[1])
-  # print(f"     series collection - {catalogItemMetadata[2]}")
-  if (catalogItemMetadata[0] == "") or (not catalogItemMetadata[0]):
+  # print(f"            series collection: {catalogItemMetadata[2]}")
+  if (catalogItemMetadata[0] == "") or (not catalogItemMetadata[0]) or (catalogItemMetadata[0] == 0):
     firstValue = 2
   else:
     firstValue = 0
-  
-  for metadataItem, metadataValue in catalogItemMetadata[firstValue].items():
-    if metadataItem in ["year", "languageLabel", "productionCompany", "sourceType", "cast", "producer", "director", "primaryGenreLabel", "secondaryGenresLabel", "duration", "description", "metadataSource", "editorsNotes", "translations", "secondaryGenres", "primaryGenre"]:
-      if metadataItem == "secondaryGenres":
-        if ((not metadataValue) or (metadataValue == "")) and titleCode[0][0] == "S":
-          metadataValue = catalogItemMetadata[2][metadataItem]
-          # if (not metadataValue) or (metadataValue == ""):
-          #   metadataValue = catalogItemMetadata[2][metadataItem]
-        if (metadataValue) and (metadataValue != ""):
-          genreCombined = ""
-          for eachGenre in metadataValue:
-            queryGenreCode = {'entityUUID': eachGenre}
+
+  if catalogItemMetadata[firstValue]:
+    for metadataItem, metadataValue in catalogItemMetadata[firstValue].items():
+      if metadataItem in ["year", "languageLabel", "productionCompany", "sourceType", "cast", "producer", "director", "primaryGenreLabel", "secondaryGenresLabel", "duration", "description", "metadataSource", "editorsNotes", "translations", "secondaryGenres", "primaryGenre"]:
+        if metadataItem == "secondaryGenres":
+          if ((not metadataValue) or (metadataValue == "")) and titleCode[0][0] == "S":
+            metadataValue = catalogItemMetadata[2][metadataItem]
+            # if (not metadataValue) or (metadataValue == ""):
+            #   metadataValue = catalogItemMetadata[2][metadataItem]
+          if (metadataValue) and (metadataValue != ""):
+            genreCombined = ""
+            for eachGenre in metadataValue:
+              queryGenreCode = {'entityUUID': eachGenre}
+              genreValue = genreCollection.find_one(queryGenreCode)
+              genreCombined = genreCombined+genreValue['entityValue']+","
+            metadataValue = genreCombined[:-1]
+        elif metadataItem == "primaryGenre":
+          if ((not metadataValue) or (metadataValue == "")) and titleCode[0][0] == "S":
+            metadataValue = catalogItemMetadata[2][metadataItem]
+            # if (not metadataValue) or (metadataValue == ""):
+            #   metadataValue = catalogItemMetadata[2][metadataItem]
+          if (metadataValue) and (metadataValue != ""):
+            queryGenreCode = {'entityUUID': metadataValue}
             genreValue = genreCollection.find_one(queryGenreCode)
-            genreCombined = genreCombined+genreValue['entityValue']+","
-          metadataValue = genreCombined[:-1]
-      elif metadataItem == "primaryGenre":
-        if ((not metadataValue) or (metadataValue == "")) and titleCode[0][0] == "S":
-          metadataValue = catalogItemMetadata[2][metadataItem]
-          # if (not metadataValue) or (metadataValue == ""):
-          #   metadataValue = catalogItemMetadata[2][metadataItem]
-        if (metadataValue) and (metadataValue != ""):
-          queryGenreCode = {'entityUUID': metadataValue}
-          genreValue = genreCollection.find_one(queryGenreCode)
-          metadataValue = genreValue['entityValue']
-      elif metadataItem == "translations":
-        if ((not metadataValue) or (metadataValue == "")) and titleCode[0][0] == "S":
-          metadataValue = catalogItemMetadata[2][metadataItem]
-          # if (not metadataValue) or (metadataValue == ""):
-          #   metadataValue = catalogItemMetadata[2][metadataItem]
-        if (metadataValue) and (metadataValue != ""):
-          enTranslations = metadataValue['en']
-          if enTranslations['description']:
-            catalogMetadataUpdate = catalogMetadataUpdate + f"""description en: {enTranslations['description']}
+            metadataValue = genreValue['entityValue']
+        elif metadataItem == "translations":
+          if ((not metadataValue) or (metadataValue == "")) and titleCode[0][0] == "S":
+            metadataValue = catalogItemMetadata[2][metadataItem]
+            # if (not metadataValue) or (metadataValue == ""):
+            #   metadataValue = catalogItemMetadata[2][metadataItem]
+          if (metadataValue) and (metadataValue != ""):
+            enTranslations = metadataValue['en']
+            if enTranslations['description']:
+              catalogMetadataUpdate = catalogMetadataUpdate + f"""description en: {enTranslations['description']}
   """
-          if enTranslations['shortDescription']:
-            catalogMetadataUpdate = catalogMetadataUpdate + f"""short description en: {enTranslations['shortDescription']}
+            if enTranslations['shortDescription']:
+              catalogMetadataUpdate = catalogMetadataUpdate + f"""short description en: {enTranslations['shortDescription']}
   """
-          esTranslations = metadataValue['es']
-          if esTranslations['description']:
-            catalogMetadataUpdate = catalogMetadataUpdate + f"""description es: {esTranslations['description']}
+            esTranslations = metadataValue['es']
+            if esTranslations['description']:
+              catalogMetadataUpdate = catalogMetadataUpdate + f"""description es: {esTranslations['description']}
   """
-          if esTranslations['shortDescription']:
-            catalogMetadataUpdate = catalogMetadataUpdate + f"""short description es: {esTranslations['shortDescription']}
+            if esTranslations['shortDescription']:
+              catalogMetadataUpdate = catalogMetadataUpdate + f"""short description es: {esTranslations['shortDescription']}
   """
-      elif metadataItem == "metadataSource":
-        if ((not metadataValue) or (metadataValue == "")) and titleCode[0][0] == "S":
-          metadataValue = catalogItemMetadata[2][metadataItem]
-          # if (not metadataValue) or (metadataValue == ""):
-          #   metadataValue = catalogItemMetadata[2][metadataItem]
-        if (metadataValue) and (metadataValue != ""):
-          for infoItem in metadataValue:
-            sourceType = infoItem['sourceType']
-            sourceUrl = infoItem['url']
-            catalogMetadataUpdate = catalogMetadataUpdate + f"""Source Type - {sourceType}: {sourceUrl}
+        elif metadataItem == "metadataSource":
+          if ((not metadataValue) or (metadataValue == "")) and titleCode[0][0] == "S":
+            metadataValue = catalogItemMetadata[2][metadataItem]
+            # if (not metadataValue) or (metadataValue == ""):
+            #   metadataValue = catalogItemMetadata[2][metadataItem]
+          if (metadataValue) and (metadataValue != ""):
+            for infoItem in metadataValue:
+              sourceType = infoItem['sourceType']
+              sourceUrl = infoItem['url']
+              catalogMetadataUpdate = catalogMetadataUpdate + f"""Source Type - {sourceType}: {sourceUrl}
   """
-      else:
-        if ((not metadataValue) or (metadataValue == "")) and titleCode[0][0] == "S":
-          metadataValue = catalogItemMetadata[2][metadataItem]
-          # if (not metadataValue) or (metadataValue == ""):
-          #   metadataValue = catalogItemMetadata[2][metadataItem]
-        if (metadataValue) and (metadataValue != ""):
-          catalogMetadataUpdate = catalogMetadataUpdate + f"""{metadataItem}: {str(metadataValue).replace('[',"").replace(']',"")}
+        else:
+          if ((not metadataValue) or (metadataValue == "")) and titleCode[0][0] == "S":
+            metadataValue = catalogItemMetadata[2][metadataItem]
+            # if (not metadataValue) or (metadataValue == ""):
+            #   metadataValue = catalogItemMetadata[2][metadataItem]
+          if (metadataValue) and (metadataValue != ""):
+            catalogMetadataUpdate = catalogMetadataUpdate + f"""{metadataItem}: {str(metadataValue).replace('[',"").replace(']',"")}
   """
-    # print(f"{metadataItem}: {metadataValue}")
+      # print(f"{metadataItem}: {metadataValue}")
 
   # print(catalogMetadataUpdate)
   # clientProd1.close()
@@ -219,8 +220,9 @@ try:
   # print(f"{cantemoOriginalTitleWhite} (without accents: {cantemoOriginalTitle}) - {cantemoTitleCode}")
   #------------------------------
 
-  if (not catalogMetadataUpdate) or (catalogMetadataUpdate == ""):
+  if (not catalogMetadataUpdate) or (catalogMetadataUpdate == "") or (catalogItemMetadata[firstValue]):
     catalogMetadataUpdate = "Information of this item cannot be found in Catalog Service"
+  # print(f"Value to update is: {catalogMetadataUpdate}")
 
   #------------------------------
   # Update Cantemo metadata
@@ -234,12 +236,12 @@ try:
   urlPutAnalysisInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata/"
   itemRawPayload = f"""
 <MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"> 
-  <timespan start=\"-INF\" end=\"+INF\">
-    <field>
-      <name>oly_catalogMetadata</name>
-      <value>{catalogMetadataUpdateValid}</value>
-    </field>
-  </timespan>
+<timespan start=\"-INF\" end=\"+INF\">
+  <field>
+    <name>oly_catalogMetadata</name>
+    <value>{catalogMetadataUpdateValid}</value>
+  </field>
+</timespan>
 </MetadataDocument>"""
   # print(itemRawPayload)
   itemPayload = itemRawPayload.encode('utf-8')
