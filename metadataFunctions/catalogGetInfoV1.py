@@ -108,7 +108,7 @@ try:
   titleCode = list(range(3))
   catalogItemMetadata = list(range(3))
   titleCode[0] = readCantemoMetadata(cantemoItemId, 'oly_titleCode').strip()
-  
+
   #------------------------------
   # Start with gathering information on movie or series level
   if titleCode[0] is not None:
@@ -146,7 +146,7 @@ try:
   else:
     firstValue = 0
 
-  if catalogItemMetadata[firstValue]:
+  if (catalogItemMetadata[firstValue] != firstValue):
     for metadataItem, metadataValue in catalogItemMetadata[firstValue].items():
       if metadataItem in ["year", "languageLabel", "productionCompany", "sourceType", "cast", "producer", "director", "primaryGenreLabel", "secondaryGenresLabel", "duration", "description", "metadataSource", "editorsNotes", "translations", "secondaryGenres", "primaryGenre"]:
         if metadataItem == "secondaryGenres":
@@ -220,7 +220,7 @@ try:
   # print(f"{cantemoOriginalTitleWhite} (without accents: {cantemoOriginalTitle}) - {cantemoTitleCode}")
   #------------------------------
 
-  if (not catalogMetadataUpdate) or (catalogMetadataUpdate == "") or (catalogItemMetadata[firstValue]):
+  if (not catalogMetadataUpdate) or (catalogMetadataUpdate == "") or (catalogItemMetadata[firstValue] != firstValue):
     catalogMetadataUpdate = "Information of this item cannot be found in Catalog Service"
   # print(f"Value to update is: {catalogMetadataUpdate}")
 
