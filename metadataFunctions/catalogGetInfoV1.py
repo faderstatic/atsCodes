@@ -140,7 +140,7 @@ try:
 
   # print(catalogItemMetadata[0])
   # print(catalogItemMetadata[1])
-  # print(catalogItemMetadata[2])
+  # print(f"     series collection - {catalogItemMetadata[2]}")
   if (catalogItemMetadata[0] == "") or (not catalogItemMetadata[0]):
     firstValue = 2
   else:
@@ -149,7 +149,7 @@ try:
   for metadataItem, metadataValue in catalogItemMetadata[firstValue].items():
     if metadataItem in ["year", "languageLabel", "productionCompany", "sourceType", "cast", "producer", "director", "primaryGenreLabel", "secondaryGenresLabel", "duration", "description", "metadataSource", "editorsNotes", "translations", "secondaryGenres", "primaryGenre"]:
       if metadataItem == "secondaryGenres":
-        if (not metadataValue) or (metadataValue == ""):
+        if ((not metadataValue) or (metadataValue == "")) and titleCode[0][0] == "S":
           metadataValue = catalogItemMetadata[2][metadataItem]
           # if (not metadataValue) or (metadataValue == ""):
           #   metadataValue = catalogItemMetadata[2][metadataItem]
@@ -161,7 +161,7 @@ try:
             genreCombined = genreCombined+genreValue['entityValue']+","
           metadataValue = genreCombined[:-1]
       elif metadataItem == "primaryGenre":
-        if (not metadataValue) or (metadataValue == ""):
+        if ((not metadataValue) or (metadataValue == "")) and titleCode[0][0] == "S":
           metadataValue = catalogItemMetadata[2][metadataItem]
           # if (not metadataValue) or (metadataValue == ""):
           #   metadataValue = catalogItemMetadata[2][metadataItem]
@@ -170,7 +170,7 @@ try:
           genreValue = genreCollection.find_one(queryGenreCode)
           metadataValue = genreValue['entityValue']
       elif metadataItem == "translations":
-        if (not metadataValue) or (metadataValue == ""):
+        if ((not metadataValue) or (metadataValue == "")) and titleCode[0][0] == "S":
           metadataValue = catalogItemMetadata[2][metadataItem]
           # if (not metadataValue) or (metadataValue == ""):
           #   metadataValue = catalogItemMetadata[2][metadataItem]
@@ -190,7 +190,7 @@ try:
             catalogMetadataUpdate = catalogMetadataUpdate + f"""short description es: {esTranslations['shortDescription']}
   """
       elif metadataItem == "metadataSource":
-        if (not metadataValue) or (metadataValue == ""):
+        if ((not metadataValue) or (metadataValue == "")) and titleCode[0][0] == "S":
           metadataValue = catalogItemMetadata[2][metadataItem]
           # if (not metadataValue) or (metadataValue == ""):
           #   metadataValue = catalogItemMetadata[2][metadataItem]
@@ -201,7 +201,7 @@ try:
             catalogMetadataUpdate = catalogMetadataUpdate + f"""Source Type - {sourceType}: {sourceUrl}
   """
       else:
-        if (not metadataValue) or (metadataValue == ""):
+        if ((not metadataValue) or (metadataValue == "")) and titleCode[0][0] == "S":
           metadataValue = catalogItemMetadata[2][metadataItem]
           # if (not metadataValue) or (metadataValue == ""):
           #   metadataValue = catalogItemMetadata[2][metadataItem]
@@ -241,7 +241,7 @@ try:
     </field>
   </timespan>
 </MetadataDocument>"""
-  print(itemRawPayload)
+  # print(itemRawPayload)
   itemPayload = itemRawPayload.encode('utf-8')
   # print(itemPayload)
   httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=itemPayload)
