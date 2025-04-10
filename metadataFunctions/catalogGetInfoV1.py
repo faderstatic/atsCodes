@@ -25,6 +25,7 @@ import urllib.request
 from email.message import EmailMessage
 from requests.exceptions import HTTPError
 from urllib.parse import quote_plus
+from xml.sax.saxutils import escape
 from pymongo import MongoClient
 # import traceback
 #------------------------------
@@ -223,6 +224,7 @@ try:
 
   #------------------------------
   # Update Cantemo metadata
+  catalogMetadataUpdateValid = escape(catalogMetadataUpdate)
   headers = {
   'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
   'Cookie': 'csrftoken=HFOqrbk9cGt3qnc6WBIxWPjvCFX0udBdbJnzCv9jECumOjfyG7SS2lgVbFcaHBCc',
@@ -235,11 +237,11 @@ try:
   <timespan start=\"-INF\" end=\"+INF\">
     <field>
       <name>oly_catalogMetadata</name>
-      <value>{catalogMetadataUpdate}</value>
+      <value>{catalogMetadataUpdateValid}</value>
     </field>
   </timespan>
 </MetadataDocument>"""
-  # print(itemRawPayload)
+  print(itemRawPayload)
   itemPayload = itemRawPayload.encode('utf-8')
   # print(itemPayload)
   httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=itemPayload)
