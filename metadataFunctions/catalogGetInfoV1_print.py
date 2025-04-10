@@ -25,6 +25,7 @@ import urllib.request
 from email.message import EmailMessage
 from requests.exceptions import HTTPError
 from urllib.parse import quote_plus
+from xml.sax.saxutils import escape
 from pymongo import MongoClient
 # import traceback
 #------------------------------
@@ -87,6 +88,7 @@ try:
   movieCollection = olyplatCatalog["movie"]
   seriesCollection = olyplatCatalog["series"]
   episodeCollection = olyplatCatalog["episode"]
+  seasonCollection = olyplatCatalog["season"]
   genreCollection = olyplatCatalog["genre_type"]
 
   cantemoItemId = sys.argv[1]
@@ -103,60 +105,113 @@ try:
   cantemoOriginalTitle = cantemoOriginalTitleWhite.translate(translationTable)
   # cantemoOriginalTitle = cantemoOriginalTitleTemp.replace(' ', '+')
 
-  cantemoTitleCode = readCantemoMetadata(cantemoItemId, 'oly_titleCode')
-  queryTitleCode = {'titleCode': cantemoTitleCode}
-  catalogItemMetadata = catalogCollection.find_one(queryTitleCode)
-  print(f"Cantemo Title Code = {cantemoTitleCode}")
-  print(f"Catalog Item Found: {catalogItemMetadata}")
-  if catalogItemMetadata is None:
-    if cantemoTitleCode[0] == "M":
-      catalogItemMetadata = movieCollection.find_one(queryTitleCode)
-      # print("Get information from movie collection")
-    if (cantemoTitleCode[0] == "S") and ("E" in cantemoTitleCode[-3:]):
-      catalogItemMetadata = episodeCollection.find_one(queryTitleCode)
-      # print("Get information from episode collection")
-    elif cantemoTitleCode[0] == "S":
-      catalogItemMetadata = seriesCollection.find_one(queryTitleCode)
-      # print("Get information from series collection")
+  titleCode = list(range(3))
+  catalogItemMetadata = list(range(3))
+  titleCode[0] = readCantemoMetadata(cantemoItemId, 'oly_titleCode').strip()
+  print(f"Title Code: {titleCode[0]}")
+
+  #------------------------------
+  # Start with gathering information on movie or series level
+  if titleCode[0] is not None:
+    if titleCode[0][0] == "M":
+      titleCodeDepth = 1
+      queryTitleCode = {'titleCode': titleCode[0]}
+      catalogItemMetadata[0] = movieCollection.find_one(queryTitleCode)
+      print("Get information from movie collection")
+    elif titleCode[0][0] == "S":
+      titleCodeDepth = 3
+      queryTitleCode = {'titleCode': titleCode[0]}
+      catalogItemMetadata[0] = episodeCollection.find_one(queryTitleCode)
+      print("Get information from episode collection")
+      # Prepare series (titleCode[2]) and season (titleCode[1]) titlecode incase no information in episode
+      titleCode[2] = titleCode[0][:7]
+      # print(titleCode[2])
+      queryTitleCode = {'titleCode': titleCode[2]}
+      catalogItemMetadata[2] = seriesCollection.find_one(queryTitleCode)
+      # episodeNumberPosition = titleCode[0].rfind("E")
+      # if episodeNumberPosition != -1:
+      #   titleCode[1] = titleCode[0][:episodeNumberPosition]
+      # else:
+      #   titleCode[1] = titleCode[0]
+      # queryTitleCode = {'titleCode': titleCode[1]}
+      # catalogItemMetadata[1] = seasonCollection.find_one(queryTitleCode)
+  #------------------------------
+
   catalogMetadataUpdate = ""
-  for metadataItem, metadataValue in catalogItemMetadata.items():
-    if metadataItem in ["year", "languageLabel", "productionCompany", "sourceType", "producer", "director", "primaryGenreLabel", "secondaryGenresLabel", "duration", "description", "metadataSource", "cast", "editorsNotes", "translations", "secondaryGenres", "primaryGenre"]:
-      if (metadataItem == "secondaryGenres"):
-        genreCombined = ""
-        for eachGenre in metadataValue:
-          queryGenreCode = {'entityUUID': eachGenre}
-          genreValue = genreCollection.find_one(queryGenreCode)
-          genreCombined = genreCombined+genreValue['entityValue']+","
-        metadataValue = genreCombined[:-1]
-      if (metadataItem == "primaryGenre"):
-        queryGenreCode = {'entityUUID': metadataValue}
-        genreValue = genreCollection.find_one(queryGenreCode)
-        metadataValue = genreValue['entityValue']
-      if metadataItem == "translations":
-        enTranslations = metadataValue['en']
-        if enTranslations['description']:
-          catalogMetadataUpdate = catalogMetadataUpdate + f"""description en: {enTranslations['description']}
-"""
-        if enTranslations['shortDescription']:
-          catalogMetadataUpdate = catalogMetadataUpdate + f"""short description en: {enTranslations['shortDescription']}
-"""
-        esTranslations = metadataValue['es']
-        if esTranslations['description']:
-          catalogMetadataUpdate = catalogMetadataUpdate + f"""description es: {esTranslations['description']}
-"""
-        if esTranslations['shortDescription']:
-          catalogMetadataUpdate = catalogMetadataUpdate + f"""short description es: {esTranslations['shortDescription']}
-"""
-      elif metadataItem == "metadataSource":
-        for infoItem in catalogItemMetadata['metadataSource']:
-          sourceType = infoItem['sourceType']
-          sourceUrl = infoItem['url']
-          catalogMetadataUpdate = catalogMetadataUpdate + f"""Source Type - {sourceType}: {sourceUrl}
-"""
-      else:
-        catalogMetadataUpdate = catalogMetadataUpdate + f"""{metadataItem}: {str(metadataValue).replace('[',"").replace(']',"")}
-"""
+
+  # print(f"base level metadata collected: {catalogItemMetadata[0]}")
+  # print(catalogItemMetadata[1])
+  # print(f"            series collection: {catalogItemMetadata[2]}")
+  if (catalogItemMetadata[0] == "") or (not catalogItemMetadata[0]) or (catalogItemMetadata[0] == 0):
+    firstValue = 2
+  else:
+    firstValue = 0
+
+  if (catalogItemMetadata[firstValue] != firstValue):
+    for metadataItem, metadataValue in catalogItemMetadata[firstValue].items():
+      if metadataItem in ["year", "languageLabel", "productionCompany", "sourceType", "cast", "producer", "director", "primaryGenreLabel", "secondaryGenresLabel", "duration", "description", "metadataSource", "editorsNotes", "translations", "secondaryGenres", "primaryGenre"]:
+        if metadataItem == "secondaryGenres":
+          if ((not metadataValue) or (metadataValue == "")) and titleCode[0][0] == "S":
+            metadataValue = catalogItemMetadata[2][metadataItem]
+            # if (not metadataValue) or (metadataValue == ""):
+            #   metadataValue = catalogItemMetadata[2][metadataItem]
+          if (metadataValue) and (metadataValue != ""):
+            genreCombined = ""
+            for eachGenre in metadataValue:
+              queryGenreCode = {'entityUUID': eachGenre}
+              genreValue = genreCollection.find_one(queryGenreCode)
+              genreCombined = genreCombined+genreValue['entityValue']+","
+            metadataValue = genreCombined[:-1]
+        elif metadataItem == "primaryGenre":
+          if ((not metadataValue) or (metadataValue == "")) and titleCode[0][0] == "S":
+            metadataValue = catalogItemMetadata[2][metadataItem]
+            # if (not metadataValue) or (metadataValue == ""):
+            #   metadataValue = catalogItemMetadata[2][metadataItem]
+          if (metadataValue) and (metadataValue != ""):
+            queryGenreCode = {'entityUUID': metadataValue}
+            genreValue = genreCollection.find_one(queryGenreCode)
+            metadataValue = genreValue['entityValue']
+        elif metadataItem == "translations":
+          if ((not metadataValue) or (metadataValue == "")) and titleCode[0][0] == "S":
+            metadataValue = catalogItemMetadata[2][metadataItem]
+            # if (not metadataValue) or (metadataValue == ""):
+            #   metadataValue = catalogItemMetadata[2][metadataItem]
+          if (metadataValue) and (metadataValue != ""):
+            enTranslations = metadataValue['en']
+            if enTranslations['description']:
+              catalogMetadataUpdate = catalogMetadataUpdate + f"""description en: {enTranslations['description']}
+  """
+            if enTranslations['shortDescription']:
+              catalogMetadataUpdate = catalogMetadataUpdate + f"""short description en: {enTranslations['shortDescription']}
+  """
+            esTranslations = metadataValue['es']
+            if esTranslations['description']:
+              catalogMetadataUpdate = catalogMetadataUpdate + f"""description es: {esTranslations['description']}
+  """
+            if esTranslations['shortDescription']:
+              catalogMetadataUpdate = catalogMetadataUpdate + f"""short description es: {esTranslations['shortDescription']}
+  """
+        elif metadataItem == "metadataSource":
+          if ((not metadataValue) or (metadataValue == "")) and titleCode[0][0] == "S":
+            metadataValue = catalogItemMetadata[2][metadataItem]
+            # if (not metadataValue) or (metadataValue == ""):
+            #   metadataValue = catalogItemMetadata[2][metadataItem]
+          if (metadataValue) and (metadataValue != ""):
+            for infoItem in metadataValue:
+              sourceType = infoItem['sourceType']
+              sourceUrl = infoItem['url']
+              catalogMetadataUpdate = catalogMetadataUpdate + f"""Source Type - {sourceType}: {sourceUrl}
+  """
+        else:
+          if ((not metadataValue) or (metadataValue == "")) and titleCode[0][0] == "S":
+            metadataValue = catalogItemMetadata[2][metadataItem]
+            # if (not metadataValue) or (metadataValue == ""):
+            #   metadataValue = catalogItemMetadata[2][metadataItem]
+          if (metadataValue) and (metadataValue != ""):
+            catalogMetadataUpdate = catalogMetadataUpdate + f"""{metadataItem}: {str(metadataValue).replace('[',"").replace(']',"")}
+  """
       # print(f"{metadataItem}: {metadataValue}")
+
   print(catalogMetadataUpdate)
   # clientProd1.close()
   clientOdev.close()
@@ -166,8 +221,12 @@ try:
   # print(f"{cantemoOriginalTitleWhite} (without accents: {cantemoOriginalTitle}) - {cantemoTitleCode}")
   #------------------------------
 
+  if (catalogMetadataUpdate == ""):
+    catalogMetadataUpdate = "Information of this item cannot be found in Catalog Service"
+
   #------------------------------
   # Update Cantemo metadata
+  '''catalogMetadataUpdateValid = escape(catalogMetadataUpdate)
   headers = {
   'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
   'Cookie': 'csrftoken=HFOqrbk9cGt3qnc6WBIxWPjvCFX0udBdbJnzCv9jECumOjfyG7SS2lgVbFcaHBCc',
@@ -177,18 +236,19 @@ try:
   urlPutAnalysisInfo = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata/"
   itemRawPayload = f"""
 <MetadataDocument xmlns=\"http://xml.vidispine.com/schema/vidispine\"> 
-  <timespan start=\"-INF\" end=\"+INF\">
-    <field>
-      <name>oly_catalogMetadata</name>
-      <value>{catalogMetadataUpdate}</value>
-    </field>
-  </timespan>
+<timespan start=\"-INF\" end=\"+INF\">
+  <field>
+    <name>oly_catalogMetadata</name>
+    <value>{catalogMetadataUpdateValid}</value>
+  </field>
+</timespan>
 </MetadataDocument>"""
   # print(itemRawPayload)
   itemPayload = itemRawPayload.encode('utf-8')
-  print(itemPayload)
-  # httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=itemPayload)  
-
+  # print(itemPayload)
+  httpApiResponse = requests.request("PUT", urlPutAnalysisInfo, headers=headers, data=itemPayload)
+  #------------------------------
+  '''
 #------------------------------
 except Exception as e:
     print(f"MongoDB Error: {e}")
