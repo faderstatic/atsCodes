@@ -575,11 +575,11 @@ then
     fi
     if [[ ($descriptionEn != "") || ($shortDescriptionEn != "") ]];
     then
-        apiPayload="$apiPayload     <group>\n          <name>English Synopsis</name>\n         <field>\n               <name>oly_descriptionEn</name>\n                <value>$descriptionEn</value>\n         </field>\n         <field>\n               <name>oly_shortDescriptionEn</name>\n                <value>$shortDescriptionEn</value>\n         </field>\n     </group>\n"
+        apiPayload="$apiPayload     <group mode=\"add\">\n          <name>English Synopsis</name>\n         <field>\n               <name>oly_descriptionEn</name>\n                <value>$descriptionEn</value>\n         </field>\n         <field>\n               <name>oly_shortDescriptionEn</name>\n                <value>$shortDescriptionEn</value>\n         </field>\n     </group>\n"
     fi
     if [[ ($descriptionEs != "") || ($shortDescriptionEs != "") ]];
     then
-        apiPayload="$apiPayload     <group>\n          <name>Spanish Synopsis</name>\n         <field>\n               <name>oly_descriptionEs</name>\n                <value>$descriptionEs</value>\n         </field>\n         <field>\n               <name>oly_shortDescriptionEs</name>\n                <value>$shortDescriptionEs</value>\n         </field>\n     </group>\n"
+        apiPayload="$apiPayload     <group mode=\"add\">\n          <name>Spanish Synopsis</name>\n         <field>\n               <name>oly_descriptionEs</name>\n                <value>$descriptionEs</value>\n         </field>\n         <field>\n               <name>oly_shortDescriptionEs</name>\n                <value>$shortDescriptionEs</value>\n         </field>\n     </group>\n"
     fi
     apiPayload="$apiPayload </timespan>\n</MetadataDocument>"
     apiPayloadFormatted=$(echo -e $apiPayload)
