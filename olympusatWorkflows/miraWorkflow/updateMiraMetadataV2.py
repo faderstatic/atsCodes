@@ -13,6 +13,7 @@ import time
 import xml.etree.ElementTree as ET
 import requests
 import uuid
+import json
 from email.message import EmailMessage
 from requests.exceptions import HTTPError
 from urllib.parse import quote_plus
@@ -32,9 +33,10 @@ clientOdev = MongoClient(uriOdev)
 clientCluster0 = MongoClient(uriCluster0)
 #------------------------------
 
-olyplatCatalog = clientOdev["olyplat_catalog"]
 cantemoDb = clientCluster0["cantemo"]
 refCrewCollection = cantemoDb["refCrew"]
+#------------------------------
+olyplatCatalog = clientOdev["olyplat_catalog"]
 catalogCollection = olyplatCatalog["catalog"]
 movieCollection = olyplatCatalog["movie"]
 seriesCollection = olyplatCatalog["series"]
@@ -46,6 +48,18 @@ try:
   ns = {'vidispine': 'http://xml.vidispine.com/schema/vidispine'}
 
   #------------------------------
+  # Creating Spanish accented characters translation
+  accentedCharacters = "áéíóúÁÉÍÓÚñÑ"
+  unaccentedCharacters = "aeiouAEIOUnN"
+  translationTable = str.maketrans(accentedCharacters, unaccentedCharacters)
+  #------------------------------
+
+  contentFlagsPresent = 0
+  publishEnMetadata = 0
+  publishEsMetadata = 0
+  descriptionEn = shortDescriptionEn = descriptionEs = shortDescriptionEs = ""
+
+  #------------------------------
   # Making API call to Cantemo to get content flag
   headersCantemo = {
     'Authorization': 'Basic YWRtaW46MTBsbXBAc0B0',
@@ -53,104 +67,130 @@ try:
     'Accept': 'application/json'
   }
   payloadCantemo = {}
-  urlGetContentFlags = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata?field=oly_titleCode,oly_contentFlags&includeConstraintValue=all&terse=yes&interval=generic"
+  # urlGetContentFlags = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata?field=oly_titleCode,oly_contentFlags&includeConstraintValue=all&terse=yes&interval=generic"
+  # urlGetContentFlags = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata?field=oly_titleCode,oly_contentFlags&includeConstraintValue=all&interval=generic"
+  urlGetContentFlags = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata?field=oly_contentFlags,oly_deliveryLanguages,oly_titleCode&includeConstraintValue=all&terse=yes&interval=generic"
   httpApiResponse = requests.request("GET", urlGetContentFlags, headers=headersCantemo, data=payloadCantemo)
   httpApiResponse.raise_for_status()
   #------------------------------
 
   #------------------------------
-  # Creating Spanish accented characters translation
-  accentedCharacters = "áéíóúÁÉÍÓÚñÑ"
-  unaccentedCharacters = "aeiouAEIOUnN"
-  translationTable = str.maketrans(accentedCharacters, unaccentedCharacters)
+  # Parsing JSON data
+  responseJson = httpApiResponse.json() if httpApiResponse and httpApiResponse.status_code == 200 else None
+  # print(responseJson)
+  if responseJson['item']:
+    metadataItems = responseJson['item']
+    for metadataFields in metadataItems:
+      # if 'id' in metadataFields:
+      #   print(metadataFields['id'])
+      if 'oly_titleCode' in metadataFields:
+        for itemDetails in metadataFields['oly_titleCode']:
+          # print(itemDetails['value'])
+          cantemoTitleCodeRaw = itemDetails['value']
+          cantemoTitleCode = cantemoTitleCodeRaw.strip()
+      # if 'oly_contentFlags' in metadataFields:
+      #   contentFlagsPresent = 1
+      #   for itemDetails in metadataFields['oly_contentFlags']:
+      #     print(itemDetails['value'])
+      if 'oly_deliveryLanguages' in metadataFields:
+        for itemDetails in metadataFields['oly_deliveryLanguages']:
+          if itemDetails['value'] == "english":
+            publishEnMetadata = 1
+          if itemDetails['value'] == "spanish":
+            publishEsMetadata = 1
+  
   #------------------------------
-
-  #------------------------------
-  # Parsing XML data to get content Flags (cantemoContentFlag)
-  responseXml = httpApiResponse.text
-  responseRoot = ET.XML(responseXml)
-  legacyContentFlag = 'false'
-  contentEmptyFlag = 'false'
-
-  for child in responseRoot.findall('vidispine:item', ns):
-      for titleCodeItem in child.findall('oly_titleCode'):
-        cantemoTitleCode = titleCodeItem.text
-
-  for child in responseRoot.findall('vidispine:item', ns):
-    for cantemoContentFlags in child.findall('oly_contentFlags'):
-      if not cantemoContentFlags.text:
-        contentEmptyFlag = 'true'
-      elif cantemoContentFlags.text == 'legacycontent':
-        legacyContentFlag = 'true'
-
-  if legacyContentFlag == 'true':
-    #------------------------------
-    # Making API call to Cantemo to get contract code
-    payloadCantemo = {}
-    urlGetContractCode = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata?field=oly_titleCode,oly_contractCode&terse=yes&interval=generic"
-    httpApiResponse = requests.request("GET", urlGetContractCode, headers=headersCantemo, data=payloadCantemo)
+  # Get descriptions
+  if publishEnMetadata or publishEsMetadata:
+    urlGetDescriptions = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata?field=oly_descriptionEn,oly_shortDescriptionEn,oly_descriptionEs,oly_shortDescriptionEs&includeConstraintValue=all&terse=yes&interval=generic"
+    httpApiResponse = requests.request("GET", urlGetDescriptions, headers=headersCantemo, data=payloadCantemo)
     httpApiResponse.raise_for_status()
     #------------------------------
-
+    # Parsing JSON data
+    responseJson = httpApiResponse.json() if httpApiResponse and httpApiResponse.status_code == 200 else None
+    if responseJson['item']:
+      metadataItems = responseJson['item']
+      for metadataFields in metadataItems:
+        if publishEnMetadata:
+          if 'oly_descriptionEn' in metadataFields:
+            for itemDetails in metadataFields['oly_descriptionEn']:
+              descriptionEn = itemDetails['value']
+          if 'oly_shortDescriptionEn' in metadataFields:
+            for itemDetails in metadataFields['oly_shortDescriptionEn']:
+              shortDescriptionEn = itemDetails['value']
+        if publishEsMetadata:
+          if 'oly_descriptionEs' in metadataFields:
+            for itemDetails in metadataFields['oly_descriptionEs']:
+              descriptionEs = itemDetails['value']
+          if 'oly_shortDescriptionEs' in metadataFields:
+            for itemDetails in metadataFields['oly_shortDescriptionEs']:
+              shortDescriptionEs = itemDetails['value']
     #------------------------------
-    # Parsing XML data to get Rightsline contract Code (contractCode))
-    responseXml = httpApiResponse.text
-    root = ET.XML(responseXml)
-    for child in root.findall('vidispine:item', ns):
-      for cantemoContractCode in child.findall('oly_contractCode'):
-        rightslineContractId = cantemoContractCode.text
-
-    #------------------------------
-    # Making API call to Cantemo to get Rightsline title code
-    urlGetTitleCode = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata?field=oly_titleCode&terse=yes"
-    httpApiResponse = requests.request("GET", urlGetTitleCode, headers=headersCantemo, data=payloadCantemo)
-    httpApiResponse.raise_for_status()
-    #------------------------------
-
-    #------------------------------
-    # Parsing XML data to get Rightsline title code (titleCode)
-    responseXml = httpApiResponse.text
-    root = ET.XML(responseXml)
-    for child in root.findall('vidispine:item', ns):
-      for cantemoTitleCode in child.findall('oly_titleCode'):
-        rightslineItemId = cantemoTitleCode.text
-    #------------------------------
+  #------------------------------
+  
+  skipFlag = 0
+  cantemoTitleCodeLen = len(cantemoTitleCode)
+  cantemoTitleCodeType = cantemoTitleCode[0]
+  isEpisode = 0
+  synopsisLabel = "title_synopsis"
+  if cantemoTitleCodeLen == 11:
+    isEpisode = 1
+    synopsisLabel = "episode_synopsis"
+    urlMira = f"http://10.1.1.22:83/Service1.svc/title_episodes/{cantemoTitleCode}"
+  elif (cantemoTitleCodeLen == 9) or (cantemoTitleCodeType == "M"):
+    urlMira = f"http://10.1.1.22:83/Service1.svc/titles/{cantemoTitleCode}"
   else:
-    #------------------------------
-    # Making API call to Cantemo to get contract ID
-    payloadCantemo = {}
-    urlGetContractId = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata?field=oly_rightslineContractId&terse=yes"
-    httpApiResponse = requests.request("GET", urlGetContractId, headers=headersCantemo, data=payloadCantemo)
-    httpApiResponse.raise_for_status()
-    #------------------------------
+    print("Series information cannot be updated with this method.")
+    skipFlag = 1
 
+  if skipFlag == 0:
     #------------------------------
-    # Parsing XML data to get Rightsline contract ID (rightslineContractId)
-    responseXml = httpApiResponse.text
-    root = ET.XML(responseXml)
-    # print(root.tag, root.attrib, root.text)
-    for child in root.findall('vidispine:item', ns):
-      for cantemoContractId in child.findall('oly_rightslineContractId'):
-        rightslineContractId = cantemoContractId.text
-
+    # Get existing information from Mira
+    payload = ""
+    headers = {
+      'Content-Type': 'text/plain; charset=UTF-8',
+    }
+    
+    miraResponse = requests.request("GET", urlMira, headers=headers, data=payload)
+    miraResponse.raise_for_status
     #------------------------------
-    # Making API call to Cantemo to get Rightsline Item ID
-    urlGetRightslineItemId = f"http://10.1.1.34:8080/API/item/{cantemoItemId}/metadata?field=oly_rightslineItemId&terse=yes"
-    httpApiResponse = requests.request("GET", urlGetRightslineItemId, headers=headersCantemo, data=payloadCantemo)
-    httpApiResponse.raise_for_status()
+    # Creating JSON payload
+    payload_dict = {}
+    responseJson = miraResponse.json() if miraResponse and miraResponse.status_code == 200 else None
+    if isEpisode == 0:
+      miraId = responseJson[0]['id_titles']
+      payload_dict["id_titles"] = miraId
+      payload_dict["title_synopsis"] = []
+    else:
+      miraId = responseJson[0]['id_title_episodes']
+      payload_dict["id_title_episodes"] = miraId
+      payload_dict["episode_synopsis"] = []
+    if descriptionEn != "":
+      payload_dict[synopsisLabel].append({
+        "id_synopsis_types": 22,
+        "synopsis": descriptionEn
+        })
+    if shortDescriptionEn != "":
+      payload_dict[synopsisLabel].append({
+        "id_synopsis_types": 21,
+        "synopsis": shortDescriptionEn
+        })
+    if descriptionEs != "":
+      payload_dict[synopsisLabel].append({
+        "id_synopsis_types": 2,
+        "synopsis": descriptionEs
+        })
+    if shortDescriptionEs != "":
+      payload_dict[synopsisLabel].append({
+        "id_synopsis_types": 1,
+        "synopsis": shortDescriptionEn
+        })
+    
+    payload = json.dumps(payload_dict, indent=4)
+    print(payload)
     #------------------------------
-
-    #------------------------------
-    # Parsing XML data to get Rightsline item ID (rightslineItemId)
-    # ET.register_namespace('ns', 'http://xml.vidispine.com/schema/vidispine')
-    responseXml = httpApiResponse.text
-    root = ET.XML(responseXml)
-    # print(root.tag, root.attrib, root.text)
-    for child in root.findall('vidispine:item', ns):
-      for cantemoRightslineId in child.findall('oly_rightslineItemId'):
-        rightslineItemId = cantemoRightslineId.text
-    #------------------------------
-
+  
+  if 0:
     #------------------------------
     # Get existing information from Mira
     urlMira = f"http://10.1.1.22:83/Service1.svc/titles/{cantemoTitleCode}"
@@ -352,8 +392,8 @@ except Exception as e:
     print(f"MongoDB Error: {e}")
     # print(traceback.format_exc())
     # clientProd1.close()
-    clientOdev.close()
-    clientCluster0.close()
+    # clientOdev.close()
+    # clientCluster0.close()
 except HTTPError as http_err:
   print(f'HTTP error occurred: {http_err}')
 except Exception as err:
