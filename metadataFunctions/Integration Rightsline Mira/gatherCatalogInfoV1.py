@@ -85,7 +85,10 @@ try:
         lineWriter = csv.writer(outFile)
         lineWriter.writerow(csvHeader)
         for cantemoTitleCodeLine in lines:
-          cantemoTitleCode = cantemoTitleCodeLine.strip().split("_")[0]
+          if (cantemoTitleCodeLine[0] == "S") or (cantemoTitleCodeLine[0] == "M"):
+            cantemoTitleCode = cantemoTitleCodeLine.strip().split("_")[0]
+          else:
+            cantemoTitleCode = cantemoTitleCodeLine.strip()
           print(f"Processing: {cantemoTitleCode}")
           itemInfo = []
           itemInfo.append(cantemoTitleCode)
@@ -146,15 +149,15 @@ try:
                 blankInfo = 0
               if (catalogSeriesMetadata[0]['translations']['en']['shortDescription'] != "") and (descriptionType == "short") and (languageExport == "en"):
                 catalogEnShortDesc = catalogSeriesMetadata[0]['translations']['en']['shortDescription']
-                itemInfo.append(catalogEnDesc)
+                itemInfo.append(catalogEnShortDesc)
                 blankInfo = 0
               if (catalogSeriesMetadata[0]['translations']['es']['description'] != "") and (descriptionType == "long") and (languageExport == "es"):
                 catalogEsDesc = catalogSeriesMetadata[0]['translations']['es']['description']
-                itemInfo.append(catalogEnDesc)
+                itemInfo.append(catalogEsDesc)
                 blankInfo = 0
               if (catalogSeriesMetadata[0]['translations']['es']['shortDescription'] != "") and (descriptionType == "short") and (languageExport == "es"):
                 catalogEsShortDesc = catalogSeriesMetadata[0]['translations']['es']['shortDescription']
-                itemInfo.append(catalogEnDesc)
+                itemInfo.append(catalogEsShortDesc)
                 blankInfo = 0
               if blankInfo == 1:
                 itemInfo.append("")
@@ -183,28 +186,37 @@ try:
               for cast in catalogCrewMetadata[0]['cast']:
                 if castInformation == "":
                   castInformation = cast
-                castInformation = f"{castInformation}, {cast}"
+                else:
+                  castInformation = f"{castInformation}, {cast}"
               # castInformation = f"{castInformation}"
               # print(f"--- CAST: {castInformation}")
               itemInfo.append(castInformation)
+            else:
+              itemInfo.append("")
             if catalogCrewMetadata[0]['producer']:
               for producer in catalogCrewMetadata[0]['producer']:
                 if producerInformation == "":
                   producerInformation = f"{producer}"
-                producerInformation = f"{producerInformation}, {producer}"
+                else:
+                  producerInformation = f"{producerInformation}, {producer}"
               # producerInformation = f"{producerInformation}"
               # print(f"--- PRODUCER: {producerInformation}")
               itemInfo.append(producerInformation)
+            else:
+              itemInfo.append("")
             if catalogCrewMetadata[0]['director']:
               for director in catalogCrewMetadata[0]['director']:
                 if directorInformation == "":
                   directorInformation = f"{director}"
-                directorInformation = f"{directorInformation}, {director}"
+                else:
+                  directorInformation = f"{directorInformation}, {director}"
               # directorInformation = f"{directorInformation}"
               # print(f"--- DIRECTOR: {directorInformation}")
               itemInfo.append(directorInformation)
+            else:
+              itemInfo.append("")
           else:
-            itemInfo.append("")
+            itemInfo.extend(["","",""])
 
           lineWriter.writerow(itemInfo)
 
