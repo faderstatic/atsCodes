@@ -190,7 +190,7 @@ try:
         #------------------------------
         # Get existing synopsis information from catalog
         queryTitleCode = {'titleCode': cantemoTitleCode}
-        titleCodeMetadata = list(episodeCollection.find(queryTitleCode))
+        titleCodeMetadata = list(movieCollection.find(queryTitleCode))
         if titleCodeMetadata:
           if titleCodeMetadata[0]['translations']['en']['description'] != "":
             catalogEnDescExists = 1
