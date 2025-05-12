@@ -85,7 +85,7 @@ try:
         lineWriter = csv.writer(outFile)
         lineWriter.writerow(csvHeader)
         for cantemoTitleCodeLine in lines:
-          if (cantemoTitleCodeLine[0] == "S") or (cantemoTitleCodeLine[0] == "M"):
+          if (cantemoTitleCodeLine[0] == "S") or (cantemoTitleCodeLine[0] == "M") or (cantemoTitleCodeLine[0] == "U"):
             cantemoTitleCode = cantemoTitleCodeLine.strip().split("_")[0]
           else:
             cantemoTitleCode = cantemoTitleCodeLine.strip()
@@ -115,22 +115,23 @@ try:
           # Get existing synopsis information from catalog
           blankInfo = 1
           if catalogItemMetadata:
-            if (catalogItemMetadata[0]['translations']['en']['description'] != "") and (descriptionType == "long") and (languageExport == "en"):
-              catalogEnDesc = catalogItemMetadata[0]['translations']['en']['description']
-              itemInfo.append(catalogEnDesc)
-              blankInfo = 0
-            if (catalogItemMetadata[0]['translations']['en']['shortDescription'] != "") and (descriptionType == "short") and (languageExport == "en"):
-              catalogEnShortDesc = catalogItemMetadata[0]['translations']['en']['shortDescription']
-              itemInfo.append(catalogEnShortDesc)
-              blankInfo = 0
-            if (catalogItemMetadata[0]['translations']['es']['description'] != "") and (descriptionType == "long") and (languageExport == "es"):
-              catalogEsDesc = catalogItemMetadata[0]['translations']['es']['description']
-              itemInfo.append(catalogEsDesc)
-              blankInfo = 0
-            if (catalogItemMetadata[0]['translations']['es']['shortDescription'] != "") and (descriptionType == "short") and (languageExport == "es"):
-              catalogEsShortDesc = catalogItemMetadata[0]['translations']['es']['shortDescription']
-              itemInfo.append(catalogEsShortDesc)
-              blankInfo = 0
+            if "translations" in catalogItemMetadata[0]:
+              if (catalogItemMetadata[0]['translations']['en']['description'] != "") and (descriptionType == "long") and (languageExport == "en"):
+                catalogEnDesc = catalogItemMetadata[0]['translations']['en']['description']
+                itemInfo.append(catalogEnDesc)
+                blankInfo = 0
+              if (catalogItemMetadata[0]['translations']['en']['shortDescription'] != "") and (descriptionType == "short") and (languageExport == "en"):
+                catalogEnShortDesc = catalogItemMetadata[0]['translations']['en']['shortDescription']
+                itemInfo.append(catalogEnShortDesc)
+                blankInfo = 0
+              if (catalogItemMetadata[0]['translations']['es']['description'] != "") and (descriptionType == "long") and (languageExport == "es"):
+                catalogEsDesc = catalogItemMetadata[0]['translations']['es']['description']
+                itemInfo.append(catalogEsDesc)
+                blankInfo = 0
+              if (catalogItemMetadata[0]['translations']['es']['shortDescription'] != "") and (descriptionType == "short") and (languageExport == "es"):
+                catalogEsShortDesc = catalogItemMetadata[0]['translations']['es']['shortDescription']
+                itemInfo.append(catalogEsShortDesc)
+                blankInfo = 0
             if blankInfo == 1:
               itemInfo.append("")
           else:
@@ -143,27 +144,30 @@ try:
             print(f"--- Getting information for {cantemoSeriesCode} from series collection ---")
             blankInfo = 1
             if catalogSeriesMetadata:
-              if (catalogSeriesMetadata[0]['translations']['en']['description'] != "") and (descriptionType == "long") and (languageExport == "en"):
-                catalogEnDesc = catalogSeriesMetadata[0]['translations']['en']['description']
-                itemInfo.append(catalogEnDesc)
-                blankInfo = 0
-              if (catalogSeriesMetadata[0]['translations']['en']['shortDescription'] != "") and (descriptionType == "short") and (languageExport == "en"):
-                catalogEnShortDesc = catalogSeriesMetadata[0]['translations']['en']['shortDescription']
-                itemInfo.append(catalogEnShortDesc)
-                blankInfo = 0
-              if (catalogSeriesMetadata[0]['translations']['es']['description'] != "") and (descriptionType == "long") and (languageExport == "es"):
-                catalogEsDesc = catalogSeriesMetadata[0]['translations']['es']['description']
-                itemInfo.append(catalogEsDesc)
-                blankInfo = 0
-              if (catalogSeriesMetadata[0]['translations']['es']['shortDescription'] != "") and (descriptionType == "short") and (languageExport == "es"):
-                catalogEsShortDesc = catalogSeriesMetadata[0]['translations']['es']['shortDescription']
-                itemInfo.append(catalogEsShortDesc)
-                blankInfo = 0
+              if "translations" in catalogSeriesMetadata[0]:
+                if (catalogSeriesMetadata[0]['translations']['en']['description'] != "") and (descriptionType == "long") and (languageExport == "en"):
+                  catalogEnDesc = catalogSeriesMetadata[0]['translations']['en']['description']
+                  itemInfo.append(catalogEnDesc)
+                  blankInfo = 0
+                if (catalogSeriesMetadata[0]['translations']['en']['shortDescription'] != "") and (descriptionType == "short") and (languageExport == "en"):
+                  catalogEnShortDesc = catalogSeriesMetadata[0]['translations']['en']['shortDescription']
+                  itemInfo.append(catalogEnShortDesc)
+                  blankInfo = 0
+                if (catalogSeriesMetadata[0]['translations']['es']['description'] != "") and (descriptionType == "long") and (languageExport == "es"):
+                  catalogEsDesc = catalogSeriesMetadata[0]['translations']['es']['description']
+                  itemInfo.append(catalogEsDesc)
+                  blankInfo = 0
+                if (catalogSeriesMetadata[0]['translations']['es']['shortDescription'] != "") and (descriptionType == "short") and (languageExport == "es"):
+                  catalogEsShortDesc = catalogSeriesMetadata[0]['translations']['es']['shortDescription']
+                  itemInfo.append(catalogEsShortDesc)
+                  blankInfo = 0
               if blankInfo == 1:
                 itemInfo.append("")
             else:
               itemInfo.append("")
               print(f"--- Information does not exist in Catalog service in SERIES LEVEL for the title code [{cantemoTitleCode}] ---")
+          elif (getSeriesInfo == "yes"):
+            itemInfo.append("")
           #------------------------------
           emptyCollectionQuery = 0
           if (cantemoTitleCode[0] == "S"):
@@ -176,13 +180,13 @@ try:
           else:
             cantemoCrewCode = cantemoTitleCode
             queryTitleCode = {'titleCode': cantemoCrewCode}
-            if seriesCollection.count_documents(queryTitleCode) != 0:
+            if movieCollection.count_documents(queryTitleCode) != 0:
               catalogCrewMetadata = movieCollection.find(queryTitleCode)
             else:
               emptyCollectionQuery = 1
           castInformation = producerInformation = directorInformation = ""
           if not emptyCollectionQuery:
-            if catalogCrewMetadata[0]['cast']:
+            if "cast" in catalogCrewMetadata[0]:
               for cast in catalogCrewMetadata[0]['cast']:
                 if castInformation == "":
                   castInformation = cast
@@ -193,7 +197,7 @@ try:
               itemInfo.append(castInformation)
             else:
               itemInfo.append("")
-            if catalogCrewMetadata[0]['producer']:
+            if "producer" in catalogCrewMetadata[0]:
               for producer in catalogCrewMetadata[0]['producer']:
                 if producerInformation == "":
                   producerInformation = f"{producer}"
@@ -204,7 +208,7 @@ try:
               itemInfo.append(producerInformation)
             else:
               itemInfo.append("")
-            if catalogCrewMetadata[0]['director']:
+            if "director" in catalogCrewMetadata[0]:
               for director in catalogCrewMetadata[0]['director']:
                 if directorInformation == "":
                   directorInformation = f"{director}"
