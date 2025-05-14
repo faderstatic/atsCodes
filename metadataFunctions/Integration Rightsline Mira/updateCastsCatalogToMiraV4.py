@@ -68,7 +68,7 @@ try:
       lines = file.readlines()
       #------------------------------
       # Control whether to update Mira
-      printOnly = 1
+      printOnly = 0
       #------------------------------
       for cantemoTitleCodeLine in lines:
         if (cantemoTitleCodeLine[0] == "S") or (cantemoTitleCodeLine[0] == "M") or (cantemoTitleCodeLine[0] == "U"):
@@ -146,7 +146,7 @@ try:
           # Parsing JSON data
           responseJson = miraResponse.json() if miraResponse and miraResponse.status_code == 200 else None
           # print(responseJson)
-          miraSynopsisMissing = 0
+          missingMiraEn = missingMiraEnShort = missingMiraEs = missingMiraEsShort = 1
           if "id_title_episodes" in responseJson[0]:
             miraId = responseJson[0]['id_title_episodes']
             payloadEpisode = f"{{\r\n    \"id_title_episodes\": {miraId},\r\n    \"episode_synopsis\": ["
@@ -156,65 +156,46 @@ try:
               # print(f"Description - {responseJson[0]['description']}")
               if miraEpisodeSynopsis:
                 for synopsisType in miraEpisodeSynopsis:
-                  if synopsisType['id_synopsis_types'] == 22:
-                    if (synopsisType['synopsis'] == "") and itemEnDescExists:
-                      updateMiraSynopsisFlag = 1
-                      payloadEpisode = f"{payloadEpisode}\r\n        {{\r\n            \"id_synopsis_types\": 22,\r\n            \"synopsis\": \"{itemEnDesc.replace('"', '\\"')}\"}},"
-                    elif (synopsisType['synopsis'] == "") and titleEnDescExists:
-                      updateMiraSynopsisFlag = 1
-                      payloadEpisode = f"{payloadEpisode}\r\n        {{\r\n            \"id_synopsis_types\": 22,\r\n            \"synopsis\": \"{titleEnDesc.replace('"', '\\"')}\"}},"
-                    else:
-                      print(f"  Mira Long Description En: {synopsisType['synopsis']}")
-                  if synopsisType['id_synopsis_types'] == 21:
-                    if (synopsisType['synopsis'] == "") and itemEnShortDescExists:
-                      updateMiraSynopsisFlag = 1
-                      payloadEpisode = f"{payloadEpisode}\r\n        {{\r\n            \"id_synopsis_types\": 21,\r\n            \"synopsis\": \"{itemEnShortDesc.replace('"', '\\"')}\"}},"
-                    elif (synopsisType['synopsis'] == "") and titleEnShortDescExists:
-                      updateMiraSynopsisFlag = 1
-                      payloadEpisode = f"{payloadEpisode}\r\n        {{\r\n            \"id_synopsis_types\": 21,\r\n            \"synopsis\": \"{titleEnShortDesc.replace('"', '\\"')}\"}},"
-                    else:
-                      print(f"  Mira Short Description En: {synopsisType['synopsis']}")
-                  if synopsisType['id_synopsis_types'] == 2:
-                    if (synopsisType['synopsis'] == "") and itemEsDescExists:
-                      updateMiraSynopsisFlag = 1
-                      payloadEpisode = f"{payloadEpisode}\r\n        {{\r\n            \"id_synopsis_types\": 2,\r\n            \"synopsis\": \"{itemEsDesc.replace('"', '\\"')}\"}},"
-                    elif (synopsisType['synopsis'] == "") and titleEsDescExists:
-                      updateMiraSynopsisFlag = 1
-                      payloadEpisode = f"{payloadEpisode}\r\n        {{\r\n            \"id_synopsis_types\": 2,\r\n            \"synopsis\": \"{titleEsDesc.replace('"', '\\"')}\"}},"
-                    else:
-                      print(f"  Mira Long Description Es: {synopsisType['synopsis']}")
-                  if synopsisType['id_synopsis_types'] == 1:
-                    if (synopsisType['synopsis'] == "") and itemEsShortDescExists:
-                      updateMiraSynopsisFlag = 1
-                      payloadEpisode = f"{payloadEpisode}\r\n        {{\r\n            \"id_synopsis_types\": 1,\r\n            \"synopsis\": \"{itemEsShortDesc.replace('"', '\\"')}\"}},"
-                    elif (synopsisType['synopsis'] == "") and titleEsShortDescExists:
-                      updateMiraSynopsisFlag = 1
-                      payloadEpisode = f"{payloadEpisode}\r\n        {{\r\n            \"id_synopsis_types\": 1,\r\n            \"synopsis\": \"{titleEsShortDesc.replace('"', '\\"')}\"}},"
-                    else:
-                      print(f"  Mira Short Description Es: {synopsisType['synopsis']}")
-              else:
-                miraSynopsisMissing = 1
-            else:
-              miraSynopsisMissing = 1
+                  if (synopsisType['id_synopsis_types'] == 22) and (synopsisType['synopsis'] != ""):
+                    missingMiraEn = 0
+                  if (synopsisType['id_synopsis_types'] == 21) and (synopsisType['synopsis'] != ""):
+                    missingMiraEnShort = 0
+                  if (synopsisType['id_synopsis_types'] == 2) and (synopsisType['synopsis'] != ""):
+                    missingMiraEs = 0
+                  if (synopsisType['id_synopsis_types'] == 1) and (synopsisType['synopsis'] != ""):
+                    missingMiraEsShort = 0
+          if missingMiraEn and itemEnDescExists:
+            updateMiraSynopsisFlag = 1
+            payloadEpisode = f"{payloadEpisode}\r\n        {{\r\n            \"id_synopsis_types\": 22,\r\n            \"synopsis\": \"{itemEnDesc.replace('"', '\\"')}\"}},"
+          elif missingMiraEn and titleEnDescExists:
+            updateMiraSynopsisFlag = 1
+            payloadEpisode = f"{payloadEpisode}\r\n        {{\r\n            \"id_synopsis_types\": 22,\r\n            \"synopsis\": \"{titleEnDesc.replace('"', '\\"')}\"}},"
           else:
-            print(f"This item [{cantemoTitleCode}] does not exist in Mira - will need to be created")
-          if miraSynopsisMissing:
-            if itemEnDescExists:
-              payloadEpisode = f"{payloadEpisode}\r\n        {{\r\n            \"id_synopsis_types\": 22,\r\n            \"synopsis\": \"{itemEnDesc.replace('"', '\\"')}\"}},"
-            elif titleEnDescExists:
-              payloadEpisode = f"{payloadEpisode}\r\n        {{\r\n            \"id_synopsis_types\": 22,\r\n            \"synopsis\": \"{titleEnDesc.replace('"', '\\"')}\"}},"
-            if itemEnShortDescExists:
-              payloadEpisode = f"{payloadEpisode}\r\n        {{\r\n            \"id_synopsis_types\": 21,\r\n            \"synopsis\": \"{itemEnShortDesc.replace('"', '\\"')}\"}},"
-            elif titleEnShortDescExists:
-              payloadEpisode = f"{payloadEpisode}\r\n        {{\r\n            \"id_synopsis_types\": 21,\r\n            \"synopsis\": \"{titleEnShortDesc.replace('"', '\\"')}\"}},"
-            if itemEsDescExists:
-              payloadEpisode = f"{payloadEpisode}\r\n        {{\r\n            \"id_synopsis_types\": 2,\r\n            \"synopsis\": \"{itemEsDesc.replace('"', '\\"')}\"}},"
-            elif titleEsDescExists:
-              payloadEpisode = f"{payloadEpisode}\r\n        {{\r\n            \"id_synopsis_types\": 2,\r\n            \"synopsis\": \"{titleEsDesc.replace('"', '\\"')}\"}},"
-            if itemEsShortDescExists:
-              payloadEpisode = f"{payloadEpisode}\r\n        {{\r\n            \"id_synopsis_types\": 1,\r\n            \"synopsis\": \"{itemEsShortDesc.replace('"', '\\"')}\"}},"
-            elif titleEsShortDescExists:
-              payloadEpisode = f"{payloadEpisode}\r\n        {{\r\n            \"id_synopsis_types\": 1,\r\n            \"synopsis\": \"{titleEsShortDesc.replace('"', '\\"')}\"}},"
+            print(f"  Mira Long Description En: {synopsisType['synopsis']}")
+          if missingMiraEnShort and itemEnShortDescExists:
+            updateMiraSynopsisFlag = 1
+            payloadEpisode = f"{payloadEpisode}\r\n        {{\r\n            \"id_synopsis_types\": 21,\r\n            \"synopsis\": \"{itemEnShortDesc.replace('"', '\\"')}\"}},"
+          elif missingMiraEnShort and titleEnShortDescExists:
+            updateMiraSynopsisFlag = 1
+            payloadEpisode = f"{payloadEpisode}\r\n        {{\r\n            \"id_synopsis_types\": 21,\r\n            \"synopsis\": \"{titleEnShortDesc.replace('"', '\\"')}\"}},"
+          else:
+            print(f"  Mira Short Description En: {synopsisType['synopsis']}")
+          if missingMiraEs and itemEsDescExists:
+            updateMiraSynopsisFlag = 1
+            payloadEpisode = f"{payloadEpisode}\r\n        {{\r\n            \"id_synopsis_types\": 2,\r\n            \"synopsis\": \"{itemEsDesc.replace('"', '\\"')}\"}},"
+          elif missingMiraEs and titleEsDescExists:
+            updateMiraSynopsisFlag = 1
+            payloadEpisode = f"{payloadEpisode}\r\n        {{\r\n            \"id_synopsis_types\": 2,\r\n            \"synopsis\": \"{titleEsDesc.replace('"', '\\"')}\"}},"
+          else:
+            print(f"  Mira Long Description Es: {synopsisType['synopsis']}")
+          if missingMiraEsShort and itemEsShortDescExists:
+            updateMiraSynopsisFlag = 1
+            payloadEpisode = f"{payloadEpisode}\r\n        {{\r\n            \"id_synopsis_types\": 1,\r\n            \"synopsis\": \"{itemEsShortDesc.replace('"', '\\"')}\"}},"
+          elif missingMiraEsShort and titleEsShortDescExists:
+            updateMiraSynopsisFlag = 1
+            payloadEpisode = f"{payloadEpisode}\r\n        {{\r\n            \"id_synopsis_types\": 1,\r\n            \"synopsis\": \"{titleEsShortDesc.replace('"', '\\"')}\"}},"
+          else:
+            print(f"  Mira Short Description Es: {synopsisType['synopsis']}")
           #------------------------------
           trimmedPayloadEpisode = payloadEpisode[:-1]
           rawPayloadEpisode = f"{trimmedPayloadEpisode}\r\n    ]\r\n}}"
@@ -256,15 +237,19 @@ try:
             if titleCodeMetadata[0]['translations']['en']['description'] != "":
               titleEnDescExists = 1
               titleEnDesc = titleCodeMetadata[0]['translations']['en']['description']
+              print(f"  Catalog title description EN: {titleEnDesc}")
             if titleCodeMetadata[0]['translations']['en']['shortDescription'] != "":
               titleEnShortDescExists = 1
               titleEnShortDesc = titleCodeMetadata[0]['translations']['en']['shortDescription']
+              print(f"  Catalog short title description EN: {titleEnShortDesc}")
             if titleCodeMetadata[0]['translations']['es']['description'] != "":
               titleEsDescExists = 1
               titleEsDesc = titleCodeMetadata[0]['translations']['es']['description']
+              print(f"  Catalog title description ES: {titleEsDesc}")
             if titleCodeMetadata[0]['translations']['es']['shortDescription'] != "":
               titleEsShortDescExists = 1
               titleEsShortDesc = titleCodeMetadata[0]['translations']['es']['shortDescription']
+              print(f"  Catalog title short description ES: {titleEsShortDesc}")
         #------------------------------
         # Analyse information from Mira
         # urlMira = f"http://10.1.1.22:83/Service1.svc/titles/{cantemoTitleCode}"
@@ -278,7 +263,8 @@ try:
         #------------------------------
         # Parsing JSON data
         responseJson = miraResponse.json() if miraResponse and miraResponse.status_code == 200 else None
-        miraSynopsisMissing = updateMiraSynopsisFlag = 0
+        updateMiraSynopsisFlag = 0
+        missingMiraEn = missingMiraEnShort = missingMiraEs = missingMiraEsShort = 1
         if "id_titles" in responseJson[0]:
           miraId = responseJson[0]['id_titles']
           payloadEpisode = f"{{\r\n    \"id_titles\": {miraId},\r\n    \"title_synopsis\": ["
@@ -288,53 +274,34 @@ try:
             # print(f"Description - {responseJson[0]['description']}")
             if miraEpisodeSynopsis:
               for synopsisType in miraEpisodeSynopsis:
-                if synopsisType['id_synopsis_types'] == 22:
-                  if (synopsisType['synopsis'] == "") and itemEnDescExists:
-                    updateMiraSynopsisFlag = 1
-                    payloadEpisode = f"{payloadEpisode}\r\n        {{\r\n            \"id_synopsis_types\": 22,\r\n            \"synopsis\": \"{itemEnDesc.replace('"', '\\"')}\"}},"
-                  # print(f"Long Description En: {synopsisType['synopsis']}")
-                  elif (synopsisType['synopsis'] == "") and titleEnDescExists:
-                    updateMiraSynopsisFlag = 1
-                    payloadEpisode = f"{payloadEpisode}\r\n        {{\r\n            \"id_synopsis_types\": 22,\r\n            \"synopsis\": \"{titleEnDesc.replace('"', '\\"')}\"}},"
-                if synopsisType['id_synopsis_types'] == 21:
-                  if (synopsisType['synopsis'] == "") and itemEnShortDescExists:
-                    updateMiraSynopsisFlag = 1
-                    payloadEpisode = f"{payloadEpisode}\r\n        {{\r\n            \"id_synopsis_types\": 21,\r\n            \"synopsis\": \"{itemEnShortDesc.replace('"', '\\"')}\"}},"
-                  # print(f"Short Description En: {synopsisType['synopsis']}")
-                  elif (synopsisType['synopsis'] == "") and titleEnShortDescExists:
-                    updateMiraSynopsisFlag = 1
-                    payloadEpisode = f"{payloadEpisode}\r\n        {{\r\n            \"id_synopsis_types\": 21,\r\n            \"synopsis\": \"{titleEnShortDesc.replace('"', '\\"')}\"}},"
-                if synopsisType['id_synopsis_types'] == 2:
-                  if (synopsisType['synopsis'] == "") and itemEsDescExists:
-                    updateMiraSynopsisFlag = 1
-                    payloadEpisode = f"{payloadEpisode}\r\n        {{\r\n            \"id_synopsis_types\": 2,\r\n            \"synopsis\": \"{itemEsDesc.replace('"', '\\"')}\"}},"
-                  # print(f"Long Description Es: {synopsisType['synopsis']}")
-                  elif (synopsisType['synopsis'] == "") and titleEsDescExists:
-                    updateMiraSynopsisFlag = 1
-                    payloadEpisode = f"{payloadEpisode}\r\n        {{\r\n            \"id_synopsis_types\": 2,\r\n            \"synopsis\": \"{titleEsDesc.replace('"', '\\"')}\"}},"
-                if synopsisType['id_synopsis_types'] == 1:
-                  if (synopsisType['synopsis'] == "") and itemEsShortDescExists:
-                    updateMiraSynopsisFlag = 1
-                    payloadEpisode = f"{payloadEpisode}\r\n        {{\r\n            \"id_synopsis_types\": 1,\r\n            \"synopsis\": \"{itemEsShortDesc.replace('"', '\\"')}\"}},"
-                  # print(f"Short Description Es: {synopsisType['synopsis']}")
-                  elif (synopsisType['synopsis'] == "") and titleEsShortDescExists:
-                    updateMiraSynopsisFlag = 1
-                    payloadEpisode = f"{payloadEpisode}\r\n        {{\r\n            \"id_synopsis_types\": 1,\r\n            \"synopsis\": \"{titleEsShortDesc.replace('"', '\\"')}\"}},"
-            else:
-              miraSynopsisMissing = 1
-          else:
-            miraSynopsisMissing = 1
+                if (synopsisType['id_synopsis_types'] == 22) and (synopsisType['synopsis'] != ""):
+                  missingMiraEn = 0
+                if (synopsisType['id_synopsis_types'] == 21) and (synopsisType['synopsis'] != ""):
+                  missingMiraEnShort = 0
+                if (synopsisType['id_synopsis_types'] == 2) and (synopsisType['synopsis'] != ""):
+                  missingMiraEs = 0
+                if (synopsisType['id_synopsis_types'] == 1) and (synopsisType['synopsis'] != ""):
+                  missingMiraEsShort = 0
+        if missingMiraEn and titleEnDescExists:
+          updateMiraSynopsisFlag = 1
+          payloadEpisode = f"{payloadEpisode}\r\n        {{\r\n            \"id_synopsis_types\": 22,\r\n            \"synopsis\": \"{titleEnDesc.replace('"', '\\"')}\"}},"
         else:
-          miraSynopsisMissing = 1
-        if updateMiraSynopsisFlag:
-          if titleEnDescExists:
-            payloadEpisode = f"{payloadEpisode}\r\n        {{\r\n            \"id_synopsis_types\": 22,\r\n            \"synopsis\": \"{titleEnDesc.replace('"', '\\"')}\"}},"
-          if titleEnShortDescExists:
-            payloadEpisode = f"{payloadEpisode}\r\n        {{\r\n            \"id_synopsis_types\": 21,\r\n            \"synopsis\": \"{titleEnShortDesc.replace('"', '\\"')}\"}},"
-          if titleEsDescExists:
-            payloadEpisode = f"{payloadEpisode}\r\n        {{\r\n            \"id_synopsis_types\": 2,\r\n            \"synopsis\": \"{titleEsDesc.replace('"', '\\"')}\"}},"
-          if titleEsShortDescExists:
-            payloadEpisode = f"{payloadEpisode}\r\n        {{\r\n            \"id_synopsis_types\": 1,\r\n            \"synopsis\": \"{titleEsShortDesc.replace('"', '\\"')}\"}},"
+          print(f"  Mira title description EN: {synopsisType['synopsis']}")
+        if missingMiraEnShort and titleEnShortDescExists:
+          updateMiraSynopsisFlag = 1
+          payloadEpisode = f"{payloadEpisode}\r\n        {{\r\n            \"id_synopsis_types\": 21,\r\n            \"synopsis\": \"{titleEnShortDesc.replace('"', '\\"')}\"}},"
+        else:
+          print(f"  Mira title short description EN: {synopsisType['synopsis']}")
+        if missingMiraEs and titleEsDescExists:
+          updateMiraSynopsisFlag = 1
+          payloadEpisode = f"{payloadEpisode}\r\n        {{\r\n            \"id_synopsis_types\": 2,\r\n            \"synopsis\": \"{titleEsDesc.replace('"', '\\"')}\"}},"
+        else:
+          print(f"  Mira title description ES: {synopsisType['synopsis']}")
+        if missingMiraEsShort and titleEsShortDescExists:
+          updateMiraSynopsisFlag = 1
+          payloadEpisode = f"{payloadEpisode}\r\n        {{\r\n            \"id_synopsis_types\": 1,\r\n            \"synopsis\": \"{titleEsShortDesc.replace('"', '\\"')}\"}},"
+        else:
+          print(f"  Mira title short description ES: {synopsisType['synopsis']}")
         #------------------------------
         trimmedPayloadEpisode = payloadEpisode[:-1]
         rawPayloadEpisode = f"{trimmedPayloadEpisode}\r\n    ]\r\n}}"
