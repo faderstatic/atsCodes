@@ -198,7 +198,7 @@ try:
               miraSynopsisMissing = 1
           else:
             print(f"This item [{cantemoTitleCode}] does not exist in Mira - will need to be created")
-          if updateMiraSynopsisFlag:
+          if miraSynopsisMissing:
             if itemEnDescExists:
               payloadEpisode = f"{payloadEpisode}\r\n        {{\r\n            \"id_synopsis_types\": 22,\r\n            \"synopsis\": \"{itemEnDesc.replace('"', '\\"')}\"}},"
             elif titleEnDescExists:
