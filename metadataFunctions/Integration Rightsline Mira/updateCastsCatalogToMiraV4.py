@@ -208,6 +208,7 @@ try:
                     if (synopsisType['id_synopsis_types'] == 22) and (synopsisType['synopsis'] != ""):
                       missingMiraEn = 0
                       miraItemEn = synopsisType['synopsis'].replace('"', r'\"')
+                      ccMiraItemEn = len(miraItemEn)
                       if outputMethod == "file":
                         outFile.write("* Mira item contains English Description *\n")
                       else:
@@ -215,6 +216,7 @@ try:
                     if (synopsisType['id_synopsis_types'] == 21) and (synopsisType['synopsis'] != ""):
                       missingMiraEnShort = 0
                       miraItemEnShort = synopsisType['synopsis'].replace('"', r'\"')
+                      ccMiraItemEnShort = len(miraItemEnShort)
                       if outputMethod == "file":
                         outFile.write("* Mira item contains Short English Description *\n")
                       else:
@@ -222,6 +224,7 @@ try:
                     if (synopsisType['id_synopsis_types'] == 2) and (synopsisType['synopsis'] != ""):
                       missingMiraEs = 0
                       miraItemEs = synopsisType['synopsis'].replace('"', r'\"')
+                      ccMiraItemEs = len(miraItemEs)
                       if outputMethod == "file":
                         outFile.write("* Mira item contains Spanish Description *\n")
                       else:
@@ -229,6 +232,7 @@ try:
                     if (synopsisType['id_synopsis_types'] == 1) and (synopsisType['synopsis'] != ""):
                       missingMiraEsShort = 0
                       miraItemEsShort = synopsisType['synopsis'].replace('"', r'\"')
+                      ccMiraItemEsShort = len(miraItemEsShort)
                       if outputMethod == "file":
                         outFile.write("* Mira item contains Short Spanish Description *\n")
                       else:
@@ -326,6 +330,12 @@ try:
             rawPayloadEpisode = f"{trimmedPayloadEpisode}\r\n    ]\r\n}}"
             # rawJsonPayloadEpisode = json.dumps(rawPayloadEpisode)
             payloadEpisode = rawPayloadEpisode.encode('utf-8')
+            if outputMethod == "file":
+              outFile.write(f"--- Update Mira? - {updateMiraSynopsisFlag}\n")
+              outFile.write(f"--- Payload for item: {rawPayloadEpisode}\n")
+            else:
+              print(f"--- Update Mira? - {updateMiraSynopsisFlag}")
+              print(f"--- Payload for item: {rawPayloadEpisode}")
             if (updateMiraSynopsisFlag == 1) and (printOnly != 1):
               urlMiraEpisodeUpdate = "http://10.1.1.22:83/Service1.svc/title_episodes"
               response = requests.request("PUT", urlMiraEpisodeUpdate, headers=headers, data=payloadEpisode)
@@ -334,13 +344,6 @@ try:
                 updateItemSynopsisResult = "Updated item synopsis information in Mira - result: success"
               else:
                 updateItemSynopsisResult = f" Updated item synopsis information in Mira - result: {jsonResponse}"
-            else:
-              if outputMethod == "file":
-                outFile.write(f"--- Update Mira? - {updateMiraSynopsisFlag}\n")
-                outFile.write(f"--- Payload for item: {rawPayloadEpisode}\n")
-              else:
-                print(f"--- Update Mira? - {updateMiraSynopsisFlag}")
-                print(f"--- Payload for item: {rawPayloadEpisode}")
             #------------------------------
           # DONE Taking care of episodic synopsis
           #------------------------------
@@ -424,15 +427,19 @@ try:
                   if (synopsisType['id_synopsis_types'] == 22) and (synopsisType['synopsis'] != ""):
                     missingMiraEn = 0
                     miraTitleEn = synopsisType['synopsis'].replace('"', r'\"')
+                    ccMiraTitleEn = len(miraTitleEn)
                   if (synopsisType['id_synopsis_types'] == 21) and (synopsisType['synopsis'] != ""):
                     missingMiraEnShort = 0
                     miraTitleEnShort = synopsisType['synopsis'].replace('"', r'\"')
+                    ccMiraTitleEnShort = len(miraTitleEnShort)
                   if (synopsisType['id_synopsis_types'] == 2) and (synopsisType['synopsis'] != ""):
                     missingMiraEs = 0
                     miraTitleEs = synopsisType['synopsis'].replace('"', r'\"')
+                    ccMiraTitleEs = len(miraTitleEs)
                   if (synopsisType['id_synopsis_types'] == 1) and (synopsisType['synopsis'] != ""):
                     missingMiraEsShort = 0
                     miraTitleEsShort = synopsisType['synopsis'].replace('"', r'\"')
+                    ccMiraTitleEsShort = len(miraTitleEsShort)
           if missingMiraEn and titleEnDescExists and (ccTitleEnDesc <= 250):
             updateMiraSynopsisFlag = 1
             payloadEpisode = f"{payloadEpisode}\r\n        {{\r\n            \"id_synopsis_types\": 22,\r\n            \"synopsis\": \"{titleEnDesc.replace('"', '\\"')}\"}},"
@@ -474,6 +481,12 @@ try:
           rawPayloadEpisode = f"{trimmedPayloadEpisode}\r\n    ]\r\n}}"
           # rawJsonPayloadEpisode = json.dumps(rawPayloadEpisode)
           payloadEpisode = rawPayloadEpisode.encode('utf-8')
+          if outputMethod == "file":
+            outFile.write(f"--- Update Mira? - {updateMiraSynopsisFlag}\n")
+            outFile.write(f"--- Payload for title: {rawPayloadEpisode}\n")
+          else:
+            print(f"--- Update Mira? - {updateMiraSynopsisFlag}")
+            print(f"--- Payload for title: {rawPayloadEpisode}")
           if (updateMiraSynopsisFlag == 1) and (printOnly != 1):
             urlMiraEpisodeUpdate = "http://10.1.1.22:83/Service1.svc/titles"
             response = requests.request("PUT", urlMiraEpisodeUpdate, headers=headers, data=payloadEpisode)
@@ -482,13 +495,6 @@ try:
               updateTitleSynopsisResult = "Updated title synopsis information in Mira - result: success"
             else:
               updateTitleSynopsisResult = f" Updated title synopsis information in Mira - result: {jsonResponse}"
-          else:
-            if outputMethod == "file":
-              outFile.write(f"--- Update Mira? - {updateMiraSynopsisFlag}\n")
-              outFile.write(f"--- Payload for title: {rawPayloadEpisode}\n")
-            else:
-              print(f"--- Update Mira? - {updateMiraSynopsisFlag}")
-              print(f"--- Payload for title: {rawPayloadEpisode}")
           #------------------------------
           # DONE Taking care of movie and title synopsis
           #------------------------------
