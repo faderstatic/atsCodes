@@ -36,9 +36,7 @@ try:
 
   titleFile = sys.argv[1]
   outputMethod = sys.argv[2]
-
-  if outputMethod == "file":
-    outputFile = sys.argv[3]
+  outputFile = sys.argv[3]
 
   #------------------------------
   # Control whether to update Mira
