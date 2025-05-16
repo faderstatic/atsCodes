@@ -196,7 +196,6 @@ try:
             #------------------------------
             # Parsing JSON data
             responseJson = miraResponse.json() if miraResponse and miraResponse.status_code == 200 else None
-            print(responseJson)
             missingMiraEn = missingMiraEnShort = missingMiraEs = missingMiraEsShort = 1
             if "id_title_episodes" in responseJson[0]:
               miraId = responseJson[0]['id_title_episodes']
@@ -376,18 +375,18 @@ try:
                 print(f"  Using Mira item Short Description Es: {miraItemEsShort}")
             #------------------------------
             headers = {
-             'Content-Type': 'application/json; charset=UTF-8',
+             'Content-Type': 'text/plain; charset=UTF-8',
             }
-            payloadEpisodeJson = json.dumps(payloadEpisode, ensure_ascii=False)
+            payloadEpisodeStr = json.dumps(payloadEpisode, ensure_ascii=False)
             if outputMethod == "file":
-              outFile.write(f"--- Update Mira? - {updateMiraSynopsisFlag}\n")
-              outFile.write(f"--- Payload for item: {payloadEpisode}\n")
+              outFile.write(f"--- Update Mira item? - {updateMiraSynopsisFlag}\n")
+              outFile.write(f"--- Payload for item: {payloadEpisodeStr}\n")
             else:
-              print(f"--- Update Mira? - {updateMiraSynopsisFlag}")
-              print(f"--- Payload for item: {payloadEpisode}")
+              print(f"--- Update Mira item? - {updateMiraSynopsisFlag}")
+              print(f"--- Payload for item: {payloadEpisodeStr}")
             if (updateMiraSynopsisFlag == 1) and (printOnly != 1):
               urlMiraEpisodeUpdate = "http://10.1.1.22:83/Service1.svc/title_episodes"
-              response = requests.put(urlMiraEpisodeUpdate, headers=headers, data=payloadEpisodeJson, timeout=(10,120))
+              response = requests.put(urlMiraEpisodeUpdate, headers=headers, data=payloadEpisodeStr.encode("utf-8"), timeout=(10,120))
               jsonResponse = response.json()
               if jsonResponse == "null":
                 updateItemSynopsisResult = "Updated item synopsis information in Mira - result: success"
@@ -557,18 +556,18 @@ try:
               print(f"  Using Mira title short description ES: {miraTitleEsShort}")
           #------------------------------
           headers = {
-            'Content-Type': 'application/json; charset=UTF-8',
+            'Content-Type': 'text/plain; charset=UTF-8',
           }
-          payloadTitleJson = json.dumps(payloadTitle, ensure_ascii=False)
+          payloadTitleStr = json.dumps(payloadTitle, ensure_ascii=False)
           if outputMethod == "file":
-            outFile.write(f"--- Update Mira? - {updateMiraSynopsisFlag}\n")
-            outFile.write(f"--- Payload for title: {payloadTitle}\n")
+            outFile.write(f"--- Update Mira title? - {updateMiraSynopsisFlag}\n")
+            outFile.write(f"--- Payload for title: {payloadTitleStr}\n")
           else:
-            print(f"--- Update Mira? - {updateMiraSynopsisFlag}")
-            print(f"--- Payload for title: {payloadTitle}")
+            print(f"--- Update Mira title? - {updateMiraSynopsisFlag}")
+            print(f"--- Payload for title: {payloadTitleStr}")
           if (updateMiraSynopsisFlag == 1) and (printOnly != 1):
             urlMiraEpisodeUpdate = "http://10.1.1.22:83/Service1.svc/titles"
-            response = requests.put(urlMiraEpisodeUpdate, headers=headers, data=payloadTitleJson, timeout=(10,120))
+            response = requests.put(urlMiraEpisodeUpdate, headers=headers, data=payloadTitleStr.encode("utf-8"), timeout=(10,120))
             jsonResponse = response.json()
             if jsonResponse == "null":
               updateTitleSynopsisResult = "Updated title synopsis information in Mira - result: success"
@@ -783,16 +782,16 @@ try:
                   payloadCrew["title_subjects"].append(subject)
             
           urlMiraUpdate = "http://10.1.1.22:83/Service1.svc/titles"
-          payloadCrewJson = json.dumps(payloadCrew, ensure_ascii=False)
+          payloadCrewStr = json.dumps(payloadCrew, ensure_ascii=False)
           headers = {
-            'Content-Type': 'application/json; charset=UTF-8',
+            'Content-Type': 'text/plain; charset=UTF-8',
           }
           outFile.write(f"{updateItemSynopsisResult}\n")
           print(updateItemSynopsisResult)
           outFile.write(f"{updateTitleSynopsisResult}\n")
           print(updateTitleSynopsisResult)
           if printOnly != 1:
-            response = requests.put(urlMiraUpdate, headers=headers, data=payloadCrewJson, timeout=(10,120))
+            response = requests.put(urlMiraUpdate, headers=headers, data=payloadCrewStr.encode("utf-8"), timeout=(10,120))
             jsonResponse = response.json()
             if jsonResponse == "null":
               outFile.write("Updated crew information in Mira - result: success\n")
