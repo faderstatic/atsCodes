@@ -742,6 +742,7 @@ try:
                       outFile.write(f"  Adding new actor from Catalog to reference database: {crew_record}\n")
                       print(f"  Adding new actor from Catalog to reference database: {crew_record}")
                     #------------------------------
+                    updateCastFlag = 1
                     subjectName = metadataValue[iCounter].strip()
                     subject = {
                       "id_positions": 1,
@@ -787,6 +788,7 @@ try:
                       outFile.write(f"  Adding new director from Catalog to reference database: {crew_record}\n")
                       print(f"  Adding new director from Catalog to reference database: {crew_record}")
                     #------------------------------
+                    updateCastFlag = 1
                     subjectName = metadataValue[iCounter].strip()
                     subject = {
                       "id_positions": 2,
@@ -794,28 +796,32 @@ try:
                       "external_ident": directorUuid[iCounter]
                     }
                     payloadCrew["title_subjects"].append(subject)
-              
-            urlMiraUpdate = "http://10.1.1.22:83/Service1.svc/titles"
-            payloadCrewStr = json.dumps(payloadCrew, ensure_ascii=False)
-            headers = {
-              'Content-Type': 'text/plain; charset=UTF-8',
-            }
             outFile.write(f"{updateItemSynopsisResult}\n")
             print(updateItemSynopsisResult)
             outFile.write(f"{updateTitleSynopsisResult}\n")
             print(updateTitleSynopsisResult)
-            if printOnly != 1:
-              response = requests.put(urlMiraUpdate, headers=headers, data=payloadCrewStr.encode("utf-8"), timeout=(10,120))
-              jsonResponse = response.json()
-              if jsonResponse == "null":
-                outFile.write("Updated crew information in Mira - result: success\n")
-                print("Updated crew information in Mira - result: success")
+            if updateCastFlag:
+              urlMiraUpdate = "http://10.1.1.22:83/Service1.svc/titles"
+              payloadCrewStr = json.dumps(payloadCrew, ensure_ascii=False)
+              headers = {
+                'Content-Type': 'text/plain; charset=UTF-8',
+              }
+              
+              if printOnly != 1:
+                response = requests.put(urlMiraUpdate, headers=headers, data=payloadCrewStr.encode("utf-8"), timeout=(10,120))
+                jsonResponse = response.json()
+                if jsonResponse == "null":
+                  outFile.write("Updated crew information in Mira - result: success\n")
+                  print("Updated crew information in Mira - result: success")
+                else:
+                  outFile.write(f"Updated crew information in Mira - result: {jsonResponse}\n")
+                  print(f"Updated crew information in Mira - result: {jsonResponse}")
               else:
-                outFile.write(f" Updated crew information in Mira - result: {jsonResponse}\n")
-                print(f" Updated crew information in Mira - result: {jsonResponse}")
+                outFile.write(f"Cast update: {payloadCrew}\n")
+                print(f"Cast update: {payloadCrew}")
             else:
-              outFile.write(f"Cast update: {payloadCrew}\n")
-              print(f"Cast update: {payloadCrew}")
+              outFile.write(f"No cast information to update\n")
+              print(f"No cast information to update")
             #------------------------------
             outFile.write("----------------------------------------\n")
             print("----------------------------------------")
