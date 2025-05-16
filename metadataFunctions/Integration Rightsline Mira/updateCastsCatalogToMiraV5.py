@@ -111,7 +111,7 @@ try:
                 if titleCodeMetadata[0]['translations']['en']['description'] != "":
                   itemEnDescExists = 1
                   # trySeriesEnDescFlag = 0
-                  itemEnDesc = titleCodeMetadata[0]['translations']['en']['description'].replace('"', '\\"')
+                  itemEnDesc = titleCodeMetadata[0]['translations']['en']['description']
                   ccItemEnDesc = len(itemEnDesc)
                   if outputMethod == "file":
                     outFile.write(f"* Item Description English Exists *: {itemEnDesc}\n")
@@ -120,7 +120,7 @@ try:
                 if titleCodeMetadata[0]['translations']['en']['shortDescription'] != "":
                   itemEnShortDescExists = 1
                   # trySeriesEnShortDescFlag = 0
-                  itemEnShortDesc = titleCodeMetadata[0]['translations']['en']['shortDescription'].replace('"', '\\"')
+                  itemEnShortDesc = titleCodeMetadata[0]['translations']['en']['shortDescription']
                   ccItemEnShortDesc = len(itemEnShortDesc)
                   if outputMethod == "file":
                     outFile.write(f"* Item Short Description English Exists *: {itemEnShortDesc}\n")
@@ -129,7 +129,7 @@ try:
                 if titleCodeMetadata[0]['translations']['es']['description'] != "":
                   itemEsDescExists = 1
                   # trySeriesEsDescFlag = 0
-                  itemEsDesc = titleCodeMetadata[0]['translations']['es']['description'].replace('"', '\\"')
+                  itemEsDesc = titleCodeMetadata[0]['translations']['es']['description']
                   ccItemEsDesc = len(itemEsDesc)
                   if outputMethod == "file":
                     outFile.write(f"* Item Description Spanish Exists *: {itemEsDesc}\n")
@@ -138,7 +138,7 @@ try:
                 if titleCodeMetadata[0]['translations']['es']['shortDescription'] != "":
                   itemEsShortDescExists = 1
                   # trySeriesEsShortDescFlag = 0
-                  itemEsShortDesc = titleCodeMetadata[0]['translations']['es']['shortDescription'].replace('"', '\\"')
+                  itemEsShortDesc = titleCodeMetadata[0]['translations']['es']['shortDescription']
                   ccItemEsShortDesc = len(itemEsShortDesc)
                   if outputMethod == "file":
                     outFile.write(f"* Item Short Description Spanish Exists *: {itemEsShortDesc}\n")
@@ -152,7 +152,7 @@ try:
               if "translations" in titleCodeMetadata[0]:
                 if titleCodeMetadata[0]['translations']['en']['description'] != "":
                   titleEnDescExists = 1
-                  titleEnDesc = titleCodeMetadata[0]['translations']['en']['description'].replace('"', '\\"')
+                  titleEnDesc = titleCodeMetadata[0]['translations']['en']['description']
                   ccTitleEnDesc = len(titleEnDesc)
                   if outputMethod == "file":
                     outFile.write(f"* Title Description English Exists *: {titleEnDesc}\n")
@@ -160,7 +160,7 @@ try:
                     print(f"* Title Description English Exists *: {titleEnDesc}")
                 if titleCodeMetadata[0]['translations']['en']['shortDescription'] != "":
                   titleEnShortDescExists = 1
-                  titleEnShortDesc = titleCodeMetadata[0]['translations']['en']['shortDescription'].replace('"', '\\"')
+                  titleEnShortDesc = titleCodeMetadata[0]['translations']['en']['shortDescription']
                   ccTitleEnShortDesc = len(titleEnShortDesc)
                   if outputMethod == "file":
                     outFile.write(f"* Title Short Description English Exists *: {titleEnShortDesc}\n")
@@ -168,7 +168,7 @@ try:
                     print(f"* Title Short Description English Exists *: {titleEnShortDesc}")
                 if titleCodeMetadata[0]['translations']['es']['description'] != "":
                   titleEsDescExists = 1
-                  titleEsDesc = titleCodeMetadata[0]['translations']['es']['description'].replace('"', '\\"')
+                  titleEsDesc = titleCodeMetadata[0]['translations']['es']['description']
                   ccTitleEsDesc = len(titleEsDesc)
                   if outputMethod == "file":
                     outFile.write(f"* Title Description Spanish Exists *: {titleEsDesc}\n")
@@ -176,7 +176,7 @@ try:
                     print(f"* Title Description Spanish Exists *: {titleEsDesc}")
                 if titleCodeMetadata[0]['translations']['es']['shortDescription'] != "":
                   titleEsShortDescExists = 1
-                  titleEsShortDesc = titleCodeMetadata[0]['translations']['es']['shortDescription'].replace('"', '\\"')
+                  titleEsShortDesc = titleCodeMetadata[0]['translations']['es']['shortDescription']
                   ccTitleEsShortDesc = len(titleEsShortDesc)
                   if outputMethod == "file":
                     outFile.write(f"* Title Short Description Spanish Exists: {titleEsShortDesc}\n")
@@ -211,7 +211,7 @@ try:
                   for synopsisType in miraEpisodeSynopsis:
                     if (synopsisType['id_synopsis_types'] == 22) and (synopsisType['synopsis'] != ""):
                       missingMiraEn = 0
-                      miraItemEn = synopsisType['synopsis'].replace('"', r'\"')
+                      miraItemEn = synopsisType['synopsis']
                       ccMiraItemEn = len(miraItemEn)
                       if outputMethod == "file":
                         outFile.write("* Mira item contains English Description *\n")
@@ -219,7 +219,7 @@ try:
                         print("* Mira item contains English Description *")
                     if (synopsisType['id_synopsis_types'] == 21) and (synopsisType['synopsis'] != ""):
                       missingMiraEnShort = 0
-                      miraItemEnShort = synopsisType['synopsis'].replace('"', r'\"')
+                      miraItemEnShort = synopsisType['synopsis']
                       ccMiraItemEnShort = len(miraItemEnShort)
                       if outputMethod == "file":
                         outFile.write("* Mira item contains Short English Description *\n")
@@ -227,7 +227,7 @@ try:
                         print("* Mira item contains Short English Description *")
                     if (synopsisType['id_synopsis_types'] == 2) and (synopsisType['synopsis'] != ""):
                       missingMiraEs = 0
-                      miraItemEs = synopsisType['synopsis'].replace('"', r'\"')
+                      miraItemEs = synopsisType['synopsis']
                       ccMiraItemEs = len(miraItemEs)
                       if outputMethod == "file":
                         outFile.write("* Mira item contains Spanish Description *\n")
@@ -235,7 +235,7 @@ try:
                         print("* Mira item contains Spanish Description *")
                     if (synopsisType['id_synopsis_types'] == 1) and (synopsisType['synopsis'] != ""):
                       missingMiraEsShort = 0
-                      miraItemEsShort = synopsisType['synopsis'].replace('"', r'\"')
+                      miraItemEsShort = synopsisType['synopsis']
                       ccMiraItemEsShort = len(miraItemEsShort)
                       if outputMethod == "file":
                         outFile.write("* Mira item contains Short Spanish Description *\n")
@@ -391,7 +391,7 @@ try:
               if jsonResponse == "null":
                 updateItemSynopsisResult = "Updated item synopsis information in Mira - result: success"
               else:
-                updateItemSynopsisResult = f" Updated item synopsis information in Mira - result: {jsonResponse}"
+                updateItemSynopsisResult = f"Updated item synopsis information in Mira - result: {jsonResponse}"
             #------------------------------
           # DONE Taking care of episodic synopsis
           #------------------------------
@@ -418,7 +418,7 @@ try:
             if "translations" in titleCodeMetadata[0]:
               if titleCodeMetadata[0]['translations']['en']['description'] != "":
                 titleEnDescExists = 1
-                titleEnDesc = titleCodeMetadata[0]['translations']['en']['description'].replace('"', '\\"')
+                titleEnDesc = titleCodeMetadata[0]['translations']['en']['description']
                 ccTitleEnDesc = len(titleEnDesc)
                 if outputMethod == "file":
                   outFile.write(f"  Catalog title description EN: {titleEnDesc}\n")
@@ -426,7 +426,7 @@ try:
                   print(f"  Catalog title description EN: {titleEnDesc}")
               if titleCodeMetadata[0]['translations']['en']['shortDescription'] != "":
                 titleEnShortDescExists = 1
-                titleEnShortDesc = titleCodeMetadata[0]['translations']['en']['shortDescription'].replace('"', '\\"')
+                titleEnShortDesc = titleCodeMetadata[0]['translations']['en']['shortDescription']
                 ccTitleEnShortDesc = len(titleEnShortDesc)
                 if outputMethod == "file":
                   outFile.write(f"  Catalog short title description EN: {titleEnShortDesc}\n")
@@ -434,7 +434,7 @@ try:
                   print(f"  Catalog short title description EN: {titleEnShortDesc}")
               if titleCodeMetadata[0]['translations']['es']['description'] != "":
                 titleEsDescExists = 1
-                titleEsDesc = titleCodeMetadata[0]['translations']['es']['description'].replace('"', '\\"')
+                titleEsDesc = titleCodeMetadata[0]['translations']['es']['description']
                 ccTitleEsDesc = len(titleEsDesc)
                 if outputMethod == "file":
                   outFile.write(f"  Catalog title description ES: {titleEsDesc}\n")
@@ -442,7 +442,7 @@ try:
                   print(f"  Catalog title description ES: {titleEsDesc}")
               if titleCodeMetadata[0]['translations']['es']['shortDescription'] != "":
                 titleEsShortDescExists = 1
-                titleEsShortDesc = titleCodeMetadata[0]['translations']['es']['shortDescription'].replace('"', '\\"')
+                titleEsShortDesc = titleCodeMetadata[0]['translations']['es']['shortDescription']
                 ccTitleEsShortDesc = len(titleEsShortDesc)
                 if outputMethod == "file":
                   outFile.write(f"  Catalog title short description ES: {titleEsShortDesc}\n")
@@ -476,19 +476,19 @@ try:
                 for synopsisType in miraEpisodeSynopsis:
                   if (synopsisType['id_synopsis_types'] == 22) and (synopsisType['synopsis'] != ""):
                     missingMiraEn = 0
-                    miraTitleEn = synopsisType['synopsis'].replace('"', r'\"')
+                    miraTitleEn = synopsisType['synopsis']
                     ccMiraTitleEn = len(miraTitleEn)
                   if (synopsisType['id_synopsis_types'] == 21) and (synopsisType['synopsis'] != ""):
                     missingMiraEnShort = 0
-                    miraTitleEnShort = synopsisType['synopsis'].replace('"', r'\"')
+                    miraTitleEnShort = synopsisType['synopsis']
                     ccMiraTitleEnShort = len(miraTitleEnShort)
                   if (synopsisType['id_synopsis_types'] == 2) and (synopsisType['synopsis'] != ""):
                     missingMiraEs = 0
-                    miraTitleEs = synopsisType['synopsis'].replace('"', r'\"')
+                    miraTitleEs = synopsisType['synopsis']
                     ccMiraTitleEs = len(miraTitleEs)
                   if (synopsisType['id_synopsis_types'] == 1) and (synopsisType['synopsis'] != ""):
                     missingMiraEsShort = 0
-                    miraTitleEsShort = synopsisType['synopsis'].replace('"', r'\"')
+                    miraTitleEsShort = synopsisType['synopsis']
                     ccMiraTitleEsShort = len(miraTitleEsShort)
           if missingMiraEn and titleEnDescExists:
           # if missingMiraEn and titleEnDescExists and (ccTitleEnDesc <= 250):
@@ -728,7 +728,7 @@ try:
                     outFile.write(f"  Adding new actor from Catalog to reference database: {crew_record}\n")
                     print(f"  Adding new actor from Catalog to reference database: {crew_record}")
                   #------------------------------
-                  subjectName = metadataValue[iCounter].strip().replace('"', '\\"')
+                  subjectName = metadataValue[iCounter].strip()
                   subject = {
                     "id_positions": 1,
                     "first_name": subjectName,
@@ -773,7 +773,7 @@ try:
                     outFile.write(f"  Adding new director from Catalog to reference database: {crew_record}\n")
                     print(f"  Adding new director from Catalog to reference database: {crew_record}")
                   #------------------------------
-                  subjectName = metadataValue[iCounter].strip().replace('"', '\\"')
+                  subjectName = metadataValue[iCounter].strip()
                   subject = {
                     "id_positions": 2,
                     "first_name": subjectName,
