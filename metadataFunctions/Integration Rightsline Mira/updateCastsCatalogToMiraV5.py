@@ -212,7 +212,7 @@ try:
                   # print(f"Description - {responseJson[0]['description']}")
                   if miraEpisodeSynopsis:
                     for synopsisType in miraEpisodeSynopsis:
-                      if (synopsisType['id_synopsis_types'] == 22) and (synopsisType['synopsis'] != ""):
+                      if (synopsisType['id_synopsis_types'] == 22) and (synopsisType['synopsis'] != "") and (synopsisType['synopsis'] is not None):
                         missingMiraEn = 0
                         miraItemEn = synopsisType['synopsis']
                         ccMiraItemEn = len(miraItemEn)
@@ -220,7 +220,7 @@ try:
                           outFile.write("* Mira item contains English Description *\n")
                         else:
                           print("* Mira item contains English Description *")
-                      if (synopsisType['id_synopsis_types'] == 21) and (synopsisType['synopsis'] != ""):
+                      if (synopsisType['id_synopsis_types'] == 21) and (synopsisType['synopsis'] != "") and (synopsisType['synopsis'] is not None):
                         missingMiraEnShort = 0
                         miraItemEnShort = synopsisType['synopsis']
                         ccMiraItemEnShort = len(miraItemEnShort)
@@ -228,7 +228,7 @@ try:
                           outFile.write("* Mira item contains Short English Description *\n")
                         else:
                           print("* Mira item contains Short English Description *")
-                      if (synopsisType['id_synopsis_types'] == 2) and (synopsisType['synopsis'] != ""):
+                      if (synopsisType['id_synopsis_types'] == 2) and (synopsisType['synopsis'] != "") and (synopsisType['synopsis'] is not None):
                         missingMiraEs = 0
                         miraItemEs = synopsisType['synopsis']
                         ccMiraItemEs = len(miraItemEs)
@@ -236,7 +236,7 @@ try:
                           outFile.write("* Mira item contains Spanish Description *\n")
                         else:
                           print("* Mira item contains Spanish Description *")
-                      if (synopsisType['id_synopsis_types'] == 1) and (synopsisType['synopsis'] != ""):
+                      if (synopsisType['id_synopsis_types'] == 1) and (synopsisType['synopsis'] != "") and (synopsisType['synopsis'] is not None):
                         missingMiraEsShort = 0
                         miraItemEsShort = synopsisType['synopsis']
                         ccMiraItemEsShort = len(miraItemEsShort)
@@ -484,19 +484,19 @@ try:
                 # print(f"Description - {responseJson[0]['description']}")
                 if miraEpisodeSynopsis:
                   for synopsisType in miraEpisodeSynopsis:
-                    if (synopsisType['id_synopsis_types'] == 22) and (synopsisType['synopsis'] != ""):
+                    if (synopsisType['id_synopsis_types'] == 22) and (synopsisType['synopsis'] != "") and (synopsisType['synopsis'] is not None):
                       missingMiraEn = 0
                       miraTitleEn = synopsisType['synopsis']
                       ccMiraTitleEn = len(miraTitleEn)
-                    if (synopsisType['id_synopsis_types'] == 21) and (synopsisType['synopsis'] != ""):
+                    if (synopsisType['id_synopsis_types'] == 21) and (synopsisType['synopsis'] != "") and (synopsisType['synopsis'] is not None):
                       missingMiraEnShort = 0
                       miraTitleEnShort = synopsisType['synopsis']
                       ccMiraTitleEnShort = len(miraTitleEnShort)
-                    if (synopsisType['id_synopsis_types'] == 2) and (synopsisType['synopsis'] != ""):
+                    if (synopsisType['id_synopsis_types'] == 2) and (synopsisType['synopsis'] != "") and (synopsisType['synopsis'] is not None):
                       missingMiraEs = 0
                       miraTitleEs = synopsisType['synopsis']
                       ccMiraTitleEs = len(miraTitleEs)
-                    if (synopsisType['id_synopsis_types'] == 1) and (synopsisType['synopsis'] != ""):
+                    if (synopsisType['id_synopsis_types'] == 1) and (synopsisType['synopsis'] != "") and (synopsisType['synopsis'] is not None):
                       missingMiraEsShort = 0
                       miraTitleEsShort = synopsisType['synopsis']
                       ccMiraTitleEsShort = len(miraTitleEsShort)
